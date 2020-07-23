@@ -11,25 +11,18 @@ namespace Persistence
 
         }
         public DbSet<Contact> Contacts { get; set; }
-        public DbSet<ProductionStocks> Stocks { get; set; }
+        public DbSet<ProductionStock> Stocks { get; set; }
+        public DbSet<Objective> Objectives { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Contact>()
+                builder.Entity<ProductionStock>()
                 .HasData(
-                    new Contact {Id = 1, Name = "max1"},
-                    new Contact {Id = 2, Name = "max2"},
-                    new Contact {Id = 3, Name = "max3"},
-                    new Contact {Id = 4, Name = "max4"},
-                    new Contact {Id = 5, Name = "max5"}
-                );
-                builder.Entity<ProductionStocks>()
-                .HasData(
-                    new ProductionStocks {Id = 1, Name = "steel1", Count = 1},
-                    new ProductionStocks {Id = 2, Name = "steel2", Count = 4},
-                    new ProductionStocks {Id = 3, Name = "steel3", Count = 3},
-                    new ProductionStocks {Id = 4, Name = "steel4", Count = 6},
-                    new ProductionStocks {Id = 5, Name = "steel5", Count = 5}
+                    new ProductionStock {Id = 1, Name = "steel1", Count = 1},
+                    new ProductionStock {Id = 2, Name = "steel2", Count = 4},
+                    new ProductionStock {Id = 3, Name = "steel3", Count = 3},
+                    new ProductionStock {Id = 4, Name = "steel4", Count = 6},
+                    new ProductionStock {Id = 5, Name = "steel5", Count = 5}
                 );
         }
     }

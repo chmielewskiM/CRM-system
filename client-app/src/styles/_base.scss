@@ -1,0 +1,71 @@
+@import 'mixins';
+@import 'variables';
+*{
+    font-family:$font-sans;
+}
+body {
+    margin-top: 10px;
+    font-family:$font-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    height:100%;
+    overflow: hidden;
+}
+#root{
+    height: inherit;
+    overflow: hidden;
+}
+.ui.container.wrapper{
+    margin-left:15% !important;
+    margin-right: 0 !important;
+    height: inherit;
+    width:100%;
+    overflow: hidden;
+    @include breakpoint(tablet) {
+        margin-left:150px !important;
+    }
+
+    @include breakpoint(smartphone) {
+        margin-left:100px !important;
+    }
+
+    & .grid{
+        height: 100%;
+        padding:0;
+        margin:0;
+        overflow: hidden;
+        & .row{
+            height: 50%;
+            margin:0;
+            padding:1rem 2rem;
+            & .column{
+                margin:2rem;
+                padding:1rem;
+            }
+        }
+    }
+}
+html {
+    font-size: 62.5%;
+
+    @include breakpoint(smartphone) {
+        font-size: 44%;
+    }
+
+    @include breakpoint(tablet) {
+        font-size: 50%;
+    }
+
+    @include breakpoint(tablet_landscape) {
+        font-size: 55%;
+    }
+
+    @include breakpoint(bigdesktop) {
+        font-size: 75%;
+    }
+
+    @include breakpoint(xxl) {
+        font-size: 150%;
+    }
+
+}

@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Persistence.Migrations
 {
-    public partial class Initialization : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -10,13 +11,33 @@ namespace Persistence.Migrations
                 name: "Contacts",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(nullable: true)
+                    Id = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    Type = table.Column<string>(nullable: true),
+                    Company = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(nullable: true),
+                    DateAdded = table.Column<DateTime>(nullable: false),
+                    Notes = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Contacts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Objectives",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Category = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    Assignation = table.Column<string>(nullable: true),
+                    Deadline = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Objectives", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -32,31 +53,6 @@ namespace Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Stocks", x => x.Id);
                 });
-
-            migrationBuilder.InsertData(
-                table: "Contacts",
-                columns: new[] { "Id", "Name" },
-                values: new object[] { 1, "max1" });
-
-            migrationBuilder.InsertData(
-                table: "Contacts",
-                columns: new[] { "Id", "Name" },
-                values: new object[] { 2, "max2" });
-
-            migrationBuilder.InsertData(
-                table: "Contacts",
-                columns: new[] { "Id", "Name" },
-                values: new object[] { 3, "max3" });
-
-            migrationBuilder.InsertData(
-                table: "Contacts",
-                columns: new[] { "Id", "Name" },
-                values: new object[] { 4, "max4" });
-
-            migrationBuilder.InsertData(
-                table: "Contacts",
-                columns: new[] { "Id", "Name" },
-                values: new object[] { 5, "max5" });
 
             migrationBuilder.InsertData(
                 table: "Stocks",
@@ -88,6 +84,9 @@ namespace Persistence.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Contacts");
+
+            migrationBuilder.DropTable(
+                name: "Objectives");
 
             migrationBuilder.DropTable(
                 name: "Stocks");

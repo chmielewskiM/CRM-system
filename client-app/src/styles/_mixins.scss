@@ -1,0 +1,54 @@
+//0-576px Phone
+//576-768px Tablet
+//768-1200px Tablet landscape
+//1200-1800px  Desktop
+//++   Big desktop
+@mixin breakpoint ($breakpoint) {
+    @if $breakpoint==smartphone {
+        @media (max-width:36em) {
+            @content
+        }
+
+        ;
+    }
+
+    @if $breakpoint==tablet {
+        @media (max-width:48em) {
+            @content
+        }
+
+        ;
+    }
+
+    @if $breakpoint==tablet_landscape {
+        @media (max-width:62em) {
+            @content
+        }
+
+        ;
+    }
+
+    @if $breakpoint==desktop {
+        @media (max-width:112.5em) {
+            @content
+        }
+
+        ;
+    }
+
+    @if $breakpoint==bigdesktop {
+        @media (min-width:112.5em) {
+            @content
+        }
+
+        ;
+    }
+    @if $breakpoint==xxl {
+        @media (min-width:137.5em) {
+            @content
+        }
+
+        ;
+    }
+
+}
