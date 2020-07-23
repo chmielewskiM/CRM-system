@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "yEAVOc2qym4CIk/8Jz/jfqUR7HMBzczN0wDTYz4v8H1R5jU7WZiwl54sXIIkHWjU6v8BaLXbnFpJq6oJPhj7mw==",
+  "success": true,
+  "projectFilePath": "E:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\mc\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\mc\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

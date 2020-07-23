@@ -1,0 +1,9 @@
+E:\VSC\sysCRM\CRM\Domain\bin\Debug\netstandard2.0\Domain.deps.json
+E:\VSC\sysCRM\CRM\Domain\bin\Debug\netstandard2.0\Domain.dll
+E:\VSC\sysCRM\CRM\Domain\bin\Debug\netstandard2.0\Domain.pdb
+E:\VSC\sysCRM\CRM\Domain\obj\Debug\netstandard2.0\Domain.csprojAssemblyReference.cache
+E:\VSC\sysCRM\CRM\Domain\obj\Debug\netstandard2.0\Domain.csproj.CoreCompileInputs.cache
+E:\VSC\sysCRM\CRM\Domain\obj\Debug\netstandard2.0\Domain.AssemblyInfoInputs.cache
+E:\VSC\sysCRM\CRM\Domain\obj\Debug\netstandard2.0\Domain.AssemblyInfo.cs
+E:\VSC\sysCRM\CRM\Domain\obj\Debug\netstandard2.0\Domain.dll
+E:\VSC\sysCRM\CRM\Domain\obj\Debug\netstandard2.0\Domain.pdb

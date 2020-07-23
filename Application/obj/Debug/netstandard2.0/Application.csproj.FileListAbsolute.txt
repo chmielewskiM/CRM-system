@@ -1,0 +1,14 @@
+E:\VSC\sysCRM\CRM\Application\bin\Debug\netstandard2.0\Application.deps.json
+E:\VSC\sysCRM\CRM\Application\bin\Debug\netstandard2.0\Application.dll
+E:\VSC\sysCRM\CRM\Application\bin\Debug\netstandard2.0\Application.pdb
+E:\VSC\sysCRM\CRM\Application\bin\Debug\netstandard2.0\Persistence.dll
+E:\VSC\sysCRM\CRM\Application\bin\Debug\netstandard2.0\Persistence.pdb
+E:\VSC\sysCRM\CRM\Application\obj\Debug\netstandard2.0\Application.csprojAssemblyReference.cache
+E:\VSC\sysCRM\CRM\Application\obj\Debug\netstandard2.0\Application.csproj.CoreCompileInputs.cache
+E:\VSC\sysCRM\CRM\Application\obj\Debug\netstandard2.0\Application.AssemblyInfoInputs.cache
+E:\VSC\sysCRM\CRM\Application\obj\Debug\netstandard2.0\Application.AssemblyInfo.cs
+E:\VSC\sysCRM\CRM\Application\obj\Debug\netstandard2.0\Application.csproj.CopyComplete
+E:\VSC\sysCRM\CRM\Application\obj\Debug\netstandard2.0\Application.dll
+E:\VSC\sysCRM\CRM\Application\obj\Debug\netstandard2.0\Application.pdb
+E:\VSC\sysCRM\CRM\Application\bin\Debug\netstandard2.0\Domain.dll
+E:\VSC\sysCRM\CRM\Application\bin\Debug\netstandard2.0\Domain.pdb
