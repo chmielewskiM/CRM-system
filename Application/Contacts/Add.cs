@@ -17,7 +17,8 @@ namespace Application.Contacts
         public string Company { get; set; }
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
-        public DateTime DateAdded { get; set; }
+        public string DateAdded { get; set; }
+        public string Notes { get; set; }
         
         }
 
@@ -41,6 +42,7 @@ namespace Application.Contacts
                     PhoneNumber = request.PhoneNumber,
                     DateAdded = request.DateAdded,
                     Email = request.Email,
+                    Notes = request.Notes
                 };
 
                 _context.Contacts.Add(contact);

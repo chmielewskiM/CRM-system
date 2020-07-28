@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Domain;
 namespace Persistence
@@ -16,7 +17,7 @@ namespace Persistence
                         Company = "S Solutions",
                         Type = "Lead",
                         PhoneNumber = "111 111 111",
-                        DateAdded = DateTime.Now.AddDays(-12),
+                        DateAdded = DateTime.Now.AddDays(-12).ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "michael@one.com",
                         Notes = "talk about price",
                     },
@@ -25,7 +26,7 @@ namespace Persistence
                         Company = "ChainQ",
                         Type = "Supplier",
                         PhoneNumber = "222 111 111",
-                        DateAdded = DateTime.Now.AddDays(-7),
+                        DateAdded = DateTime.Now.AddDays(-7).ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "evan@two.com",
                         Notes = "inform about new purchase",
                     },
@@ -34,7 +35,7 @@ namespace Persistence
                         Company = "A-Rest",
                         Type = "Client",
                         PhoneNumber = "333 111 111",
-                        DateAdded = DateTime.Now.AddDays(-7),
+                        DateAdded = DateTime.Now.AddDays(-7).ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "evelyn@three.com",
                         Notes = "report",
                     },
@@ -43,7 +44,7 @@ namespace Persistence
                         Company = "VoiceTen",
                         Type = "Lead",
                         PhoneNumber = "444 111 111",
-                        DateAdded = DateTime.Now.AddDays(-2),
+                        DateAdded = DateTime.Now.AddDays(-2).ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "mert@four.com",
                         Notes = "present the offer",
                     },
@@ -52,7 +53,7 @@ namespace Persistence
                         Company = "Mining inc.",
                         Type = "Supplier",
                         PhoneNumber = "555 111 111",
-                        DateAdded = DateTime.Now.AddDays(-3),
+                        DateAdded = DateTime.Now.AddDays(-3).ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "vivian@five.com",
                         Notes = "",
                     },
@@ -61,7 +62,7 @@ namespace Persistence
                         Company = "K-Express",
                         Type = "Client",
                         PhoneNumber = "666 111 111",
-                        DateAdded = DateTime.Now.AddDays(-4),
+                        DateAdded = DateTime.Now.AddDays(-4).ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "sam@six.com",
                         Notes = "",
                     },
@@ -70,7 +71,7 @@ namespace Persistence
                         Company = "Individual client",
                         Type = "Client",
                         PhoneNumber = "777 111 111",
-                        DateAdded = DateTime.Now.AddDays(-2),
+                        DateAdded = DateTime.Now.AddDays(-2).ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "robert@seven.com",
                         Notes = "",
                     },
@@ -79,7 +80,7 @@ namespace Persistence
                         Company = "Manufacturers inc.",
                         Type = "Lead",
                         PhoneNumber = "888 111 111",
-                        DateAdded = DateTime.Now.AddDays(-10),
+                        DateAdded = DateTime.Now.AddDays(-10).ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "lars@eight.com",
                         Notes = "",
                     },
@@ -88,7 +89,7 @@ namespace Persistence
                         Company = "SunTerra",
                         Type = "Lead",
                         PhoneNumber = "999 111 111",
-                        DateAdded = DateTime.Now.AddDays(-2),
+                        DateAdded = DateTime.Now.AddDays(-2).ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "larry@nine.com",
                         Notes = "ask about the needs",
                     }

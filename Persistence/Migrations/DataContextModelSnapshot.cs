@@ -25,7 +25,7 @@ namespace Persistence.Migrations
                     b.Property<string>("Company")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("DateAdded")
+                    b.Property<string>("DateAdded")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")

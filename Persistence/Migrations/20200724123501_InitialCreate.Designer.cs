@@ -9,7 +9,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200719200713_InitialCreate")]
+    [Migration("20200724123501_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,7 +27,7 @@ namespace Persistence.Migrations
                     b.Property<string>("Company")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("DateAdded")
+                    b.Property<string>("DateAdded")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")

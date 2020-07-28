@@ -15,6 +15,9 @@ namespace Application.Contacts
             public string Type { get; set; }
             public string Company { get; set; }
             public string PhoneNumber { get; set; }
+            public string Email { get; set; }
+            public string DateAdded { get; set; }
+            public string Notes { get; set; }
         }
 
         public class Handler : IRequestHandler<Command>
@@ -37,6 +40,9 @@ namespace Application.Contacts
                 contact.Type = request.Type ?? contact.Type;
                 contact.Company = request.Company ?? contact.Company;
                 contact.PhoneNumber = request.PhoneNumber ?? contact.PhoneNumber;
+                contact.Email = request.Email ?? contact.Email;
+                // contact.DateAdded = request.DateAdded ?? contact.DateAdded;
+                contact.Notes = request.Notes ?? contact.Notes;
 
                 var success = await _context.SaveChangesAsync() > 0;
 

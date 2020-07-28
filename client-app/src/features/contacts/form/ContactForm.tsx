@@ -1,30 +1,26 @@
-import React, { useState, FormEvent } from 'react'
+import React, { useState, FormEvent, useContext, SyntheticEvent } from 'react'
 import { Form, Segment, TextArea, Select, Input, Button, Modal } from 'semantic-ui-react'
 import { IContact } from '../../../app/models/contact'
 import { v4 as uuid } from 'uuid';
+import { observer } from 'mobx-react-lite';
+import ContactStore from '../../../app/stores/contactStore'
 
 interface IProps {
-    contact: IContact;
-    showForm: boolean;
-    setShowForm: (showForm: boolean) => void;
-    addContact: (contact: IContact) => void;
-    editContact: (contact: IContact) => void;
-    selectedContact: IContact;
+    contact: IContact | undefined;
 }
 
 
 export const ContactForm: React.FC<IProps> = ({
     contact: initialFormState,
-    setShowForm,
-    addContact,
-    editContact,
-    selectedContact
 }) => {
 
+    const contactStore = useContext(ContactStore);
+    const {showForm, selectedContact, setShowForm, submitting, addContact, editContact, updateFormSelect} = contactStore;
 
     const fillForm = () => {
-        if (initialFormState) {
-            return initialFormState
+        if (selectedContact) {
+            setValue(selectedContact.type)
+            return selectedContact
         } else {
             return {
                 id: '',
@@ -38,7 +34,8 @@ export const ContactForm: React.FC<IProps> = ({
             }
         }
     };
-
+    
+    const [value, setValue] = useState('');
     const [contact, setContact] = useState<IContact>(fillForm);
 
     const handleSubmit = () => {
@@ -53,26 +50,26 @@ export const ContactForm: React.FC<IProps> = ({
         }
 
     }
+
     var options = [
         { key: 'Lead', text: 'Lead', value: 'Lead' },
         { key: 'Client', text: 'Client', value: 'Client' },
         { key: 'Team', text: 'Team', value: 'Team' },
-        { key: 'supplier', text: 'Supplier', value: 'Supplier' },
-        { key: 'shipment', text: 'Shipment', value: 'Shipment' },
-        { key: 'other', text: 'Other', value: 'Other' },
-        { key: 'inactive', text: 'Inactive', value: 'Inactive' },
+        { key: 'Supplier', text: 'Supplier', value: 'Supplier' },
+        { key: 'Shipment', text: 'Shipment', value: 'Shipment' },
+        { key: 'Other', text: 'Other', value: 'Other' },
+        { key: 'Inactive', text: 'Inactive', value: 'Inactive' },
     ]
-    const [selectedValue, setSelectedValue] = useState(contact.type);
 
     const handleInputChange = (event: FormEvent<HTMLInputElement>) => {
         const { name, value } = event.currentTarget;
-        setContact({ ...contact, [name]: value })
+        setContact({ ...contact, [name]: value });
     }
 
-    const handleSelect = (event: FormEvent<HTMLSelectElement>) => {
-        setSelectedValue(event.currentTarget.innerText);
+    const handleSelect = (event: SyntheticEvent<HTMLElement, Event>) => {
+        setValue(event.currentTarget.innerText);
         event.currentTarget.classList.add('Selected');
-        contact.type = event.currentTarget.innerText;
+        updateFormSelect(event.currentTarget.innerText);
     }
 
     return (
@@ -94,7 +91,7 @@ export const ContactForm: React.FC<IProps> = ({
                                 placeholder='Name'
                                 value={contact.name}
                             />
-                            <Form.Field
+                            <Form.Select
                                 onChange={handleSelect}
                                 id='form-input-control-last-name'
                                 control={Select}
@@ -102,7 +99,7 @@ export const ContactForm: React.FC<IProps> = ({
                                 name='type'
                                 label='Type'
                                 placeholder='Type'
-                                value={selectedValue}
+                                value={value}
                             />
                             <Form.Field
                                 onChange={handleInputChange}
@@ -130,10 +127,6 @@ export const ContactForm: React.FC<IProps> = ({
                                 label='Email'
                                 placeholder='e-mail address'
                                 value={contact.email}
-                            // error={{
-                            //     content: 'Please enter a valid email address',
-                            //     pointing: 'below',
-                            // }}
                             />
                             <Form.Field
                                 onChange={handleInputChange}
@@ -150,7 +143,9 @@ export const ContactForm: React.FC<IProps> = ({
                                     setShowForm(false)}
                             >
                             </Button>
-                            <Button positive floated='right' type='submit' size='big' content='Confirm'>
+                            <Button positive floated='right' type='submit' size='big' content='Confirm'
+                                loading={submitting}
+                            >
                             </Button>
 
                         </Form>
@@ -160,3 +155,5 @@ export const ContactForm: React.FC<IProps> = ({
         </Segment>
     )
 }
+
+export default observer(ContactForm);

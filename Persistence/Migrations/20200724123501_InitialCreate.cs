@@ -17,7 +17,7 @@ namespace Persistence.Migrations
                     Company = table.Column<string>(nullable: true),
                     PhoneNumber = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
-                    DateAdded = table.Column<DateTime>(nullable: false),
+                    DateAdded = table.Column<string>(nullable: true),
                     Notes = table.Column<string>(nullable: true)
                 },
                 constraints: table =>

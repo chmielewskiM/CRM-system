@@ -1,16 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Table, Segment } from 'semantic-ui-react';
-import { IContact } from '../../../app/models/contact';
+import { observer } from 'mobx-react-lite';
+import ContactStore from '../../../app/stores/contactStore'
 
-interface IProps {
-    contacts: IContact[];
-    selectContact: (id: string) => void;
-}
+export const ContactList: React.FC = () => {
 
-export const ContactList: React.FC<IProps> = ({
-    contacts,
-    selectContact
-}) => {
+    const contactStore = useContext(ContactStore);
+    const { contactsByDate, selectContact } = contactStore;
+
     return (
         <Segment>
             <Table celled selectable>
@@ -23,7 +20,7 @@ export const ContactList: React.FC<IProps> = ({
                         <Table.HeaderCell>E-mail</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
-                {contacts.map(contact => (
+                {contactsByDate.map(contact => (
                     <Table.Body key={contact.id}>
                         <Table.Row onClick={() => selectContact(contact.id)}>
                             <Table.Cell>{contact.name}</Table.Cell>
@@ -39,4 +36,4 @@ export const ContactList: React.FC<IProps> = ({
     )
 }
 
-// export default ContactList;
+export default observer(ContactList);

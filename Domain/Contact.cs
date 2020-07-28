@@ -10,7 +10,7 @@ namespace Domain
         public string Company { get; set; }
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
-        public DateTime DateAdded { get; set; }
+        public string DateAdded { get; set; }
         public string Notes { get; set; }
 
     }

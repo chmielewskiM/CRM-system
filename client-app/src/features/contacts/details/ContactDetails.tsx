@@ -1,42 +1,33 @@
-import React, { Fragment } from 'react'
-import { Header, Divider, Label, Segment, Button } from 'semantic-ui-react'
-import { IContact } from '../../../app/models/contact'
+import React, { Fragment, useContext } from 'react';
+import { Header, Divider, Label, Segment, Button } from 'semantic-ui-react';
+import { observer } from 'mobx-react-lite';
+import ContactStore from '../../../app/stores/contactStore';
 
+export const ContactDetails: React.FC = () => {
 
-interface IProps {
-    contact: IContact;
-    showForm: boolean;
-    setShowForm: (showForm: boolean) => void;
-    setSelectedContact: (contact: IContact | null) => void;
-    deleteContact: (id: string) => void;
-}
-
-export const ContactDetails: React.FC<IProps> = ({
-    contact,
-    setSelectedContact,
-    showForm,
-    setShowForm,
-    deleteContact
-}) => {
+    const contactStore = useContext(ContactStore);
+    const { selectedContact, selectContact, deleteContact, submitting, editContactForm } = contactStore;
 
     return (
 
         <Segment>
             <Button floated='right' icon='close'
-                onClick={() => { setSelectedContact(null) }}
+                onClick={() => { selectContact('') }}
             >
 
             </Button>
-            <Fragment key={contact.id}>
+            <Fragment
+                key={selectedContact!.id}
+            >
 
                 <Header as='h2' width={16}>
-                    Details about {contact.name}
+                    Details about {selectedContact!.name}
                 </Header>
 
                 <Divider clearing />
 
                 <Label as='a' color='red' ribbon>
-                    Date added {contact.dateAdded.split('T')[0]}
+                    Date added {selectedContact!.dateAdded.split('T')[0]}
                 </Label>
 
                 <Header as='h3'>Deals</Header>
@@ -46,10 +37,16 @@ export const ContactDetails: React.FC<IProps> = ({
                 <Divider section />
 
                 <Header as='h3'>Notes</Header>
-                {contact.notes}
+                {selectedContact!.notes}
                 <Button.Group widths={2}>
-                    <Button onClick={() => setShowForm(true)} primary content='Edit'></Button>
-                    <Button onClick={() => deleteContact(contact.id)} negative content='Delete'></Button>
+                    <Button
+                        onClick={() => editContactForm(selectedContact!.id)}
+                        loading={submitting}
+                        primary content='Edit'></Button>
+                    <Button
+                        onClick={() => deleteContact(selectedContact!.id)}
+                        loading={submitting}
+                        negative content='Delete'></Button>
                 </Button.Group>
             </Fragment>
 
@@ -57,3 +54,6 @@ export const ContactDetails: React.FC<IProps> = ({
         </Segment>
     )
 }
+
+
+export default observer(ContactDetails);
