@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Domain;
-using Persistence;
-using Microsoft.EntityFrameworkCore;
 using MediatR;
 using System.Threading;
 using Application.Contacts;

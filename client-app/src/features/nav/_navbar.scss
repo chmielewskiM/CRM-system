@@ -1,8 +1,9 @@
 @import '../../styles/variables';
 
-.ui.vertical.menu {
+.ui.vertical.menu.left.fixed {
     width: 15%;
-    
+    border: 0;
+
     @include breakpoint(tablet) {
         width: 150px;
     }
@@ -12,16 +13,11 @@
     }
 
     & .sideBar {
-        background: rgb(255,67,67);
-        background: linear-gradient(180deg, rgba(255,67,67,1) 60%, rgba(255,67,67,0.16) 100%, rgba(255,255,255,0) 100%);
+        background: linear-gradient(180deg, $color-primary-dark 60%, $color-primary-light 100%);
         height: 100%;
         display: flex;
-        border:0;
-        & div.item {
-            color: white;
-            font-size: 1.6rem;
-            width: 100%;
-        }
+        border: 0;
+        font-size: 1.6rem;
 
         & :first-child {
             display: flex;
@@ -30,23 +26,46 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            color: $color-primary-light;
+            margin: 0;
+            padding: 0;
+            width: 100%;
 
             & img {
-                width: 50px;
-                min-height: 50px;
+                max-width: 10vw;
+                max-height: 10vw;
+                margin-top: 10px;
             }
 
             & h3 {
                 display: block;
-                margin-top: 10px;
+                margin: 10px;
                 font-size: 3rem;
                 color: rgba(255, 255, 255, 0.842);
-                border:0;
+                border: 0;
             }
         }
 
-        & :nth-child(2) {
-            border-top: 1px solid #fff;
+        & a.link.item {
+            width: 100%;
+            color: #fff;
+            &:last-of-type {
+                justify-self: flex-end;
+            }
+            &.active,
+            &.active:hover {
+                color: $color-detail;
+                background-color: #fff;
+                border-color: $color-secondary-light;
+            }
+
+            &:hover {
+                color: $color-detail;
+                background-color: $color-primary-dark;
+                border-color: $color-secondary-light;
+            }
         }
+
+        
     }
 }

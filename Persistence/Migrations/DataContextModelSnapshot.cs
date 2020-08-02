@@ -16,6 +16,23 @@ namespace Persistence.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.3");
 
+            modelBuilder.Entity("Domain.Call", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DateCalled")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Calls");
+                });
+
             modelBuilder.Entity("Domain.Contact", b =>
                 {
                     b.Property<Guid>("Id")
@@ -48,6 +65,35 @@ namespace Persistence.Migrations
                     b.ToTable("Contacts");
                 });
 
+            modelBuilder.Entity("Domain.Material", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Available")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("Deployed")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Ordered")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("Required")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("Storehouse")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Materials");
+                });
+
             modelBuilder.Entity("Domain.Objective", b =>
                 {
                     b.Property<Guid>("Id")
@@ -71,53 +117,39 @@ namespace Persistence.Migrations
                     b.ToTable("Objectives");
                 });
 
-            modelBuilder.Entity("Domain.ProductionStock", b =>
+            modelBuilder.Entity("Domain.Order", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("Count")
-                        .HasColumnType("INTEGER");
+                    b.Property<double>("Amount")
+                        .HasColumnType("REAL");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Client")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DateOrderClosed")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DateOrderOpened")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Deadline")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("Product")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Stocks");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Count = 1,
-                            Name = "steel1"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Count = 4,
-                            Name = "steel2"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Count = 3,
-                            Name = "steel3"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Count = 6,
-                            Name = "steel4"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Count = 5,
-                            Name = "steel5"
-                        });
+                    b.ToTable("Orders");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,6 +1,8 @@
 using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Errors;
 using MediatR;
 using Persistence;
 
@@ -27,7 +29,8 @@ namespace Application.Contacts
                 var contact = await _context.Contacts.FindAsync(request.Id);
                 
                 if (contact == null)
-                    throw new Exception("Couldn't find any contact");
+                    throw new RestException(HttpStatusCode.NotFound, 
+                    new {contact = "Not found"});
 
                 _context.Remove(contact);
 

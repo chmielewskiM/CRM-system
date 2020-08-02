@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Persistence;
 
-namespace Application.Objectives
+namespace Application.Orders
 {
     public class Delete
     {
@@ -24,12 +24,12 @@ namespace Application.Objectives
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var objective = await _context.Objectives.FindAsync(request.Id);
+                var order = await _context.Orders.FindAsync(request.Id);
                 
-                if (objective == null)
-                    throw new Exception("Couldn't find objective");
+                if (order == null)
+                    throw new Exception("Couldn't find order");
 
-                _context.Remove(objective);
+                _context.Remove(order);
 
                 var success = await _context.SaveChangesAsync() > 0;
 

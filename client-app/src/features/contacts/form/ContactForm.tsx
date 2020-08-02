@@ -10,12 +10,18 @@ interface IProps {
 }
 
 
-export const ContactForm: React.FC<IProps> = ({
-    contact: initialFormState,
-}) => {
+export const ContactForm: React.FC<IProps> = () => {
 
     const contactStore = useContext(ContactStore);
-    const {showForm, selectedContact, setShowForm, submitting, addContact, editContact, updateFormSelect} = contactStore;
+    const {
+        showContactForm,
+        selectedContact,
+        setShowContactForm,
+        submitting,
+        addContact,
+        editContact,
+        updateFormSelect
+    } = contactStore;
 
     const fillForm = () => {
         if (selectedContact) {
@@ -34,7 +40,7 @@ export const ContactForm: React.FC<IProps> = ({
             }
         }
     };
-    
+
     const [value, setValue] = useState('');
     const [contact, setContact] = useState<IContact>(fillForm);
 
@@ -140,7 +146,7 @@ export const ContactForm: React.FC<IProps> = ({
 
                             <Button negative floated='right' type='button' size='big' content='Cancel'
                                 onClick={() =>
-                                    setShowForm(false)}
+                                    setShowContactForm(false)}
                             >
                             </Button>
                             <Button positive floated='right' type='submit' size='big' content='Confirm'

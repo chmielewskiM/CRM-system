@@ -1,11 +1,10 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Domain;
 using System;
-using Application.Objectives;
+using Application.Materials;
 using System.Threading;
 using Microsoft.AspNetCore.Cors;
 
@@ -14,25 +13,19 @@ namespace API.Controllers
     [Route("[controller]")]
     [ApiController]
     [EnableCors]
-    public class ObjectiveController : ControllerBase
+    public class MaterialController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public ObjectiveController(IMediator mediator)
+        public MaterialController(IMediator mediator)
         {
             _mediator = mediator;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Objective>>> List(CancellationToken ct)
+        public async Task<ActionResult<List<Material>>> List(CancellationToken ct)
         {
             return await _mediator.Send(new List.Query(), ct);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Objective>> Details(Guid id)
-        {
-            return await _mediator.Send(new Details.Query{Id=id});
         }
 
         [HttpPost]

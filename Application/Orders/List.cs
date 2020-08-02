@@ -8,12 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Persistence;
 
-namespace Application.Objectives
+namespace Application.Orders
 {
     public class List
     {
-        public class Query : IRequest<List<Objective>> { }
-        public class Handler : IRequestHandler<Query, List<Objective>>
+        public class Query : IRequest<List<Order>> { }
+        public class Handler : IRequestHandler<Query, List<Order>>
         {
             private readonly DataContext _context;
             private readonly ILogger<List> _logger;
@@ -24,7 +24,7 @@ namespace Application.Objectives
                 _context = context;
             }
 
-            public async Task<List<Objective>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<List<Order>> Handle(Query request, CancellationToken cancellationToken)
             {
                 try
                 {
@@ -39,9 +39,9 @@ namespace Application.Objectives
                 {
                     _logger.LogInformation("Task was cancelled");
                 }
-                var objectives = await _context.Objectives.ToListAsync();
+                var orders = await _context.Orders.ToListAsync();
 
-                return objectives;
+                return orders;
             }
         }
     }

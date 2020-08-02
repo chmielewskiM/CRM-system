@@ -1,6 +1,9 @@
 using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Errors;
+using FluentValidation;
 using MediatR;
 using Persistence;
 
@@ -20,6 +23,18 @@ namespace Application.Contacts
             public string Notes { get; set; }
         }
 
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(x => x.Name).NotEmpty();
+                RuleFor(x => x.Type).NotEmpty();
+                RuleFor(x => x.Company).NotEmpty();
+                RuleFor(x => x.PhoneNumber).NotEmpty();
+                RuleFor(x => x.Email).NotEmpty();
+            }
+        }
+        
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
@@ -34,14 +49,14 @@ namespace Application.Contacts
                 var contact = await _context.Contacts.FindAsync(request.Id);
 
                 if (contact == null)
-                    throw new Exception("Could not find objective");
+                    throw new RestException(HttpStatusCode.NotFound,
+                    new { contact = "Not found" });
 
                 contact.Name = request.Name ?? contact.Name;
                 contact.Type = request.Type ?? contact.Type;
                 contact.Company = request.Company ?? contact.Company;
                 contact.PhoneNumber = request.PhoneNumber ?? contact.PhoneNumber;
                 contact.Email = request.Email ?? contact.Email;
-                // contact.DateAdded = request.DateAdded ?? contact.DateAdded;
                 contact.Notes = request.Notes ?? contact.Notes;
 
                 var success = await _context.SaveChangesAsync() > 0;

@@ -1,16 +1,16 @@
-import React, { useContext } from 'react';
-import { Table, Segment } from 'semantic-ui-react';
+import React, { useContext, Fragment } from 'react';
+import { Table } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import ContactStore from '../../../app/stores/contactStore'
 
 export const ContactList: React.FC = () => {
 
     const contactStore = useContext(ContactStore);
-    const { contactsByDate, selectContact } = contactStore;
+    const { contactsByDate, selectContact, selectedContact } = contactStore;
 
     return (
-        <Segment>
-            <Table celled selectable>
+        <Fragment>
+            <Table celled selectable sortable>
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell>Name</Table.HeaderCell>
@@ -22,7 +22,10 @@ export const ContactList: React.FC = () => {
                 </Table.Header>
                 {contactsByDate.map(contact => (
                     <Table.Body key={contact.id}>
-                        <Table.Row onClick={() => selectContact(contact.id)}>
+                        <Table.Row 
+                        onClick={() => selectContact(contact.id)}
+                        active={selectedContact !== undefined && selectedContact.id == contact.id}
+                        >
                             <Table.Cell>{contact.name}</Table.Cell>
                             <Table.Cell>{contact.company}</Table.Cell>
                             <Table.Cell>{contact.type}</Table.Cell>
@@ -32,7 +35,7 @@ export const ContactList: React.FC = () => {
                     </Table.Body>
                 ))}
             </Table>
-        </Segment>
+        </Fragment>
     )
 }
 

@@ -8,6 +8,19 @@ namespace Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Calls",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    DateCalled = table.Column<string>(nullable: true),
+                    Notes = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Calls", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Contacts",
                 columns: table => new
                 {
@@ -26,6 +39,23 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Materials",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    Storehouse = table.Column<string>(nullable: true),
+                    Available = table.Column<double>(nullable: false),
+                    Deployed = table.Column<double>(nullable: false),
+                    Ordered = table.Column<double>(nullable: false),
+                    Required = table.Column<double>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Materials", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Objectives",
                 columns: table => new
                 {
@@ -41,55 +71,41 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Stocks",
+                name: "Orders",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(nullable: true),
-                    Count = table.Column<int>(nullable: false)
+                    Id = table.Column<Guid>(nullable: false),
+                    Client = table.Column<string>(nullable: true),
+                    Product = table.Column<string>(nullable: true),
+                    Amount = table.Column<double>(nullable: false),
+                    Price = table.Column<double>(nullable: false),
+                    DateOrderOpened = table.Column<string>(nullable: true),
+                    Deadline = table.Column<string>(nullable: true),
+                    DateOrderClosed = table.Column<string>(nullable: true),
+                    Notes = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Stocks", x => x.Id);
+                    table.PrimaryKey("PK_Orders", x => x.Id);
                 });
-
-            migrationBuilder.InsertData(
-                table: "Stocks",
-                columns: new[] { "Id", "Count", "Name" },
-                values: new object[] { 1, 1, "steel1" });
-
-            migrationBuilder.InsertData(
-                table: "Stocks",
-                columns: new[] { "Id", "Count", "Name" },
-                values: new object[] { 2, 4, "steel2" });
-
-            migrationBuilder.InsertData(
-                table: "Stocks",
-                columns: new[] { "Id", "Count", "Name" },
-                values: new object[] { 3, 3, "steel3" });
-
-            migrationBuilder.InsertData(
-                table: "Stocks",
-                columns: new[] { "Id", "Count", "Name" },
-                values: new object[] { 4, 6, "steel4" });
-
-            migrationBuilder.InsertData(
-                table: "Stocks",
-                columns: new[] { "Id", "Count", "Name" },
-                values: new object[] { 5, 5, "steel5" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Calls");
+
+            migrationBuilder.DropTable(
                 name: "Contacts");
+
+            migrationBuilder.DropTable(
+                name: "Materials");
 
             migrationBuilder.DropTable(
                 name: "Objectives");
 
             migrationBuilder.DropTable(
-                name: "Stocks");
+                name: "Orders");
         }
     }
 }

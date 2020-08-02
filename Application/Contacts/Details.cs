@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Domain;
 using MediatR;
 using Persistence;
+using Application.Errors;
+using System.Net;
 
 namespace Application.Contacts
 {
@@ -28,6 +30,10 @@ namespace Application.Contacts
             public async Task<Contact> Handle(Query request, CancellationToken cancellationToken)
             {
                 var contact = await _context.Contacts.FindAsync(request.Id);
+
+                if (contact == null)
+                    throw new RestException(HttpStatusCode.NotFound,
+                    new { contact = "Not found" });
 
                 return contact;
             }

@@ -1,0 +1,15 @@
+.ui.container.wrapper{
+    & .grid{
+        & .row{
+            & .column.two{
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                & .button{
+                    margin: 5px 0;
+                    
+                }
+            }
+        }
+    }
+}

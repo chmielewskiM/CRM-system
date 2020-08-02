@@ -7,16 +7,16 @@ using Domain;
 using MediatR;
 using Persistence;
 
-namespace Application.Objectives
+namespace Application.Materials
 {
     public class Details
     {
-        public class Query : IRequest<Objective>
+        public class Query : IRequest<Material>
         {
             public Guid Id { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query, Objective>
+        public class Handler : IRequestHandler<Query, Material>
         {
             private readonly DataContext _context;
 
@@ -25,11 +25,11 @@ namespace Application.Objectives
                 _context = context;
             }
 
-            public async Task<Objective> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Material> Handle(Query request, CancellationToken cancellationToken)
             {
-                var objective = await _context.Objectives.FindAsync(request.Id);
+                var material = await _context.Materials.FindAsync(request.Id);
 
-                return objective;
+                return material;
             }
         }
     }

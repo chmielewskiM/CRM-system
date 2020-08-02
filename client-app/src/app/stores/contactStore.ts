@@ -1,7 +1,8 @@
 import { observable, action, computed, configure, runInAction } from "mobx";
-import { createContext, FormEvent } from "react";
+import { createContext } from "react";
 import { IContact } from "../models/contact";
 import agent from "../api/agent";
+import { toast } from "react-toastify";
 
 configure({ enforceActions: "always" });
 
@@ -9,7 +10,7 @@ class ContactStore {
   @observable contacts: IContact[] = [];
   @observable selectedContact: IContact | undefined;
   @observable loadingInitial = false;
-  @observable showForm = false;
+  @observable showContactForm = false;
   @observable submitting = false;
   @observable contactRegistry = new Map();
   @observable selectedValue: string = "";
@@ -50,17 +51,17 @@ class ContactStore {
   @action addContactForm = () => {
     this.selectedContact = undefined;
     this.selectedValue = "";
-    this.showForm = true;
+    this.showContactForm = true;
   };
 
   @action editContactForm = (id: string) => {
     this.selectedContact = this.contactRegistry.get(id);
     this.selectedValue = this.selectedContact!.type;
-    this.showForm = true;
+    this.showContactForm = true;
   };
 
-  @action setShowForm = (show: boolean) => {
-    this.showForm = show;
+  @action setShowContactForm = (show: boolean) => {
+    this.showContactForm = show;
   };
 
   @action updateFormSelect = async (selection: string) => {
@@ -76,7 +77,8 @@ class ContactStore {
       await agent.Contacts.add(contact);
       runInAction("Loading contacts", () => {
         this.contactRegistry.set(contact.id, contact);
-        this.showForm = false;
+        toast.success('Contact added');
+        this.showContactForm = false;
         this.submitting = false;
       });
     } catch (error) {
@@ -97,7 +99,7 @@ class ContactStore {
         runInAction("Loading contacts", () => {
           this.contactRegistry.set(contact.id, contact);
           this.selectedContact = contact;
-          this.showForm = false;
+          this.showContactForm = false;
           this.submitting = false;
         });
       } catch (error) {
@@ -107,8 +109,7 @@ class ContactStore {
         console.log(error);
       }
     } else {
-      console.log("nie zmieniono kontaktu");
-      this.showForm = false;
+      this.showContactForm = false;
       this.submitting = false;
     }
   };
