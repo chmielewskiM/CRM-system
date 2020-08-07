@@ -48,15 +48,15 @@
 
         & a.link.item {
             width: 100%;
-            color: #fff;
+            color: #edf6f9;
             &:last-of-type {
                 justify-self: flex-end;
             }
             &.active,
             &.active:hover {
                 color: $color-detail;
-                background-color: #fff;
-                border-color: $color-secondary-light;
+                background-color: #edf6f9;
+                border-color: #edf6f9;
             }
 
             &:hover {

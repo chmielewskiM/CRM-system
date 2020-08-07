@@ -39,6 +39,22 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DelegatedTasks",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Assignment = table.Column<string>(nullable: true),
+                    Type = table.Column<string>(nullable: true),
+                    Deadline = table.Column<DateTime>(nullable: false),
+                    Notes = table.Column<string>(nullable: true),
+                    Done = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DelegatedTasks", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Materials",
                 columns: table => new
                 {
@@ -53,21 +69,6 @@ namespace Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Materials", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Objectives",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    Category = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    Assignation = table.Column<string>(nullable: true),
-                    Deadline = table.Column<DateTime>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Objectives", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -99,10 +100,10 @@ namespace Persistence.Migrations
                 name: "Contacts");
 
             migrationBuilder.DropTable(
-                name: "Materials");
+                name: "DelegatedTasks");
 
             migrationBuilder.DropTable(
-                name: "Objectives");
+                name: "Materials");
 
             migrationBuilder.DropTable(
                 name: "Orders");

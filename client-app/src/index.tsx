@@ -1,17 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom'
-import 'react-toastify/dist/ReactToastify.css'
+import { BrowserRouter } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
 import './styles/main.scss';
 import App from './app/layout/App';
 import * as serviceWorker from './serviceWorker';
+import dateFnsLocalizer from 'react-widgets-date-fns';
+import 'react-widgets/dist/css/react-widgets.css';
+// import 'mobx-react-lite/batchingForReactDom'
+dateFnsLocalizer();
 
 ReactDOM.render(
   // <React.StrictMode>
   <BrowserRouter>
     <App />,
   </BrowserRouter>,
-  /* </React.StrictMode>, */
+  //  </React.StrictMode>, 
   document.getElementById('root')
 );
 

@@ -1,19 +1,27 @@
-import { observable, action, computed, configure, runInAction } from "mobx";
-import { createContext } from "react";
-import { IContact } from "../models/contact";
-import agent from "../api/agent";
-import { toast } from "react-toastify";
+import { observable, action, computed, configure, runInAction } from 'mobx';
+import { createContext } from 'react';
+import { toast } from 'react-toastify';
+import { IContact } from '../models/contact';
+import agent from '../api/agent';
 
-configure({ enforceActions: "always" });
+configure({ enforceActions: 'always' });
 
 class ContactStore {
   @observable contacts: IContact[] = [];
+
   @observable selectedContact: IContact | undefined;
+
   @observable loadingInitial = false;
+
   @observable showContactForm = false;
+
   @observable submitting = false;
+
   @observable contactRegistry = new Map();
-  @observable selectedValue: string = "";
+
+  @observable selectedValue = '';
+
+  @observable render = false;
 
   @computed get contactsByDate() {
     return Array.from(this.contactRegistry.values())
@@ -25,14 +33,15 @@ class ContactStore {
     this.loadingInitial = true;
     try {
       const contacts = await agent.Contacts.list();
-      runInAction("Loading contacts", () => {
+      runInAction('Loading contacts', () => {
         contacts.forEach((contact) => {
           this.contactRegistry.set(contact.id, contact);
         });
         this.loadingInitial = false;
+        this.render = true;
       });
     } catch (error) {
-      runInAction("Loading error", () => {
+      runInAction('Loading error', () => {
         this.loadingInitial = false;
       });
       console.log(error);
@@ -40,7 +49,8 @@ class ContactStore {
   };
 
   @action selectContact = (id: string) => {
-    if (id !== "") {
+    this.render = !this.render;
+    if (id !== '') {
       this.selectedContact = this.contactRegistry.get(id);
       this.selectedValue = this.selectedContact!.type;
     } else {
@@ -49,18 +59,21 @@ class ContactStore {
   };
 
   @action addContactForm = () => {
+    this.render = !this.render;
     this.selectedContact = undefined;
-    this.selectedValue = "";
+    this.selectedValue = '';
     this.showContactForm = true;
   };
 
   @action editContactForm = (id: string) => {
+    this.render = !this.render;
     this.selectedContact = this.contactRegistry.get(id);
     this.selectedValue = this.selectedContact!.type;
     this.showContactForm = true;
   };
 
   @action setShowContactForm = (show: boolean) => {
+    this.render = !this.render;
     this.showContactForm = show;
   };
 
@@ -75,14 +88,14 @@ class ContactStore {
     try {
       contact.type = this.selectedValue;
       await agent.Contacts.add(contact);
-      runInAction("Loading contacts", () => {
+      runInAction('Loading contacts', () => {
         this.contactRegistry.set(contact.id, contact);
         toast.success('Contact added');
         this.showContactForm = false;
         this.submitting = false;
       });
     } catch (error) {
-      runInAction("Loading contacts", () => {
+      runInAction('Loading contacts', () => {
         this.submitting = false;
       });
       console.log(error);
@@ -91,19 +104,22 @@ class ContactStore {
 
   @action editContact = async (contact: IContact) => {
     this.submitting = true;
-
-    if (this.selectedContact !== contact || this.selectedValue !== contact.type) {
+    this.render = !this.render;
+    if (
+      this.selectedContact !== contact ||
+      this.selectedValue !== contact.type
+    ) {
       try {
         contact.type = this.selectedValue;
         await agent.Contacts.update(contact);
-        runInAction("Loading contacts", () => {
+        runInAction('Loading contacts', () => {
           this.contactRegistry.set(contact.id, contact);
           this.selectedContact = contact;
           this.showContactForm = false;
           this.submitting = false;
         });
       } catch (error) {
-        runInAction("Loading contacts", () => {
+        runInAction('Loading contacts', () => {
           this.submitting = false;
         });
         console.log(error);
@@ -118,13 +134,14 @@ class ContactStore {
     this.submitting = true;
     try {
       await agent.Contacts.delete(id);
-      runInAction("Loading contacts", () => {
+      runInAction('Loading contacts', () => {
         this.contactRegistry.delete(this.selectedContact!.id);
         this.selectedContact = undefined;
         this.submitting = false;
+        this.render = !this.render;
       });
     } catch (error) {
-      runInAction("Loading contacts", () => {
+      runInAction('Loading contacts', () => {
         this.submitting = false;
       });
       console.log(error);

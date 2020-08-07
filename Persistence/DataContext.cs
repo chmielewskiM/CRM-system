@@ -11,7 +11,7 @@ namespace Persistence
 
         }
         public DbSet<Contact> Contacts { get; set; }
-        public DbSet<Objective> Objectives { get; set; }
+        public DbSet<DelegatedTask> DelegatedTasks { get; set; }
         public DbSet<Call> Calls { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Material> Materials { get; set; }

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "qvMwl+zdJy4bsCTdG23SdZxkXLf9DZJ3hGt2hBg6srqsf3m19iLZjghl4hre3k+NvkwLWzQISo9oIl7ekmg+fg==",
+  "dgSpecHash": "SEqSnFoP1eCU46W1wNJMgDFXq3W4TUaSFzDubR/qSEWhgc4MIeKiznKrAoZCrlOuhu7vM0So7pSPL1cm565c5Q==",
   "success": true,
   "projectFilePath": "E:\\VSC\\sysCRM\\CRM\\Persistence\\Persistence.csproj",
   "expectedPackageFiles": [
@@ -26,8 +26,6 @@
     "C:\\Users\\mc\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\3.1.3\\microsoft.extensions.logging.abstractions.3.1.3.nupkg.sha512",
     "C:\\Users\\mc\\.nuget\\packages\\microsoft.extensions.options\\3.1.3\\microsoft.extensions.options.3.1.3.nupkg.sha512",
     "C:\\Users\\mc\\.nuget\\packages\\microsoft.extensions.primitives\\3.1.3\\microsoft.extensions.primitives.3.1.3.nupkg.sha512",
-    "C:\\Users\\mc\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
-    "C:\\Users\\mc\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512",
     "C:\\Users\\mc\\.nuget\\packages\\sqlitepclraw.bundle_e_sqlite3\\2.0.2\\sqlitepclraw.bundle_e_sqlite3.2.0.2.nupkg.sha512",
     "C:\\Users\\mc\\.nuget\\packages\\sqlitepclraw.core\\2.0.2\\sqlitepclraw.core.2.0.2.nupkg.sha512",
     "C:\\Users\\mc\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.0.2\\sqlitepclraw.lib.e_sqlite3.2.0.2.nupkg.sha512",

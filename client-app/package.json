@@ -6,33 +6,48 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "@types/enzyme": "^3.10.5",
+    "@types/enzyme-adapter-react-16": "^1.0.6",
     "@types/jest": "^24.9.1",
     "@types/node": "^12.12.38",
     "@types/react": "^16.9.34",
     "@types/react-dom": "^16.9.7",
     "@types/react-router-dom": "^5.1.5",
+    "@types/react-widgets": "^4.4.2",
+    "@types/revalidate": "^1.1.2",
     "@types/uuid": "^8.0.0",
     "axios": "^0.19.2",
+    "date-fns": "^2.15.0",
+    "final-form": "^4.20.1",
     "mobx": "^5.15.4",
     "mobx-react-lite": "^2.0.7",
     "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-final-form": "^6.5.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "react-toastify": "^6.0.8",
+    "react-widgets": "^4.5.0",
+    "react-widgets-date-fns": "^4.1.0",
+    "revalidate": "^1.2.0",
     "semantic-ui-react": "^0.88.2",
+    "ts-jest": "^26.1.4",
     "typescript": "^3.7.5",
     "uuid": "^8.2.0"
   },
   "scripts": {
+    "format": "prettier --write src/**/*.{js,jsx,ts,tsx}",
+    "lint": "eslint --fix src/**/*.{js,jsx,ts,tsx}",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "reportUnusedDisableDirectives": false
   },
   "browserslist": {
     "production": [
@@ -45,5 +60,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
+    "enzyme-to-json": "^3.5.0",
+    "eslint-config-airbnb-typescript-prettier": "^3.1.0",
+    "prettier": "^2.0.5"
   }
 }

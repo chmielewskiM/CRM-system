@@ -1,17 +1,23 @@
-import { observable, action, computed, configure, runInAction } from "mobx";
-import { createContext, FormEvent } from "react";
-import agent from "../api/agent";
-import { IOrder } from "../models/order";
+import { observable, action, computed, configure, runInAction } from 'mobx';
+import { createContext, FormEvent } from 'react';
+import agent from '../api/agent';
+import { IOrder } from '../models/order';
 
-configure({ enforceActions: "always" });
+configure({ enforceActions: 'always' });
 
 class OrderStore {
   @observable orders: IOrder[] = [];
+
   @observable selectedOrder: IOrder | undefined;
+
   @observable loadingInitial = false;
+
   @observable showOrderForm = false;
+
   @observable submitting = false;
+
   @observable orderRegistry = new Map();
+
   @observable selected: string | undefined = undefined;
 
   @computed get ordersByDate() {
@@ -24,14 +30,14 @@ class OrderStore {
     this.loadingInitial = true;
     try {
       const orders = await agent.Orders.list();
-      runInAction("Loading orders", () => {
+      runInAction('Loading orders', () => {
         orders.forEach((order) => {
           this.orderRegistry.set(order.id, order);
         });
         this.loadingInitial = false;
       });
     } catch (error) {
-      runInAction("Loading error", () => {
+      runInAction('Loading error', () => {
         this.loadingInitial = false;
       });
       console.log(error);
@@ -39,9 +45,9 @@ class OrderStore {
   };
 
   @action selectOrder = (id: string) => {
-    if (id !== "") {
+    if (id !== '') {
       this.selectedOrder = this.orderRegistry.get(id);
-      this.selected = "1";
+      this.selected = '1';
       console.log(this.selectedOrder);
     } else {
       this.selectedOrder = undefined;
@@ -49,7 +55,7 @@ class OrderStore {
   };
 
   @action addOrderForm = () => {
-    console.log("forma");
+    console.log('forma');
     this.selectedOrder = undefined;
     this.showOrderForm = true;
   };
@@ -67,13 +73,13 @@ class OrderStore {
     this.submitting = true;
     try {
       await agent.Orders.add(order);
-      runInAction("Loading orders", () => {
+      runInAction('Loading orders', () => {
         this.orderRegistry.set(order.id, order);
         this.showOrderForm = false;
         this.submitting = false;
       });
     } catch (error) {
-      runInAction("Loading orders", () => {
+      runInAction('Loading orders', () => {
         this.submitting = false;
       });
       console.log(error);
@@ -86,14 +92,14 @@ class OrderStore {
     if (this.selectedOrder !== order) {
       try {
         await agent.Orders.update(order);
-        runInAction("Loading orders", () => {
+        runInAction('Loading orders', () => {
           this.orderRegistry.set(order.id, order);
           this.selectedOrder = order;
           this.showOrderForm = false;
           this.submitting = false;
         });
       } catch (error) {
-        runInAction("Loading orders", () => {
+        runInAction('Loading orders', () => {
           this.submitting = false;
         });
         console.log(error);
@@ -108,13 +114,13 @@ class OrderStore {
     this.submitting = true;
     try {
       await agent.Orders.delete(id);
-      runInAction("Deleting order", () => {
+      runInAction('Deleting order', () => {
         this.orderRegistry.delete(this.selectedOrder!.id);
         this.selectedOrder = undefined;
         this.submitting = false;
       });
     } catch (error) {
-      runInAction("Deleting order", () => {
+      runInAction('Deleting order', () => {
         this.submitting = false;
       });
       console.log(error);
