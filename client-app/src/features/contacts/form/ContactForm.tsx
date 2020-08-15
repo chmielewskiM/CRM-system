@@ -1,71 +1,54 @@
-import React, { useState, useContext, SyntheticEvent, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Form, Segment, Button, Modal } from 'semantic-ui-react';
 import { v4 as uuid } from 'uuid';
 import { observer } from 'mobx-react-lite';
 import { Form as FinalForm, Field } from 'react-final-form';
-import ContactStore from '../../../app/stores/contactStore';
-import { IContact } from '../../../app/models/contact';
+import { IContact, ContactFormValues } from '../../../app/models/contact';
 import TextInput from '../../../app/common/form/TextInput';
 import TextAreaInput from '../../../app/common/form/TextAreaInput';
 import SelectInput from '../../../app/common/form/SelectInput';
 import { options } from '../../../app/common/options/contactType';
+import { combineValidators, isRequired } from 'revalidate';
+import { RootStoreContext } from '../../../app/stores/rootStore';
+
+const validation = combineValidators({
+  name: isRequired({ message: 'The name is required.' }),
+  // type: isRequired({ message: 'Choose who should perform the task.' }),
+  // company: isRequired({ message: 'Select type of the task.' }),
+  // phoneNumber: isRequired({ message: 'The date is required.' }),
+  // email: isRequired({ message: 'The time is required.' }),
+  // notes: isRequired({ message: 'The time is required.' }),
+});
 
 interface IProps {
   contact: IContact | undefined;
 }
 
 export const ContactForm: React.FC<IProps> = () => {
-  const contactStore = useContext(ContactStore);
+  const rootStore = useContext(RootStoreContext);
   const {
-    selectedContact,
     setShowContactForm,
     submitting,
-    updateFormSelect,
-    render,
-  } = contactStore;
-  useEffect(() => {
-  }, [render]);
-  const fillForm = () => {
-    if (selectedContact) {
-      setValue(selectedContact.type);
-      return selectedContact;
-    }
-    return {
-      id: '',
-      name: '',
-      company: '',
-      type: '',
-      phoneNumber: '',
-      email: '',
-      dateAdded: '',
-      notes: '',
-    };
-  };
+    addContact,
+    editContact,
+    fillForm,
+  } = rootStore.contactStore;
 
-  const [value, setValue] = useState('');
-  const [contact, setContact] = useState<IContact>(fillForm);
+  useEffect(() => {}, []);
 
-  // const handleSubmit = () => {
-  //     if (contact.id.length === 0) {
-  //         let newContact = {
-  //             ...contact,
-  //             id: uuid()
-  //         }
-  //         addContact(newContact);
-  //     } else {
-  //         editContact(contact);
-  //     }
-
-  // }
+  const [contact, setContact] = useState(new ContactFormValues());
 
   const handleFinalFormSubmit = (values: any) => {
-    
-  };
-
-  const handleSelect = (event: SyntheticEvent<HTMLElement, Event>) => {
-    setValue(event.currentTarget.innerText);
-    event.currentTarget.classList.add('Selected');
-    updateFormSelect(event.currentTarget.innerText);
+    const { ...contact } = values;
+    if (!contact.id) {
+      let newContact = {
+        ...contact,
+        id: uuid(),
+      };
+      addContact(newContact);
+    } else {
+      editContact(contact);
+    }
   };
 
   return (
@@ -74,7 +57,9 @@ export const ContactForm: React.FC<IProps> = () => {
         <Modal.Content>
           <Segment clearing size="big">
             <FinalForm
+              validate={validation}
               onSubmit={handleFinalFormSubmit}
+              initialValues={fillForm()}
               render={({ handleSubmit }) => (
                 <Form onSubmit={handleSubmit} size="big">
                   <Field
@@ -87,7 +72,7 @@ export const ContactForm: React.FC<IProps> = () => {
                     options={options}
                     name="type"
                     placeholder="Type"
-                    value={value}
+                    value={contact.type}
                     component={SelectInput}
                   />
                   <Field
@@ -104,7 +89,7 @@ export const ContactForm: React.FC<IProps> = () => {
                   />
                   <Field
                     name="email"
-                    placeholder="e-mail address"
+                    placeholder="E-mail address"
                     value={contact.email}
                     component={TextInput}
                   />

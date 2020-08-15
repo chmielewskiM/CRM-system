@@ -10,9 +10,8 @@ import {
 } from 'semantic-ui-react';
 import { v4 as uuid } from 'uuid';
 import { observer } from 'mobx-react-lite';
-import StockStore from '../../../app/stores/stockStore';
-import ContactStore from '../../../app/stores/contactStore';
 import { IMaterial } from '../../../app/models/material';
+import { RootStoreContext } from '../../../app/stores/rootStore';
 
 interface IProps {
   material: IMaterial | undefined;
@@ -21,22 +20,16 @@ interface IProps {
 export const MaterialForm: React.FC<IProps> = ({
   material: initialFormState,
 }) => {
-  const contactStore = useContext(ContactStore);
-  const stockStore = useContext(StockStore);
-
-  const {} = contactStore;
+  const rootStore = useContext(RootStoreContext);
 
   const {
-    showMaterialForm,
     setShowMaterialForm,
     selectedMaterial,
     addMaterial,
     editMaterial,
-    selectedValue,
-    selected,
     submitting,
     updateFormSelect,
-  } = stockStore;
+  } = rootStore.stockStore;
 
   const fillForm = () => {
     if (selectedMaterial) {

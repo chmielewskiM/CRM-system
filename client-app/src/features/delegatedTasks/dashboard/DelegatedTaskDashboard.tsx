@@ -1,25 +1,23 @@
 import React, { useContext, useEffect } from 'react';
 import { Grid, Button } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
-import { ToastContainer, Zoom } from 'react-toastify';
 import { DelegatedTaskList } from './DelegatedTaskList';
-// import { DelegatedTaskDetails } from '../details/DelegatedTaskDetails';
 import { DelegatedTaskForm } from '../form/DelegatedTaskForm';
-import DelegatedTaskStore from '../../../app/stores/delegatedTaskStore';
-import LoaderComponent from '../../../app/layout/LoaderComponent';
+import { RootStoreContext } from '../../../app/stores/rootStore';
 
 export const DelegatedTaskDashboard: React.FC = () => {
-  const delegatedTaskStore = useContext(DelegatedTaskStore);
+  const rootStore = useContext(RootStoreContext);
   const {
+    loadDelegatedTasks,
     showDelegatedTaskForm,
     selectedDelegatedTask,
     addDelegatedTaskForm,
     editDelegatedTaskForm,
-    deleteDelegatedTask
-  } = delegatedTaskStore;
+    deleteDelegatedTask,
+  } = rootStore.delegatedTaskStore;
   useEffect(() => {
-    delegatedTaskStore.loadDelegatedTasks();
-  }, [delegatedTaskStore]);
+    loadDelegatedTasks();
+  }, [rootStore.delegatedTaskStore]);
 
   // if (delegatedTaskStore.loadingInitial)
   //   return <LoaderComponent content="Loading..." />;

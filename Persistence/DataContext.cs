@@ -1,12 +1,12 @@
-﻿using System;
-using Domain;
+﻿using Domain;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<User>
     {
-        public DataContext(DbContextOptions options) :base(options)
+        public DataContext(DbContextOptions options) : base(options)
         {
 
         }
@@ -15,17 +15,25 @@ namespace Persistence
         public DbSet<Call> Calls { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Material> Materials { get; set; }
+        public DbSet<UserContact> UserContacts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-                // builder.Entity<ProductionStock>()
-                // .HasData(
-                //     new ProductionStock {Id = 1, Name = "steel1", Count = 1},
-                //     new ProductionStock {Id = 2, Name = "steel2", Count = 4},
-                //     new ProductionStock {Id = 3, Name = "steel3", Count = 3},
-                //     new ProductionStock {Id = 4, Name = "steel4", Count = 6},
-                //     new ProductionStock {Id = 5, Name = "steel5", Count = 5}
-                // );
+            base.OnModelCreating(builder);
+
+            builder.Entity<UserContact>(x => x.HasKey(ua => new { ua.UserId, ua.ContactId }));
+
+            builder.Entity<UserContact>()
+            .HasOne(u => u.User)
+            .WithMany(a => a.UserContacts)
+            .HasForeignKey(u => u.UserId);
+
+            builder.Entity<UserContact>()
+            .HasOne(a => a.Contact)
+            .WithMany(u => u.UserContacts)
+            .HasForeignKey(a => a.ContactId);
+
+
         }
     }
 }

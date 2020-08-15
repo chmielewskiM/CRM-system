@@ -1,33 +1,41 @@
-import React, { useEffect, Fragment, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { Container } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
-import {
-  Route,
-  Switch,
-  withRouter,
-  RouteComponentProps,
-} from 'react-router-dom';
+import { Route, withRouter, RouteComponentProps } from 'react-router-dom';
 import { ToastContainer, Zoom } from 'react-toastify';
 import { Navbar } from '../../features/nav/Navbar';
 import { ContactDashboard } from '../../features/contacts/dashboard/ContactDashboard';
 import LoaderComponent from './LoaderComponent';
-import ContactStore from '../stores/contactStore';
-import StockStore from '../stores/stockStore';
-import OrderStore from '../stores/orderStore';
-import { Homepage } from '../../features/contacts/home/Homepage';
 import { SignIn } from '../../features/signin/SignIn';
 import { OrderDashboard } from '../../features/orders/dashboard/OrderDashboard';
 import { StockDashboard } from '../../features/stock/dashboard/StockDashboard';
 import { DelegatedTaskDashboard } from '../../features/delegatedTasks/dashboard/DelegatedTaskDashboard';
-import DelegatedTaskStore from '../stores/delegatedTaskStore';
-import { loadavg } from 'os';
+import { RootStoreContext } from '../stores/rootStore';
+import { HomeDashboard } from '../../features/home/dashboard/HomeDashboard';
 
 const App: React.FC<RouteComponentProps> = ({ history }) => {
-  const contactStore = useContext(ContactStore);
-  const delegatedTaskStore = useContext(DelegatedTaskStore);
+  const rootStore = useContext(RootStoreContext);
+  const { appLoaded, setAppLoaded, token } = rootStore.commonStore;
+  const { getUser } = rootStore.userStore;
 
   useEffect(() => {
-  }, [history, contactStore.render, delegatedTaskStore.render]);
+    if (token) {
+      getUser().finally(() => setAppLoaded());
+    } else {
+      setAppLoaded();
+    }
+  }, [
+    history,
+    getUser,
+    setAppLoaded,
+    token,
+    rootStore.contactStore.rr,
+    rootStore.delegatedTaskStore.rr,
+    rootStore.orderStore.rr,
+    rootStore.stockStore.rr,
+    rootStore.modalStore.rr,
+  ]);
+  if (!appLoaded) return <LoaderComponent />;
 
   return (
     <>
@@ -44,6 +52,7 @@ const App: React.FC<RouteComponentProps> = ({ history }) => {
           <>
             <Navbar />
             <Container className="wrapper">
+              <Route path="/dashboard" component={HomeDashboard} />
               <Route path="/contacts" component={ContactDashboard} />
               <Route path="/tasks" component={DelegatedTaskDashboard} />
               <Route path="/orders" component={OrderDashboard} />

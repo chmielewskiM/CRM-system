@@ -1,67 +1,50 @@
-import React, { useState, FormEvent, useContext, SyntheticEvent } from 'react';
-import {
-  Form,
-  Segment,
-  TextArea,
-  Select,
-  Input,
-  Button,
-  Modal,
-} from 'semantic-ui-react';
+import React, { useState, useContext, useEffect, Fragment } from 'react';
+import { Form, Segment, Button, Modal, Label } from 'semantic-ui-react';
 import { v4 as uuid } from 'uuid';
 import { observer } from 'mobx-react-lite';
-import { ToastContainer } from 'react-toastify';
-import OrderStore from '../../../app/stores/orderStore';
-import ContactStore from '../../../app/stores/contactStore';
-import { IOrder } from '../../../app/models/order';
+import { Form as FinalForm, Field } from 'react-final-form';
+import { IOrderForm, OrderFormValues } from '../../../app/models/order';
+import TextInput from '../../../app/common/form/TextInput';
+import TextAreaInput from '../../../app/common/form/TextAreaInput';
+import SelectInput from '../../../app/common/form/SelectInput';
+import { combineValidators, isRequired } from 'revalidate';
+import { material } from '../../../app/common/options/product';
+import NumberInput from '../../../app/common/form/NumberInput';
+import RadioInput from '../../../app/common/form/RadioInput';
+import { RootStoreContext } from '../../../app/stores/rootStore';
+
+const validation = combineValidators({
+  client: isRequired({ message: 'Choose who should perform the task.' }),
+  // type: isRequired({ message: 'Choose who should perform the task.' }),
+  // product: isRequired({ message: 'Select type of the task.' }),
+  // amount: isRequired({ message: 'Select type of the task.' }),
+  // price: isRequired({ message: 'Select type of the task.' }),
+});
 
 interface IProps {
-  order: IOrder | undefined;
+  order: IOrderForm | undefined;
 }
 
-export const OrderForm: React.FC<IProps> = ({ order: initialFormState }) => {
-  const contactStore = useContext(ContactStore);
-  const orderStore = useContext(OrderStore);
-
+export const OrderForm: React.FC<IProps> = () => {
+  const rootStore = useContext(RootStoreContext);
   const {
-    selectedContact,
-    submitting,
-    addContact,
-    editContact,
-    updateFormSelect,
-  } = contactStore;
-  const {
-    showOrderForm,
     setShowOrderForm,
-    selectedOrder,
-    addOrder,
     editOrder,
-  } = orderStore;
+    addOrder,
+    submitting,
+    fillForm,
+    selectedValue,
+  } = rootStore.orderStore;
 
-  const fillForm = () => {
-    if (selectedOrder) {
-      // setValue(selectedContact.type)
-      return selectedOrder;
-    }
-    return {
-      id: '',
-      client: '',
-      product: '',
-      amount: 0,
-      price: 0,
-      dateOrderOpened: '',
-      deadline: '',
-      dateOrderClosed: '',
-      notes: '',
-    };
-  };
+  useEffect(() => {}, [setShowOrderForm]);
 
-  const [value, setValue] = useState('');
-  const [order, setOrder] = useState<IOrder>(fillForm);
+  const [order, setOrder] = useState(new OrderFormValues());
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = () => {
-    if (order.id.length === 0) {
-      const newOrder = {
+  const handleFinalFormSubmit = (values: any) => {
+    const { ...order } = values;
+    if (!order.id) {
+      let newOrder = {
         ...order,
         id: uuid(),
       };
@@ -71,114 +54,136 @@ export const OrderForm: React.FC<IProps> = ({ order: initialFormState }) => {
     }
   };
 
-  const options: any = [];
-
-  // contactStore.contactRegistry.forEach((id) => {     options.push({
-  // label:contactStore.contactRegistry.get(id), value:
-  // contactStore.contactRegistry.values()}) });
-
-  const handleInputChange = (event: FormEvent<HTMLInputElement>) => {
-    const { name, value } = event.currentTarget;
-    setOrder({
-      ...order,
-      [name]: value,
-    });
-  };
-
-  const handleSelect = (event: SyntheticEvent<HTMLElement, Event>) => {
-    setValue(event.currentTarget.innerText);
-    event.currentTarget.classList.add('Selected');
-    updateFormSelect(event.currentTarget.innerText);
-  };
-
   return (
     <Segment clearing>
-      <Modal as={Form} open>
+      <Modal open>
         <Modal.Content>
           <Segment clearing size="big">
-            <Form onSubmit={handleSubmit} size="big">
-              <Form.Field
-                onChange={handleInputChange}
-                id="form-input-control-first-name"
-                control={Input}
-                name="client"
-                label="Client"
-                placeholder="Client"
-                value={order.client}
-              />
-              <Form.Select
-                onChange={handleSelect}
-                id="form-input-control-last-name"
-                control={Select}
-                options={options}
-                name="type"
-                label="Type"
-                placeholder="Type"
-                value={value}
-              />
-              <Form.Field
-                onChange={handleInputChange}
-                id="form-input-control-last-name"
-                control={Input}
-                name="product"
-                label="Product"
-                placeholder="Product"
-                value={order.product}
-              />
-              <Form.Field
-                onChange={handleInputChange}
-                id="form-input-control-last-name"
-                control={Input}
-                name="amount"
-                label="Amount"
-                placeholder="Amount"
-                value={order.amount}
-              />
-              <Form.Field
-                onChange={handleInputChange}
-                id=""
-                control={Input}
-                name="price"
-                label="Price"
-                placeholder="Price"
-                value={order.price}
-              />
-              <Form.Field
-                onChange={handleInputChange}
-                id="form-input-control-error-email"
-                control={TextArea}
-                name="deadline"
-                label="Deadline"
-                placeholder="Deadline"
-                value={order.deadline}
-              />
-              <Form.Field
-                onChange={handleInputChange}
-                id="form-textarea-control-opinion"
-                control={TextArea}
-                name="notes"
-                label="Notes"
-                placeholder="Notes"
-                value={order.notes}
-              />
+            <FinalForm
+              validate={validation}
+              initialValues={fillForm()}
+              onSubmit={handleFinalFormSubmit}
+              render={({
+                handleSubmit,
+                invalid,
+                pristine,
+                form,
+                values,
+                touched,
+              }) => (
+                <Form onSubmit={handleSubmit} size="big">
+                  <Field
+                    name="client"
+                    placeholder="Client"
+                    value={order.client}
+                    component={TextInput}
+                  />
+                  <Form.Group inline>
+                    <Label>Sale</Label>
+                    <Field
+                      name="sale"
+                      label="Sale"
+                      value={selectedValue}
+                      type="radio"
+                      component={RadioInput}
+                    />
+                    {''}
+                    <Label>Purchase</Label>
+                    <Field
+                      name="sale"
+                      label="Purchase"
+                      value={!selectedValue}
+                      type="radio"
+                      component={RadioInput}
+                    />
+                    {''}
+                  </Form.Group>
+                  {selectedValue == false && (
+                    <Fragment>
+                      <Form.Group>
+                        <Field
+                          options={material}
+                          name="type"
+                          placeholder="Type"
+                          value={order.notes}
+                          component={SelectInput}
+                        />
+                        <Field
+                          name="amount"
+                          placeholder="Amount"
+                          component={NumberInput}
+                        />
+                        <Field
+                          name="price"
+                          placeholder="Price"
+                          component={NumberInput}
+                        />
+                      </Form.Group>
+                    </Fragment>
+                  )}
+                  {selectedValue != false && (
+                    <Fragment>
+                      <Form.Group>
+                        <Field
+                          name="length"
+                          placeholder="Length"
+                          component={NumberInput}
+                        />
+                        <Field
+                          name="diameter"
+                          placeholder="Diameter"
+                          component={NumberInput}
+                        />
+                        <Field
+                          options={material}
+                          name="type"
+                          placeholder="Type"
+                          value={order.notes}
+                          component={SelectInput}
+                        />
+                        <Field
+                          name="amount"
+                          placeholder="Amount"
+                          component={NumberInput}
+                        />
+                        <Field
+                          name="price"
+                          placeholder="Price"
+                          component={NumberInput}
+                        />
+                      </Form.Group>
+                    </Fragment>
+                  )}
 
-              <Button
-                negative
-                floated="right"
-                type="button"
-                size="big"
-                content="Cancel"
-                onClick={() => setShowOrderForm(false)}
-              />
-              <Button
-                positive
-                floated="right"
-                type="submit"
-                size="big"
-                content="Confirm"
-                loading={submitting}
-              />
-            </Form>
+                  <Field
+                    name="notes"
+                    placeholder="Notes"
+                    value={order.notes}
+                    component={TextAreaInput}
+                  />
+
+                  <Button
+                    negative
+                    floated="right"
+                    type="button"
+                    size="big"
+                    content="Cancel"
+                    onClick={() => setShowOrderForm(false)}
+                    // loading={submitting}
+                    // disabled={loading}
+                  />
+                  <Button
+                    positive
+                    floated="right"
+                    type="submit"
+                    size="big"
+                    content="Confirm"
+                    loading={submitting}
+                    // disabled={loading}
+                  />
+                </Form>
+              )}
+            />
           </Segment>
         </Modal.Content>
       </Modal>

@@ -27,11 +27,11 @@ namespace Application.Contacts
         {
             public CommandValidator()
             {
-                RuleFor(x => x.Name).NotEmpty();
-                RuleFor(x => x.Type).NotEmpty();
-                RuleFor(x => x.Company).NotEmpty();
-                RuleFor(x => x.PhoneNumber).NotEmpty();
-                RuleFor(x => x.Email).NotEmpty();
+                // RuleFor(x => x.Name).NotEmpty();
+                // RuleFor(x => x.Type).NotEmpty();
+                // RuleFor(x => x.Company).NotEmpty();
+                // RuleFor(x => x.PhoneNumber).NotEmpty();
+                // RuleFor(x => x.Email).NotEmpty();
             }
         }
         

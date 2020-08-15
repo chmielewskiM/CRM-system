@@ -1,16 +1,20 @@
 import { observable, action, computed, configure, runInAction } from 'mobx';
-import { createContext } from 'react';
 import { toast } from 'react-toastify';
 import {
   IDelegatedTask,
   DelegatedTaskFormValues,
 } from '../models/delegatedTask';
 import agent from '../api/agent';
-import { isThisSecond } from 'date-fns';
+import { RootStore } from './rootStore';
 
 configure({ enforceActions: 'always' });
 
-class DelegatedTaskStore {
+export default class DelegatedTaskStore {
+  rootStore: RootStore;
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
+  }
+
   @observable delegatedTasks: IDelegatedTask[] = [];
 
   @observable selectedDelegatedTask: IDelegatedTask | undefined;
@@ -25,7 +29,11 @@ class DelegatedTaskStore {
 
   @observable selectedValue = '';
 
-  @observable render = false;
+  @observable rr = false;
+
+  @action render() {
+    this.rr = !this.rr;
+  }
 
   @computed get delegatedTasksByDate() {
     return Array.from(this.delegatedTaskRegistry.values())
@@ -37,13 +45,13 @@ class DelegatedTaskStore {
     this.loadingInitial = true;
     try {
       const delegatedTasks = await agent.DelegatedTasks.list();
-      runInAction('Loading delegatedTasks', () => {
+      runInAction('Loading Tasks', () => {
         delegatedTasks.forEach((delegatedTask) => {
           delegatedTask.deadline = new Date(delegatedTask.deadline!);
           this.delegatedTaskRegistry.set(delegatedTask.id, delegatedTask);
         });
         this.loadingInitial = false;
-        this.render = true;
+        this.render();
       });
     } catch (error) {
       runInAction('Loading error', () => {
@@ -54,38 +62,34 @@ class DelegatedTaskStore {
   };
 
   @action selectDelegatedTask = (id: string) => {
-    this.render = !this.render;
     if (id !== '') {
       this.selectedDelegatedTask = this.delegatedTaskRegistry.get(id);
-      this.selectedValue = this.selectedDelegatedTask!.type;
+      this.render();
     } else {
       this.selectedDelegatedTask = undefined;
+      this.render();
     }
   };
 
   @action addDelegatedTaskForm = () => {
-    this.render = !this.render;
     this.selectedDelegatedTask = undefined;
     this.selectedValue = '';
     this.showDelegatedTaskForm = true;
     this.submitting = false;
+    this.render();
   };
 
   @action editDelegatedTaskForm = (id: string) => {
-    this.render = !this.render;
     this.selectedDelegatedTask = this.delegatedTaskRegistry.get(id);
     this.showDelegatedTaskForm = true;
+    this.render();
   };
 
   @action setShowDelegatedTaskForm = (show: boolean) => {
-    this.render = !this.render;
     this.showDelegatedTaskForm = show;
+    this.render();
   };
 
-  @action updateFormSelect = async (selection: string) => {
-    this.selectedValue = selection;
-    return this.selectedValue;
-  };
   @action fillForm = () => {
     if (this.selectedDelegatedTask) {
       var selected = this.selectedDelegatedTask;
@@ -95,6 +99,7 @@ class DelegatedTaskStore {
     }
     return new DelegatedTaskFormValues();
   };
+
   @action addDelegatedTask = async (delegatedTask: IDelegatedTask) => {
     this.submitting = true;
     try {
@@ -104,8 +109,7 @@ class DelegatedTaskStore {
         toast.success('DelegatedTask added');
         this.showDelegatedTaskForm = false;
         this.submitting = false;
-        this.render = !this.render;
-        this.showDelegatedTaskForm = false;
+        this.render();
       });
     } catch (error) {
       runInAction('Loading delegatedTasks', () => {
@@ -118,16 +122,14 @@ class DelegatedTaskStore {
 
   @action editDelegatedTask = async (delegatedTask: IDelegatedTask) => {
     this.submitting = true;
-
     if (this.selectedDelegatedTask !== delegatedTask) {
       try {
         await agent.DelegatedTasks.update(delegatedTask);
         runInAction('Loading delegatedTasks', () => {
           this.delegatedTaskRegistry.set(delegatedTask.id, delegatedTask);
-          this.selectedDelegatedTask = delegatedTask;
           this.showDelegatedTaskForm = false;
           this.submitting = false;
-          this.render = !this.render;
+          this.render();
         });
       } catch (error) {
         runInAction('Loading delegatedTasks', () => {
@@ -150,7 +152,7 @@ class DelegatedTaskStore {
         this.delegatedTaskRegistry.delete(this.selectedDelegatedTask!.id);
         this.selectedDelegatedTask = undefined;
         this.submitting = false;
-        this.render = !this.render;
+        this.render();
       });
     } catch (error) {
       runInAction('Loading delegatedTasks', () => {
@@ -160,5 +162,3 @@ class DelegatedTaskStore {
     }
   };
 }
-
-export default createContext(new DelegatedTaskStore());

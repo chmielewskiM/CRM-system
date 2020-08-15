@@ -27,10 +27,10 @@ namespace Application.DelegatedTasks
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var delegatedTask = await _context.DelegatedTasks.FindAsync(request.Id);
-                
+
                 if (delegatedTask == null)
-                    throw new RestException(HttpStatusCode.NotFound, 
-                    new {delegatedTask = "Not found"});
+                    throw new RestException(HttpStatusCode.NotFound,
+                    new { delegatedTask = "Not found" });
 
                 _context.Remove(delegatedTask);
 

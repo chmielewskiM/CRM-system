@@ -3,7 +3,6 @@ import { Form, Segment, Button, Modal } from 'semantic-ui-react';
 import { v4 as uuid } from 'uuid';
 import { observer } from 'mobx-react-lite';
 import { Form as FinalForm, Field } from 'react-final-form';
-import DelegatedTaskStore from '../../../app/stores/delegatedTaskStore';
 import {
   IDelegatedTaskForm,
   DelegatedTaskFormValues,
@@ -15,9 +14,10 @@ import { options } from '../../../app/common/options/delegatedTaskType';
 import DateInput from '../../../app/common/form/DateInput';
 import { combineDateAndTime } from '../../../app/common/util/util';
 import { combineValidators, isRequired } from 'revalidate';
+import { RootStoreContext } from '../../../app/stores/rootStore';
 
 const validation = combineValidators({
-  name: isRequired({ message: 'The name is required.' }),
+  // name: isRequired({ message: 'The name is required.' }),
   assignment: isRequired({ message: 'Choose who should perform the task.' }),
   type: isRequired({ message: 'Select type of the task.' }),
   date: isRequired({ message: 'The date is required.' }),
@@ -29,21 +29,21 @@ interface IProps {
 }
 
 export const DelegatedTaskForm: React.FC<IProps> = () => {
-  const delegatedTaskStore = useContext(DelegatedTaskStore);
+  const rootStore = useContext(RootStoreContext);
   const {
     setShowDelegatedTaskForm,
     editDelegatedTask,
     addDelegatedTask,
     submitting,
-    render,
     fillForm,
-  } = delegatedTaskStore;
+  } = rootStore.delegatedTaskStore;
 
-  useEffect(() => {}, [render, setShowDelegatedTaskForm]);
+  useEffect(() => {}, [setShowDelegatedTaskForm]);
 
   const [delegatedTask, setDelegatedTask] = useState(
     new DelegatedTaskFormValues()
   );
+
   const [loading, setLoading] = useState(false);
 
   const handleFinalFormSubmit = (values: any) => {
@@ -82,7 +82,7 @@ export const DelegatedTaskForm: React.FC<IProps> = () => {
                     options={options}
                     name="type"
                     placeholder="Type"
-                    value={'delegatedTask.type'}
+                    value={delegatedTask.type}
                     component={SelectInput}
                   />
                   <Form.Group>
@@ -124,7 +124,7 @@ export const DelegatedTaskForm: React.FC<IProps> = () => {
                     type="submit"
                     size="big"
                     content="Confirm"
-                    // loading={submitting}
+                    loading={submitting}
                     // disabled={loading}
                   />
                 </Form>

@@ -27,10 +27,10 @@ namespace Application.Contacts
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var contact = await _context.Contacts.FindAsync(request.Id);
-                
+
                 if (contact == null)
-                    throw new RestException(HttpStatusCode.NotFound, 
-                    new {contact = "Not found"});
+                    throw new RestException(HttpStatusCode.NotFound,
+                    new { contact = "Not found" });
 
                 _context.Remove(contact);
 

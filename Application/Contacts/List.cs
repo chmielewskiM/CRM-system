@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -12,36 +12,28 @@ namespace Application.Contacts
 {
     public class List
     {
-        public class Query : IRequest<List<Contact>> { }
-        public class Handler : IRequestHandler<Query, List<Contact>>
+        public class Query : IRequest<List<ContactDTO>> { }
+        public class Handler : IRequestHandler<Query, List<ContactDTO>>
         {
             private readonly DataContext _context;
             private readonly ILogger<List> _logger;
+            private readonly IMapper _mapper;
 
-            public Handler(DataContext context, ILogger<List> logger)
+            public Handler(DataContext context, ILogger<List> logger, IMapper mapper)
             {
+                _mapper = mapper;
                 _logger = logger;
                 _context = context;
             }
 
-            public async Task<List<Contact>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<List<ContactDTO>> Handle(Query request, CancellationToken cancellationToken)
             {
-                try
-                {
-                    for (var i = 0; i < 10; i++)
-                    {
-                        cancellationToken.ThrowIfCancellationRequested();
-                        await Task.Delay(10, cancellationToken);
-                        _logger.LogInformation($"Task {i} has completed");
-                    }
-                }
-                catch (Exception ex) when (ex is TaskCanceledException)
-                {
-                    _logger.LogInformation("Task was cancelled");
-                }
-                var contacts = await _context.Contacts.ToListAsync();
+                var contacts = await _context.Contacts
+                .Include(x => x.UserContacts)
+                .ThenInclude(x => x.User)
+                .ToListAsync();
 
-                return contacts;
+                return _mapper.Map<List<Contact>, List<ContactDTO>>(contacts);
             }
         }
     }

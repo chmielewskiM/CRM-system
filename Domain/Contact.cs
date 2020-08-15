@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Domain
 {
@@ -12,6 +13,7 @@ namespace Domain
         public string Email { get; set; }
         public DateTime DateAdded { get; set; }
         public string Notes { get; set; }
+        public ICollection<UserContact> UserContacts { get; set; }
 
     }
 }

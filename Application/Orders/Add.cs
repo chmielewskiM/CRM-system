@@ -11,15 +11,15 @@ namespace Application.Orders
     {
         public class Command : IRequest
         {
-        public Guid Id { get; set; }
-        public string Client { get; set; }
-        public string Product { get; set; }
-        public Double Amount { get; set; }
-        public Double Price { get; set; }
-        public string DateOrderOpened { get; set; }
-        public string Deadline { get; set; }
-        public string DateOrderClosed { get; set; }
-        public string Notes { get; set; }
+            public Guid Id { get; set; }
+            public string Client { get; set; }
+            public Boolean Type { get; set; }
+            public string Product { get; set; }
+            public Double Amount { get; set; }
+            public Double Price { get; set; }
+            public DateTime DateOrderOpened { get; set; }
+            public DateTime DateOrderClosed { get; set; }
+            public string Notes { get; set; }
         }
 
         public class Handler : IRequestHandler<Command>
@@ -37,11 +37,11 @@ namespace Application.Orders
                 {
                     Id = request.Id,
                     Client = request.Client,
+                    Type = request.Type,
                     Product = request.Product,
                     Amount = request.Amount,
                     Price = request.Price,
                     DateOrderOpened = request.DateOrderOpened,
-                    Deadline = request.Deadline,
                     DateOrderClosed = request.DateOrderClosed,
                     Notes = request.Notes,
                 };
@@ -49,9 +49,9 @@ namespace Application.Orders
                 _context.Orders.Add(order);
                 var success = await _context.SaveChangesAsync() > 0;
 
-                if(success) return Unit.Value;
+                if (success) return Unit.Value;
 
-                throw new Exception ("Problem saving changes");
+                throw new Exception("Problem saving changes");
             }
         }
     }

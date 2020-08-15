@@ -1,11 +1,17 @@
 import { observable, action, computed, configure, runInAction } from 'mobx';
-import { createContext, FormEvent } from 'react';
+import { toast } from 'react-toastify';
+import { IOrder, OrderFormValues } from '../models/order';
 import agent from '../api/agent';
-import { IOrder } from '../models/order';
+import { RootStore } from './rootStore';
 
 configure({ enforceActions: 'always' });
 
-class OrderStore {
+export default class OrderStore {
+  rootStore: RootStore;
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
+  }
+
   @observable orders: IOrder[] = [];
 
   @observable selectedOrder: IOrder | undefined;
@@ -18,23 +24,86 @@ class OrderStore {
 
   @observable orderRegistry = new Map();
 
-  @observable selected: string | undefined = undefined;
+  @observable selectedValue: boolean = true;
 
-  @computed get ordersByDate() {
-    return Array.from(this.orderRegistry.values());
-    //   .slice(0)
-    //   .sort((a, b) => Date.parse(b.dateAdded) - Date.parse(a.dateAdded));
+  @observable orderList: string | null = window.localStorage.getItem(
+    'orderList'
+  );
+
+  @observable rr = false;
+
+  @action render() {
+    this.rr = !this.rr;
   }
 
-  @action loadOrders = async () => {
+  @computed get ordersByDate() {
+    return Array.from(this.orderRegistry.values())
+      .slice(0)
+      .sort(
+        (a, b) => Date.parse(b.dateOrderOpened) - Date.parse(a.dateOrderOpened)
+      );
+  }
+
+  @action toggleSelect = (value: any) => {
+    this.selectedValue = !this.selectedValue;
+    this.render();
+  };
+
+  @action setOrderList = (value: string) => {
+    window.localStorage.setItem('orderList', value);
+    this.orderList = window.localStorage.getItem('orderList');
+    this.render();
+  };
+
+  @action loadOrders = async (value: string) => {
     this.loadingInitial = true;
     try {
       const orders = await agent.Orders.list();
-      runInAction('Loading orders', () => {
-        orders.forEach((order) => {
-          this.orderRegistry.set(order.id, order);
-        });
-        this.loadingInitial = false;
+      runInAction('Loading Orders', () => {
+        switch (value) {
+          case 'open': {
+            this.orderRegistry.clear();
+            window.localStorage.setItem('orderList', 'open');
+            orders.forEach((order) => {
+              var verifyDate = new Date(order.dateOrderClosed!).getFullYear();
+              if (verifyDate < 2) {
+                order.dateOrderOpened = new Date(order.dateOrderOpened!);
+                this.orderRegistry.set(order.id, order);
+              }
+            });
+            this.loadingInitial = false;
+            this.selectedOrder = undefined;
+            this.render();
+            break;
+          }
+          case 'closed': {
+            this.orderRegistry.clear();
+            window.localStorage.setItem('orderList', 'closed');
+            orders.forEach((order) => {
+              var verifyDate = new Date(order.dateOrderClosed!).getFullYear();
+              if (verifyDate > 2) {
+                order.dateOrderOpened = new Date(order.dateOrderOpened!);
+                this.orderRegistry.set(order.id, order);
+              }
+            });
+            this.loadingInitial = false;
+            this.selectedOrder = undefined;
+            this.render();
+            break;
+          }
+          default: {
+            this.orderRegistry.clear();
+            window.localStorage.setItem('orderList', 'default');
+            orders.forEach((order) => {
+              order.dateOrderOpened = new Date(order.dateOrderOpened!);
+              this.orderRegistry.set(order.id, order);
+            });
+            this.loadingInitial = false;
+            this.selectedOrder = undefined;
+            this.render();
+            break;
+          }
+        }
       });
     } catch (error) {
       runInAction('Loading error', () => {
@@ -43,70 +112,113 @@ class OrderStore {
       console.log(error);
     }
   };
+  typeOfOrder = (order: IOrder) => {
+    var type = '';
+    order.type ? (type = 'Sale') : (type = 'Purchase');
 
+    return type;
+  };
   @action selectOrder = (id: string) => {
     if (id !== '') {
       this.selectedOrder = this.orderRegistry.get(id);
-      this.selected = '1';
-      console.log(this.selectedOrder);
+      this.render();
     } else {
       this.selectedOrder = undefined;
+      this.render();
     }
   };
+  @action closeOrder = async (order: IOrder) => {
+    this.submitting = true;
+    try {
+      order.dateOrderClosed = new Date(Date.now());
+      await agent.Orders.update(order);
+      runInAction('Loading orders', () => {
+        this.orderRegistry.set(order.id, order);
+        this.submitting = false;
+        this.loadOrders(this.orderList!);
+      });
+    } catch (error) {
+      runInAction('Loading orders', () => {});
+      toast.error('Problem occured');
+      console.log(error);
+    }
+    this.rootStore.modalStore.closeModal();
 
+    console.log('OSTORECLOSE');
+    toast.success('Order closed');
+  };
   @action addOrderForm = () => {
-    console.log('forma');
     this.selectedOrder = undefined;
     this.showOrderForm = true;
+    this.submitting = false;
+    this.render();
   };
 
   @action editOrderForm = (id: string) => {
     this.selectedOrder = this.orderRegistry.get(id);
     this.showOrderForm = true;
+    this.render();
   };
 
   @action setShowOrderForm = (show: boolean) => {
     this.showOrderForm = show;
+    this.render();
+  };
+
+  @action fillForm = () => {
+    if (this.selectedOrder) {
+      var selected = this.selectedOrder;
+      var order = new OrderFormValues(selected);
+      return order;
+    }
+    return new OrderFormValues();
   };
 
   @action addOrder = async (order: IOrder) => {
     this.submitting = true;
     try {
+      var date = new Date(Date.now());
+      order.dateOrderOpened = date;
+      order.type = this.selectedValue;
       await agent.Orders.add(order);
       runInAction('Loading orders', () => {
         this.orderRegistry.set(order.id, order);
+        toast.success('Order added');
         this.showOrderForm = false;
         this.submitting = false;
+        this.loadOrders(this.orderList!);
       });
     } catch (error) {
       runInAction('Loading orders', () => {
         this.submitting = false;
       });
-      console.log(error);
+      toast.error('Problem occured');
+      console.log(error.response);
     }
   };
 
   @action editOrder = async (order: IOrder) => {
     this.submitting = true;
-
     if (this.selectedOrder !== order) {
       try {
         await agent.Orders.update(order);
         runInAction('Loading orders', () => {
           this.orderRegistry.set(order.id, order);
-          this.selectedOrder = order;
           this.showOrderForm = false;
           this.submitting = false;
         });
+        this.render();
       } catch (error) {
         runInAction('Loading orders', () => {
           this.submitting = false;
         });
+        toast.error('Problem occured');
         console.log(error);
       }
     } else {
       this.showOrderForm = false;
       this.submitting = false;
+      this.render();
     }
   };
 
@@ -114,18 +226,17 @@ class OrderStore {
     this.submitting = true;
     try {
       await agent.Orders.delete(id);
-      runInAction('Deleting order', () => {
+      runInAction('Loading orders', () => {
         this.orderRegistry.delete(this.selectedOrder!.id);
         this.selectedOrder = undefined;
         this.submitting = false;
       });
+      this.render();
     } catch (error) {
-      runInAction('Deleting order', () => {
+      runInAction('Loading orders', () => {
         this.submitting = false;
       });
       console.log(error);
     }
   };
 }
-
-export default createContext(new OrderStore());

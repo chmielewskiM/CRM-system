@@ -1,5 +1,3 @@
-import { format } from 'date-fns';
-
 export const combineDateAndTime = (date: Date, time: Date) => {
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
@@ -15,6 +13,5 @@ export const destructureDeadline = (deadline: Date) => {
   const month = deadline.getMonth() + 1;
   const day = deadline.getDate();
   const dateString = `${year}-${month}-${day}`;
-  console.log(dateString)
   return dateString;
 };

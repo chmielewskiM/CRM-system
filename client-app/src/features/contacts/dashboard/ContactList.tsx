@@ -1,18 +1,22 @@
 import React, { useContext, Fragment, useEffect } from 'react';
 import { Table } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
-import ContactStore from '../../../app/stores/contactStore';
 import LoaderComponent from '../../../app/layout/LoaderComponent';
+import { RootStoreContext } from '../../../app/stores/rootStore';
 
 export const ContactList: React.FC = () => {
-  const contactStore = useContext(ContactStore);
-  const { contactsByDate, selectContact, selectedContact, render } = contactStore;
+  const rootStore = useContext(RootStoreContext);
+  const {
+    contactsByDate,
+    selectContact,
+    selectedContact,
+    loadingInitial,
+    showContactForm,
+    rr,
+  } = rootStore.contactStore;
+  useEffect(() => {}, [showContactForm, rr]);
+  if (loadingInitial) return <LoaderComponent content="Loading..." />;
 
-  useEffect(() => {
-  }, [render]);
-  if (contactStore.loadingInitial)
-  return <LoaderComponent content="Loading..." />;
-  
   return (
     <>
       <Table celled selectable sortable>

@@ -12,12 +12,12 @@ namespace Application.Orders
         {
             public Guid Id { get; set; }
             public string Client { get; set; }
+            public Boolean Type { get; set; }
             public string Product { get; set; }
             public Double Amount { get; set; }
             public Double Price { get; set; }
-            public string DateOrderOpened { get; set; }
-            public string Deadline { get; set; }
-            public string DateOrderClosed { get; set; }
+            public DateTime DateOrderOpened { get; set; }
+            public DateTime DateOrderClosed { get; set; }
             public string Notes { get; set; }
         }
 
@@ -38,12 +38,12 @@ namespace Application.Orders
                     throw new Exception("Could not find order");
 
                 order.Client = request.Client ?? order.Client;
+                order.Type = request.Type;
                 order.Product = request.Product ?? order.Product;
                 order.Amount = request.Amount;
                 order.Price = request.Price;
-                order.DateOrderOpened = request.DateOrderOpened ?? order.DateOrderOpened;
-                order.Deadline = request.Deadline ?? order.Deadline;
-                order.DateOrderClosed = request.DateOrderClosed ?? order.DateOrderClosed;
+                order.DateOrderOpened = request.DateOrderOpened;
+                order.DateOrderClosed = request.DateOrderClosed;
                 order.Notes = request.Notes ?? order.Notes;
 
                 var success = await _context.SaveChangesAsync() > 0;

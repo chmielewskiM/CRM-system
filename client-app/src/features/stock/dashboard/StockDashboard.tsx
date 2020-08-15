@@ -1,33 +1,19 @@
 import React, { useContext } from 'react';
 import { Grid, Button } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
-import ContactStore from '../../../app/stores/contactStore';
-import OrderStore from '../../../app/stores/orderStore';
-import StockStore from '../../../app/stores/stockStore';
 import { StockList } from './StockList';
 import { MaterialForm } from '../form/MaterialForm';
+import { RootStoreContext } from '../../../app/stores/rootStore';
 
 export const StockDashboard: React.FC = () => {
-  const contactStore = useContext(ContactStore);
-  const orderStore = useContext(OrderStore);
-  const stockStore = useContext(StockStore);
-
-  const {} = contactStore;
-
-  const {} = orderStore;
-
+  const rootStore = useContext(RootStoreContext);
   const {
-    selectMaterial,
     selectedMaterial,
     addMaterialForm,
-    addMaterial,
     editMaterialForm,
-    editMaterial,
     deleteMaterial,
     showMaterialForm,
-    setShowMaterialForm,
-    submitting,
-  } = stockStore;
+  } = rootStore.stockStore;
 
   return (
     <Grid stackable centered divided="vertically">

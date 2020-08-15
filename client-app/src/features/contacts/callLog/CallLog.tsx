@@ -1,11 +1,11 @@
-import React, { useContext, Fragment } from 'react';
-import { Table, Segment } from 'semantic-ui-react';
+import React, { useContext } from 'react';
+import { Table } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
-import ContactStore from '../../../app/stores/contactStore';
+import { RootStoreContext } from '../../../app/stores/rootStore';
 
 export const CallLog: React.FC = () => {
-  const contactStore = useContext(ContactStore);
-  const { contactsByDate, selectContact } = contactStore;
+  const rootStore = useContext(RootStoreContext);
+  const { contactsByDate, selectContact } = rootStore.contactStore;
 
   return (
     <>

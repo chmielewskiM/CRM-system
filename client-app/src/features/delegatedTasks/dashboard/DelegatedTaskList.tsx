@@ -1,16 +1,16 @@
 import React, { useContext } from 'react';
 import { Table } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
-import DelegatedTaskStore from '../../../app/stores/delegatedTaskStore';
 import { format } from 'date-fns';
+import { RootStoreContext } from '../../../app/stores/rootStore';
 
 export const DelegatedTaskList: React.FC = () => {
-  const delegatedTaskStore = useContext(DelegatedTaskStore);
+  const rootStore = useContext(RootStoreContext);
   const {
     delegatedTasksByDate,
     selectDelegatedTask,
     selectedDelegatedTask,
-  } = delegatedTaskStore;
+  } = rootStore.delegatedTaskStore;
 
   return (
     <>

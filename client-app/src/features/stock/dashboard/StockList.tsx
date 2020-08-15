@@ -1,11 +1,15 @@
-import React, { useContext, Fragment } from 'react';
+import React, { useContext } from 'react';
 import { Table } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
-import StockStore from '../../../app/stores/stockStore';
+import { RootStoreContext } from '../../../app/stores/rootStore';
 
 export const StockList: React.FC = () => {
-  const stockStore = useContext(StockStore);
-  const { selectMaterial, selectedMaterial, materialsByName } = stockStore;
+  const rootStore = useContext(RootStoreContext);
+  const {
+    selectMaterial,
+    selectedMaterial,
+    materialsByName,
+  } = rootStore.stockStore;
 
   return (
     <>

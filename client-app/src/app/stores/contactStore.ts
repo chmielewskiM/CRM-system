@@ -1,12 +1,15 @@
-import { observable, action, computed, configure, runInAction } from 'mobx';
-import { createContext } from 'react';
+import { observable, action, computed, runInAction } from 'mobx';
 import { toast } from 'react-toastify';
-import { IContact } from '../models/contact';
+import { IContact, ContactFormValues } from '../models/contact';
 import agent from '../api/agent';
+import { RootStore } from './rootStore';
 
-configure({ enforceActions: 'always' });
+export default class ContactStore {
+  rootStore: RootStore;
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
+  }
 
-class ContactStore {
   @observable contacts: IContact[] = [];
 
   @observable selectedContact: IContact | undefined;
@@ -21,7 +24,11 @@ class ContactStore {
 
   @observable selectedValue = '';
 
-  @observable render = false;
+  @observable rr = false;
+
+  @action render() {
+    this.rr = !this.rr;
+  }
 
   @computed get contactsByDate() {
     return Array.from(this.contactRegistry.values())
@@ -38,7 +45,7 @@ class ContactStore {
           this.contactRegistry.set(contact.id, contact);
         });
         this.loadingInitial = false;
-        this.render = true;
+        this.render();
       });
     } catch (error) {
       runInAction('Loading error', () => {
@@ -49,50 +56,53 @@ class ContactStore {
   };
 
   @action selectContact = (id: string) => {
-    this.render = !this.render;
     if (id !== '') {
       this.selectedContact = this.contactRegistry.get(id);
-      this.selectedValue = this.selectedContact!.type;
+      this.render();
     } else {
       this.selectedContact = undefined;
+      this.render();
     }
   };
 
   @action addContactForm = () => {
-    this.render = !this.render;
     this.selectedContact = undefined;
     this.selectedValue = '';
     this.showContactForm = true;
+    this.submitting = false;
+    this.render();
   };
 
   @action editContactForm = (id: string) => {
-    this.render = !this.render;
     this.selectedContact = this.contactRegistry.get(id);
-    this.selectedValue = this.selectedContact!.type;
     this.showContactForm = true;
+    this.render();
   };
 
   @action setShowContactForm = (show: boolean) => {
-    this.render = !this.render;
     this.showContactForm = show;
+    this.render();
   };
 
-  @action updateFormSelect = async (selection: string) => {
-    this.selectedValue = selection;
-    return this.selectedValue;
+  @action fillForm = () => {
+    if (this.selectedContact) {
+      return this.selectedContact;
+    }
+    return new ContactFormValues();
   };
 
   @action addContact = async (contact: IContact) => {
     this.submitting = true;
-    contact.dateAdded = new Date().toISOString();
+    var date = new Date(Date.now());
+    contact.dateAdded = date;
     try {
-      contact.type = this.selectedValue;
       await agent.Contacts.add(contact);
       runInAction('Loading contacts', () => {
         this.contactRegistry.set(contact.id, contact);
         toast.success('Contact added');
         this.showContactForm = false;
         this.submitting = false;
+        this.render();
       });
     } catch (error) {
       runInAction('Loading contacts', () => {
@@ -102,31 +112,28 @@ class ContactStore {
     }
   };
 
-  @action editContact = async (contact: IContact) => {
+  @action editContact = async (contact: ContactFormValues) => {
     this.submitting = true;
-    this.render = !this.render;
-    if (
-      this.selectedContact !== contact ||
-      this.selectedValue !== contact.type
-    ) {
+    if (this.selectedContact !== contact) {
       try {
-        contact.type = this.selectedValue;
         await agent.Contacts.update(contact);
         runInAction('Loading contacts', () => {
           this.contactRegistry.set(contact.id, contact);
-          this.selectedContact = contact;
           this.showContactForm = false;
           this.submitting = false;
+          this.render();
         });
       } catch (error) {
         runInAction('Loading contacts', () => {
           this.submitting = false;
         });
+        toast.error('Problem occured');
         console.log(error);
       }
     } else {
       this.showContactForm = false;
       this.submitting = false;
+      this.render();
     }
   };
 
@@ -138,7 +145,7 @@ class ContactStore {
         this.contactRegistry.delete(this.selectedContact!.id);
         this.selectedContact = undefined;
         this.submitting = false;
-        this.render = !this.render;
+        this.render();
       });
     } catch (error) {
       runInAction('Loading contacts', () => {
@@ -148,5 +155,3 @@ class ContactStore {
     }
   };
 }
-
-export default createContext(new ContactStore());

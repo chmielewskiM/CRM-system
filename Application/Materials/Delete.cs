@@ -25,7 +25,7 @@ namespace Application.Materials
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var material = await _context.Materials.FindAsync(request.Id);
-                
+
                 if (material == null)
                     throw new Exception("Couldn't find material");
 

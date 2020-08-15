@@ -1,23 +1,25 @@
 import React, { Fragment, useContext, useEffect } from 'react';
 import { Header, Divider, Label, Segment, Button } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
-import ContactStore from '../../../app/stores/contactStore';
 import LoaderComponent from '../../../app/layout/LoaderComponent';
+import { RootStoreContext } from '../../../app/stores/rootStore';
 
 export const ContactDetails: React.FC = () => {
-  const contactStore = useContext(ContactStore);
+  const rootStore = useContext(RootStoreContext);
   const {
+    loadingInitial,
     selectedContact,
     selectContact,
     deleteContact,
     submitting,
     editContactForm,
-    render
-  } = contactStore;
-  useEffect(() => {
-  }, [render]);
-  if (contactStore.loadingInitial)
-  return <LoaderComponent content="Loading..." />;
+    showContactForm,
+    rr,
+  } = rootStore.contactStore;
+
+  useEffect(() => {}, [showContactForm, rr]);
+
+  if (loadingInitial) return <LoaderComponent content="Loading..." />;
   return (
     <Segment>
       <Button
@@ -35,7 +37,7 @@ export const ContactDetails: React.FC = () => {
         <Divider clearing />
 
         <Label as="a" color="red" ribbon>
-          Date added {selectedContact!.dateAdded.split('T')[0]}
+          Date added {selectedContact!.dateAdded!.toString()}
           {/* Date added {selectedContact.dateAdded!.toISOString().split('T')[0]} */}
         </Label>
 
@@ -49,13 +51,13 @@ export const ContactDetails: React.FC = () => {
         {selectedContact!.notes}
         <Button.Group widths={2}>
           <Button
-            onClick={() => editContactForm(selectedContact!.id)}
+            onClick={() => editContactForm(selectedContact!.id!)}
             loading={submitting}
             primary
             content="Edit"
           />
           <Button
-            onClick={() => deleteContact(selectedContact!.id)}
+            onClick={() => deleteContact(selectedContact!.id!)}
             loading={submitting}
             negative
             content="Delete"

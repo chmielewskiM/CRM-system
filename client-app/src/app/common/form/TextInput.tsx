@@ -1,6 +1,7 @@
 import React from 'react';
 import { FieldRenderProps } from 'react-final-form';
 import { FormFieldProps, Form, Label } from 'semantic-ui-react';
+import { observer } from 'mobx-react-lite';
 
 export interface IProps
   extends FieldRenderProps<string, HTMLElement>,
@@ -25,4 +26,4 @@ const TextInput: React.FC<IProps> = ({
   );
 };
 
-export default TextInput;
+export default observer(TextInput);

@@ -1,54 +1,96 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   Button,
   Form,
   Grid,
   Header,
   Image,
-  Message,
   Segment,
+  Label,
 } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
+import { Form as FinalForm, Field } from 'react-final-form';
+import TextInput from '../../app/common/form/TextInput';
+import { observer } from 'mobx-react-lite';
+import { RootStoreContext } from '../../app/stores/rootStore';
+import { IUserFormValues } from '../../app/models/user';
+import { FORM_ERROR } from 'final-form';
 
-export const SignIn = () => (
-  <Grid
-    textAlign="center"
-    style={{
-      height: '100vh',
-    }}
-    verticalAlign="middle"
-  >
-    <Grid.Column
+// const validate = combineValidators({
+//   username: isRequired('username'),
+//   password: isRequired('password'),
+// });
+
+export const SignIn = () => {
+  const rootStore = useContext(RootStoreContext);
+  const { login } = rootStore.userStore;
+
+  return (
+    <Grid
+      textAlign="center"
       style={{
-        maxWidth: 450,
+        height: '100vh',
       }}
+      verticalAlign="middle"
     >
-      <Image fluid size="small" centered src="/assets/logo.png" alt="logo" />
-      <Header as="h2" size="huge" color="teal" textAlign="center">
-        SteelBay
-      </Header>
-      <Form size="massive">
-        <Segment raised size="huge">
-          <Form.Input
-            fluid
-            icon="user"
-            iconPosition="left"
-            placeholder="User"
-          />
-          <Form.Input
-            fluid
-            icon="lock"
-            iconPosition="left"
-            placeholder="Password"
-            type="password"
-          />
-          <Button color="teal" fluid size="large" as={Link} to="/home">
-            Log In
-          </Button>
-        </Segment>
-      </Form>
-    </Grid.Column>
-  </Grid>
-);
+      <Grid.Column
+        style={{
+          maxWidth: 450,
+        }}
+      >
+        <Image size="small" centered src="/assets/logo.png" alt="logo" />
+        <Header as="h2" size="huge" color="teal" textAlign="center">
+          SteelBay
+        </Header>
+        <FinalForm
+          onSubmit={(values: IUserFormValues) =>
+            login(values).catch((error) => ({
+              [FORM_ERROR]: error,
+            }))
+          }
+          // validate={validate}
+          render={({
+            handleSubmit,
+            invalid,
+            pristine,
+            dirtySinceLastSubmit,
+          }) => (
+            <Form onSubmit={handleSubmit}>
+              <Segment raised>
+                <Field
+                  fluid
+                  icon="user"
+                  iconPosition="left"
+                  name="username"
+                  placeholder="Username"
+                  component={TextInput}
+                />
+                <Field
+                  fluid
+                  icon="lock"
+                  iconPosition="left"
+                  name="password"
+                  placeholder="Password"
+                  type="password"
+                  component={TextInput}
+                />
 
-export default SignIn;
+                <Button
+                  positive
+                  color="teal"
+                  fluid
+                  size="large"
+                  disabled={(invalid && !dirtySinceLastSubmit) || pristine}
+                  type="submit"
+                >
+                  Log In
+                </Button>
+              </Segment>
+            </Form>
+          )}
+        ></FinalForm>
+      </Grid.Column>
+    </Grid>
+  );
+};
+
+export default observer(SignIn);

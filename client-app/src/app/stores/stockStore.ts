@@ -1,11 +1,16 @@
 import { observable, action, computed, configure, runInAction } from 'mobx';
-import { createContext } from 'react';
 import agent from '../api/agent';
 import { IMaterial } from '../models/material';
+import { RootStore } from './rootStore';
 
 configure({ enforceActions: 'always' });
 
-class StockStore {
+export default class StockStore {
+  rootStore: RootStore;
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
+  }
+
   @observable materials: IMaterial[] = [];
 
   @observable selectedMaterial: IMaterial | undefined;
@@ -21,6 +26,12 @@ class StockStore {
   @observable selected: string | undefined = undefined;
 
   @observable selectedValue = '';
+
+  @observable rr = false;
+
+  @action render() {
+    this.rr = !this.rr;
+  }
 
   @computed get materialsByName() {
     return Array.from(this.materialRegistry.values());
@@ -38,6 +49,7 @@ class StockStore {
         });
         this.loadingInitial = false;
       });
+      this.render();
     } catch (error) {
       runInAction('Loading error', () => {
         this.loadingInitial = false;
@@ -50,26 +62,28 @@ class StockStore {
     if (id !== '') {
       this.selectedMaterial = this.materialRegistry.get(id);
       this.selected = '1';
-      console.log(this.selectedMaterial);
+      this.render();
     } else {
       this.selectedMaterial = undefined;
+      this.render();
     }
   };
 
   @action addMaterialForm = () => {
-    console.log('forma');
     this.selectedMaterial = undefined;
     this.showMaterialForm = true;
+    this.render();
   };
 
   @action editMaterialForm = (id: string) => {
     this.selectedMaterial = this.materialRegistry.get(id);
     this.showMaterialForm = true;
+    this.render();
   };
 
   @action setShowMaterialForm = (show: boolean) => {
     this.showMaterialForm = show;
-    console.log(show);
+    this.render();
   };
 
   @action updateFormSelect = async (selection: string) => {
@@ -86,6 +100,7 @@ class StockStore {
         this.showMaterialForm = false;
         this.submitting = false;
       });
+      this.render();
     } catch (error) {
       runInAction('Loading materials', () => {
         this.submitting = false;
@@ -96,7 +111,6 @@ class StockStore {
 
   @action editMaterial = async (material: IMaterial) => {
     this.submitting = true;
-
     if (this.selectedMaterial !== material) {
       try {
         await agent.Materials.update(material);
@@ -106,6 +120,7 @@ class StockStore {
           this.showMaterialForm = false;
           this.submitting = false;
         });
+        this.render();
       } catch (error) {
         runInAction('Loading materials', () => {
           this.submitting = false;
@@ -115,6 +130,7 @@ class StockStore {
     } else {
       this.showMaterialForm = false;
       this.submitting = false;
+      this.render();
     }
   };
 
@@ -127,6 +143,7 @@ class StockStore {
         this.selectedMaterial = undefined;
         this.submitting = false;
       });
+      this.render();
     } catch (error) {
       runInAction('Deleting material', () => {
         this.submitting = false;
@@ -135,5 +152,3 @@ class StockStore {
     }
   };
 }
-
-export default createContext(new StockStore());

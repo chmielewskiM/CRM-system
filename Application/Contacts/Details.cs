@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -8,34 +7,42 @@ using MediatR;
 using Persistence;
 using Application.Errors;
 using System.Net;
+using AutoMapper;
 
 namespace Application.Contacts
 {
     public class Details
     {
-        public class Query : IRequest<Contact>
+        public class Query : IRequest<ContactDTO>
         {
             public Guid Id { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query, Contact>
+        public class Handler : IRequestHandler<Query, ContactDTO>
         {
             private readonly DataContext _context;
+            private readonly IMapper _mapper;
 
-            public Handler(DataContext context)
+            public Handler(DataContext context, IMapper mapper)
             {
+                _mapper = mapper;
                 _context = context;
             }
 
-            public async Task<Contact> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<ContactDTO> Handle(Query request, CancellationToken cancellationToken)
             {
-                var contact = await _context.Contacts.FindAsync(request.Id);
+                var contact = await _context.Contacts
+                .Include(x => x.UserContacts)
+                .ThenInclude(x => x.User)
+                .SingleOrDefaultAsync(x => x.Id == request.Id);
 
                 if (contact == null)
                     throw new RestException(HttpStatusCode.NotFound,
                     new { contact = "Not found" });
 
-                return contact;
+                var contactToReturn = _mapper.Map<Contact, ContactDTO>(contact);
+
+                return contactToReturn;
             }
         }
     }

@@ -1,20 +1,25 @@
 import React, { useContext, useEffect } from 'react';
 import { Grid, Button } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
-import { ToastContainer, Zoom } from 'react-toastify';
 import { ContactList } from './ContactList';
 import { ContactDetails } from '../details/ContactDetails';
 import { ContactForm } from '../form/ContactForm';
-import ContactStore from '../../../app/stores/contactStore';
-import LoaderComponent from '../../../app/layout/LoaderComponent';
+import { RootStoreContext } from '../../../app/stores/rootStore';
 
 export const ContactDashboard: React.FC = () => {
-  const contactStore = useContext(ContactStore);
-  const { showContactForm, selectedContact, addContactForm } = contactStore;
+  const rootStore = useContext(RootStoreContext);
+  const {
+    showContactForm,
+    selectedContact,
+    addContactForm,
+    loadContacts,
+    selectContact,
+  } = rootStore.contactStore;
 
   useEffect(() => {
-    contactStore.loadContacts();
-  }, [contactStore]);
+    loadContacts();
+    if (selectedContact) selectContact(selectedContact!.id);
+  }, [showContactForm]);
 
   // if (contactStore.loadingInitial)
   //   return <LoaderComponent content="Loading..." />;

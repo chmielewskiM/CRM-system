@@ -6,13 +6,11 @@ using Domain;
 using System;
 using Application.Materials;
 using System.Threading;
-using Microsoft.AspNetCore.Cors;
 
 namespace API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [EnableCors]
     public class MaterialController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -44,7 +42,7 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(Guid id)
         {
-            return await _mediator.Send(new Delete.Command{Id = id});
+            return await _mediator.Send(new Delete.Command { Id = id });
         }
     }
 }

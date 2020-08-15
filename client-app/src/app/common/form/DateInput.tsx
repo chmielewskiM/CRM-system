@@ -26,7 +26,6 @@ const DateInput: React.FC<IProps> = ({
         onKeyDown={(e) => e.preventDefault()}
         date={date}
         time={time}
-        // {...rest}
       ></DateTimePicker>
       {touched && error && (
         <Label basic color="red">

@@ -11,16 +11,16 @@ export interface IDelegatedTaskForm extends Partial<IDelegatedTask> {
   time?: Date;
 }
 
-export class DelegatedTaskFormValues implements IDelegatedTaskForm{
-  id?:string= undefined;
-  assignment:string= '';
-  type:string= '';
-  date?:Date= undefined;
-  time?:Date= undefined;
-  notes:string= '';
-  done:boolean= false;
+export class DelegatedTaskFormValues implements IDelegatedTaskForm {
+  id?: string = undefined;
+  assignment: string = '';
+  type: string = '';
+  date?: Date = undefined;
+  time?: Date = undefined;
+  notes: string = '';
+  done: boolean = false;
 
-  constructor(init?:IDelegatedTaskForm){
+  constructor(init?: IDelegatedTaskForm) {
     if (init && init.deadline) {
       init.time = init.deadline;
     }

@@ -1,12 +1,13 @@
 import React from 'react';
 import { FieldRenderProps } from 'react-final-form';
 import { FormFieldProps, Form, Label, Select } from 'semantic-ui-react';
+import { observer } from 'mobx-react-lite';
 
 export interface IProps
   extends FieldRenderProps<string, HTMLElement>,
     FormFieldProps {}
 
-const TextInput: React.FC<IProps> = ({
+const SelectInput: React.FC<IProps> = ({
   input,
   width,
   options,
@@ -30,4 +31,4 @@ const TextInput: React.FC<IProps> = ({
   );
 };
 
-export default TextInput;
+export default observer(SelectInput);

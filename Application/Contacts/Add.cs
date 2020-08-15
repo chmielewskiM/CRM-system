@@ -5,6 +5,8 @@ using MediatR;
 using Persistence;
 using Domain;
 using FluentValidation;
+using Application.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Contacts
 {
@@ -26,19 +28,21 @@ namespace Application.Contacts
         {
             public CommandValidator()
             {
-                RuleFor(x => x.Name).NotEmpty();
-                RuleFor(x => x.Type).NotEmpty();
-                RuleFor(x => x.Company).NotEmpty();
-                RuleFor(x => x.PhoneNumber).NotEmpty();
-                RuleFor(x => x.Email).NotEmpty();
+                // RuleFor(x => x.Name).NotEmpty();
+                // RuleFor(x => x.Type).NotEmpty();
+                // RuleFor(x => x.Company).NotEmpty();
+                // RuleFor(x => x.PhoneNumber).NotEmpty();
+                // RuleFor(x => x.Email).NotEmpty();
             }
         }
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
+            private readonly IUserAccessor _userAccessor;
 
-            public Handler(DataContext context)
+            public Handler(DataContext context, IUserAccessor userAccessor)
             {
+                _userAccessor = userAccessor;
                 _context = context;
             }
 
@@ -57,6 +61,19 @@ namespace Application.Contacts
                 };
 
                 _context.Contacts.Add(contact);
+
+                var user = await _context.Users.SingleOrDefaultAsync(x =>
+                x.UserName == _userAccessor.GetLoggedUsername());
+
+                var contactAddress = new UserContact
+                {
+                    User = user,
+                    Contact = contact,
+                    DateAdded = request.DateAdded
+                };
+
+                _context.UserContacts.Add(contactAddress);
+
                 var success = await _context.SaveChangesAsync() > 0;
 
                 if (success) return Unit.Value;

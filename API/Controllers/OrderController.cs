@@ -6,13 +6,11 @@ using Domain;
 using System;
 using Application.Orders;
 using System.Threading;
-using Microsoft.AspNetCore.Cors;
 
 namespace API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [EnableCors]
     public class OrderController : ControllerBase
     {
         private readonly IMediator _mediator;
