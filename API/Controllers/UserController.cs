@@ -2,6 +2,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Application.AppUser;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
+using System.Threading;
+using Domain;
 
 namespace API.Controllers
 {
@@ -23,6 +26,11 @@ namespace API.Controllers
         public async Task<ActionResult<AppUser>> LoggedUser()
         {
             return await Mediator.Send(new LoggedUser.Query());
+        }
+        [HttpGet("list")]
+        public async Task<ActionResult<List<User>>> List(CancellationToken ct)
+        {
+            return await Mediator.Send(new List.Query(), ct);
         }
     }
 }

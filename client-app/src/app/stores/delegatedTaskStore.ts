@@ -6,6 +6,7 @@ import {
 } from '../models/delegatedTask';
 import agent from '../api/agent';
 import { RootStore } from './rootStore';
+import { IUser } from '../models/user';
 
 configure({ enforceActions: 'always' });
 
@@ -16,6 +17,8 @@ export default class DelegatedTaskStore {
   }
 
   @observable delegatedTasks: IDelegatedTask[] = [];
+
+  @observable users: IUser[] = [];
 
   @observable selectedDelegatedTask: IDelegatedTask | undefined;
 
@@ -28,6 +31,8 @@ export default class DelegatedTaskStore {
   @observable delegatedTaskRegistry = new Map();
 
   @observable selectedValue = '';
+
+  @observable usersRegistry = new Map();
 
   @observable rr = false;
 
@@ -51,6 +56,39 @@ export default class DelegatedTaskStore {
           this.delegatedTaskRegistry.set(delegatedTask.id, delegatedTask);
         });
         this.loadingInitial = false;
+        this.render();
+      });
+    } catch (error) {
+      runInAction('Loading error', () => {
+        this.loadingInitial = false;
+      });
+      console.log(error);
+    }
+  };
+
+  @computed get assignmentOptions() {
+    const userOptions: Array<Object> = [];
+    this.usersRegistry.forEach((user) => {
+      let newName = {
+        key: user.displayName,
+        text: user.displayName,
+        value: user.displayName,
+      };
+      userOptions.push(newName);
+    });
+    return userOptions;
+  }
+
+  @action loadUsers = async () => {
+    this.loadingInitial = true;
+    try {
+      const users = await agent.Users.list();
+      runInAction('Loading Tasks', () => {
+        users.forEach((user) => {
+          this.usersRegistry.set(user.id, user);
+        });
+        this.loadingInitial = false;
+
         this.render();
       });
     } catch (error) {

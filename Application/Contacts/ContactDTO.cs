@@ -14,7 +14,8 @@ namespace Application.Contacts
         public string Email { get; set; }
         public DateTime DateAdded { get; set; }
         public string Notes { get; set; }
+        public string Status { get; set; }
         [JsonProperty("users")]
-        public ICollection<ContactAddressDTO> UserContacts { get; set; }
+        public ICollection<UserAccessDTO> UserContacts { get; set; }
     }
 }

@@ -12,6 +12,8 @@ export default class ContactStore {
 
   @observable contacts: IContact[] = [];
 
+  @observable contact: IContact | undefined;
+
   @observable selectedContact: IContact | undefined;
 
   @observable loadingInitial = false;
@@ -58,6 +60,7 @@ export default class ContactStore {
   @action selectContact = (id: string) => {
     if (id !== '') {
       this.selectedContact = this.contactRegistry.get(id);
+      this.contact = this.selectedContact;
       this.render();
     } else {
       this.selectedContact = undefined;
@@ -114,7 +117,8 @@ export default class ContactStore {
 
   @action editContact = async (contact: ContactFormValues) => {
     this.submitting = true;
-    if (this.selectedContact !== contact) {
+
+    if (this.contact == this.selectedContact) {
       try {
         await agent.Contacts.update(contact);
         runInAction('Loading contacts', () => {
@@ -128,9 +132,9 @@ export default class ContactStore {
           this.submitting = false;
         });
         toast.error('Problem occured');
-        console.log(error);
       }
     } else {
+      toast.info('No changes');
       this.showContactForm = false;
       this.submitting = false;
       this.render();

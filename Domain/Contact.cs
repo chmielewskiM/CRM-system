@@ -13,7 +13,8 @@ namespace Domain
         public string Email { get; set; }
         public DateTime DateAdded { get; set; }
         public string Notes { get; set; }
-        public ICollection<UserContact> UserContacts { get; set; }
+        public string Status { get; set; }
+        public virtual ICollection<UserContact> UserContacts { get; set; }
 
     }
 }

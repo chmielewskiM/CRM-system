@@ -20,7 +20,7 @@ export default class UserStore {
 
   @action login = async (values: IUserFormValues) => {
     try {
-      const user = await agent.User.login(values);
+      const user = await agent.Users.login(values);
       runInAction(() => {
         this.user = user;
       });
@@ -34,7 +34,7 @@ export default class UserStore {
 
   @action register = async (values: IUserFormValues) => {
     try {
-      const user = await agent.User.register(values);
+      const user = await agent.Users.register(values);
       this.rootStore.commonStore.setToken(user.token);
       this.rootStore.modalStore.closeModal();
     } catch (error) {}
@@ -42,7 +42,7 @@ export default class UserStore {
 
   @action getUser = async () => {
     try {
-      const user = await agent.User.logged();
+      const user = await agent.Users.logged();
       runInAction(() => {
         this.user = user;
       });

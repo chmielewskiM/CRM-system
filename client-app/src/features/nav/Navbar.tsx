@@ -25,6 +25,7 @@ export const Navbar: React.FC = () => {
           as={NavLink}
           to="/contacts"
         />
+        <Menu.Item className="link" name="Leads" as={NavLink} to="/leads" />
         <Menu.Item className="link" name="Tasks" as={NavLink} to="/tasks" />
         <Menu.Item className="link" name="Orders" as={NavLink} to="/orders" />
         <Menu.Item className="link" name="Stock" as={NavLink} to="/stock" />

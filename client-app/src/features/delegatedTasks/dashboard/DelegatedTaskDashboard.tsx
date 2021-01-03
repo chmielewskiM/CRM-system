@@ -14,9 +14,11 @@ export const DelegatedTaskDashboard: React.FC = () => {
     addDelegatedTaskForm,
     editDelegatedTaskForm,
     deleteDelegatedTask,
+    loadUsers,
   } = rootStore.delegatedTaskStore;
   useEffect(() => {
     loadDelegatedTasks();
+    loadUsers();
   }, [rootStore.delegatedTaskStore]);
 
   // if (delegatedTaskStore.loadingInitial)

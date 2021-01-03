@@ -7,7 +7,6 @@ import {
   IDelegatedTaskForm,
   DelegatedTaskFormValues,
 } from '../../../app/models/delegatedTask';
-import TextInput from '../../../app/common/form/TextInput';
 import TextAreaInput from '../../../app/common/form/TextAreaInput';
 import SelectInput from '../../../app/common/form/SelectInput';
 import { options } from '../../../app/common/options/delegatedTaskType';
@@ -17,11 +16,10 @@ import { combineValidators, isRequired } from 'revalidate';
 import { RootStoreContext } from '../../../app/stores/rootStore';
 
 const validation = combineValidators({
-  // name: isRequired({ message: 'The name is required.' }),
-  assignment: isRequired({ message: 'Choose who should perform the task.' }),
-  type: isRequired({ message: 'Select type of the task.' }),
-  date: isRequired({ message: 'The date is required.' }),
-  time: isRequired({ message: 'The time is required.' }),
+  // assignment: isRequired({ message: 'Choose who should perform the task.' }),
+  // type: isRequired({ message: 'Select type of the task.' }),
+  // date: isRequired({ message: 'The date is required.' }),
+  // time: isRequired({ message: 'The time is required.' }),
 });
 
 interface IProps {
@@ -36,6 +34,7 @@ export const DelegatedTaskForm: React.FC<IProps> = () => {
     addDelegatedTask,
     submitting,
     fillForm,
+    assignmentOptions,
   } = rootStore.delegatedTaskStore;
 
   useEffect(() => {}, [setShowDelegatedTaskForm]);
@@ -50,6 +49,7 @@ export const DelegatedTaskForm: React.FC<IProps> = () => {
     const deadline = combineDateAndTime(values.date, values.time);
     const { date, time, ...delegatedTask } = values;
     delegatedTask.deadline = deadline;
+
     if (!delegatedTask.id) {
       let newTask = {
         ...delegatedTask,
@@ -72,19 +72,22 @@ export const DelegatedTaskForm: React.FC<IProps> = () => {
               onSubmit={handleFinalFormSubmit}
               render={({ handleSubmit, invalid, pristine }) => (
                 <Form onSubmit={handleSubmit} size="big">
-                  <Field
-                    name="assignment"
-                    placeholder="Assignment"
-                    value={delegatedTask.assignment}
-                    component={TextInput}
-                  />
-                  <Field
-                    options={options}
-                    name="type"
-                    placeholder="Type"
-                    value={delegatedTask.type}
-                    component={SelectInput}
-                  />
+                  <Form.Group>
+                    <Field
+                      options={assignmentOptions}
+                      name="assignment"
+                      placeholder="Assignment"
+                      value={delegatedTask.assignment}
+                      component={SelectInput}
+                    />
+                    <Field
+                      options={options}
+                      name="type"
+                      placeholder="Type"
+                      value={delegatedTask.type}
+                      component={SelectInput}
+                    />
+                  </Form.Group>
                   <Form.Group>
                     <Field
                       name="date"

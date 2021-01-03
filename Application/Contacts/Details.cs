@@ -32,9 +32,7 @@ namespace Application.Contacts
             public async Task<ContactDTO> Handle(Query request, CancellationToken cancellationToken)
             {
                 var contact = await _context.Contacts
-                .Include(x => x.UserContacts)
-                .ThenInclude(x => x.User)
-                .SingleOrDefaultAsync(x => x.Id == request.Id);
+                .FindAsync(request.Id);
 
                 if (contact == null)
                     throw new RestException(HttpStatusCode.NotFound,

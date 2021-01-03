@@ -7,6 +7,7 @@ export interface IContact {
   dateAdded?: Date;
   email: string;
   notes: string;
+  status: string;
 }
 
 export class ContactFormValues implements Partial<IContact> {
@@ -18,6 +19,7 @@ export class ContactFormValues implements Partial<IContact> {
   dateAdded?: Date = undefined;
   email: string = '';
   notes: string = '';
+  status: string ='';
 
   constructor(init?: Partial<IContact>) {
     Object.assign(this, init);

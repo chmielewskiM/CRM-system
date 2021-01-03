@@ -24,10 +24,10 @@ namespace Application.DelegatedTasks
         {
             public CommandValidator()
             {
-                RuleFor(x => x.Assignment).NotEmpty();
-                RuleFor(x => x.Type).NotEmpty();
-                RuleFor(x => x.Deadline).NotEmpty();
-                RuleFor(x => x.Notes).NotEmpty();
+                // RuleFor(x => x.Assignment).NotEmpty();
+                // RuleFor(x => x.Type).NotEmpty();
+                // RuleFor(x => x.Deadline).NotEmpty();
+                // RuleFor(x => x.Notes).NotEmpty();
             }
         }
         public class Handler : IRequestHandler<Command>

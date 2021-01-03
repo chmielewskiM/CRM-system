@@ -72,7 +72,8 @@ namespace Persistence.Migrations
                     PhoneNumber = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
                     DateAdded = table.Column<DateTime>(nullable: false),
-                    Notes = table.Column<string>(nullable: true)
+                    Notes = table.Column<string>(nullable: true),
+                    Status = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -237,6 +238,31 @@ namespace Persistence.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "UserContacts",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(nullable: false),
+                    ContactId = table.Column<Guid>(nullable: false),
+                    DateAdded = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserContacts", x => new { x.UserId, x.ContactId });
+                    table.ForeignKey(
+                        name: "FK_UserContacts_Contacts_ContactId",
+                        column: x => x.ContactId,
+                        principalTable: "Contacts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserContacts_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -273,6 +299,11 @@ namespace Persistence.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserContacts_ContactId",
+                table: "UserContacts",
+                column: "ContactId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -296,9 +327,6 @@ namespace Persistence.Migrations
                 name: "Calls");
 
             migrationBuilder.DropTable(
-                name: "Contacts");
-
-            migrationBuilder.DropTable(
                 name: "DelegatedTasks");
 
             migrationBuilder.DropTable(
@@ -308,7 +336,13 @@ namespace Persistence.Migrations
                 name: "Orders");
 
             migrationBuilder.DropTable(
+                name: "UserContacts");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Contacts");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

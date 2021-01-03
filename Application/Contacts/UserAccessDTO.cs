@@ -1,6 +1,6 @@
 namespace Application.Contacts
 {
-    public class ContactAddressDTO
+    public class UserAccessDTO
     {
         public string Username { get; set; }
         public string DisplayName { get; set; }

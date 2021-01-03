@@ -8,9 +8,10 @@ namespace Application.Contacts
         public MappingProfile()
         {
             CreateMap<Contact, ContactDTO>();
-            CreateMap<UserContact, ContactAddressDTO>()
+            CreateMap<UserContact, UserAccessDTO>()
             .ForMember(d => d.Username, o => o.MapFrom(s => s.User.UserName))
-            .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.User.DisplayName));
+            .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.User.DisplayName))
+            .ForMember(d => d.Level, o => o.MapFrom(s => s.User.Level));
         }
     }
 }

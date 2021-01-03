@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import { OrderList } from './OrderList';
 import { OrderForm } from '../form/OrderForm';
 import { RootStoreContext } from '../../../app/stores/rootStore';
-import ModalContainer from '../../../app/common/modals/ModalContainer';
+import ConfirmationModal from '../../../app/common/modals/ConfirmationModal';
 
 export const OrderDashboard: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
@@ -26,7 +26,7 @@ export const OrderDashboard: React.FC = () => {
 
   return (
     <Fragment>
-      <ModalContainer />
+      {/* <ConfirmationModal contact={}/> */}
       <Grid stackable centered divided="vertically">
         {showOrderForm && (
           <OrderForm
@@ -70,7 +70,7 @@ export const OrderDashboard: React.FC = () => {
                 <Button
                   negative
                   content="Mark as done"
-                  onClick={() => openModal('as')}
+                  onClick={() => openModal('as', '', '')}
                 />
               )}
             {selectedOrder && (

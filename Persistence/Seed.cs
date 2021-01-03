@@ -19,19 +19,19 @@ namespace Persistence
                         DisplayName = "Admin",
                         UserName = "Admin",
                         Email = "admin@sb.com",
-                        Level = "admin",
+                        Level = "top"
                     },
                     new User {
                         DisplayName = "Manager",
                         UserName = "Manager",
                         Email = "manager@sb.com",
-                        Level = "manager",
+                        Level = "mid"
                     },
                     new User {
                         DisplayName = "Employee",
                         UserName = "Employee",
                         Email = "employee@sb.com",
-                        Level = "worker",
+                        Level = "low"
                     }
                 };
                 foreach (var user in users)
@@ -53,7 +53,8 @@ namespace Persistence
                             .AddDays(-12),
                         // .ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "michael@one.com",
-                        Notes = "talk about price"
+                        Notes = "talk about price",
+                        Status = "Inactive"
                     },
                     new Contact {
                         Name = "Evan Whitaker",
@@ -65,7 +66,8 @@ namespace Persistence
                             .AddDays(-7),
                         // .ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "evan@two.com",
-                        Notes = "inform about new purchase"
+                        Notes = "inform about new purchase",
+                        Status = "Inactive"
                     },
                     new Contact {
                         Name = "Evelyn More",
@@ -77,7 +79,8 @@ namespace Persistence
                             .AddDays(-7),
                         // .ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "evelyn@three.com",
-                        Notes = "report"
+                        Notes = "report",
+                        Status = "Inactive"
                     },
                     new Contact {
                         Name = "Mert Sauer",
@@ -89,7 +92,8 @@ namespace Persistence
                             .AddDays(-2),
                         // .ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "mert@four.com",
-                        Notes = "present the offer"
+                        Notes = "present the offer",
+                        Status = "Inactive"
                     },
                     new Contact {
                         Name = "Vivian Jang",
@@ -101,7 +105,8 @@ namespace Persistence
                             .AddDays(-3),
                         // .ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "vivian@five.com",
-                        Notes = ""
+                        Notes = "",
+                        Status = "Inactive"
                     },
                     new Contact {
                         Name = "Sam Ford",
@@ -113,7 +118,8 @@ namespace Persistence
                             .AddDays(-4),
                         // .ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "sam@six.com",
-                        Notes = ""
+                        Notes = "",
+                        Status = "Inactive"
                     },
                     new Contact {
                         Name = "Robert Guide",
@@ -125,7 +131,8 @@ namespace Persistence
                             .AddDays(-2),
                         // .ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "robert@seven.com",
-                        Notes = ""
+                        Notes = "",
+                        Status = "Inactive"
                     },
                     new Contact {
                         Name = "Lars Hammer",
@@ -137,7 +144,8 @@ namespace Persistence
                             .AddDays(-10),
                         // .ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "lars@eight.com",
-                        Notes = ""
+                        Notes = "",
+                        Status = "Inactive"
                     },
                     new Contact {
                         Name = "Larry Graham",
@@ -149,7 +157,8 @@ namespace Persistence
                             .AddDays(-2),
                         // .ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "larry@nine.com",
-                        Notes = "ask about the needs"
+                        Notes = "ask about the needs",
+                        Status = "Inactive"
                     }
                 };
                 context
@@ -204,8 +213,7 @@ namespace Persistence
                             .Now
                             .AddDays(-12),
                         Notes = "123"
-                    },
-
+                    }
                 };
 
                 context

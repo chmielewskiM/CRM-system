@@ -15,7 +15,7 @@ namespace Infrastructure.Security
 
         public string GetLoggedUsername()
         {
-            var username = _httpContextAccessor.HttpContext.User?.Claims?.FirstOrDefault(x =>
+            var username = _httpContextAccessor.HttpContext.User?.Claims?.Single(x =>
             x.Type == ClaimTypes.NameIdentifier)?.Value;
 
             return username;

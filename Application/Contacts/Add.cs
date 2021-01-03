@@ -22,6 +22,7 @@ namespace Application.Contacts
             public string Email { get; set; }
             public DateTime DateAdded { get; set; }
             public string Notes { get; set; }
+            public string Status { get; set; }
 
         }
         public class CommandValidator : AbstractValidator<Command>
@@ -57,7 +58,8 @@ namespace Application.Contacts
                     PhoneNumber = request.PhoneNumber,
                     DateAdded = request.DateAdded,
                     Email = request.Email,
-                    Notes = request.Notes
+                    Notes = request.Notes,
+                    Status = "Active"
                 };
 
                 _context.Contacts.Add(contact);
@@ -65,14 +67,14 @@ namespace Application.Contacts
                 var user = await _context.Users.SingleOrDefaultAsync(x =>
                 x.UserName == _userAccessor.GetLoggedUsername());
 
-                var contactAddress = new UserContact
+                var userAccess = new UserContact
                 {
                     User = user,
                     Contact = contact,
                     DateAdded = request.DateAdded
                 };
 
-                _context.UserContacts.Add(contactAddress);
+                _context.UserContacts.Add(userAccess);
 
                 var success = await _context.SaveChangesAsync() > 0;
 

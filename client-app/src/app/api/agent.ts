@@ -5,8 +5,6 @@ import {IOrder} from '../models/order';
 import {IMaterial} from '../models/material';
 import {IDelegatedTaskForm} from '../models/delegatedTask';
 import {IUser, IUserFormValues} from '../models/user';
-import {useContext} from 'react';
-import {RootStoreContext} from '../stores/rootStore';
 
 axios.defaults.baseURL = 'http://localhost:5000';
 
@@ -73,6 +71,14 @@ const Contacts = {
     delete: (id : string) => requests.del(`/contact/${id}`)
 };
 
+const Leads = {
+    list: (): Promise < IContact[] > => requests.get('/lead'),
+    details: (id : string) => requests.get(`/lead/${id}`),
+    add: (contact : IContact) => requests.post('/lead', contact),
+    update: (contact : IContact) => requests.put(`/lead/${contact.id}`, contact),
+    delete: (id : string) => requests.del(`/lead/${id}`)
+};
+
 const DelegatedTasks = {
     list: (): Promise < IDelegatedTaskForm[] > => requests.get('/delegatedTask'),
     details: (id : string) => requests.get(`/delegatedTask/${id}`),
@@ -102,7 +108,8 @@ const Materials = {
     delete: (id : string) => requests.del(`/material/${id}`)
 };
 
-const User = {
+const Users = {
+    list: (): Promise < IUser[] > => requests.get('/user/list'),
     logged: (): Promise < IUser > => requests.get('/user'),
     login: (user : IUserFormValues): Promise < IUser > => requests.post('/user/login', user),
     register: (user : IUserFormValues): Promise < IUser > => requests.post('/user/register', user)
@@ -110,8 +117,9 @@ const User = {
 
 export default {
     Contacts,
+    Leads,
     Orders,
     Materials,
     DelegatedTasks,
-    User
+    Users
 };

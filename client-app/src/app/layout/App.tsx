@@ -12,6 +12,7 @@ import { StockDashboard } from '../../features/stock/dashboard/StockDashboard';
 import { DelegatedTaskDashboard } from '../../features/delegatedTasks/dashboard/DelegatedTaskDashboard';
 import { RootStoreContext } from '../stores/rootStore';
 import { HomeDashboard } from '../../features/home/dashboard/HomeDashboard';
+import { LeadDashboard } from '../../features/leads/dashboard/LeadDashboard';
 
 const App: React.FC<RouteComponentProps> = ({ history }) => {
   const rootStore = useContext(RootStoreContext);
@@ -30,6 +31,7 @@ const App: React.FC<RouteComponentProps> = ({ history }) => {
     setAppLoaded,
     token,
     rootStore.contactStore.rr,
+    rootStore.leadStore.rr,
     rootStore.delegatedTaskStore.rr,
     rootStore.orderStore.rr,
     rootStore.stockStore.rr,
@@ -54,6 +56,7 @@ const App: React.FC<RouteComponentProps> = ({ history }) => {
             <Container className="wrapper">
               <Route path="/dashboard" component={HomeDashboard} />
               <Route path="/contacts" component={ContactDashboard} />
+              <Route path="/leads" component={LeadDashboard} />
               <Route path="/tasks" component={DelegatedTaskDashboard} />
               <Route path="/orders" component={OrderDashboard} />
               <Route path="/stock" component={StockDashboard} />

@@ -40,5 +40,17 @@ namespace API.Controllers
         {
             return await Mediator.Send(new Delete.Command { Id = id });
         }
+
+        [HttpPost("{id}/share")]
+        public async Task<ActionResult<Unit>> Share(Guid id)
+        {
+            return await Mediator.Send(new Share.Command { Id = id });
+        }
+
+        [HttpPost("{id}/unshare")]
+        public async Task<ActionResult<Unit>> Unshare(Guid id)
+        {
+            return await Mediator.Send(new Unshare.Command { Id = id });
+        }
     }
 }
