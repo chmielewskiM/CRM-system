@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "75221DsFF3YgXaCdJIYJIfu0HpDjv9Yzl+1NhK/8xg9arnNWPLNHanrM5rsqddE2h9ZVM/4mOwkhmP0tx+4nVQ==",
+  "dgSpecHash": "XEmYjz4Q/fuZWcOb6L+a+NXFOBZq4C0Tb0ha5s12TPMHVtqBOGNaAvjipdVlTdNngdFW5UyUJDNBllaNNXq5Ug==",
   "success": true,
-  "projectFilePath": "E:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj",
+  "projectFilePath": "e:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\mc\\.nuget\\packages\\automapper\\10.0.0\\automapper.10.0.0.nupkg.sha512",
     "C:\\Users\\mc\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\8.0.1\\automapper.extensions.microsoft.dependencyinjection.8.0.1.nupkg.sha512",

@@ -40,6 +40,7 @@
     "format": "prettier --write src/**/*.{js,jsx,ts,tsx}",
     "lint": "eslint --fix src/**/*.{js,jsx,ts,tsx}",
     "start": "react-scripts start",
+    "start-watch": "react-scripts start --watch",
     "build": "react-scripts build",
     "test": "jest",
     "test:watch": "jest --watch",

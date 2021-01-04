@@ -1,134 +1,176 @@
 @import '../../styles/variables';
 
-.ui.vertical.menu.left.fixed {
-    width: 15%;
-    border: 0;
-
-    @include breakpoint(tablet) {
-        width: 150px;
-    }
-
-    @include breakpoint(smartphone) {
-        width: 100px;
-    }
-
-    & .sideBar {
-        background: linear-gradient(180deg, $color-primary-dark 60%, $color-primary-light 100%);
-        height: 100%;
-        display: flex;
+#root {
+    .ui.vertical.menu.pointing {
+        width: 0;
+        flex: 0.15 1;
         border: 0;
-        font-size: 1.6rem;
+        margin: 0;
+        display: initial;
+        transition: flex .5s ease-out;
+        &.off {
+            flex: 0 1;
+            transition-duration: .3s;
+            & .sideBar {
+                & .button .icon {
+                    color: $color-primary-dark;
+                }
 
-        & :first-child {
-            display: flex;
-            flex: 1 0;
-            max-height: 25%;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            color: $color-primary-light;
-            margin: 0;
-            padding: 0;
-            width: 100%;
+                & *:not(.icon) {
+                    transition: opacity .1s ease-out;
+                    opacity: 0;
 
-            & img {
-                max-width: 10vw;
-                max-height: 10vw;
-                margin-top: 10px;
-            }
-
-            & h3 {
-                display: block;
-                margin: 10px;
-                font-size: 3rem;
-                color: rgba(255, 255, 255, 0.842);
-                border: 0;
+                }
             }
         }
 
-        & :last-child {
-            margin: auto 0 auto 0;
-            align-self: flex-start;
-            margin: auto 0 5rem 0;
-            width: 100%;
-            padding: 0;
+        @include breakpoint(tablet) {
+            width: 150px;
+        }
+
+        @include breakpoint(smartphone) {
+            width: 100px;
+        }
+
+        & .sideBar {
+            background: linear-gradient(180deg, $color-primary-dark 60%, $color-primary-light 100%);
+            height: 100%;
+            display: flex;
             border: 0;
+            font-size: 1.6rem;
+            transition: none;
+            flex: 1 0;
 
-            & .ui.dropdown {
-
-                &:hover,
-                &.active {
-                    & >* {
-                        color: $color-primary-light;
-                        opacity: 1;
-                    }
-                }
-
-                & >* {
-                    color: $color-primary-dark;
-                }
+            & *:not(.icon) {
+                transition: opacity .15s ease-in .3s;
+                opacity: 1;
             }
 
-            & .text,
-            .dropdown.icon {
-
-                opacity: 0.8;
-            }
-
-            & i {
+            & :nth-child(2) {
+                display: flex;
+                flex: 1 0;
+                max-height: 25%;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                color: $color-primary-light;
                 margin: 0;
+                padding: 0;
+                width: 100%;
+
+                & img {
+                    max-width: 10vw;
+                    max-height: 10vw;
+                    margin-top: 10px;
+                }
+
+                & h3 {
+                    display: block;
+                    margin: 10px;
+                    font-size: 3rem;
+                    color: rgba(255, 255, 255, 0.842);
+                    border: 0;
+                }
             }
 
-            & .menu {
-                background-color: transparent;
-                margin: 1rem 0;
-                top: 100%;
-                bottom: 0;
+            & :last-child {
+                margin: auto 0 auto 0;
+                align-self: flex-start;
+                margin: auto 0 5rem 0;
+                width: 100%;
+                padding: 0;
+                border: 0;
 
-                & .item.logout {
-                    margin: 0 !important;
-                    padding: 0;
+                & .ui.dropdown {
 
-                    &:hover {
-                        background-color: transparent !important;
-                        & .label,
-                        i.power.icon {
-                            color: $color-secondary;
+                    &:hover,
+                    &.active {
+                        &>* {
+                            color: $color-primary-light;
+                            opacity: 1;
                         }
                     }
 
-                    & .label {
-                        background-color: transparent;
+                    &>* {
+                        color: $color-primary-dark;
                     }
+                }
 
-                    & .label,
-                    i.power.icon {
+                & .text,
+                .dropdown.icon {
+
+                    opacity: 0.8;
+                }
+
+                & i {
+                    margin: 0;
+                }
+
+                & .menu {
+                    background-color: transparent;
+                    margin: 1rem 0;
+                    top: 100%;
+                    bottom: 0;
+
+                    & .item.logout {
                         margin: 0 !important;
-                        color: $color-primary-light;
-                        font-size: 1rem;
+                        padding: 0;
+
+                        &:hover {
+                            background-color: transparent !important;
+
+                            & .label,
+                            i.power.icon {
+                                color: $color-secondary;
+                            }
+                        }
+
+                        & .label {
+                            background-color: transparent;
+                        }
+
+                        & .label,
+                        i.power.icon {
+                            margin: 0 !important;
+                            color: $color-primary-light;
+                            font-size: 1rem;
+                        }
                     }
                 }
             }
-        }
 
-        & a.link.item {
-            width: 100%;
-            color: #edf6f9;
+            & a.link.item {
+                align-self: stretch;
+                color: #edf6f9;
+                font-family: $font-serif;
 
-            &.active,
-            &.active:hover {
-                color: $color-detail;
-                background-color: #edf6f9;
-                border-color: #edf6f9;
+                &.active,
+                &.active:hover {
+                    color: $color-primary-dark;
+                    background-color: #edf6f9;
+                    border-color: #edf6f9;
+                }
+
+                &:hover {
+                    color: $color-detail;
+                    background-color: $color-primary-dark;
+                    border-color: $color-secondary-light;
+                }
             }
 
-            &:hover {
-                color: $color-detail;
-                background-color: $color-primary-dark;
-                border-color: $color-secondary-light;
+            & .button {
+                font-size: 3rem;
+                padding: 0;
+                margin: 0;
+                position: fixed;
+                left: 10%;
+                background-color: transparent;
+                z-index: 1;
+
+                & .icon {
+                    color: white;
+                }
             }
         }
-
-
     }
 }

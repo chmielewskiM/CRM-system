@@ -29,6 +29,7 @@ export const SignIn = () => {
       textAlign="center"
       style={{
         height: '100vh',
+        width: '100%'
       }}
       verticalAlign="middle"
     >

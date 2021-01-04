@@ -23,6 +23,10 @@ export default class CommonStore {
 
   @observable appLoaded = false;
 
+  @observable toggleIcon = 'toggle on';
+
+  @observable toggledNav = true;
+
   @action setToken = (token: string | null) => {
     window.localStorage.setItem('jwt', token!);
     this.token = token;
@@ -30,5 +34,12 @@ export default class CommonStore {
 
   @action setAppLoaded = () => {
     this.appLoaded = true;
+  };
+
+  @action toggleNav = () => {
+    this.toggledNav = !this.toggledNav;
+    this.toggledNav ? this.toggleIcon = 'toggle on' : this.toggleIcon = 'toggle off';
+    console.log(this.toggleIcon)
+    this.rootStore.contactStore.render();
   };
 }

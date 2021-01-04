@@ -19,9 +19,9 @@ export const ContactList: React.FC = () => {
 
   return (
     <>
-      <Table celled selectable sortable>
+      <Table striped selectable size='small' className='tableContainer' scrollable='false'>
         <Table.Header>
-          <Table.Row>
+          <Table.Row >
             <Table.HeaderCell>Name</Table.HeaderCell>
             <Table.HeaderCell>Company</Table.HeaderCell>
             <Table.HeaderCell>Type</Table.HeaderCell>
@@ -30,7 +30,7 @@ export const ContactList: React.FC = () => {
           </Table.Row>
         </Table.Header>
         {contactsByDate.map((contact) => (
-          <Table.Body key={contact.id}>
+          <Table.Body key={contact.id} scrollable='true'>
             <Table.Row
               onClick={() => selectContact(contact.id)}
               active={

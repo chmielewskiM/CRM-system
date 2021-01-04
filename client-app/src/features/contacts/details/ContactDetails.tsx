@@ -31,7 +31,7 @@ export const ContactDetails: React.FC = () => {
       />
       <Fragment key={selectedContact!.id}>
         <Header as="h2" width={16}>
-          Details about {selectedContact!.name}
+          {selectedContact!.name}
         </Header>
 
         <Divider clearing />

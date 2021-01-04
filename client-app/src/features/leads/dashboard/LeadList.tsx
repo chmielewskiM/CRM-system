@@ -15,7 +15,7 @@ export const LeadList: React.FC = () => {
     loadLeads,
     rr,
   } = rootStore.leadStore;
-  
+
   useEffect(() => {}, [showLeadForm, rr]);
 
   if (loadingInitial) return <LoaderComponent content="Loading..." />;
@@ -24,39 +24,35 @@ export const LeadList: React.FC = () => {
     <>
       <Breadcrumb size="massive">
         <Breadcrumb.Section
+          content="Active"
           onClick={() => {
             loadLeads('Active');
           }}
-        >
-          Active
-        </Breadcrumb.Section>
+        />
         <Breadcrumb.Divider icon="right arrow" size="massive" />
         <Breadcrumb.Section
+          content="Opportunity"
           onClick={() => {
             loadLeads('Opportunity');
           }}
-        >
-          Opportunity
-        </Breadcrumb.Section>
+        />
         <Breadcrumb.Divider icon="right arrow" size="massive" />
         <Breadcrumb.Section
+          content="Quote"
           onClick={() => {
             loadLeads('Quote');
           }}
-        >
-          Quote
-        </Breadcrumb.Section>
+        />
         <Breadcrumb.Divider icon="right arrow" size="massive" />
         <Breadcrumb.Section
+          content="Invoice"
           onClick={() => {
             loadLeads('Invoice');
           }}
-        >
-          Invoice
-        </Breadcrumb.Section>
+        />
       </Breadcrumb>
 
-      <Table striped>
+      <Table striped size='small' className='tableContainer'>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Name</Table.HeaderCell>
@@ -75,7 +71,7 @@ export const LeadList: React.FC = () => {
               <Table.Cell>{contact.status}</Table.Cell>
               <Table.Cell>{contact.phoneNumber}</Table.Cell>
               <Table.Cell>{contact.email}</Table.Cell>
-              <Table.Cell>
+              <Table.Cell transparent="true">
                 <LeadSettings
                   contact={new ContactFormValues(contact)}
                 ></LeadSettings>

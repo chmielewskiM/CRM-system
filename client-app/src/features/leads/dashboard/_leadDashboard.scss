@@ -1,15 +1,19 @@
-.ui.container.wrapper{
-    & .grid{
-        & .two.column.row{
-            height: 10%;
-            padding:3rem;
-            & .column.two{
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-start;
-                & .button{
-                    margin: 5px 0;
-                    
+:global(#root) {
+    .ui.container.wrapper {
+        & .grid {
+            & .buttonsRow {
+                height: 10%;
+                padding: 3rem;
+
+                & .column.two {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-start;
+
+                    & .button {
+                        margin: 5px 0;
+
+                    }
                 }
             }
         }
