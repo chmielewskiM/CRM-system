@@ -52,7 +52,7 @@ export const LeadList: React.FC = () => {
         />
       </Breadcrumb>
 
-      <Table striped size='small' className='tableContainer'>
+      <Table striped size='small' className='table-container'>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Name</Table.HeaderCell>

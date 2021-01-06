@@ -4,5 +4,9 @@
 @import 'variables';
 @import '../features/nav/navbar';
 @import '../features/contacts/dashboard/contactDashboard';
+@import '../features/archivedLogs/archivedLog';
 @import '../features/leads/dashboard/leadDashboard';
+@import '../features/delegatedTasks/dashboard/delegatedTaskDashboard';
+@import '../features/delegatedTasks/details/delegatedTaskDetails';
+@import '../features/delegatedTasks/taskNotifier/taskNotifier';
 @import '../features/signin/signin';

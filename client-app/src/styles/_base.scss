@@ -7,6 +7,7 @@
 
 html {
     font-size: 62.5%;
+    height: 100vh;
 
     @include breakpoint(smartphone) {
         font-size: 44%;
@@ -31,25 +32,20 @@ html {
 }
 
 body {
-    // margin-top: 10px;
-    // font-family: $font-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    height: 100%;
-    background-color: $color-primary-light;
+    // background-color: $color-primary-light;
 }
 
 #root {
-    height: inherit;
     display: flex;
+    height: 100vh;
 
     & .ui.container.wrapper {
-        // margin-left: 15% !important;
         margin-right: 0 !important;
         height: inherit;
-        flex:1 0;
+        flex: 1 0;
 
-        // overflow: hidden;
         @include breakpoint(tablet) {
             margin-left: 150px !important;
         }
@@ -58,71 +54,129 @@ body {
             margin-left: 100px !important;
         }
 
-        & .grid {
-            height: 100%;
+        & .grid.main-grid {
+            height: inherit;
             padding: 0;
             margin: 0;
-            overflow: hidden;
+            overflow-y: scroll;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-content: baseline;
 
-            & .row {
-                height: 50%;
-                margin: 0;
+            & .buttons-row {
+                height: 3rem;
+                justify-content: flex-end;
+                align-items: stretch;
+                padding: 0;
+                border-bottom: 1px solid $color-primary-dark;
+                position: sticky;
+                background-color: $color-primary-light;
 
-                // padding:1rem 2rem;
-                & .column {
-                    overflow-y: auto;
-                    overflow-x: auto;
-                    max-height: 100%;
-                }
-            }
-        }
-    }
-
-    & table.ui.table.tableContainer {
-        // background: $color-detail;
-        border: none;
-
-        &>* {
-            border: none;
-        }
-
-        & thead {
-            background-color: $color-primary-dark;
-
-            & tr {
-                padding: .3rem !important;
-                & th {
-                    color: $color-primary-light;
+                & .button {
+                    font-weight: $bold;
+                    font-size: 1.2rem;
+                    margin: 0 .4rem;
+                    color: $color-primary-dark;
                     background-color: transparent;
-                    margin:.5rem;
-                padding:.3rem 1rem;
-                }
-            }
-        }
-
-        & tbody {
-
-
-
-            & tr {
-                // background-color: rgba(255, 255, 255, 0.61);
-
-                &:hover {
-                    background-color: rgba($color-primary-dark, 0.6) !important;
-                    color: #fff !important;
-                }
-
-                &.active {
-                    background-color: rgba($color-primary-dark, 0.9) !important;
-                    color: $color-detail2 !important;
+                    padding: 0 2rem;
+                    border-radius: 0;
 
                     &:hover {
-                        background-color: $color-primary-dark !important;
+                        color: #ff5a5f;
+                        // box-shadow: 0 0 1rem .1rem inset $color-primary-dark;
                     }
                 }
 
-                & td {
-                    border: none;
+            }
+
+            & .row-content-1 {
+                width: 100%;
+                max-height: 50%;
+                margin: 0;
+                overflow: hidden;
+                // padding:1rem 0;
+                & .column {
+                    max-height: 100%;
+                    overflow: hidden;
+                    position: relative;
+                    & table.ui.table.table-container {
+                        border: thin solid $color-primary-dark;
+                        
+                        &>* {
+                            border: none;
+                        }
+
+                        & .head {
+                            @include table-head;
+                            & th{
+                                font-weight: $light;
+                            }
+                        }
+
+                        & tbody {
+                            
+
+                            &:nth-child(odd){
+                                background-color: $color-primary-light;
+                            }
+
+                            & tr {
+                                // background-color: rgba(255, 255, 255, 0.61);
+
+                                &:hover {
+                                    background-color: rgba($color-primary-dark, 0.6) !important;
+                                    color: #fff !important;
+                                }
+
+                                &.active {
+                                    background-color: rgba($color-primary-dark, 0.9) !important;
+                                    color: $color-detail2 !important;
+
+                                    &:hover {
+                                        background-color: $color-primary-dark !important;
+                                    }
+                                }
+
+                                & td {
+                                    border: none;
+                                }
+                            }
+                        }
+                    }
+
+                    & .list {
+                        background-color: transparent;
+                        margin: 0;
+                        padding: 0;
+                        width: 100%;
+                        overflow-y: scroll;
+                        position: relative;
+                        
+                        &::-webkit-scrollbar{
+                            display: none;
+                        }
+                        // & .head{
+                        //     background-color: white;
+                        // }
+                    }
+                }
+            }
+
+            & .row-content-2 {
+                // flex: .5 0;
+                margin: 0;
+                padding: 0;
+                justify-content: space-between;
+                width: 100%;
+                & .column {
+                    max-height: 100%;
+                    width: auto;
+
+                    & .details {
+                        height: auto;
+                        width: auto;
+                    }
                 }
             }
         }

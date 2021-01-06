@@ -21,7 +21,7 @@ export const ContactDetails: React.FC = () => {
 
   if (loadingInitial) return <LoaderComponent content="Loading..." />;
   return (
-    <Segment>
+    <Segment className='details'>
       <Button
         floated="right"
         icon="close"

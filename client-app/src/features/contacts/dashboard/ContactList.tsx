@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { Table } from 'semantic-ui-react';
+import { Table, Segment, Grid } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import LoaderComponent from '../../../app/layout/LoaderComponent';
 import { RootStoreContext } from '../../../app/stores/rootStore';
@@ -19,8 +19,9 @@ export const ContactList: React.FC = () => {
 
   return (
     <>
-      <Table striped selectable size='small' className='tableContainer' scrollable='false'>
-        <Table.Header>
+      <Segment basic as={Grid.Column} className='list'>
+      <Table striped selectable size='small' className='table-container' scrollable='true'>
+        <Table.Header className='head'>
           <Table.Row >
             <Table.HeaderCell>Name</Table.HeaderCell>
             <Table.HeaderCell>Company</Table.HeaderCell>
@@ -47,6 +48,7 @@ export const ContactList: React.FC = () => {
           </Table.Body>
         ))}
       </Table>
+      </Segment>
     </>
   );
 };

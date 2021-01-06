@@ -1,7 +1,7 @@
 :global(#root) {
     .ui.container.wrapper {
-        & .grid {
-            & .buttonsRow {
+        & .main-grid {
+            & .buttons-row {
                 height: 10%;
                 padding: 3rem;
 

@@ -13,6 +13,7 @@
             transition-duration: .3s;
             & .sideBar {
                 & .button .icon {
+                    transition: color .3s ease-out;
                     color: $color-primary-dark;
                 }
 
@@ -40,7 +41,7 @@
             font-size: 1.6rem;
             transition: none;
             flex: 1 0;
-
+            overflow: hidden;
             & *:not(.icon) {
                 transition: opacity .15s ease-in .3s;
                 opacity: 1;
@@ -65,7 +66,7 @@
                 }
 
                 & h3 {
-                    display: block;
+                    // display: block;
                     margin: 10px;
                     font-size: 3rem;
                     color: rgba(255, 255, 255, 0.842);
@@ -143,7 +144,17 @@
                 align-self: stretch;
                 color: #edf6f9;
                 font-family: $font-serif;
-
+                display: inline-flex;
+                flex-direction: row-reverse;
+                justify-content: flex-start;
+                padding-right: 0;
+                & >*{
+                    margin:0;
+                }
+                & .icon{
+                    flex: 0;
+                    padding: 0 1rem;
+                }
                 &.active,
                 &.active:hover {
                     color: $color-primary-dark;
@@ -168,6 +179,7 @@
                 z-index: 1;
 
                 & .icon {
+                    transition: color .5s ease-in;
                     color: white;
                 }
             }

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "e:\\VSC\\sysCRM\\CRM\\API\\API.csproj": {}
+    "E:\\VSC\\sysCRM\\CRM\\API\\API.csproj": {}
   },
   "projects": {
-    "e:\\VSC\\sysCRM\\CRM\\API\\API.csproj": {
+    "E:\\VSC\\sysCRM\\CRM\\API\\API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "e:\\VSC\\sysCRM\\CRM\\API\\API.csproj",
+        "projectUniqueName": "E:\\VSC\\sysCRM\\CRM\\API\\API.csproj",
         "projectName": "API",
-        "projectPath": "e:\\VSC\\sysCRM\\CRM\\API\\API.csproj",
+        "projectPath": "E:\\VSC\\sysCRM\\CRM\\API\\API.csproj",
         "packagesPath": "C:\\Users\\mc\\.nuget\\packages\\",
-        "outputPath": "e:\\VSC\\sysCRM\\CRM\\API\\obj\\",
+        "outputPath": "E:\\VSC\\sysCRM\\CRM\\API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Microsoft\\Xamarin\\NuGet\\"
@@ -31,11 +31,11 @@
         "frameworks": {
           "netcoreapp3.1": {
             "projectReferences": {
-              "e:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj": {
-                "projectPath": "e:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj"
+              "E:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj": {
+                "projectPath": "E:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj"
               },
-              "e:\\VSC\\sysCRM\\CRM\\Infrastructure\\Infrastructure.csproj": {
-                "projectPath": "e:\\VSC\\sysCRM\\CRM\\Infrastructure\\Infrastructure.csproj"
+              "E:\\VSC\\sysCRM\\CRM\\Infrastructure\\Infrastructure.csproj": {
+                "projectPath": "E:\\VSC\\sysCRM\\CRM\\Infrastructure\\Infrastructure.csproj"
               }
             }
           }
@@ -88,14 +88,14 @@
         }
       }
     },
-    "e:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj": {
+    "E:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "e:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj",
+        "projectUniqueName": "E:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj",
         "projectName": "Application",
-        "projectPath": "e:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj",
+        "projectPath": "E:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj",
         "packagesPath": "C:\\Users\\mc\\.nuget\\packages\\",
-        "outputPath": "e:\\VSC\\sysCRM\\CRM\\Application\\obj\\",
+        "outputPath": "E:\\VSC\\sysCRM\\CRM\\Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Microsoft\\Xamarin\\NuGet\\"
@@ -115,11 +115,11 @@
         "frameworks": {
           "netstandard2.1": {
             "projectReferences": {
-              "e:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj": {
-                "projectPath": "e:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj"
+              "E:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj": {
+                "projectPath": "E:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj"
               },
-              "e:\\VSC\\sysCRM\\CRM\\Persistence\\Persistence.csproj": {
-                "projectPath": "e:\\VSC\\sysCRM\\CRM\\Persistence\\Persistence.csproj"
+              "E:\\VSC\\sysCRM\\CRM\\Persistence\\Persistence.csproj": {
+                "projectPath": "E:\\VSC\\sysCRM\\CRM\\Persistence\\Persistence.csproj"
               }
             }
           }
@@ -169,14 +169,14 @@
         }
       }
     },
-    "e:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj": {
+    "E:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "e:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj",
+        "projectUniqueName": "E:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj",
         "projectName": "Domain",
-        "projectPath": "e:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj",
+        "projectPath": "E:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj",
         "packagesPath": "C:\\Users\\mc\\.nuget\\packages\\",
-        "outputPath": "e:\\VSC\\sysCRM\\CRM\\Domain\\obj\\",
+        "outputPath": "E:\\VSC\\sysCRM\\CRM\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Microsoft\\Xamarin\\NuGet\\"
@@ -235,14 +235,14 @@
         }
       }
     },
-    "e:\\VSC\\sysCRM\\CRM\\Infrastructure\\Infrastructure.csproj": {
+    "E:\\VSC\\sysCRM\\CRM\\Infrastructure\\Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "e:\\VSC\\sysCRM\\CRM\\Infrastructure\\Infrastructure.csproj",
+        "projectUniqueName": "E:\\VSC\\sysCRM\\CRM\\Infrastructure\\Infrastructure.csproj",
         "projectName": "Infrastructure",
-        "projectPath": "e:\\VSC\\sysCRM\\CRM\\Infrastructure\\Infrastructure.csproj",
+        "projectPath": "E:\\VSC\\sysCRM\\CRM\\Infrastructure\\Infrastructure.csproj",
         "packagesPath": "C:\\Users\\mc\\.nuget\\packages\\",
-        "outputPath": "e:\\VSC\\sysCRM\\CRM\\Infrastructure\\obj\\",
+        "outputPath": "E:\\VSC\\sysCRM\\CRM\\Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Microsoft\\Xamarin\\NuGet\\"
@@ -262,8 +262,8 @@
         "frameworks": {
           "netstandard2.1": {
             "projectReferences": {
-              "e:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj": {
-                "projectPath": "e:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj"
+              "E:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj": {
+                "projectPath": "E:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj"
               }
             }
           }
@@ -305,14 +305,14 @@
         }
       }
     },
-    "e:\\VSC\\sysCRM\\CRM\\Persistence\\Persistence.csproj": {
+    "E:\\VSC\\sysCRM\\CRM\\Persistence\\Persistence.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "e:\\VSC\\sysCRM\\CRM\\Persistence\\Persistence.csproj",
+        "projectUniqueName": "E:\\VSC\\sysCRM\\CRM\\Persistence\\Persistence.csproj",
         "projectName": "Persistence",
-        "projectPath": "e:\\VSC\\sysCRM\\CRM\\Persistence\\Persistence.csproj",
+        "projectPath": "E:\\VSC\\sysCRM\\CRM\\Persistence\\Persistence.csproj",
         "packagesPath": "C:\\Users\\mc\\.nuget\\packages\\",
-        "outputPath": "e:\\VSC\\sysCRM\\CRM\\Persistence\\obj\\",
+        "outputPath": "E:\\VSC\\sysCRM\\CRM\\Persistence\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Microsoft\\Xamarin\\NuGet\\"
@@ -332,8 +332,8 @@
         "frameworks": {
           "netstandard2.1": {
             "projectReferences": {
-              "e:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj": {
-                "projectPath": "e:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj"
+              "E:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj": {
+                "projectPath": "E:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj"
               }
             }
           }

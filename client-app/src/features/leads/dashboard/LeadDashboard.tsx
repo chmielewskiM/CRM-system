@@ -8,9 +8,9 @@ import { RootStoreContext } from '../../../app/stores/rootStore';
 
 export const LeadDashboard: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
-  const { showLeadForm, selectedLead, addLeadForm, selectLead, status } = rootStore.leadStore;
+  const { showLeadForm, selectedLead, addLeadForm, selectLead, status, loadLeads } = rootStore.leadStore;
 
-  useEffect(() => {}, [showLeadForm, status]);
+  useEffect(() => {loadLeads(status)}, [showLeadForm, status]);
 
   // if (contactStore.loadingInitial)
   //   return <LoaderComponent content="Loading..." />;
