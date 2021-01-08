@@ -1,9 +1,6 @@
 import { observable, action, computed, configure, runInAction } from 'mobx';
 import { toast } from 'react-toastify';
-import {
-  IDelegatedTask,
-  DelegatedTaskFormValues,
-} from '../models/delegatedTask';
+import { IDelegatedTask, DelegatedTaskFormValues } from '../models/delegatedTask';
 import agent from '../api/agent';
 import { RootStore } from './rootStore';
 import { IUser } from '../models/user';
@@ -35,6 +32,8 @@ export default class DelegatedTaskStore {
   @observable usersRegistry = new Map();
 
   @observable rr = false;
+
+  @observable displayDimmer: boolean = false;
 
   @action render() {
     this.rr = !this.rr;
@@ -199,4 +198,18 @@ export default class DelegatedTaskStore {
       console.log(error);
     }
   };
+
+  // Notifier and notifications
+ 
+  @observable notes = 'lala'
+  @action showDimmer = () => {
+    this.displayDimmer = true;
+    console.log(this.displayDimmer)
+    this.render();
+  }
+  @action hideDimmer = () => {
+    this.displayDimmer = false;
+    console.log(this.displayDimmer)
+    this.render();
+  }
 }

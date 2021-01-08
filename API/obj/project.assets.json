@@ -7859,11 +7859,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\VSC\\sysCRM\\CRM\\API\\API.csproj",
+      "projectUniqueName": "e:\\VSC\\sysCRM\\CRM\\API\\API.csproj",
       "projectName": "API",
-      "projectPath": "E:\\VSC\\sysCRM\\CRM\\API\\API.csproj",
+      "projectPath": "e:\\VSC\\sysCRM\\CRM\\API\\API.csproj",
       "packagesPath": "C:\\Users\\mc\\.nuget\\packages\\",
-      "outputPath": "E:\\VSC\\sysCRM\\CRM\\API\\obj\\",
+      "outputPath": "e:\\VSC\\sysCRM\\CRM\\API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "D:\\Microsoft\\Xamarin\\NuGet\\"
@@ -7883,11 +7883,11 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "E:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj": {
-              "projectPath": "E:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj"
+            "e:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj": {
+              "projectPath": "e:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj"
             },
-            "E:\\VSC\\sysCRM\\CRM\\Infrastructure\\Infrastructure.csproj": {
-              "projectPath": "E:\\VSC\\sysCRM\\CRM\\Infrastructure\\Infrastructure.csproj"
+            "e:\\VSC\\sysCRM\\CRM\\Infrastructure\\Infrastructure.csproj": {
+              "projectPath": "e:\\VSC\\sysCRM\\CRM\\Infrastructure\\Infrastructure.csproj"
             }
           }
         }

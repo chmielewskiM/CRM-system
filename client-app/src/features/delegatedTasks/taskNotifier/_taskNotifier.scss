@@ -1,0 +1,58 @@
+#root {
+    & .segment.task-notifier {
+        overflow-y: scroll;
+        background-color: transparent;
+        border-top: 0.1rem outset $color11;
+        border-bottom: 0.1rem outset $color11;
+
+        & .shutter {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            box-shadow: 0 -2rem 2rem -2rem inset black;
+            padding-bottom: 1.5rem;
+        }
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        & .dimmable {
+            position: relative;
+            margin: 1rem 0;
+
+            & .card {
+                width: 100%;
+            }
+
+            & .content {
+                background-color: rgba($color9, 0.8);
+                font-size: 1.2rem;
+
+                &>* {
+                    color: $color7;
+                }
+            }
+
+            & .buttons {
+                position: absolute;
+                right: 0;
+                top: 0;
+                background: rgb(0, 48, 63);
+                background: linear-gradient(0deg, rgba(0, 48, 63, 1) 57%, rgba(33, 68, 74, 1) 74%, rgba(76, 94, 88, 1) 84%, rgba(120, 121, 102, 1) 99%, rgba(205, 172, 129, 1) 100%, rgba(205, 172, 129, 1) 100%);
+                border-bottom-left-radius: 1.7rem;
+                border: thin solid $color7;
+
+                &>* {
+                    margin: 0.5rem 0.8rem;
+
+                    & i:before {
+                        color: $color7;
+                        font-size: 1.5rem;
+                    }
+                }
+            }
+        }
+    }
+}

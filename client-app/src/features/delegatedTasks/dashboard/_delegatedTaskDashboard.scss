@@ -1,0 +1,11 @@
+#root {
+    & .wrapper {
+        & .row-content {
+            &-1 {
+                & .task.list {
+                    font-size: 1.2rem;
+                }
+            }
+        }
+    }
+}
