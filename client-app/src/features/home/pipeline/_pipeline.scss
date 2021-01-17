@@ -1,0 +1,13 @@
+#root {
+    & .pipeline-container {
+        & .recharts-wrapper {
+            display: flex;
+            align-items: center;
+            height: 100%;
+
+            & .recharts-surface {
+                height: 75%;
+            }
+        }
+    }
+}

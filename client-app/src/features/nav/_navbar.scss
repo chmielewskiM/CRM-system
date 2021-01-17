@@ -8,6 +8,9 @@
         margin: 0;
         display: initial;
         transition: flex .5s ease-out;
+        @include breakpoint(smartphone) {
+            max-width: 0;
+        }
         &.off {
             flex: 0 1;
             transition-duration: .3s;
@@ -34,7 +37,8 @@
         }
 
         & .sideBar {
-            background: linear-gradient(180deg, $color-primary-dark 60%, $color-primary-light 100%);
+            background-color: #0a1128;
+            // background: linear-gradient(180deg, $color-primary-dark 60%, $color-primary-light 100%);
             height: 100%;
             display: flex;
             border: 0;

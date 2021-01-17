@@ -1,4 +1,5 @@
 import ContactStore from './contactStore';
+import HomeStore from './homeStore';
 import LeadStore from './leadStore';
 import DelegatedTaskStore from './delegatedTaskStore';
 import OrderStore from './orderStore';
@@ -12,6 +13,7 @@ import ModalStore from './modalStore';
 configure({ enforceActions: 'always' });
 
 export class RootStore {
+  homeStore: HomeStore;
   contactStore: ContactStore;
   leadStore: LeadStore;
   delegatedTaskStore: DelegatedTaskStore;
@@ -22,6 +24,7 @@ export class RootStore {
   userStore: UserStore;
 
   constructor() {
+    this.homeStore = new HomeStore(this);
     this.contactStore = new ContactStore(this);
     this.leadStore = new LeadStore(this);
     this.delegatedTaskStore = new DelegatedTaskStore(this);

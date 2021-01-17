@@ -1,0 +1,89 @@
+#root {
+    & .row-statistics {
+        width: 100%;
+        min-height: 10%;
+        overflow: hidden;
+        padding:2rem 0;
+        margin-bottom: 4rem;
+        border-top: thin solid #fff;
+        border-bottom: thin solid #fff;
+        background-color: rgba(0, 0, 0, 0.548);
+        & * {
+            margin: 0;
+            padding: 0;
+        }
+
+        & .stat-wrapper {
+            display: flex;
+            flex-direction: column;
+            width:100%;
+            height:100%;
+            background-color: transparent;
+            border:0;
+            
+            & *{
+                
+                color:#fff;
+            }
+            
+            & .statistics {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                height:100%;
+                align-items: stretch;
+                justify-content: space-around;
+                &:after{
+                    display: none;
+                }
+                & .stat-container {
+                    display: flex;
+                    flex:.15 1;
+                    padding:1rem 0;
+                    justify-content: space-between;
+                    // box-shadow: 0 0 2px 2px #fff;
+                    
+                    @include breakpoint(tablet) {
+                        box-shadow: none;
+                    }
+                    & .value{
+                        font-size: 3rem !important;
+                        margin-bottom: 1rem;
+                        @include breakpoint(tablet) {
+                            font-size: 2.5rem !important;
+                        }
+                    }
+                    & .label span{
+                        font-size: 1.4rem;
+                        border-top: 3px ridge #fff;
+                        @include breakpoint(tablet) {
+                            font-size: 1.2rem;
+                            border-top: 2px ridge #fff;
+                        }
+                    }
+                }
+                & .header{
+                    min-height: min-content;   
+                    
+                    & i{
+                        margin:0 auto;
+                        color:$color-detail;
+                        border:thin solid #fff;
+                        box-shadow: none;
+                        font-size: 2.5rem;
+                        @include breakpoint(tablet) {
+                            font-size: 1.8rem;
+                        }
+                    }
+                    & div{
+                        color:#fff;
+                        font-size: 2rem;
+                        @include breakpoint(tablet) {
+                            font-size: 1.5rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

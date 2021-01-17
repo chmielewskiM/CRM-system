@@ -3,10 +3,17 @@
 @import 'typography';
 @import 'variables';
 @import '../features/nav/navbar';
+@import '../features/home/dashboard/homeDashboard';
 @import '../features/contacts/dashboard/contactDashboard';
 @import '../features/archivedLogs/archivedLog';
 @import '../features/leads/dashboard/leadDashboard';
 @import '../features/delegatedTasks/dashboard/delegatedTaskDashboard';
 @import '../features/delegatedTasks/details/delegatedTaskDetails';
 @import '../features/delegatedTasks/taskNotifier/taskNotifier';
+@import '../features/home/pipeline/pipeline';
+@import '../features/home/calendar/calendar';
+@import '../features/home/statistics/statistics';
+@import '../features/home/chart/lead/leadChart';
+@import '../features/home/chart/opportunity/opportunityChart';
+@import '../features/home/chart/revenue/revenueChart';
 @import '../features/signin/signin';

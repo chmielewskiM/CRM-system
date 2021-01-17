@@ -1,34 +1,51 @@
-import React from 'react';
-import { Icon, Segment, Step } from 'semantic-ui-react';
+import React, { Fragment, ReactElement } from 'react';
+import { FunnelChart, Tooltip, Funnel, LabelList, TrapezoidProps, ResponsiveContainer } from 'recharts';
 import { observer } from 'mobx-react-lite';
 
-export const Pipeline = () => (
-  <Segment>
-    <Step.Group attached="top">
-      <Step>
-        <Icon name="truck" />
-        <Step.Content>
-          <Step.Title>Shipping</Step.Title>
-          <Step.Description>Choose your shipping options</Step.Description>
-        </Step.Content>
-      </Step>
+const data = [
+  {
+    value: 100,
+    name: 'Lead',
+    fill: '#3a1772',
+  },
+  {
+    value: 80,
+    name: 'Opportunity',
+    fill: '#16c79a',
+  },
+  {
+    value: 50,
+    name: 'Quote',
+    fill: '#087e8b',
+  },
+  {
+    value: 40,
+    name: 'Invoice',
+    fill: '#fbff00',
+  },
+  {
+    value: 26,
+    name: 'Converted',
+    fill: '#c81d25',
+  },
+];
+const shape: TrapezoidProps = {};
 
-      <Step active>
-        <Icon name="payment" />
-        <Step.Content>
-          <Step.Title>Billing</Step.Title>
-          <Step.Description>Enter billing information</Step.Description>
-        </Step.Content>
-      </Step>
-
-      <Step disabled>
-        <Icon name="info" />
-        <Step.Content>
-          <Step.Title>Confirm Order</Step.Title>
-        </Step.Content>
-      </Step>
-    </Step.Group>
-  </Segment>
-);
-
+export const Pipeline = () => {
+  return (
+    <Fragment>
+      <ResponsiveContainer className="pipeline-container">
+        <FunnelChart>
+          <Tooltip payload={data} />
+          <Funnel
+            dataKey="value"
+            data={data}
+            isAnimationActive={true}
+            activeShape={shape}
+          ></Funnel>
+        </FunnelChart>
+      </ResponsiveContainer>
+    </Fragment>
+  );
+};
 export default observer(Pipeline);

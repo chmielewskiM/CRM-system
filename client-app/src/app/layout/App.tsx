@@ -30,6 +30,7 @@ const App: React.FC<RouteComponentProps> = ({ history }) => {
     getUser,
     setAppLoaded,
     token,
+    rootStore.homeStore.rr,
     rootStore.contactStore.rr,
     rootStore.leadStore.rr,
     rootStore.delegatedTaskStore.rr,
@@ -58,7 +59,7 @@ const App: React.FC<RouteComponentProps> = ({ history }) => {
               <Route path="/contacts" component={ContactDashboard} />
               <Route path="/leads" component={LeadDashboard} />
               <Route path="/tasks" component={DelegatedTaskDashboard} />
-              <Route path="/orders" component={OrderDashboard} />
+              {/* <Route path="/orders" component={OrderDashboard} /> */}
               <Route path="/stock" component={StockDashboard} />
             </Container>
           </>

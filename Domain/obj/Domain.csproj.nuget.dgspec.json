@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "e:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj": {}
+    "E:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj": {}
   },
   "projects": {
-    "e:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj": {
+    "E:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "e:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj",
+        "projectUniqueName": "E:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj",
         "projectName": "Domain",
-        "projectPath": "e:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj",
+        "projectPath": "E:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj",
         "packagesPath": "C:\\Users\\mc\\.nuget\\packages\\",
-        "outputPath": "e:\\VSC\\sysCRM\\CRM\\Domain\\obj\\",
+        "outputPath": "E:\\VSC\\sysCRM\\CRM\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Microsoft\\Xamarin\\NuGet\\"

@@ -59,18 +59,25 @@
     padding: .5rem 0;
     font-size: 1.4rem;
     font-weight: $light;
+
     & tr {
         padding: .3rem !important;
         font-size: 1.5;
+
         & th {
             color: $color-primary-light;
             background-color: transparent;
             margin: .5rem;
             // padding: .3rem 1rem;
-            
+
             position: sticky;
             top: 0;
             background-color: $color-primary-dark;
         }
     }
+}
+
+@mixin gradient-primary-dark {
+    background:rgb(191, 215, 234);
+    background:linear-gradient(0deg, rgba(191, 215, 234, 1) 0%, rgba(11, 57, 84, 1) 100%);
 }

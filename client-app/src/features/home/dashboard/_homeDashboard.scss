@@ -1,0 +1,19 @@
+#root {
+    & .ui.container.wrapper {
+        background-color: #060f1d;
+        // background-color: $color;
+        
+        & .main-grid.home {
+            
+            & .row.row-content-2.charts{
+                display: flex;
+                justify-content: space-around;
+                flex-direction: row;
+                flex-wrap: wrap;
+                padding-bottom: 5rem;
+                
+            }
+            
+        }
+    }
+}

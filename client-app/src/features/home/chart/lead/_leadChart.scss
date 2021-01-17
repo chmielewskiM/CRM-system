@@ -1,0 +1,71 @@
+#root {
+    & .chart-lead {
+
+        padding: 0;
+        margin: 2rem 0;
+        margin-right: 2rem;
+
+        & .buttons {
+            // background-color: $color-secondary-light;
+
+            & .button {
+                border: thin solid #fff;
+                color: #fff !important;
+
+                &:hover {
+                    color: #000 !important;
+                }
+            }
+        }
+
+        & .chart-container {
+
+            margin-top: 3rem;
+            
+            & .recharts-wrapper {
+                display: flex;
+                
+                & .recharts-surface {
+                    position: relative;
+                    
+                    & .recharts-cartesian-axis {
+                        & line {
+                            stroke: #fff;
+                        }
+
+                        & .recharts-cartesian-axis-ticks {
+                            & line {
+                                stroke: #fff;
+                            }
+
+                            & text tspan {
+                                fill: #fff;
+                            }
+
+                        }
+                    }
+
+                    & .recharts-line {
+                        fill: #fff !important;
+                    }
+
+                    & .recharts-cartesian-grid {
+                        opacity: 1;
+
+                        &-horizontal {
+                            fill: #fff !important;
+
+                            &>** {
+                                fill: #fff !important;
+                            }
+                        }
+
+
+                    }
+                }
+
+            }
+
+        }
+    }
+}
