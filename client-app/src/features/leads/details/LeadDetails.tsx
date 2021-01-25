@@ -38,7 +38,6 @@ export const LeadDetails: React.FC = () => {
 
         <Label as="a" color="red" ribbon>
           Date added {selectedLead!.dateAdded!.toString()}
-          {/* Date added {selectedLead.dateAdded!.toISOString().split('T')[0]} */}
         </Label>
 
         <Header as="h3">Deals</Header>

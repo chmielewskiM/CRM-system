@@ -1,0 +1,15 @@
+#root {
+    & .row-content-1 {
+        & .ui.table-container.orders {
+            & .head {
+
+                & tr {
+
+                    & h2 {}
+
+                    & th {}
+                }
+            }
+        }
+    }
+}

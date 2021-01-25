@@ -6,7 +6,6 @@
         margin-right: 2rem;
 
         & .buttons {
-            // background-color: $color-secondary-light;
 
             & .button {
                 border: thin solid #fff;
@@ -21,13 +20,13 @@
         & .chart-container {
 
             margin-top: 3rem;
-            
+
             & .recharts-wrapper {
                 display: flex;
-                
+
                 & .recharts-surface {
                     position: relative;
-                    
+
                     & .recharts-cartesian-axis {
                         & line {
                             stroke: #fff;

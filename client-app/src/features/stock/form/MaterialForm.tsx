@@ -1,13 +1,5 @@
 import React, { useState, FormEvent, useContext, SyntheticEvent } from 'react';
-import {
-  Form,
-  Segment,
-  TextArea,
-  Select,
-  Input,
-  Button,
-  Modal,
-} from 'semantic-ui-react';
+import { Form, Segment, TextArea, Select, Input, Button, Modal } from 'semantic-ui-react';
 import { v4 as uuid } from 'uuid';
 import { observer } from 'mobx-react-lite';
 import { IMaterial } from '../../../app/models/material';
@@ -17,9 +9,7 @@ interface IProps {
   material: IMaterial | undefined;
 }
 
-export const MaterialForm: React.FC<IProps> = ({
-  material: initialFormState,
-}) => {
+export const MaterialForm: React.FC<IProps> = ({ material: initialFormState }) => {
   const rootStore = useContext(RootStoreContext);
 
   const {

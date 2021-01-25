@@ -1,26 +1,49 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Menu, Container, Image, Dropdown, Button } from 'semantic-ui-react';
 import { NavLink } from 'react-router-dom';
 import { RootStoreContext } from '../../app/stores/rootStore';
+import { observer } from 'mobx-react-lite';
 
 export const Navbar: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
   const { isLoggedIn, user, logout } = rootStore.userStore;
-  const { toggledNav, toggleIcon, toggleNav } = rootStore.commonStore;
+  const { toggledNav, toggleIcon, toggleNav, closeMobileNav, rowButtons, rr } = rootStore.commonStore;
+  const { addLeadForm } = rootStore.leadStore;
+
+  useEffect(() => {
+    console.log('nav RR');
+  }, [rr]);
+
   return (
     <Menu position="left" pointing secondary vertical className={toggleIcon}>
       <Container className="sideBar">
         <Button onClick={toggleNav} toggle={toggledNav} icon={toggleIcon} />
-        <Menu.Item header>
+        <Menu.Item header className="nav-header">
           <Image fluid centered src="/assets/logo.png" alt="logo" />
           <h3>SteelBay</h3>
         </Menu.Item>
-        <Menu.Item icon='chart line' className="link" name="Dashboard" as={NavLink} to="/dashboard"/>
-        <Menu.Item icon='address book' className="link" name="Contacts" as={NavLink} to="/contacts" />
-        <Menu.Item icon='street view' className="link" name="Leads" as={NavLink} to="/leads" />
-        <Menu.Item icon='tasks' className="link" name="Tasks" as={NavLink} to="/tasks" />
-        <Menu.Item icon='paste' className="link" name="Orders" as={NavLink} to="/orders" />
+        <Menu.Item
+          icon="chart line"
+          className="link"
+          name="Dashboard"
+          as={NavLink}
+          to="/dashboard"
+          onClick={closeMobileNav}
+        />
+        <Menu.Item
+          icon="address book"
+          className="link"
+          name="Contacts"
+          as={NavLink}
+          to="/contacts"
+          onClick={closeMobileNav}
+        />
+        <Menu.Item icon="street view" className="link" name="Leads" onClick={closeMobileNav} as={NavLink} to="/leads" />
+        <Menu.Item icon="tasks" className="link" name="Tasks" onClick={closeMobileNav} as={NavLink} to="/tasks" />
+        <Menu.Item icon="paste" className="link" name="Orders" onClick={closeMobileNav} as={NavLink} to="/orders" />
+        <Menu.Item icon="cog" className="link admin" name="Admin Panel" onClick={closeMobileNav} as={NavLink} to="/panel" />
         {/* <Menu.Item icon='' className="link" name="Stock" as={NavLink} to="/stock" /> */}
+        <Menu.Item id="btns" />
         <Menu.Item>
           <Dropdown size="big" text={`Logged as ${user?.displayName}`}>
             <Dropdown.Menu>
@@ -32,3 +55,5 @@ export const Navbar: React.FC = () => {
     </Menu>
   );
 };
+
+export default observer(Navbar);

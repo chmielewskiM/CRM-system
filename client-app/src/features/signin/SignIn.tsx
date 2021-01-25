@@ -1,13 +1,5 @@
 import React, { useContext } from 'react';
-import {
-  Button,
-  Form,
-  Grid,
-  Header,
-  Image,
-  Segment,
-  Label,
-} from 'semantic-ui-react';
+import { Button, Form, Grid, Header, Image, Segment, Label } from 'semantic-ui-react';
 import { Form as FinalForm, Field } from 'react-final-form';
 import TextInput from '../../app/common/form/TextInput';
 import { observer } from 'mobx-react-lite';
@@ -29,7 +21,7 @@ export const SignIn = () => {
       textAlign="center"
       style={{
         height: '100vh',
-        width: '100%'
+        width: '100%',
       }}
       verticalAlign="middle"
     >
@@ -49,12 +41,7 @@ export const SignIn = () => {
             }))
           }
           // validate={validate}
-          render={({
-            handleSubmit,
-            invalid,
-            pristine,
-            dirtySinceLastSubmit,
-          }) => (
+          render={({ handleSubmit, invalid, pristine, dirtySinceLastSubmit }) => (
             <Form onSubmit={handleSubmit}>
               <Segment raised>
                 <Field

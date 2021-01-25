@@ -4,7 +4,6 @@ import { observer } from 'mobx-react-lite';
 import { OrderList } from './OrderList';
 import { OrderForm } from '../form/OrderForm';
 import { RootStoreContext } from '../../../app/stores/rootStore';
-import ConfirmationModal from '../../../app/common/modals/ConfirmationModal';
 
 export const OrderDashboard: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
@@ -26,61 +25,53 @@ export const OrderDashboard: React.FC = () => {
 
   return (
     <Fragment>
-      {/* <ConfirmationModal contact={}/> */}
-      <Grid stackable centered divided="vertically">
+      <Grid stackable centered divided="vertically" className="main-grid">
         {showOrderForm && (
-          <OrderForm
-            key={(selectedOrder && selectedOrder.id) || 0}
-            order={selectedOrder!}
-          />
+          <OrderForm key={(selectedOrder && selectedOrder.id) || 0} order={selectedOrder!} />
         )}
-        <Grid.Row>
-          <Grid.Column width={2}>
-            <Button positive content="Add order" onClick={addOrderForm} />
+        <Grid.Row className="buttons-row">
+          <Button positive content="Add order" onClick={addOrderForm} />
+          <Button
+            content="All orders"
+            color="yellow"
+            onClick={() => {
+              setOrderList('default');
+            }}
+          />
+          <Button
+            content="Open orders"
+            color="yellow"
+            onClick={() => {
+              setOrderList('open');
+            }}
+          />
+          <Button
+            content="Closed orders"
+            color="yellow"
+            onClick={() => {
+              setOrderList('closed');
+            }}
+          />
+          {selectedOrder && (
             <Button
-              content="All orders"
-              color="yellow"
-              onClick={() => {
-                setOrderList('default');
-              }}
+              content="Edit order"
+              color="blue"
+              onClick={() => editOrderForm(selectedOrder.id)}
             />
-            <Button
-              content="Open orders"
-              color="yellow"
-              onClick={() => {
-                setOrderList('open');
-              }}
-            />
-            <Button
-              content="Closed orders"
-              color="yellow"
-              onClick={() => {
-                setOrderList('closed');
-              }}
-            />
-            {selectedOrder && (
-              <Button
-                content="Edit order"
-                color="blue"
-                onClick={() => editOrderForm(selectedOrder.id)}
-              />
-            )}
-            {selectedOrder &&
-              new Date(selectedOrder.dateOrderClosed!).getFullYear() < 2 && (
-                <Button
-                  negative
-                  content="Mark as done"
-                  onClick={() => openModal('as', '', '')}
-                />
-              )}
-            {selectedOrder && (
-              <Button
-                negative
-                content="Delete order"
-                onClick={() => deleteOrder(selectedOrder.id)}
-              />
-            )}
-          </Grid.Column>
+          )}
+          {selectedOrder && new Date(selectedOrder.dateOrderClosed!).getFullYear() < 2 && (
+            <Button negative content="Mark as done" onClick={() => openModal('as', '', '')} />
+          )}
+          {selectedOrder && (
+            <Button negative content="Delete order" onClick={() => deleteOrder(selectedOrder.id)} />
+          )}
+          <Button
+            icon="angle down"
+            className="expand-menu"
+            onClick={(event) => rootStore.commonStore.expandMenu(event)}
+          />
+        </Grid.Row>
+        <Grid.Row className="row-content-1">
           <Grid.Column width={10}>
             <OrderList />
           </Grid.Column>

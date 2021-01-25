@@ -5,11 +5,15 @@
 @import '../features/nav/navbar';
 @import '../features/home/dashboard/homeDashboard';
 @import '../features/contacts/dashboard/contactDashboard';
+@import '../features/contacts/details/contactDetails';
 @import '../features/archivedLogs/archivedLog';
+@import '../features/contacts/callLogs/callLog';
 @import '../features/leads/dashboard/leadDashboard';
+@import '../features/leads/list/leadList';
 @import '../features/delegatedTasks/dashboard/delegatedTaskDashboard';
 @import '../features/delegatedTasks/details/delegatedTaskDetails';
 @import '../features/delegatedTasks/taskNotifier/taskNotifier';
+@import '../features/orders/dashboard/orderDashboard';
 @import '../features/home/pipeline/pipeline';
 @import '../features/home/calendar/calendar';
 @import '../features/home/statistics/statistics';
@@ -17,3 +21,5 @@
 @import '../features/home/chart/opportunity/opportunityChart';
 @import '../features/home/chart/revenue/revenueChart';
 @import '../features/signin/signin';
+@import '../features/adminPanel/dashboard/adminPanelDashboard';
+@import '../features/adminPanel/form/adminPanelForm';

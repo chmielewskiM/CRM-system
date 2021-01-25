@@ -4,9 +4,7 @@ import { FormFieldProps, Form, Label } from 'semantic-ui-react';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import { observer } from 'mobx-react-lite';
 
-export interface IProps
-  extends FieldRenderProps<Date, HTMLElement>,
-    FormFieldProps {}
+export interface IProps extends FieldRenderProps<Date, HTMLElement>, FormFieldProps {}
 
 const DateInput: React.FC<IProps> = ({
   input,

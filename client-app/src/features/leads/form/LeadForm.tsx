@@ -24,14 +24,7 @@ interface IProps {
 
 export const LeadForm: React.FC<IProps> = () => {
   const rootStore = useContext(RootStoreContext);
-  const {
-    setShowLeadForm,
-    submitting,
-    addLead,
-    editLead,
-    fillForm,
-    rr,
-  } = rootStore.leadStore;
+  const { setShowLeadForm, submitting, addLead, editLead, fillForm, rr } = rootStore.leadStore;
 
   useEffect(() => {}, [rr]);
 
@@ -51,7 +44,7 @@ export const LeadForm: React.FC<IProps> = () => {
   };
 
   return (
-    <Segment clearing>
+    <Segment clearing className="form-container">
       <Modal open>
         <Modal.Content>
           <Segment clearing size="big">

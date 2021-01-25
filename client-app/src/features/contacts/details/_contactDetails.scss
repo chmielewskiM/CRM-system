@@ -1,0 +1,67 @@
+#root {
+    .ui.container.wrapper {
+        & .main-grid {
+            & .details {
+                margin: 2rem;
+                background: rgb(0, 48, 63);
+                background: linear-gradient(0deg, rgba(0, 48, 63, 1) 60%, rgba(14, 144, 121, 0.5970763305322129) 80%, rgba(22, 199, 154, 0.5018382352941176) 100%);
+                box-shadow: 0 0 2px 0 #fff;
+
+                & * {
+                    color: #fff;
+                }
+
+                & .icon.floated {
+                    background-color: transparent;
+                    font-size: 2rem;
+                }
+
+                & h2.header {
+                    font-size: 2rem;
+                    width: max-content;
+                    max-width: 80%;
+                    padding: .5rem;
+                    background-color: rgba(0, 0, 0, 0.3);
+                    border-radius: .7rem;
+                }
+
+                & h3.header {
+                    font-size: 1.6rem;
+                }
+
+                & .ribbon {
+                    font-size: 1.2rem;
+                    border-color: $color1;
+                    background-color: $color1;
+                }
+
+                & .deals {
+                    display: flex;
+                    justify-content: flex-start;
+
+                    &>* {
+                        background-color: #fff;
+                        font-size: 1.2rem;
+                    }
+
+                    & :first-child {
+                        color: green;
+                    }
+
+                    & :last-child {
+                        margin-left: 2rem;
+                        color: red;
+                    }
+                }
+
+                & .divider {
+                    border-color: $color3;
+                }
+
+                & .notes {
+                    font-size: 1.3rem;
+                }
+            }
+        }
+    }
+}

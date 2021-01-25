@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Form, Segment, Button, Modal } from 'semantic-ui-react';
-import { v4 as uuid } from 'uuid';
 import { observer } from 'mobx-react-lite';
 import { Form as FinalForm, Field } from 'react-final-form';
 import { IContact, ContactFormValues } from '../../../app/models/contact';
@@ -32,24 +31,12 @@ export const ContactForm: React.FC<IProps> = () => {
     addContact,
     editContact,
     fillForm,
+    handleFinalFormSubmit,
   } = rootStore.contactStore;
 
   useEffect(() => {}, []);
 
   const [contact, setContact] = useState(new ContactFormValues());
-
-  const handleFinalFormSubmit = (values: any) => {
-    const { ...contact } = values;
-    if (!contact.id) {
-      let newContact = {
-        ...contact,
-        id: uuid(),
-      };
-      addContact(newContact);
-    } else {
-      editContact(contact);
-    }
-  };
 
   return (
     <Segment clearing>

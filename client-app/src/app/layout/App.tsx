@@ -13,6 +13,8 @@ import { DelegatedTaskDashboard } from '../../features/delegatedTasks/dashboard/
 import { RootStoreContext } from '../stores/rootStore';
 import { HomeDashboard } from '../../features/home/dashboard/HomeDashboard';
 import { LeadDashboard } from '../../features/leads/dashboard/LeadDashboard';
+import AdminPanelDashboard from '../../features/adminPanel/dashboard/AdminPanelDashboard';
+// import 'mobx-react-lite/batchingForReactDom'
 
 const App: React.FC<RouteComponentProps> = ({ history }) => {
   const rootStore = useContext(RootStoreContext);
@@ -21,7 +23,7 @@ const App: React.FC<RouteComponentProps> = ({ history }) => {
 
   useEffect(() => {
     if (token) {
-      getUser().finally(() => setAppLoaded());
+      // getUser().finally(() => setAppLoaded());
     } else {
       setAppLoaded();
     }
@@ -38,7 +40,7 @@ const App: React.FC<RouteComponentProps> = ({ history }) => {
     rootStore.stockStore.rr,
     rootStore.modalStore.rr,
   ]);
-  if (!appLoaded) return <LoaderComponent />;
+  // if (!appLoaded) return <LoaderComponent />;
 
   return (
     <>
@@ -59,8 +61,9 @@ const App: React.FC<RouteComponentProps> = ({ history }) => {
               <Route path="/contacts" component={ContactDashboard} />
               <Route path="/leads" component={LeadDashboard} />
               <Route path="/tasks" component={DelegatedTaskDashboard} />
-              {/* <Route path="/orders" component={OrderDashboard} /> */}
+              <Route path="/orders" component={OrderDashboard} />
               <Route path="/stock" component={StockDashboard} />
+              <Route path="/panel" component={AdminPanelDashboard} />
             </Container>
           </>
         )}

@@ -1,0 +1,78 @@
+#root {
+    & .ui.container.wrapper {
+
+        & .wrapper.admin-panel {
+            @include breakpoint(tablet) {
+                padding: 0;
+
+                & .column.form,
+                & .column.control {
+                    margin: 0;
+                }
+            }
+
+            & .form {
+                width: 50%;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                border-radius: .7rem;
+
+                @include breakpoint(tablet) {
+                    width: 90%;
+                    align-items: center;
+                }
+
+                & .big.form {
+                    background-color: rgba(255, 255, 255, 0.2);
+                    border: .3rem inset #fff;
+                    padding: 2rem 2rem 0 2rem;
+                    display: flex;
+                    align-items: stretch;
+
+                    & .field {
+                        display: inline-flex;
+                        flex-direction: column;
+                        width: 100%;
+                        align-self: center;
+
+                        &.reset {
+                            content: ''
+                        }
+                    }
+
+                    & .buttons {
+                        align-self: flex-end;
+                        padding: 1rem;
+
+                        & .button {
+                            padding: .5rem;
+                            margin-left: 1rem;
+                            background-color: transparent;
+                            border-radius: .5rem;
+                            background-color: rgba(255, 255, 255, 1);
+                        }
+
+                        & .positive {
+                            border: .3rem solid rgba(0, 128, 0, 1);
+                            background-color: rgba(0, 128, 0, .5);
+
+                            &:hover {
+                                background-color: green;
+                            }
+                        }
+
+                        & .negative {
+                            border: .3rem solid rgba(255, 0, 0, 1);
+                            background-color: rgba(255, 0, 0, .5);
+
+                            &:hover {
+                                background-color: red;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

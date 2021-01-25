@@ -1,19 +1,43 @@
 #root {
     & .ui.container.wrapper {
         background-color: #060f1d;
-        // background-color: $color;
-        
+
         & .main-grid.home {
-            
-            & .row.row-content-2.charts{
+
+            & .row.row-content-2.charts {
                 display: flex;
                 justify-content: space-around;
                 flex-direction: row;
                 flex-wrap: wrap;
                 padding-bottom: 5rem;
-                
+
             }
-            
+
+            & .row-content-1.pipeline-calendar {
+                @include breakpoint(tablet) {
+                    max-height: min-content;
+
+                    & :last-child {
+                        padding: 0 !important;
+                    }
+                }
+
+                & .pipeline-container {
+                    @include breakpoint(tablet) {
+                        min-height: 30rem;
+                    }
+                }
+
+                //calendar
+                & #rbc {
+                    @include breakpoint(tablet) {
+                        min-height: 40rem;
+                    }
+                }
+            }
+
+
+
         }
     }
 }

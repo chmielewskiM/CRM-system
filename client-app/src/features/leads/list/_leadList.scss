@@ -1,0 +1,76 @@
+#root {
+    & .ui.container.wrapper .grid.main-grid .row-content-1.leads {
+        & .column {
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+
+            & .buttons-status {
+                @include reset-div;
+                padding: 3rem 0;
+                margin: 0 auto !important;
+                background-color: transparent;
+
+                @include breakpoint(tablet) {
+                    & .buttons {
+                        justify-content: center;
+                    }
+                }
+
+                @include breakpoint(smartphone) {
+                    width: 100%;
+
+                    & .buttons {
+                        display: flex-start;
+                        width: 100%;
+                        justify-content: space-between;
+
+                        & .button {
+                            text-align: left;
+                        }
+
+                        & .icon {
+                            max-width: 10px;
+                        }
+                    }
+                }
+
+                & .button {
+                    background-color: transparent;
+                    font-size: 2rem;
+                    color: #fff;
+                    flex: .2 0;
+                    padding: 0;
+                    font-size: 2rem;
+
+                    @include breakpoint(tablet) {
+                        flex: .1 0;
+                        font-size: 1.6rem;
+                    }
+
+                    &:hover {
+                        color: $color4;
+                    }
+
+                    &.focused,
+                    &:active {
+                        color: $color10;
+                    }
+                }
+
+                & .icon {
+                    flex: .1 0;
+                    color: #fff;
+                    font-size: 3rem;
+
+                    @include breakpoint(tablet) {
+                        font-size: 1rem;
+                    }
+
+                }
+            }
+
+        }
+
+    }
+}

@@ -49,6 +49,8 @@ export default class LeadStore {
 
   @observable confirmation = false;
 
+  @observable progress: number = 20;
+
   @observable modalDecision = {
     refuse: false,
     accept: false,
@@ -105,8 +107,7 @@ export default class LeadStore {
       this.contactRegistry.clear();
       runInAction('Loading contacts', () => {
         contacts.forEach((contact) => {
-          if (contact.status == status)
-            this.contactRegistry.set(contact.id, contact);
+          if (contact.status == status) this.contactRegistry.set(contact.id, contact);
         });
         this.status = status;
         this.loadingInitial = false;
@@ -223,5 +224,15 @@ export default class LeadStore {
       });
       console.log(error);
     }
+  };
+
+  @action focused = (progress: number) => {
+    const target = event!.target as HTMLButtonElement;
+    target.parentElement?.childNodes.forEach((child) => {
+      var el = child as HTMLElement;
+      el.classList.remove('focused');
+    });
+    target.classList.add('focused');
+    this.progress = progress;
   };
 }

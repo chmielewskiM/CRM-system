@@ -1,22 +1,27 @@
 import React, { useContext, useEffect } from 'react';
-import { Grid, Segment, Button, ButtonGroup } from 'semantic-ui-react';
+import { Grid, Button, ButtonGroup } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import { RootStoreContext } from '../../../app/stores/rootStore';
 import { Pipeline } from '../pipeline/Pipeline';
-import ArchivedLog from '../../archivedLogs/ArchivedLog';
 import Calendar from '../calendar/Calendar';
 import Statistics from '../statistics/Statistics';
 import LeadChart from '../chart/lead/LeadChart';
 import LeadBySourceChart from '../chart/lead/LeadBySourceChart';
 import OpportunityChart from '../chart/opportunity/OpportunityChart';
 import OpportunityByEmployeeChart from '../chart/opportunity/OpportunityByEmployeeChart';
-import InfoModal from '../../../app/common/modals/InfoModal';
 import RevenueChart from '../chart/revenue/RevenueChart';
 
 export const HomeDashboard: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
 
-  const { rr, bool, sel, leadChart, opportunityChart, showLeadChart, showOpportunityChart } = rootStore.homeStore;
+  const {
+    rr,
+    bool,
+    leadChart,
+    opportunityChart,
+    showLeadChart,
+    showOpportunityChart,
+  } = rootStore.homeStore;
 
   useEffect(() => {
     console.log('dash');
@@ -24,7 +29,7 @@ export const HomeDashboard: React.FC = () => {
 
   return (
     <Grid relaxed="very" centered className="main-grid home" padded>
-      <Grid.Row className="row-content-1">
+      <Grid.Row className="row-content-1 pipeline-calendar">
         <Grid.Column computer={7} tablet={7} mobile={16}>
           <Pipeline />
         </Grid.Column>
@@ -51,7 +56,9 @@ export const HomeDashboard: React.FC = () => {
           <ButtonGroup floated="right">
             <Button basic content="Last 30 days" />
             <Button basic content="Last 7 days" />
-            {!opportunityChart && <Button basic content="By employee" onClick={showOpportunityChart} />}
+            {!opportunityChart && (
+              <Button basic content="By employee" onClick={showOpportunityChart} />
+            )}
             {opportunityChart && <Button basic content="Overall" onClick={showOpportunityChart} />}
           </ButtonGroup>
           {!opportunityChart && <OpportunityChart />}

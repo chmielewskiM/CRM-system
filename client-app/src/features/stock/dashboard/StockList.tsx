@@ -5,11 +5,7 @@ import { RootStoreContext } from '../../../app/stores/rootStore';
 
 export const StockList: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
-  const {
-    selectMaterial,
-    selectedMaterial,
-    materialsByName,
-  } = rootStore.stockStore;
+  const { selectMaterial, selectedMaterial, materialsByName } = rootStore.stockStore;
 
   return (
     <>
@@ -31,10 +27,7 @@ export const StockList: React.FC = () => {
           <Table.Body key={material.id}>
             <Table.Row
               onClick={() => selectMaterial(material.id)}
-              active={
-                selectedMaterial !== undefined &&
-                selectedMaterial.id == material.id
-              }
+              active={selectedMaterial !== undefined && selectedMaterial.id == material.id}
             >
               <Table.Cell>{material.name}</Table.Cell>
               <Table.Cell>{material.storehouse}</Table.Cell>

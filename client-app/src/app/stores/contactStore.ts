@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { IContact, ContactFormValues } from '../models/contact';
 import agent from '../api/agent';
 import { RootStore } from './rootStore';
+import { v4 as uuid } from 'uuid';
 
 export default class ContactStore {
   rootStore: RootStore;
@@ -33,6 +34,10 @@ export default class ContactStore {
   }
 
   @computed get contactsByDate() {
+    Array.from(this.contactRegistry.entries()).forEach((entry) =>
+      console.log('Key: ' + entry[0] + ' Value: ' + entry[1])
+    );
+
     return Array.from(this.contactRegistry.values())
       .slice(0)
       .sort((a, b) => Date.parse(b.dateAdded) - Date.parse(a.dateAdded));
@@ -93,7 +98,18 @@ export default class ContactStore {
     }
     return new ContactFormValues();
   };
-
+  handleFinalFormSubmit = (values: any) => {
+    const { ...contact } = values;
+    if (!contact.id) {
+      let newContact = {
+        ...contact,
+        id: uuid(),
+      };
+      this.addContact(newContact);
+    } else {
+      this.editContact(contact);
+    }
+  };
   @action addContact = async (contact: IContact) => {
     this.submitting = true;
     var date = new Date(Date.now());

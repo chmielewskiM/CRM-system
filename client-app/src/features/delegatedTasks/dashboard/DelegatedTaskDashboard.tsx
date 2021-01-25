@@ -46,7 +46,11 @@ export const DelegatedTaskDashboard: React.FC = () => {
           />
         )}
         {selectedDelegatedTask && (
-          <Button icon="eraser" content="Delete task" onClick={() => deleteDelegatedTask(selectedDelegatedTask.id!)} />
+          <Button
+            icon="eraser"
+            content="Delete task"
+            onClick={() => deleteDelegatedTask(selectedDelegatedTask.id!)}
+          />
         )}
         {selectedDelegatedTask && (
           <Button
@@ -54,6 +58,11 @@ export const DelegatedTaskDashboard: React.FC = () => {
             // onClick={() => deleteDelegatedTask(selectedDelegatedTask.id!)}
           />
         )}
+        <Button
+          icon="angle down"
+          className="expand-menu"
+          onClick={(event) => rootStore.commonStore.expandMenu(event)}
+        />
       </Grid.Row>
       <Grid.Row className="row-content-1" stretched={true}>
         <Grid.Column width={12}>
@@ -65,7 +74,9 @@ export const DelegatedTaskDashboard: React.FC = () => {
       </Grid.Row>
 
       <Grid.Row className="row-content-2" stretched={true}>
-        <Grid.Column width={8}>{selectedDelegatedTask !== undefined && <DelegatedTaskDetails />}</Grid.Column>
+        <Grid.Column width={6}>
+          {selectedDelegatedTask !== undefined && <DelegatedTaskDetails />}
+        </Grid.Column>
         <Grid.Column width={6}>
           <Segment basic className="task log">
             {' '}

@@ -1,0 +1,66 @@
+#root {
+    & .ui.container.wrapper .ui.centered.main-grid.grid {
+        & .call-log {
+            background: none;
+            margin: 2rem;
+            padding: 1rem;
+            background: rgb(0, 48, 63);
+            background: linear-gradient(0deg, rgba(255, 255, 255, 1) 65%, rgba(0, 48, 63, .6) 65%, rgba(0, 48, 63, 1) 100%);
+
+            & * {
+                box-shadow: none;
+                border: 0;
+            }
+
+            & .ui.header {
+                padding-bottom: 1rem;
+
+                & span {
+                    color: #fff;
+                }
+
+                & .logs-button-group {
+
+                    & .button.small.compact {
+                        color: #fff !important;
+
+                        &:hover {}
+
+                        &:active {}
+                    }
+
+                }
+            }
+
+            & .item {
+                padding: 0;
+                margin: 0;
+                border-bottom: thin dashed $color3;
+                border-radius: 0;
+
+                & i {
+
+                    &.checkmark:before {}
+                }
+
+                & .content {
+
+                    & .header {
+                        font-size: 1.5rem;
+                    }
+
+                    & .meta {
+
+                        & span {}
+                    }
+                }
+
+                & .button {
+                    top: 25%;
+
+                    &:hover {}
+                }
+            }
+        }
+    }
+}

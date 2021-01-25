@@ -1,6 +1,9 @@
 #root {
     & .ui.container.wrapper {
-        & .log.task, & .log.dashboard {
+
+        & .log.task,
+        & .log.dashboard,
+        & .call-log {
             background: rgb(169, 41, 79);
             background: linear-gradient(0deg, rgba(169, 41, 79, 1) 0%, rgba(22, 199, 154, 0.35) 1%, rgba(255, 255, 255, 1) 7%, rgba(255, 255, 255, 1) 93%, rgba(22, 199, 154, 0.35) 99%, rgba(169, 41, 79, 1) 100%);
 

@@ -14,7 +14,14 @@ interface IProps {
 
 export const TaskNotification: React.FC<IProps> = (props) => {
   const rootStore = useContext(RootStoreContext);
-  const { loadingInitial, submitting, showDimmer, hideDimmer, displayDimmer, rr } = rootStore.delegatedTaskStore;
+  const {
+    loadingInitial,
+    submitting,
+    showDimmer,
+    hideDimmer,
+    displayDimmer,
+    rr,
+  } = rootStore.delegatedTaskStore;
 
   useEffect(() => {
     console.log('rend');
@@ -22,7 +29,12 @@ export const TaskNotification: React.FC<IProps> = (props) => {
 
   if (loadingInitial) return <LoaderComponent content="Loading..." />;
   return (
-    <Dimmer.Dimmable dimmed={displayDimmer} onMouseEnter={showDimmer} onMouseLeave={hideDimmer} size="medium">
+    <Dimmer.Dimmable
+      dimmed={displayDimmer}
+      onMouseEnter={showDimmer}
+      onMouseLeave={hideDimmer}
+      size="medium"
+    >
       <Card raised={true}>
         <Dimmer active={displayDimmer}></Dimmer>
         <Card.Content>

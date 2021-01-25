@@ -6,7 +6,11 @@ import { RootStoreContext } from '../../../app/stores/rootStore';
 
 export const DelegatedTaskList: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
-  const { delegatedTasksByDate, selectDelegatedTask, selectedDelegatedTask } = rootStore.delegatedTaskStore;
+  const {
+    delegatedTasksByDate,
+    selectDelegatedTask,
+    selectedDelegatedTask,
+  } = rootStore.delegatedTaskStore;
 
   return (
     <>
@@ -24,7 +28,10 @@ export const DelegatedTaskList: React.FC = () => {
             <Table.Body key={delegatedTask.id}>
               <Table.Row
                 onClick={() => selectDelegatedTask(delegatedTask.id)}
-                active={selectedDelegatedTask !== undefined && selectedDelegatedTask.id == delegatedTask.id}
+                active={
+                  selectedDelegatedTask !== undefined &&
+                  selectedDelegatedTask.id == delegatedTask.id
+                }
               >
                 <Table.Cell>{delegatedTask.assignment}</Table.Cell>
                 <Table.Cell>{delegatedTask.type}</Table.Cell>

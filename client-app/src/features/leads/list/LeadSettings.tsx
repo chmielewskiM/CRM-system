@@ -21,13 +21,7 @@ export const LeadSettings: React.FC<IProps> = (props) => {
   return (
     <Fragment>
       <ConfirmationModal contact={cont} />
-      <Dropdown
-        className="button icon teal"
-        floating
-        trigger={<></>}
-        icon="settings"
-        item
-      >
+      <Dropdown className="button icon teal" floating trigger={<></>} icon="settings" item>
         <Dropdown.Menu>
           {options.map((opt: any) => {
             return (

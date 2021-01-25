@@ -1,0 +1,57 @@
+#root {
+    & .ui.container.wrapper {
+
+        & .wrapper.admin-panel {
+            display: inline;
+            padding: 5rem;
+        }
+
+        & .control,
+        & .form {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+
+        }
+
+        & .control {
+            @include breakpoint(tablet) {
+                padding-top: 5rem;
+                margin: 0 auto !important;
+            }
+
+            & .buttons {
+                display: inline-flex;
+                margin-top: 2rem;
+                flex: 2 0;
+                align-content: space-evenly;
+
+                & .button {
+                    margin-bottom: .5rem;
+                    background-color: $color-primary-dark;
+                    font-size: 1.2rem;
+                    color: #fff;
+                    border: thin solid #fff;
+                    opacity: 0.8;
+                    border-radius: .5rem;
+
+                    @include breakpoint(tablet) {
+                        font-size: 1.5rem;
+                    }
+
+                    &:last-child {
+                        margin-left: .5rem;
+                    }
+
+                    &:hover {
+                        opacity: 1;
+                    }
+
+                    @include breakpoint(tablet) {}
+                }
+            }
+        }
+
+
+    }
+}

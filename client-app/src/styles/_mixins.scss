@@ -68,7 +68,7 @@
             color: $color-primary-light;
             background-color: transparent;
             margin: .5rem;
-            // padding: .3rem 1rem;
+            border-radius: 0;
 
             position: sticky;
             top: 0;
@@ -78,6 +78,13 @@
 }
 
 @mixin gradient-primary-dark {
-    background:rgb(191, 215, 234);
-    background:linear-gradient(0deg, rgba(191, 215, 234, 1) 0%, rgba(11, 57, 84, 1) 100%);
+    background: rgb(191, 215, 234);
+    background: linear-gradient(0deg, rgba(191, 215, 234, 1) 0%, rgba(11, 57, 84, 1) 100%);
+}
+
+@mixin reset-div {
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    border: 0;
 }

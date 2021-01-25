@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useEffect } from 'react';
-import { Header, Divider, Label, Segment, Button } from 'semantic-ui-react';
+import { Header, Divider, Label, Segment, Button, LabelGroup } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import LoaderComponent from '../../../app/layout/LoaderComponent';
 import { RootStoreContext } from '../../../app/stores/rootStore';
@@ -10,9 +10,6 @@ export const ContactDetails: React.FC = () => {
     loadingInitial,
     selectedContact,
     selectContact,
-    deleteContact,
-    submitting,
-    editContactForm,
     showContactForm,
     rr,
   } = rootStore.contactStore;
@@ -21,7 +18,7 @@ export const ContactDetails: React.FC = () => {
 
   if (loadingInitial) return <LoaderComponent content="Loading..." />;
   return (
-    <Segment className='details'>
+    <Segment className="details">
       <Button
         floated="right"
         icon="close"
@@ -34,35 +31,21 @@ export const ContactDetails: React.FC = () => {
           {selectedContact!.name}
         </Header>
 
-        <Divider clearing />
-
-        <Label as="a" color="red" ribbon>
+        <Label as="a" ribbon>
           Date added {selectedContact!.dateAdded!.toString()}
           {/* Date added {selectedContact.dateAdded!.toISOString().split('T')[0]} */}
         </Label>
 
         <Header as="h3">Deals</Header>
-        <div>Successful:</div>
-        <div>Unsuccessful:</div>
-
+        <LabelGroup className="deals">
+          <Label className="successful">Successful: 5</Label>
+          <Label className="unsuccessful">Unsuccessful: 12</Label>
+        </LabelGroup>
         <Divider section />
 
         <Header as="h3">Notes</Header>
-        {selectedContact!.notes}
-        <Button.Group widths={2}>
-          <Button
-            onClick={() => editContactForm(selectedContact!.id!)}
-            loading={submitting}
-            primary
-            content="Edit"
-          />
-          <Button
-            onClick={() => deleteContact(selectedContact!.id!)}
-            loading={submitting}
-            negative
-            content="Delete"
-          />
-        </Button.Group>
+        <div className="notes">{selectedContact!.notes}</div>
+        <Button.Group widths={2}></Button.Group>
       </Fragment>
     </Segment>
   );

@@ -10,10 +10,6 @@ export const DelegatedTaskDetails: React.FC = () => {
     loadingInitial,
     selectedDelegatedTask,
     selectDelegatedTask,
-    deleteDelegatedTask,
-    submitting,
-    editDelegatedTaskForm,
-    showDelegatedTaskForm,
     rr,
   } = rootStore.delegatedTaskStore;
 

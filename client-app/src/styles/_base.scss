@@ -34,7 +34,104 @@ html {
 body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    // background-color: $color-primary-light;
+
+    & ::-webkit-scrollbar {
+        display: none;
+    }
+
+    & .ui.page.modals.dimmer.transition.visible.active {
+        background: hsla(207, 51%, 83%, 1);
+
+        background: radial-gradient(circle, hsla(207, 51%, 83%, 1) 25%, hsla(194, 100%, 12%, 0.5) 100%);
+
+        background: -moz-radial-gradient(circle, hsla(207, 51%, 83%, 1) 25%, hsla(194, 100%, 12%, 0.5) 100%);
+
+        background: -webkit-radial-gradient(circle, hsla(207, 51%, 83%, 1) 25%, hsla(194, 100%, 12%, 0.5) 100%);
+
+        & .modal {
+            width: 40%;
+            padding: .1rem;
+            background-color: $color11;
+
+            @include breakpoint(smartphone) {
+                width: 90%;
+                ;
+            }
+
+            & .content {
+                background-color: $color-primary-dark;
+
+                & .clearing.segment {
+                    @include reset-div;
+                    background-color: $color-primary-dark;
+
+                    & .big.form {
+
+                        & .field {
+
+                            & input,
+                            & textarea {
+                                background-color: #fff;
+                                font-size: 1.4rem;
+
+                                &::placeholder {
+                                    color: rgba(0, 0, 0, 0.6);
+                                }
+                            }
+
+                            & .selection {
+                                & .visible.menu {
+                                    min-height: min-content;
+                                    overflow-y: unset;
+                                    overflow-x: unset;
+
+                                    & .item {
+                                        background-color: $color9;
+                                        font-size: 1.2rem;
+
+                                        &:hover {
+                                            & .text {
+                                                color: $color4;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                background-color: $color9;
+                                opacity:0.7;
+                                color:#fff;
+
+                                &.active {
+                                    opacity: 1;
+
+                                    & .text {
+                                        color: #fff;
+                                    }
+                                }
+                            }
+                        }
+
+                        & .button {
+                            opacity: 0.7;
+
+                            &:hover {
+                                opacity: 1;
+                            }
+
+                            &.positive {
+                                background-color: #008000;
+                            }
+
+                            &.negative {
+                                background-color: #9d0208;
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 #root {
@@ -45,7 +142,7 @@ body {
         margin: 0 !important;
         height: inherit;
         flex: 1 0;
-        
+
         & .grid.main-grid {
             height: inherit;
             padding: 0;
@@ -55,17 +152,41 @@ body {
             flex-direction: row;
             justify-content: flex-start;
             align-content: baseline;
-            &::-webkit-scrollbar{
+
+            &::-webkit-scrollbar {
                 display: none;
             }
+
             & .buttons-row {
-                height: 3rem;
+                position: relative;
+                height: 3.5rem;
                 justify-content: flex-end;
                 align-items: stretch;
                 padding: 0;
                 border-bottom: 1px solid $color-primary-dark;
                 position: sticky;
                 background-color: $color-primary-light;
+
+                &.expanded {
+
+                    flex-direction: column;
+
+                    & .button:not(:last-child) {
+                        padding: 2rem 0;
+                        font-size: 1.5rem;
+                        display: initial;
+                    }
+
+                    & .expand-menu .icon {
+                        transform: rotate(180deg);
+                    }
+                }
+
+                @include breakpoint(tablet) {
+                    min-height: 3.5rem;
+                    height: min-content;
+                    background-color: $color-primary;
+                }
 
                 & .button {
                     font-weight: $bold;
@@ -76,9 +197,38 @@ body {
                     padding: 0 2rem;
                     border-radius: 0;
 
+                    &.expand-menu {
+                        display: none;
+                        font-size: 4rem;
+                        color: $color-detail;
+                    }
+
+                    @include breakpoint(tablet) {
+                        display: none;
+                        color: #fff;
+                        font-size: 1.4rem;
+
+                        &.expand-menu {
+                            display: initial;
+
+                            & i {
+                                color: #fff;
+                            }
+                        }
+                    }
+
+                    @include breakpoint(smartphone) {
+                        padding: .2rem;
+                        margin: 0;
+
+                        &.expand-menu {
+                            display: initial;
+                            left: 60%;
+                        }
+                    }
+
                     &:hover {
                         color: #ff5a5f;
-                        // box-shadow: 0 0 1rem .1rem inset $color-primary-dark;
                     }
                 }
 
@@ -86,37 +236,48 @@ body {
 
             & .row-content-1 {
                 width: 100%;
-                min-height: 50%;
-                max-height: 60%;
+                min-height: 40%;
+                max-height: 50%;
                 margin: 0;
                 overflow: hidden;
+
+                @include breakpoint(tablet) {
+                    min-height: 30rem;
+                }
+
                 & .column {
                     max-height: 100%;
                     overflow: hidden;
                     position: relative;
+                    overflow: auto;
+
                     & table.ui.table.table-container {
                         border: thin solid $color-primary-dark;
-                        
+                        min-width: min-content;
+
+
                         &>* {
                             border: none;
                         }
 
                         & .head {
                             @include table-head;
-                            & th{
+                            white-space: nowrap;
+
+                            & th {
                                 font-weight: $light;
+
                             }
                         }
 
                         & tbody {
-                            
 
-                            &:nth-child(odd){
+
+                            &:nth-child(odd) {
                                 background-color: $color-primary-light;
                             }
 
                             & tr {
-                                // background-color: rgba(255, 255, 255, 0.61);
 
                                 &:hover {
                                     background-color: rgba($color-primary-dark, 0.6) !important;
@@ -134,6 +295,11 @@ body {
 
                                 & td {
                                     border: none;
+                                    white-space: nowrap;
+                                    font-size: 1.2rem;
+
+                                    @include breakpoint(tablet) {}
+
                                 }
                             }
                         }
@@ -146,23 +312,20 @@ body {
                         width: 100%;
                         overflow-y: scroll;
                         position: relative;
-                        
-                        &::-webkit-scrollbar{
+
+                        &::-webkit-scrollbar {
                             display: none;
                         }
-                        // & .head{
-                        //     background-color: white;
-                        // }
                     }
                 }
             }
 
             & .row-content-2 {
-                // flex: .5 0;
                 margin: 0;
                 padding: 0;
                 justify-content: space-between;
                 width: 100%;
+
                 & .column {
                     max-height: 100%;
                     width: auto;
@@ -175,4 +338,9 @@ body {
             }
         }
     }
+
+    & .clearing.segment {
+        @include reset-div;
+    }
+
 }

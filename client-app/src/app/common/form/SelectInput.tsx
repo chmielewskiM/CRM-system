@@ -3,9 +3,7 @@ import { FieldRenderProps } from 'react-final-form';
 import { FormFieldProps, Form, Label, Select } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 
-export interface IProps
-  extends FieldRenderProps<string, HTMLElement>,
-    FormFieldProps {}
+export interface IProps extends FieldRenderProps<string, HTMLElement>, FormFieldProps {}
 
 const SelectInput: React.FC<IProps> = ({
   input,

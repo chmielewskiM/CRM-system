@@ -4,6 +4,7 @@ import LeadStore from './leadStore';
 import DelegatedTaskStore from './delegatedTaskStore';
 import OrderStore from './orderStore';
 import StockStore from './stockStore';
+import AdminStore from './adminStore';
 import CommonStore from './commonStore';
 import UserStore from './userStore';
 import { createContext } from 'react';
@@ -22,6 +23,7 @@ export class RootStore {
   commonStore: CommonStore;
   modalStore: ModalStore;
   userStore: UserStore;
+  adminStore: AdminStore;
 
   constructor() {
     this.homeStore = new HomeStore(this);
@@ -33,6 +35,7 @@ export class RootStore {
     this.commonStore = new CommonStore(this);
     this.modalStore = new ModalStore(this);
     this.userStore = new UserStore(this);
+    this.adminStore = new AdminStore(this);
   }
 }
 

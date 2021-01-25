@@ -1,21 +1,8 @@
-:global(#root) {
-    .ui.container.wrapper {
-        & .main-grid {
-            & .buttons-row {
-                height: 10%;
-                padding: 3rem;
-
-                & .column.two {
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: flex-start;
-
-                    & .button {
-                        margin: 5px 0;
-
-                    }
-                }
-            }
+#root {
+    & .ui.container.wrapper {
+        & .main-grid .leads {
+            display: flex;
+            justify-content: center;
         }
     }
 }

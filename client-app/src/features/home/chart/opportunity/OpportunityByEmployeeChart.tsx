@@ -1,5 +1,13 @@
 import React, { PureComponent } from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts';
 
 const data = [
   {
@@ -52,12 +60,7 @@ export default class OpportunityByEmployeeChart extends PureComponent {
   render() {
     return (
       <ResponsiveContainer className="chart-container" aspect={1.5}>
-        <AreaChart
-          width={500}
-          height={400}
-          data={data}
-
-        >
+        <AreaChart width={500} height={400} data={data}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis />

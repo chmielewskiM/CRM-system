@@ -35,11 +35,7 @@ export default class ModalStore {
     body: null,
   };
 
-  @action openModal = (
-    content: any,
-    value: any,
-    doubleCheckContent: string
-  ) => {
+  @action openModal = (content: any, value: any, doubleCheckContent: string) => {
     this.modal.open = true;
     this.modal.body = content;
     this.triggeredFunction = value;

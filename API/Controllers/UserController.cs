@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using System.Threading;
 using Domain;
+using System;
 
 namespace API.Controllers
 {
@@ -26,6 +27,11 @@ namespace API.Controllers
         public async Task<ActionResult<AppUser>> LoggedUser()
         {
             return await Mediator.Send(new LoggedUser.Query());
+        }
+        [HttpGet("{username}")]
+        public async Task<ActionResult<AppUser>> GetUser(String username)
+        {
+            return await Mediator.Send(new GetUser.Query { Username = username });
         }
         [HttpGet("list")]
         public async Task<ActionResult<List<User>>> List(CancellationToken ct)

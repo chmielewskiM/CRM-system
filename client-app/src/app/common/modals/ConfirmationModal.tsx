@@ -7,7 +7,7 @@ import { IContact } from '../../models/contact';
 interface IProps {
   contact: IContact;
 }
-export const ConfirmationModal:React.FC<IProps> = (props) => {
+export const ConfirmationModal: React.FC<IProps> = (props) => {
   const rootStore = useContext(RootStoreContext);
   const {
     modal: { open, body },
@@ -33,6 +33,6 @@ export const ConfirmationModal:React.FC<IProps> = (props) => {
       </Modal.Actions>
     </Modal>
   );
-}
+};
 
 export default observer(ConfirmationModal);

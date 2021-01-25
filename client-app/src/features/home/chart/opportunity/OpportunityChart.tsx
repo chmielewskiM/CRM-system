@@ -1,5 +1,15 @@
 import React, { PureComponent } from 'react';
-import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import {
+  BarChart,
+  Bar,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
 
 const data = [
   {
@@ -52,12 +62,7 @@ export default class OpportunityChart extends PureComponent {
   render() {
     return (
       <ResponsiveContainer className="chart-container" aspect={1.5}>
-        <BarChart
-          width={500}
-          height={300}
-          data={data}
-
-        >
+        <BarChart width={500} height={300} data={data}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis />

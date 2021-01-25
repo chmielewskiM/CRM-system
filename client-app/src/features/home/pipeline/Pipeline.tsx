@@ -1,5 +1,5 @@
-import React, { Fragment, ReactElement } from 'react';
-import { FunnelChart, Tooltip, Funnel, LabelList, TrapezoidProps, ResponsiveContainer } from 'recharts';
+import React, { Fragment } from 'react';
+import { FunnelChart, Tooltip, Funnel, TrapezoidProps, ResponsiveContainer } from 'recharts';
 import { observer } from 'mobx-react-lite';
 
 const data = [
@@ -37,12 +37,7 @@ export const Pipeline = () => {
       <ResponsiveContainer className="pipeline-container">
         <FunnelChart>
           <Tooltip payload={data} />
-          <Funnel
-            dataKey="value"
-            data={data}
-            isAnimationActive={true}
-            activeShape={shape}
-          ></Funnel>
+          <Funnel dataKey="value" data={data} isAnimationActive={true} activeShape={shape}></Funnel>
         </FunnelChart>
       </ResponsiveContainer>
     </Fragment>

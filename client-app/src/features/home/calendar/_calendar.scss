@@ -3,63 +3,70 @@
 #root {
     & #rbc {
         box-sizing: content-box;
-        margin:.5rem;
+        margin: .5rem;
         padding: 1rem;
         @include gradient-primary-dark;
         border-radius: .5rem;
-        height:90%;
+        height: 90%;
+
         & .rbc-calendar {
-            
+
             & .rbc-toolbar {
-                // background-color:$color-primary-dark;
                 border-radius: .5rem;
-                & *{
-                    color:#fff;
+
+                & * {
+                    color: #fff;
                 }
-                & .rbc-btn-group{
-                    
-                    & button{
-                        border:0;
+
+                & .rbc-btn-group {
+
+                    & button {
+                        border: 0;
                         cursor: pointer;
-                        &:active, &:focus{
+
+                        &:active,
+                        &:focus {
                             background-color: transparent;
                             box-shadow: none;
                             color: #fff;
-                            outline:0;
+                            outline: 0;
                         }
-                        &:hover{
+
+                        &:hover {
                             background-color: transparent;
-                            color:$color-detail;
+                            color: $color-detail;
                         }
-                        
+
                     }
                 }
-                & .rbc-toolbar-label{
 
-                }
+                & .rbc-toolbar-label {}
             }
 
             & .rbc-month-view {
                 & .rbc-month-header {
-                    color:#fff;
+                    color: #fff;
                 }
 
                 & .rbc-month-row {
 
-                    & .rbc-row-bg{
+                    & .rbc-row-bg {
                         background-color: $color-primary-light;
                     }
-                    & .rbc-row-content{
-                        & .rbc-event{
+
+                    & .rbc-row-content {
+                        & .rbc-event {
                             background-color: $color9;
-                            width:1rem;
-                            height:1rem;
-                            margin:.2rem;
+                            width: 1rem;
+                            height: 1rem;
+                            margin: .2rem;
                             transition: all .1s linear;
-                            &:focus{
-                                outline:none;
+
+                            &:focus {
+                                outline: none;
                             }
-                            &:hover{
+
+                            &:hover {
                                 background-color: $color-secondary;
                                 transition: all .1s linear;
                             }
@@ -73,31 +80,33 @@
                 position: absolute;
                 box-sizing: content-box;
                 background-color: transparent;
-                
+
                 & .mini {
-                    // padding: 1rem;
                     overflow: hidden;
                     background-color: $color-secondary-dark;
                     border-radius: 1rem;
                     border: .5rem solid $color-primary-dark;
-                    color:$color-primary-dark;
+                    color: $color-primary-dark;
                     font-weight: $bold;
+
                     & .content {
-                        // padding: 3rem;
-                        width:80%;
+                        width: 80%;
                         background-color: transparent;
-                        & .header{
+
+                        & .header {
                             font-size: 1.4rem;
-                            
+
                         }
-                        & .description{
-                            padding:1rem 0;
+
+                        & .description {
+                            padding: 1rem 0;
                             font-size: 1.2rem;
                         }
                     }
-                    & .button{
+
+                    & .button {
                         background-color: transparent;
-                        color:$color-secondary;
+                        color: $color-secondary;
                         font-size: 1.2rem;
                     }
                 }

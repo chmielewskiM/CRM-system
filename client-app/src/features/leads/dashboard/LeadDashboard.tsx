@@ -1,28 +1,45 @@
 import React, { useContext, useEffect } from 'react';
 import { Grid, Button } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
-import { LeadList } from './LeadList';
+import { LeadList } from '../list/LeadList';
 import { LeadDetails } from '../details/LeadDetails';
 import { LeadForm } from '../form/LeadForm';
 import { RootStoreContext } from '../../../app/stores/rootStore';
 
 export const LeadDashboard: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
-  const { showLeadForm, selectedLead, addLeadForm, selectLead, status, loadLeads } = rootStore.leadStore;
+  const {
+    showLeadForm,
+    selectedLead,
+    addLeadForm,
+    selectLead,
+    status,
+    loadLeads,
+  } = rootStore.leadStore;
 
-  useEffect(() => {loadLeads(status)}, [showLeadForm, status]);
+  useEffect(() => {
+    loadLeads(status);
+  }, [showLeadForm, status]);
 
   // if (contactStore.loadingInitial)
   //   return <LoaderComponent content="Loading..." />;
 
   return (
-    <Grid stackable divided="vertically">
-      {showLeadForm && <LeadForm key={(selectedLead && selectedLead.id) || 0} contact={selectedLead!} />}
-      <Grid.Row>
-        <Grid.Column>
+    <Grid className="main-grid">
+      {showLeadForm && (
+        <LeadForm key={(selectedLead && selectedLead.id) || 0} contact={selectedLead!} />
+      )}
+      <Grid.Row className="buttons-row">
+        <Button positive icon="plus" content="Add lead" onClick={addLeadForm} />
+        <Button
+          icon="angle down"
+          className="expand-menu"
+          onClick={(event) => rootStore.commonStore.expandMenu(event)}
+        />
+      </Grid.Row>
+      <Grid.Row className="row-content-1 leads">
+        <Grid.Column mobile={16} tablet={14} computer={14}>
           <LeadList />
-          <Button positive circular size="big" icon="plus" content="Create lead" onClick={addLeadForm} />
-          <Button content="Call log" />
         </Grid.Column>
       </Grid.Row>
 

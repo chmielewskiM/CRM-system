@@ -26,11 +26,16 @@ export const OrderList: React.FC = () => {
 
   return (
     <>
-      <Table celled selectable sortable>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>Orders taken</Table.HeaderCell>
-          </Table.Row>
+      <Table
+        unstackable
+        striped
+        selectable
+        size="small"
+        className="table-container orders"
+        scrollable="true"
+        style={{ overflow: 'visible' }}
+      >
+        <Table.Header className="head">
           <Table.Row>
             <Table.HeaderCell>Client</Table.HeaderCell>
             <Table.HeaderCell>Type</Table.HeaderCell>
@@ -45,9 +50,7 @@ export const OrderList: React.FC = () => {
           <Table.Body key={order.id}>
             <Table.Row
               onClick={() => selectOrder(order.id)}
-              active={
-                selectedOrder !== undefined && selectedOrder.id == order.id
-              }
+              active={selectedOrder !== undefined && selectedOrder.id == order.id}
             >
               <Table.Cell>{order.client}</Table.Cell>
               <Table.Cell>{typeOfOrder(order)}</Table.Cell>

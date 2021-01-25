@@ -3,10 +3,7 @@ import { Form, Segment, Button, Modal } from 'semantic-ui-react';
 import { v4 as uuid } from 'uuid';
 import { observer } from 'mobx-react-lite';
 import { Form as FinalForm, Field } from 'react-final-form';
-import {
-  IDelegatedTaskForm,
-  DelegatedTaskFormValues,
-} from '../../../app/models/delegatedTask';
+import { IDelegatedTaskForm, DelegatedTaskFormValues } from '../../../app/models/delegatedTask';
 import TextAreaInput from '../../../app/common/form/TextAreaInput';
 import SelectInput from '../../../app/common/form/SelectInput';
 import { options } from '../../../app/common/options/delegatedTaskType';
@@ -39,9 +36,7 @@ export const DelegatedTaskForm: React.FC<IProps> = () => {
 
   useEffect(() => {}, [setShowDelegatedTaskForm]);
 
-  const [delegatedTask, setDelegatedTask] = useState(
-    new DelegatedTaskFormValues()
-  );
+  const [delegatedTask, setDelegatedTask] = useState(new DelegatedTaskFormValues());
 
   const [loading, setLoading] = useState(false);
 

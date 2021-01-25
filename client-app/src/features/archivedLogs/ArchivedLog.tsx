@@ -11,7 +11,7 @@ interface IProps {
   showAll: boolean;
 }
 
-export const CallLog: React.FC<IProps> = (props) => {
+export const ArchivedLog: React.FC<IProps> = (props) => {
   const rootStore = useContext(RootStoreContext);
   const { contactsByDate, selectContact } = rootStore.contactStore;
 
@@ -63,4 +63,4 @@ export const CallLog: React.FC<IProps> = (props) => {
   );
 };
 
-export default observer(CallLog);
+export default observer(ArchivedLog);

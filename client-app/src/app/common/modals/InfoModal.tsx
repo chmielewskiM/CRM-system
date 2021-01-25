@@ -6,27 +6,18 @@ import { IContact } from '../../models/contact';
 
 interface IProps {
   body: string;
-  open:boolean;
-  // node: ReactNode;
+  open: boolean;
 }
 export const InfoModal: React.FC<IProps> = (props) => {
   const rootStore = useContext(RootStoreContext);
-  const {
-    closeModal,
-    confirmModal,
-    modal,
-    openModal,
-    rr
-  } = rootStore.modalStore;
-  // const { selectedOrder, closeOrder } = rootStore.homeStore;
+  const { closeModal, confirmModal, modal, openModal, rr } = rootStore.modalStore;
   useEffect(() => {}, [rr]);
   const b = document.getElementById('rbc');
-  const c =b?.lastChild;
-  console.log(c)
+  const c = b?.lastChild;
+  console.log(c);
   return (
-    <Modal  dimmer='blurring' open={modal.open}  size="mini" mountNode={c}>
-      {/* <Header></Header> */}
-      <Icon as={Button} icon='x' onClick={closeModal} floated='right' ></Icon>
+    <Modal dimmer="blurring" open={modal.open} size="mini" mountNode={c}>
+      <Icon as={Button} icon="x" onClick={closeModal} floated="right"></Icon>
       <Modal.Content>
         <Modal.Header>Name</Modal.Header>
         <Modal.Description content={modal.body}></Modal.Description>

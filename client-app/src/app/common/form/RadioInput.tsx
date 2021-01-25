@@ -3,9 +3,7 @@ import { FieldRenderProps } from 'react-final-form';
 import { FormFieldProps, Form, Label } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import { RootStoreContext } from '../../stores/rootStore';
-export interface IProps
-  extends FieldRenderProps<boolean, HTMLElement>,
-    FormFieldProps {}
+export interface IProps extends FieldRenderProps<boolean, HTMLElement>, FormFieldProps {}
 
 const RadioInput: React.FC<IProps> = ({
   input,

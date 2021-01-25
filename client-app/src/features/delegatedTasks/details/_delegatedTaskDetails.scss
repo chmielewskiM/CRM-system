@@ -36,6 +36,10 @@
                         align-items: center;
                         background-color: $color-primary-dark;
 
+                        & h2 {
+                            background-color: transparent;
+                        }
+
                         &>* {
                             color: $color-secondary-dark;
                         }
@@ -43,8 +47,7 @@
 
                     &.equal {
                         height: 80%;
-                        background: rgb(11, 57, 84);
-                        background: linear-gradient(135deg, rgba(11, 57, 84, 0.8) 0%, rgba(58, 23, 114, 0.8) 100%);
+
 
                         & .column {
                             display: flex;

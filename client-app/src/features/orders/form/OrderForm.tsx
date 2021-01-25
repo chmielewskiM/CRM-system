@@ -63,14 +63,7 @@ export const OrderForm: React.FC<IProps> = () => {
               validate={validation}
               initialValues={fillForm()}
               onSubmit={handleFinalFormSubmit}
-              render={({
-                handleSubmit,
-                invalid,
-                pristine,
-                form,
-                values,
-                touched,
-              }) => (
+              render={({ handleSubmit, invalid, pristine, form, values, touched }) => (
                 <Form onSubmit={handleSubmit} size="big">
                   <Field
                     name="client"
@@ -108,32 +101,16 @@ export const OrderForm: React.FC<IProps> = () => {
                           value={order.notes}
                           component={SelectInput}
                         />
-                        <Field
-                          name="amount"
-                          placeholder="Amount"
-                          component={NumberInput}
-                        />
-                        <Field
-                          name="price"
-                          placeholder="Price"
-                          component={NumberInput}
-                        />
+                        <Field name="amount" placeholder="Amount" component={NumberInput} />
+                        <Field name="price" placeholder="Price" component={NumberInput} />
                       </Form.Group>
                     </Fragment>
                   )}
                   {selectedValue != false && (
                     <Fragment>
                       <Form.Group>
-                        <Field
-                          name="length"
-                          placeholder="Length"
-                          component={NumberInput}
-                        />
-                        <Field
-                          name="diameter"
-                          placeholder="Diameter"
-                          component={NumberInput}
-                        />
+                        <Field name="length" placeholder="Length" component={NumberInput} />
+                        <Field name="diameter" placeholder="Diameter" component={NumberInput} />
                         <Field
                           options={material}
                           name="type"
@@ -141,16 +118,8 @@ export const OrderForm: React.FC<IProps> = () => {
                           value={order.notes}
                           component={SelectInput}
                         />
-                        <Field
-                          name="amount"
-                          placeholder="Amount"
-                          component={NumberInput}
-                        />
-                        <Field
-                          name="price"
-                          placeholder="Price"
-                          component={NumberInput}
-                        />
+                        <Field name="amount" placeholder="Amount" component={NumberInput} />
+                        <Field name="price" placeholder="Price" component={NumberInput} />
                       </Form.Group>
                     </Fragment>
                   )}

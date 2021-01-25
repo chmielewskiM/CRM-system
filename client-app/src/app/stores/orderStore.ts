@@ -26,9 +26,7 @@ export default class OrderStore {
 
   @observable selectedValue: boolean = true;
 
-  @observable orderList: string | null = window.localStorage.getItem(
-    'orderList'
-  );
+  @observable orderList: string | null = window.localStorage.getItem('orderList');
 
   @observable rr = false;
 
@@ -39,9 +37,7 @@ export default class OrderStore {
   @computed get ordersByDate() {
     return Array.from(this.orderRegistry.values())
       .slice(0)
-      .sort(
-        (a, b) => Date.parse(b.dateOrderOpened) - Date.parse(a.dateOrderOpened)
-      );
+      .sort((a, b) => Date.parse(b.dateOrderOpened) - Date.parse(a.dateOrderOpened));
   }
 
   @action toggleSelect = (value: any) => {

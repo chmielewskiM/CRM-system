@@ -24,7 +24,6 @@ const myEventsList = [
   { start: new Date(), end: new Date(), title: '456' },
 ];
 
-// const views = [{month:false}]
 
 const eventPropGetter = (event: any, start: any, end: any, isSelected: boolean) => {
   const style = {
@@ -42,29 +41,24 @@ interface CalendarWithTooltipProps {
 
 export const MyCalendar: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
-  const { render, rr, sel, bool,body, selectedEvent } = rootStore.homeStore;
-  const {
-    closeModal,
-    confirmModal,
-    modal,
-    openModal
-  } = rootStore.modalStore;
-  useEffect(() => {console.log('cal')}, [rr]);
+  const { render, rr, sel, bool, body, selectedEvent } = rootStore.homeStore;
+  const { closeModal, confirmModal, modal, openModal } = rootStore.modalStore;
+  useEffect(() => {
+    console.log('cal');
+  }, [rr]);
 
   return (
-    
     <Fragment>
-      <div id='rbc'>
-      <Calendar 
-        localizer={localizer}
-        events={myEventsList}
-        startAccessor="start"
-        endAccessor="end"
-        // style={{ height: '100%' }}
-        views={['month']}
-        onSelectEvent={(data, e)=>openModal(data.title,'','')}
-      /><InfoModal open={false} body=''/>
-      
+      <div id="rbc">
+        <Calendar
+          localizer={localizer}
+          events={myEventsList}
+          startAccessor="start"
+          endAccessor="end"
+          views={['month']}
+          onSelectEvent={(data, e) => openModal(data.title, '', '')}
+        />
+        <InfoModal open={false} body="" />
       </div>
     </Fragment>
   );
