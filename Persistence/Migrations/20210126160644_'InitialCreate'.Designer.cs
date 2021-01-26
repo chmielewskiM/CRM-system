@@ -9,7 +9,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20201227003022_'InitialCreate'")]
+    [Migration("20210126160644_'InitialCreate'")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,8 +62,14 @@ namespace Persistence.Migrations
                     b.Property<string>("Status")
                         .HasColumnType("TEXT");
 
+                    b.Property<short>("SuccessfulDeals")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Type")
                         .HasColumnType("TEXT");
+
+                    b.Property<short>("UnsuccessfulDeals")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -77,6 +83,9 @@ namespace Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Assignment")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DateStarted")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Deadline")
@@ -248,6 +257,24 @@ namespace Persistence.Migrations
                     b.ToTable("UserContacts");
                 });
 
+            modelBuilder.Entity("Domain.UserTask", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("DelegatedTaskId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("UserId", "DelegatedTaskId");
+
+                    b.HasIndex("DelegatedTaskId");
+
+                    b.ToTable("UserTasks");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -388,6 +415,21 @@ namespace Persistence.Migrations
                         .WithMany("UserContacts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.UserTask", b =>
+                {
+                    b.HasOne("Domain.DelegatedTask", "DelegatedTask")
+                        .WithMany("UserTasks")
+                        .HasForeignKey("DelegatedTaskId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.User", "User")
+                        .WithMany("UserTasks")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 

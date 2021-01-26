@@ -14,13 +14,11 @@ export default class LeadStore {
         if (this.modalDecision.refuse) {
           this.modalDecision.refuse = false;
           this.deleteLead(this.modalDecision.lead.id);
-
           this.render();
         } else if (this.modalDecision.accept) {
           this.modalDecision.refuse = false;
           this.modalDecision.lead.type = 'Client';
           this.editLead(this.modalDecision.lead);
-
           this.render();
         } else console.log('Failed to make changes');
       }

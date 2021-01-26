@@ -73,7 +73,9 @@ namespace Persistence.Migrations
                     Email = table.Column<string>(nullable: true),
                     DateAdded = table.Column<DateTime>(nullable: false),
                     Notes = table.Column<string>(nullable: true),
-                    Status = table.Column<string>(nullable: true)
+                    Status = table.Column<string>(nullable: true),
+                    SuccessfulDeals = table.Column<short>(nullable: false),
+                    UnsuccessfulDeals = table.Column<short>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -87,6 +89,7 @@ namespace Persistence.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     Assignment = table.Column<string>(nullable: true),
                     Type = table.Column<string>(nullable: true),
+                    DateStarted = table.Column<DateTime>(nullable: false),
                     Deadline = table.Column<DateTime>(nullable: false),
                     Notes = table.Column<string>(nullable: true),
                     Done = table.Column<bool>(nullable: false)
@@ -263,6 +266,31 @@ namespace Persistence.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "UserTasks",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(nullable: false),
+                    DelegatedTaskId = table.Column<Guid>(nullable: false),
+                    DateAdded = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserTasks", x => new { x.UserId, x.DelegatedTaskId });
+                    table.ForeignKey(
+                        name: "FK_UserTasks_DelegatedTasks_DelegatedTaskId",
+                        column: x => x.DelegatedTaskId,
+                        principalTable: "DelegatedTasks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserTasks_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -304,6 +332,11 @@ namespace Persistence.Migrations
                 name: "IX_UserContacts_ContactId",
                 table: "UserContacts",
                 column: "ContactId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserTasks_DelegatedTaskId",
+                table: "UserTasks",
+                column: "DelegatedTaskId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -327,9 +360,6 @@ namespace Persistence.Migrations
                 name: "Calls");
 
             migrationBuilder.DropTable(
-                name: "DelegatedTasks");
-
-            migrationBuilder.DropTable(
                 name: "Materials");
 
             migrationBuilder.DropTable(
@@ -339,10 +369,16 @@ namespace Persistence.Migrations
                 name: "UserContacts");
 
             migrationBuilder.DropTable(
+                name: "UserTasks");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Contacts");
+
+            migrationBuilder.DropTable(
+                name: "DelegatedTasks");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

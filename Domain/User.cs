@@ -8,5 +8,6 @@ namespace Domain
         public string DisplayName { get; set; }
         public string Level { get; set; }
         public virtual ICollection<UserContact> UserContacts { get; set; }
+        public virtual ICollection<UserTask> UserTasks { get; set; }
     }
 }

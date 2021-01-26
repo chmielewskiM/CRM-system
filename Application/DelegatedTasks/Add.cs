@@ -5,6 +5,8 @@ using MediatR;
 using Persistence;
 using Domain;
 using FluentValidation;
+using Application.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.DelegatedTasks
 {
@@ -15,6 +17,7 @@ namespace Application.DelegatedTasks
             public Guid Id { get; set; }
             public string Assignment { get; set; }
             public string Type { get; set; }
+            public DateTime DateStarted { get; set; }
             public DateTime Deadline { get; set; }
             public string Notes { get; set; }
             public Boolean Done { get; set; }
@@ -33,9 +36,11 @@ namespace Application.DelegatedTasks
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
+            private readonly IUserAccessor _userAccessor;
 
-            public Handler(DataContext context)
+            public Handler(DataContext context, IUserAccessor userAccessor)
             {
+                _userAccessor = userAccessor;
                 _context = context;
             }
 
@@ -52,6 +57,19 @@ namespace Application.DelegatedTasks
                 };
 
                 _context.DelegatedTasks.Add(task);
+                
+                var user = await _context.Users.SingleOrDefaultAsync(x =>
+                x.UserName == _userAccessor.GetLoggedUsername());
+
+                var userAccess = new UserTask
+                {
+                    User = user,
+                    DelegatedTask = task,
+                    DateAdded = request.DateStarted
+                };
+
+                _context.UserTasks.Add(userAccess);
+                
                 var success = await _context.SaveChangesAsync() > 0;
 
                 if (success) return Unit.Value;
