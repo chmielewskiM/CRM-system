@@ -7,7 +7,7 @@ import { TaskNotification } from './TaskNotification';
 
 export const TaskNotifier: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
-  const { loadingInitial, rr, notes, displayDimmer } = rootStore.delegatedTaskStore;
+  const { loadingInitial, rr, notes, displayDimmer, receivedTasksByDate } = rootStore.delegatedTaskStore;
 
   useEffect(() => {}, [rr]);
 
@@ -15,20 +15,18 @@ export const TaskNotifier: React.FC = () => {
   return (
     <Segment basic className="task-notifier">
       <div className="shutter">
-        <Fragment>
+        
           {/* <Header as="h2" width={16}>
           {selectedContact!.name}
         </Header> */}
           {/* <Container> */}
-
-          <TaskNotification notes={notes} key="1" />
-          <TaskNotification notes={notes} key="2" />
-          <TaskNotification notes={notes} key="3" />
-          <TaskNotification notes={notes} key="4" />
-          <TaskNotification notes={notes} key="5" />
-
+          {receivedTasksByDate.map((task) => (
+            <Fragment key={task.id}>
+          <TaskNotification task={task} />
+          </Fragment>
+          ))}
           {/* </Container> */}
-        </Fragment>
+        
       </div>
     </Segment>
   );

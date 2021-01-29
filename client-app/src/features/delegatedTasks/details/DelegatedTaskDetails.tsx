@@ -32,8 +32,8 @@ export const DelegatedTaskDetails: React.FC = () => {
           <Divider />
           <Grid.Row columns="equal">
             <Grid.Column>
-              <Grid.Row>From: {selectedDelegatedTask?.assignment}</Grid.Row>
-              <Grid.Row>Priority: {selectedDelegatedTask?.assignment}</Grid.Row>
+              <Grid.Row>From: {selectedDelegatedTask?.createdBy}</Grid.Row>
+              <Grid.Row>Priority: {selectedDelegatedTask?.createdBy}</Grid.Row>
               <Grid.Row>Notes: {selectedDelegatedTask!.notes}</Grid.Row>
             </Grid.Column>
             <Grid.Column>

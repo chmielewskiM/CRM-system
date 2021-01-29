@@ -8,7 +8,6 @@ import { ContactDashboard } from '../../features/contacts/dashboard/ContactDashb
 import LoaderComponent from './LoaderComponent';
 import { SignIn } from '../../features/signin/SignIn';
 import { OrderDashboard } from '../../features/orders/dashboard/OrderDashboard';
-import { StockDashboard } from '../../features/stock/dashboard/StockDashboard';
 import { DelegatedTaskDashboard } from '../../features/delegatedTasks/dashboard/DelegatedTaskDashboard';
 import { RootStoreContext } from '../stores/rootStore';
 import { HomeDashboard } from '../../features/home/dashboard/HomeDashboard';
@@ -19,11 +18,11 @@ import AdminPanelDashboard from '../../features/adminPanel/dashboard/AdminPanelD
 const App: React.FC<RouteComponentProps> = ({ history }) => {
   const rootStore = useContext(RootStoreContext);
   const { appLoaded, setAppLoaded, token } = rootStore.commonStore;
-  const { getUser } = rootStore.userStore;
+  const { getUser, getLoggedUser } = rootStore.userStore;
 
   useEffect(() => {
     if (token) {
-      // getUser().finally(() => setAppLoaded());
+      getLoggedUser().finally(() => setAppLoaded());
     } else {
       setAppLoaded();
     }
@@ -37,7 +36,6 @@ const App: React.FC<RouteComponentProps> = ({ history }) => {
     rootStore.leadStore.rr,
     rootStore.delegatedTaskStore.rr,
     rootStore.orderStore.rr,
-    rootStore.stockStore.rr,
     rootStore.modalStore.rr,
   ]);
   // if (!appLoaded) return <LoaderComponent />;
@@ -62,7 +60,6 @@ const App: React.FC<RouteComponentProps> = ({ history }) => {
               <Route path="/leads" component={LeadDashboard} />
               <Route path="/tasks" component={DelegatedTaskDashboard} />
               <Route path="/orders" component={OrderDashboard} />
-              <Route path="/stock" component={StockDashboard} />
               <Route path="/panel" component={AdminPanelDashboard} />
             </Container>
           </>

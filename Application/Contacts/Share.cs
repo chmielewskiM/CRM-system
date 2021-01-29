@@ -14,7 +14,7 @@ namespace Application.Contacts
     public class Share
     {
         public class Command : IRequest
-        {
+        {            
             public Guid Id { get; set; }
         }
 

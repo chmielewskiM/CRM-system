@@ -15,19 +15,20 @@ namespace Application.DelegatedTasks
         public class Command : IRequest
         {
             public Guid Id { get; set; }
-            public string Assignment { get; set; }
             public string Type { get; set; }
             public DateTime DateStarted { get; set; }
             public DateTime Deadline { get; set; }
             public string Notes { get; set; }
+            public string CreatedBy { get; set; }
             public Boolean Done { get; set; }
+            public Boolean Accepted { get; set; }
+            public Boolean Refused { get; set; }
 
         }
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
-                // RuleFor(x => x.Assignment).NotEmpty();
                 // RuleFor(x => x.Type).NotEmpty();
                 // RuleFor(x => x.Deadline).NotEmpty();
                 // RuleFor(x => x.Notes).NotEmpty();
@@ -49,15 +50,18 @@ namespace Application.DelegatedTasks
                 var task = new DelegatedTask
                 {
                     Id = request.Id,
-                    Assignment = request.Assignment,
                     Type = request.Type,
                     Deadline = request.Deadline,
                     Notes = request.Notes,
+                    CreatedBy = request.CreatedBy,
+                    DateStarted = DateTime.Now,
+                    Accepted = true,
+                    Refused = request.Refused,
                     Done = request.Done
                 };
 
                 _context.DelegatedTasks.Add(task);
-                
+
                 var user = await _context.Users.SingleOrDefaultAsync(x =>
                 x.UserName == _userAccessor.GetLoggedUsername());
 
@@ -69,7 +73,7 @@ namespace Application.DelegatedTasks
                 };
 
                 _context.UserTasks.Add(userAccess);
-                
+
                 var success = await _context.SaveChangesAsync() > 0;
 
                 if (success) return Unit.Value;

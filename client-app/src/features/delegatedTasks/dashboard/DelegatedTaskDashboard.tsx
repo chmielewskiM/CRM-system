@@ -7,6 +7,7 @@ import { RootStoreContext } from '../../../app/stores/rootStore';
 import { TaskNotifier } from '../taskNotifier/TaskNotifier';
 import { DelegatedTaskDetails } from '../details/DelegatedTaskDetails';
 import ArchivedLog from '../../archivedLogs/ArchivedLog';
+import ShareTaskForm from '../form/ShareTaskForm';
 
 export const DelegatedTaskDashboard: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
@@ -19,10 +20,14 @@ export const DelegatedTaskDashboard: React.FC = () => {
     deleteDelegatedTask,
     loadUsers,
     displayDimmer,
+    setShowShareTaskForm,
+    showShareTaskForm,
+    calendarEvents,
   } = rootStore.delegatedTaskStore;
   useEffect(() => {
     loadDelegatedTasks();
-  }, [rootStore.delegatedTaskStore]);
+    calendarEvents;
+  }, [showShareTaskForm]);
 
   // if (delegatedTaskStore.loadingInitial)
   //   return <LoaderComponent content="Loading..." />;
@@ -35,6 +40,7 @@ export const DelegatedTaskDashboard: React.FC = () => {
           delegatedTask={selectedDelegatedTask!}
         />
       )}
+      {showShareTaskForm && <ShareTaskForm delegatedTask={selectedDelegatedTask} />}
       <Grid.Row className="buttons-row">
         <Button positive content="Add task" icon="plus" onClick={addDelegatedTaskForm} />
         <Button content="Done tasks" icon="history" />
@@ -53,11 +59,16 @@ export const DelegatedTaskDashboard: React.FC = () => {
           />
         )}
         {selectedDelegatedTask && (
+          <Button icon="check" content="Mark as done" onClick={() => console.log(calendarEvents)} />
+        )}
+        {selectedDelegatedTask && (
           <Button
-            content="Mark as done"
-            // onClick={() => deleteDelegatedTask(selectedDelegatedTask.id!)}
+            // icon =
+            content="Share"
+            onClick={() => setShowShareTaskForm(true)}
           />
         )}
+
         <Button
           icon="angle down"
           className="expand-menu"
@@ -80,7 +91,18 @@ export const DelegatedTaskDashboard: React.FC = () => {
         <Grid.Column width={6}>
           <Segment basic className="task log">
             {' '}
-            <ArchivedLog showAll={true} />{' '}
+              <ArchivedLog
+                showAll={true}
+                // filling={{
+                //   header: task.createdBy,
+                //   dateOne: task.dateStarted,
+                //   dateTwo: task.deadline,
+                //   done: task.done,
+                //   info: task.notes,
+                // }}
+                list={rootStore.delegatedTaskStore.userClosedTasks}
+              />
+            
           </Segment>
         </Grid.Column>
       </Grid.Row>

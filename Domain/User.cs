@@ -9,5 +9,6 @@ namespace Domain
         public string Level { get; set; }
         public virtual ICollection<UserContact> UserContacts { get; set; }
         public virtual ICollection<UserTask> UserTasks { get; set; }
+        public virtual ICollection<UserOperation> UserOperations { get; set; }
     }
 }

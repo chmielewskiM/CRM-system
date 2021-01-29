@@ -1,10 +1,13 @@
 export interface IDelegatedTask {
   id: string;
-  assignment: string;
   type: string;
   deadline: Date;
   notes: string;
+  dateStarted: Date;
+  createdBy: string;
   done: boolean;
+  accepted: boolean;
+  refused: boolean;
 }
 
 export interface IDelegatedTaskForm extends Partial<IDelegatedTask> {
@@ -13,12 +16,15 @@ export interface IDelegatedTaskForm extends Partial<IDelegatedTask> {
 
 export class DelegatedTaskFormValues implements IDelegatedTaskForm {
   id?: string = undefined;
-  assignment: string = '';
   type: string = '';
   date?: Date = undefined;
   time?: Date = undefined;
   notes: string = '';
+  dateStarted: Date = new Date();
+  createdBy: string = '';
   done: boolean = false;
+  accepted: boolean = false;
+  refused: boolean = false;
 
   constructor(init?: IDelegatedTaskForm) {
     if (init && init.deadline) {

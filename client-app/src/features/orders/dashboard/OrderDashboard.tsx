@@ -20,7 +20,6 @@ export const OrderDashboard: React.FC = () => {
   } = rootStore.orderStore;
 
   useEffect(() => {
-    console.log('ODASH');
   }, [rr]);
 
   return (

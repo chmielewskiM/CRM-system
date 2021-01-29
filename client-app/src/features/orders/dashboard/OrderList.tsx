@@ -20,8 +20,7 @@ export const OrderList: React.FC = () => {
   } = rootStore.orderStore;
 
   useEffect(() => {
-    let listType = window.localStorage.getItem('orderList');
-    if (listType) loadOrders(listType);
+    loadOrders();
   }, [orderList]);
 
   return (
@@ -57,7 +56,7 @@ export const OrderList: React.FC = () => {
               <Table.Cell>{order.product}</Table.Cell>
               <Table.Cell>{order.amount}</Table.Cell>
               <Table.Cell>{order.price}</Table.Cell>
-              <Table.Cell>{format(order.dateOrderOpened, 'P p')}</Table.Cell>
+              <Table.Cell>{order.dateOrderOpened}</Table.Cell>
               <Table.Cell>{order.notes}</Table.Cell>
             </Table.Row>
           </Table.Body>

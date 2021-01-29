@@ -18,7 +18,7 @@ export const DelegatedTaskList: React.FC = () => {
         <Table striped selectable size="small" className="table-container" scrollable="true">
           <Table.Header className="head">
             <Table.Row>
-              <Table.HeaderCell>Assignment</Table.HeaderCell>
+              <Table.HeaderCell>From</Table.HeaderCell>
               <Table.HeaderCell>Task</Table.HeaderCell>
               <Table.HeaderCell>Deadline</Table.HeaderCell>
               <Table.HeaderCell>Notes</Table.HeaderCell>
@@ -27,13 +27,17 @@ export const DelegatedTaskList: React.FC = () => {
           {delegatedTasksByDate.map((delegatedTask) => (
             <Table.Body key={delegatedTask.id}>
               <Table.Row
-                onClick={() => selectDelegatedTask(delegatedTask.id)}
+                onClick={() => {selectDelegatedTask(delegatedTask.id);
+                   console.log(delegatedTask.accepted);
+                   console.log(delegatedTask.createdBy);
+                   console.log(delegatedTask.notes);
+                  }}
                 active={
                   selectedDelegatedTask !== undefined &&
                   selectedDelegatedTask.id == delegatedTask.id
                 }
               >
-                <Table.Cell>{delegatedTask.assignment}</Table.Cell>
+                <Table.Cell>{delegatedTask.createdBy}</Table.Cell>
                 <Table.Cell>{delegatedTask.type}</Table.Cell>
                 <Table.Cell>{format(delegatedTask.deadline, 'P p')}</Table.Cell>
                 <Table.Cell>{delegatedTask.notes}</Table.Cell>

@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { IContact, ContactFormValues } from '../models/contact';
 import agent from '../api/agent';
 import { RootStore } from './rootStore';
+import { IOperation } from '../models/operation';
 
 export default class LeadStore {
   rootStore: RootStore;
@@ -60,7 +61,6 @@ export default class LeadStore {
   }
   @action render() {
     this.rr = !this.rr;
-    console.log('RR');
   }
   handleSettings = (opt: string, contact: IContact) => {
     if (opt === 'details') console.log('show details');
@@ -157,12 +157,14 @@ export default class LeadStore {
 
   @action addLead = async (contact: IContact) => {
     this.submitting = true;
+    let newStat = this.rootStore.commonStore.newStatistic('lead')
     var date = new Date(Date.now());
     contact.dateAdded = date;
     contact.status = 'Active';
     contact.type = 'Lead';
+    console.log(newStat)
     try {
-      await agent.Leads.add(contact);
+      await agent.Leads.add(contact).then(()=> agent.Operations.add(newStat!));
       runInAction('Loading contacts', () => {
         this.contactRegistry.set(contact.id, contact);
         toast.success('Lead added');

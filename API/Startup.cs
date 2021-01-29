@@ -1,6 +1,6 @@
 using API.Middleware;
 using Application.Interfaces;
-using Application.Orders;
+// using Application.Contacts;
 using Domain;
 using FluentValidation.AspNetCore;
 using Infrastructure.Security;
@@ -21,6 +21,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using AutoMapper;
+using Application.Contacts;
 
 namespace API
 {
@@ -56,8 +57,8 @@ namespace API
                         .WithOrigins("http://localhost:3000", "http://localhost:5000/order");
                 });
             });
-            services.AddMediatR(typeof(List.Handler).Assembly);
-            services.AddAutoMapper(typeof(List.Handler));
+            services.AddMediatR(typeof(Application.Contacts.List.Handler).Assembly, typeof(Application.DelegatedTasks.List.Handler).Assembly);
+            services.AddAutoMapper(typeof(Application.Contacts.List.Handler), typeof(Application.DelegatedTasks.List.Handler));
             services.AddMvc(opt =>
             {
                 var policy = new AuthorizationPolicyBuilder()

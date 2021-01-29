@@ -7,12 +7,11 @@ import { observer } from 'mobx-react-lite';
 export const Navbar: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
   const { isLoggedIn, user, logout } = rootStore.userStore;
-  const { toggledNav, toggleIcon, toggleNav, closeMobileNav, rowButtons, rr } = rootStore.commonStore;
-  const { addLeadForm } = rootStore.leadStore;
+  const { toggledNav, toggleIcon, toggleNav, closeMobileNav, rowButtons } = rootStore.commonStore;
+  const { addLeadForm, rr } = rootStore.leadStore;
 
   useEffect(() => {
-    console.log('nav RR');
-  }, [rr]);
+  }, [user]);
 
   return (
     <Menu position="left" pointing secondary vertical className={toggleIcon}>
@@ -42,7 +41,6 @@ export const Navbar: React.FC = () => {
         <Menu.Item icon="tasks" className="link" name="Tasks" onClick={closeMobileNav} as={NavLink} to="/tasks" />
         <Menu.Item icon="paste" className="link" name="Orders" onClick={closeMobileNav} as={NavLink} to="/orders" />
         <Menu.Item icon="cog" className="link admin" name="Admin Panel" onClick={closeMobileNav} as={NavLink} to="/panel" />
-        {/* <Menu.Item icon='' className="link" name="Stock" as={NavLink} to="/stock" /> */}
         <Menu.Item id="btns" />
         <Menu.Item>
           <Dropdown size="big" text={`Logged as ${user?.displayName}`}>

@@ -3,7 +3,6 @@ import HomeStore from './homeStore';
 import LeadStore from './leadStore';
 import DelegatedTaskStore from './delegatedTaskStore';
 import OrderStore from './orderStore';
-import StockStore from './stockStore';
 import AdminStore from './adminStore';
 import CommonStore from './commonStore';
 import UserStore from './userStore';
@@ -19,7 +18,6 @@ export class RootStore {
   leadStore: LeadStore;
   delegatedTaskStore: DelegatedTaskStore;
   orderStore: OrderStore;
-  stockStore: StockStore;
   commonStore: CommonStore;
   modalStore: ModalStore;
   userStore: UserStore;
@@ -31,7 +29,6 @@ export class RootStore {
     this.leadStore = new LeadStore(this);
     this.delegatedTaskStore = new DelegatedTaskStore(this);
     this.orderStore = new OrderStore(this);
-    this.stockStore = new StockStore(this);
     this.commonStore = new CommonStore(this);
     this.modalStore = new ModalStore(this);
     this.userStore = new UserStore(this);

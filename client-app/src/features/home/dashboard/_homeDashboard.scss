@@ -4,16 +4,8 @@
 
         & .main-grid.home {
 
-            & .row.row-content-2.charts {
-                display: flex;
-                justify-content: space-around;
-                flex-direction: row;
-                flex-wrap: wrap;
-                padding-bottom: 5rem;
-
-            }
-
             & .row-content-1.pipeline-calendar {
+                min-height: 60%;
                 @include breakpoint(tablet) {
                     max-height: min-content;
 
@@ -34,6 +26,15 @@
                         min-height: 40rem;
                     }
                 }
+            }
+
+            & .row.row-content-2.charts {
+                display: flex;
+                justify-content: space-around;
+                flex-direction: row;
+                flex-wrap: wrap;
+                padding-bottom: 5rem;
+
             }
 
 

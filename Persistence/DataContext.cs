@@ -14,9 +14,11 @@ namespace Persistence
         public DbSet<DelegatedTask> DelegatedTasks { get; set; }
         public DbSet<Call> Calls { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<Material> Materials { get; set; }
+        public DbSet<Operation> Operations { get; set; }
         public DbSet<UserContact> UserContacts { get; set; }
         public DbSet<UserTask> UserTasks { get; set; }
+        public DbSet<UserOperation> UserOperations { get; set; }
+        // public DbSet<UserStatistic> UserStatistics { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -51,6 +53,17 @@ namespace Persistence
                     .WithMany(u => u.UserTasks)
                     .HasForeignKey(t => t.DelegatedTaskId)
                     .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            builder.Entity<UserOperation>(x =>
+            {
+                x.HasKey(ut => new { ut.UserId, ut.OperationId });
+
+                x.HasOne(u => u.User)
+                    .WithMany(t => t.UserOperations)
+                    .HasForeignKey(u => u.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+                    
             });
         }
     }

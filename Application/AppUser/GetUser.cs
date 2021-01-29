@@ -15,7 +15,6 @@ namespace Application.AppUser
     {
         public class Query : IRequest<AppUser> { 
 
-            // public string Username { get; set; }
             public String Username { get; set; }
         }
 

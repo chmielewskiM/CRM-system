@@ -9,7 +9,6 @@ export const AdminPanelDashboard: React.FC = () => {
   const { rr, inputValue } = rootStore.userStore;
 
   useEffect(() => {
-    console.log('ADash');
   }, [rr]);
 
   const [form, setForm] = useState(true);

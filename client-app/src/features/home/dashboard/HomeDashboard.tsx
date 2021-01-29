@@ -3,7 +3,7 @@ import { Grid, Button, ButtonGroup } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import { RootStoreContext } from '../../../app/stores/rootStore';
 import { Pipeline } from '../pipeline/Pipeline';
-import Calendar from '../calendar/Calendar';
+import MyCalendar from '../calendar/Calendar';
 import Statistics from '../statistics/Statistics';
 import LeadChart from '../chart/lead/LeadChart';
 import LeadBySourceChart from '../chart/lead/LeadBySourceChart';
@@ -21,12 +21,19 @@ export const HomeDashboard: React.FC = () => {
     opportunityChart,
     showLeadChart,
     showOpportunityChart,
+    loadOperations,
+    countStats,
+    dateRangeWeek
   } = rootStore.homeStore;
 
-  useEffect(() => {
-    console.log('dash');
-  }, [rr, bool, leadChart]);
+  
 
+  useEffect(() => {
+    rootStore.delegatedTaskStore.loadDelegatedTasks()
+    rootStore.delegatedTaskStore.calendarEvents
+    // loadOperations()
+  }, [rr, bool, leadChart]);
+  // const a = rootStore.delegatedTaskStore.calendarEvents;
   return (
     <Grid relaxed="very" centered className="main-grid home" padded>
       <Grid.Row className="row-content-1 pipeline-calendar">
@@ -34,10 +41,11 @@ export const HomeDashboard: React.FC = () => {
           <Pipeline />
         </Grid.Column>
         <Grid.Column computer={9} tablet={9} mobile={16}>
-          <Calendar />
+          <MyCalendar events={rootStore.delegatedTaskStore.calendarEvents} />
         </Grid.Column>
       </Grid.Row>
       <Grid.Row className="row-statistics">
+        <Button content='click' onClick={loadOperations}/>
         <Statistics />
       </Grid.Row>
       <Grid.Row className="row-content-2 charts" columns="equal">
@@ -48,7 +56,7 @@ export const HomeDashboard: React.FC = () => {
             {!leadChart && <Button basic content="By source" onClick={showLeadChart} />}
             {leadChart && <Button basic content="Overall" onClick={showLeadChart} />}
           </ButtonGroup>
-          {!leadChart && <LeadChart />}
+          {!leadChart && <LeadChart data={countStats} xAxis={dateRangeWeek}/>}
           {leadChart && <LeadBySourceChart />}
         </Grid.Column>
 

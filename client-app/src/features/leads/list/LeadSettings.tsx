@@ -12,7 +12,7 @@ interface IProps {
 
 export const LeadSettings: React.FC<IProps> = (props) => {
   const rootStore = useContext(RootStoreContext);
-  const { openModal } = rootStore.modalStore;
+  const { openModal, confirmModal } = rootStore.modalStore;
   const { handleSettings, status, rr } = rootStore.leadStore;
   useEffect(() => {}, [rr]);
 
@@ -20,7 +20,7 @@ export const LeadSettings: React.FC<IProps> = (props) => {
 
   return (
     <Fragment>
-      <ConfirmationModal contact={cont} />
+      <ConfirmationModal contact={cont} function={confirmModal} task={undefined}/>
       <Dropdown className="button icon teal" floating trigger={<></>} icon="settings" item>
         <Dropdown.Menu>
           {options.map((opt: any) => {

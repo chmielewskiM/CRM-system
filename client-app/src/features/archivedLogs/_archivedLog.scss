@@ -61,7 +61,7 @@
                     height: min-content;
                     margin: 0 2.5rem 0 1rem;
 
-                    &.checkmark:before {
+                    &.checkmark:before, &.x:before {
                         font-size: 2rem;
                     }
                 }

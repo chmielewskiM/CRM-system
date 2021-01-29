@@ -14,7 +14,6 @@ export const InfoModal: React.FC<IProps> = (props) => {
   useEffect(() => {}, [rr]);
   const b = document.getElementById('rbc');
   const c = b?.lastChild;
-  console.log(c);
   return (
     <Modal dimmer="blurring" open={modal.open} size="mini" mountNode={c}>
       <Icon as={Button} icon="x" onClick={closeModal} floated="right"></Icon>

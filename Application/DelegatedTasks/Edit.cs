@@ -14,18 +14,19 @@ namespace Application.DelegatedTasks
         public class Command : IRequest
         {
             public Guid Id { get; set; }
-            public string Assignment { get; set; }
             public string Type { get; set; }
             public DateTime Deadline { get; set; }
             public string Notes { get; set; }
+            public string CreatedBy { get; set; }
             public Boolean Done { get; set; }
+            public Boolean Accepted { get; set; }
+            public Boolean Refused { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
-                RuleFor(x => x.Assignment).NotEmpty();
                 RuleFor(x => x.Type).NotEmpty();
                 RuleFor(x => x.Deadline).NotEmpty();
                 RuleFor(x => x.Notes).NotEmpty();
@@ -49,10 +50,12 @@ namespace Application.DelegatedTasks
                     throw new RestException(HttpStatusCode.NotFound,
                     new { delegatedTask = "Not found" });
 
-                delegatedTask.Assignment = request.Assignment ?? delegatedTask.Assignment;
                 delegatedTask.Type = request.Type ?? delegatedTask.Type;
                 delegatedTask.Deadline = request.Deadline;
                 delegatedTask.Notes = request.Notes ?? delegatedTask.Notes;
+                delegatedTask.CreatedBy = request.CreatedBy ?? delegatedTask.CreatedBy;
+                delegatedTask.Accepted = request.Accepted;
+                delegatedTask.Refused = request.Refused;
                 delegatedTask.Done = request.Done;
 
                 var success = await _context.SaveChangesAsync() > 0;

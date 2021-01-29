@@ -12,7 +12,7 @@ namespace API.Controllers
     public class DelegatedTaskController : BaseController
     {
         [HttpGet]
-        public async Task<ActionResult<List<DelegatedTask>>> List(CancellationToken ct)
+        public async Task<ActionResult<List<DelegatedTaskDTO>>> List(CancellationToken ct)
         {
             return await Mediator.Send(new List.Query(), ct);
         }
@@ -40,6 +40,12 @@ namespace API.Controllers
         public async Task<ActionResult<Unit>> Delete(Guid id)
         {
             return await Mediator.Send(new Delete.Command { Id = id });
+        }
+
+        [HttpPost("{id}/share/{username}")]
+        public async Task<ActionResult<Unit>> Share(Guid id, string username)
+        {
+            return await Mediator.Send(new ShareTask.Command { Id = id, Username = username });
         }
     }
 }

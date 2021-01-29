@@ -1,6 +1,7 @@
 import { RootStore } from './rootStore';
 import { observable, action, reaction } from 'mobx';
 import { SyntheticEvent } from 'react';
+import { OperationValues } from '../models/operation';
 
 export default class CommonStore {
   rootStore: RootStore;
@@ -58,5 +59,39 @@ export default class CommonStore {
 
     this.expandedMenu = !this.expandedMenu;
     this.render();
+  };
+  newStatistic = (stat: string) => {
+    switch (stat) {
+      case 'lead': {
+        let operation = new OperationValues();
+        operation.lead++;
+        return operation;
+      }
+      case 'opportunity': {
+        let operation = new OperationValues();
+        operation.opportunity++;
+        return operation;
+      }
+      case 'converted': {
+        let operation = new OperationValues();
+        operation.converted++;
+        return operation;
+      }
+      case 'order': {
+        let operation = new OperationValues();
+        operation.order++;
+        return operation;
+      }
+      case 'revenue': {
+        let operation = new OperationValues();
+        operation.revenue++;
+        return operation;
+      }
+      case 'source': {
+        let operation = new OperationValues();
+        // operation.source = value!;
+        return operation;
+      }
+    }
   };
 }

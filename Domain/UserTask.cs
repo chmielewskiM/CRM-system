@@ -9,5 +9,6 @@ namespace Domain
         public virtual DelegatedTask DelegatedTask { get; set; }
         public Guid DelegatedTaskId { get; set; }
         public DateTime DateAdded { get; set; }
+
     }
 }

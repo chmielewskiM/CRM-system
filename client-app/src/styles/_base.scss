@@ -185,7 +185,7 @@ body {
                 @include breakpoint(tablet) {
                     min-height: 3.5rem;
                     height: min-content;
-                    background-color: $color-primary;
+                    background-color: $color-primary-dark;
                 }
 
                 & .button {

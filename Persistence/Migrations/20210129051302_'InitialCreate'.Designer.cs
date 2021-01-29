@@ -9,7 +9,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210126160644_'InitialCreate'")]
+    [Migration("20210129051302_'InitialCreate'")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,8 +24,14 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("Accepted")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("DateCalled")
                         .HasColumnType("TEXT");
+
+                    b.Property<double>("Duration")
+                        .HasColumnType("REAL");
 
                     b.Property<string>("Notes")
                         .HasColumnType("TEXT");
@@ -82,7 +88,10 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Assignment")
+                    b.Property<bool>("Accepted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CreatedBy")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DateStarted")
@@ -97,6 +106,9 @@ namespace Persistence.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("Refused")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Type")
                         .HasColumnType("TEXT");
 
@@ -105,33 +117,36 @@ namespace Persistence.Migrations
                     b.ToTable("DelegatedTasks");
                 });
 
-            modelBuilder.Entity("Domain.Material", b =>
+            modelBuilder.Entity("Domain.Operation", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<double>("Available")
-                        .HasColumnType("REAL");
+                    b.Property<long>("Converted")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<double>("Deployed")
-                        .HasColumnType("REAL");
-
-                    b.Property<string>("Name")
+                    b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
-                    b.Property<double>("Ordered")
+                    b.Property<long>("Lead")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("Opportunity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("Order")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("Revenue")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("Required")
-                        .HasColumnType("REAL");
-
-                    b.Property<string>("Storehouse")
+                    b.Property<string>("Source")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Materials");
+                    b.ToTable("Operations");
                 });
 
             modelBuilder.Entity("Domain.Order", b =>
@@ -255,6 +270,25 @@ namespace Persistence.Migrations
                     b.HasIndex("ContactId");
 
                     b.ToTable("UserContacts");
+                });
+
+            modelBuilder.Entity("Domain.UserOperation", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("OperationId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("UserId", "OperationId");
+
+                    b.HasIndex("OperationId")
+                        .IsUnique();
+
+                    b.ToTable("UserOperations");
                 });
 
             modelBuilder.Entity("Domain.UserTask", b =>
@@ -415,6 +449,21 @@ namespace Persistence.Migrations
                         .WithMany("UserContacts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.UserOperation", b =>
+                {
+                    b.HasOne("Domain.Operation", "Operation")
+                        .WithOne("UserOperations")
+                        .HasForeignKey("Domain.UserOperation", "OperationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.User", "User")
+                        .WithMany("UserOperations")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 

@@ -34,10 +34,6 @@ export default class ContactStore {
   }
 
   @computed get contactsByDate() {
-    Array.from(this.contactRegistry.entries()).forEach((entry) =>
-      console.log('Key: ' + entry[0] + ' Value: ' + entry[1])
-    );
-
     return Array.from(this.contactRegistry.values())
       .slice(0)
       .sort((a, b) => Date.parse(b.dateAdded) - Date.parse(a.dateAdded));

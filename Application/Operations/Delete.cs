@@ -1,10 +1,12 @@
 using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Errors;
 using MediatR;
 using Persistence;
 
-namespace Application.Materials
+namespace Application.Operations
 {
     public class Delete
     {
@@ -24,12 +26,13 @@ namespace Application.Materials
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var material = await _context.Materials.FindAsync(request.Id);
+                var operation = await _context.Operations.FindAsync(request.Id);
 
-                if (material == null)
-                    throw new Exception("Couldn't find material");
+                if (operation == null)
+                    throw new RestException(HttpStatusCode.NotFound,
+                    new { operation = "Not found" });
 
-                _context.Remove(material);
+                _context.Remove(operation);
 
                 var success = await _context.SaveChangesAsync() > 0;
 

@@ -3,9 +3,12 @@ import { Button, Header, Icon, Modal } from 'semantic-ui-react';
 import { RootStoreContext } from '../../stores/rootStore';
 import { observer } from 'mobx-react-lite';
 import { IContact } from '../../models/contact';
+import { DelegatedTaskFormValues, IDelegatedTask } from '../../models/delegatedTask';
 
 interface IProps {
-  contact: IContact;
+  contact: IContact | undefined;
+  task: IDelegatedTask | undefined;
+  function(contact:IContact):void;
 }
 export const ConfirmationModal: React.FC<IProps> = (props) => {
   const rootStore = useContext(RootStoreContext);
@@ -16,7 +19,6 @@ export const ConfirmationModal: React.FC<IProps> = (props) => {
     modal,
     rr,
   } = rootStore.modalStore;
-  const { selectedOrder, closeOrder } = rootStore.orderStore;
   useEffect(() => {}, [rr]);
 
   return (
@@ -27,7 +29,8 @@ export const ConfirmationModal: React.FC<IProps> = (props) => {
         <Button basic color="red" inverted onClick={() => closeModal()}>
           <Icon name="remove" /> No
         </Button>
-        <Button color="green" inverted onClick={() => confirmModal(props.contact)}>
+        {/* <Button color="green" inverted onClick={() => confirmModal(props.contact)}> */}
+        <Button color="green" inverted onClick={() => props.function(props.contact!)}>
           <Icon name="checkmark" /> Yes
         </Button>
       </Modal.Actions>

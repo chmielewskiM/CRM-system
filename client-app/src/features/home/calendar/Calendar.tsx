@@ -20,31 +20,49 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 const myEventsList = [
-  { start: new Date(), end: new Date(), title: '123' },
+  { start: new Date(), end: new Date('2021-01-31 22:49:42.1744062'), title: '123' },
   { start: new Date(), end: new Date(), title: '456' },
 ];
 
 
 const eventPropGetter = (event: any, start: any, end: any, isSelected: boolean) => {
-  const style = {
-    backgroundColor: '#FF0000',
-    paddingLeft: '10px',
-    color: 'white',
+  var style = {
+    backgroundColor:'',
   };
+  switch(event.title){
+  case 'Call':
+  style.backgroundColor = 'green'
+  break;
+  case 'Manage':
+  style.backgroundColor = 'red'
+  break;
+  case 'Order':
+  style.backgroundColor = 'blue'
+  break;
+  case 'Send Invoice':
+  style.backgroundColor = 'black'
+  break;
+  }
   return {
     style: style,
   };
 };
-interface CalendarWithTooltipProps {
-  events: Event[];
+interface IProps {
+  events: {
+    start:Date,
+    end:Date,
+    title:string,
+    allDay:boolean,
+  }[]
 }
 
-export const MyCalendar: React.FC = () => {
+export const MyCalendar: React.FC<IProps> = (props) => {
   const rootStore = useContext(RootStoreContext);
   const { render, rr, sel, bool, body, selectedEvent } = rootStore.homeStore;
   const { closeModal, confirmModal, modal, openModal } = rootStore.modalStore;
   useEffect(() => {
-    console.log('cal');
+    rootStore.delegatedTaskStore.loadDelegatedTasks()
+    rootStore.delegatedTaskStore.calendarEvents
   }, [rr]);
 
   return (
@@ -52,13 +70,16 @@ export const MyCalendar: React.FC = () => {
       <div id="rbc">
         <Calendar
           localizer={localizer}
-          events={myEventsList}
+          events={props.events}
           startAccessor="start"
           endAccessor="end"
-          views={['month']}
+          allDayAccessor = 'allDay'
+          eventPropGetter={eventPropGetter}
+          onView={()=>rootStore.delegatedTaskStore.calendarEvents}
+          views={['month', 'day']}
           onSelectEvent={(data, e) => openModal(data.title, '', '')}
         />
-        <InfoModal open={false} body="" />
+        <InfoModal open={false} body="sdsds" />
       </div>
     </Fragment>
   );

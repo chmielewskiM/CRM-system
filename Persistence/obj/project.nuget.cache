@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "fCRJ22tYsRMxDmRId6EkyW5aBuaRtwcHQlpnbfNL9gHxgWDH4djhuxkvr54gYj4rd7bTKJenwquVwA0lmExBOQ==",
+  "dgSpecHash": "wY4pqeXQsBR+Jtq6kEigkTByVfSo9s1TIcidwOPzzezaMGUU8Wpowuam7mZJSZ4WYqfvBdwBUDULw3inQNTxKg==",
   "success": true,
-  "projectFilePath": "E:\\VSC\\sysCRM\\CRM\\Persistence\\Persistence.csproj",
+  "projectFilePath": "e:\\VSC\\sysCRM\\CRM\\Persistence\\Persistence.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\mc\\.nuget\\packages\\castle.core\\4.4.0\\castle.core.4.4.0.nupkg.sha512",
     "C:\\Users\\mc\\.nuget\\packages\\microsoft.aspnetcore.authentication\\2.2.0\\microsoft.aspnetcore.authentication.2.2.0.nupkg.sha512",

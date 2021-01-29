@@ -15,3 +15,11 @@ export const destructureDeadline = (deadline: Date) => {
   const dateString = `${year}-${month}-${day}`;
   return dateString;
 };
+
+export const destructureDate = (dateStarted: Date) => {
+  const year = dateStarted.getFullYear();
+  const month = dateStarted.getMonth() + 1;
+  const day = dateStarted.getDate();
+  const dateString = `${year}-${month}-${day}`;
+  return dateString;
+};

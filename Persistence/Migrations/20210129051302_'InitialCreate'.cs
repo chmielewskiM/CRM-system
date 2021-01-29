@@ -54,7 +54,9 @@ namespace Persistence.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     DateCalled = table.Column<string>(nullable: true),
-                    Notes = table.Column<string>(nullable: true)
+                    Accepted = table.Column<bool>(nullable: false),
+                    Notes = table.Column<string>(nullable: true),
+                    Duration = table.Column<double>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -87,12 +89,14 @@ namespace Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Assignment = table.Column<string>(nullable: true),
                     Type = table.Column<string>(nullable: true),
                     DateStarted = table.Column<DateTime>(nullable: false),
                     Deadline = table.Column<DateTime>(nullable: false),
                     Notes = table.Column<string>(nullable: true),
-                    Done = table.Column<bool>(nullable: false)
+                    CreatedBy = table.Column<string>(nullable: true),
+                    Done = table.Column<bool>(nullable: false),
+                    Accepted = table.Column<bool>(nullable: false),
+                    Refused = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -100,20 +104,21 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Materials",
+                name: "Operations",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    Storehouse = table.Column<string>(nullable: true),
-                    Available = table.Column<double>(nullable: false),
-                    Deployed = table.Column<double>(nullable: false),
-                    Ordered = table.Column<double>(nullable: false),
-                    Required = table.Column<double>(nullable: false)
+                    Lead = table.Column<long>(nullable: false),
+                    Opportunity = table.Column<long>(nullable: false),
+                    Converted = table.Column<long>(nullable: false),
+                    Order = table.Column<long>(nullable: false),
+                    Revenue = table.Column<double>(nullable: false),
+                    Source = table.Column<string>(nullable: true),
+                    Date = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Materials", x => x.Id);
+                    table.PrimaryKey("PK_Operations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -291,6 +296,31 @@ namespace Persistence.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "UserOperations",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(nullable: false),
+                    OperationId = table.Column<Guid>(nullable: false),
+                    DateAdded = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserOperations", x => new { x.UserId, x.OperationId });
+                    table.ForeignKey(
+                        name: "FK_UserOperations_Operations_OperationId",
+                        column: x => x.OperationId,
+                        principalTable: "Operations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserOperations_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -334,6 +364,12 @@ namespace Persistence.Migrations
                 column: "ContactId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserOperations_OperationId",
+                table: "UserOperations",
+                column: "OperationId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserTasks_DelegatedTaskId",
                 table: "UserTasks",
                 column: "DelegatedTaskId");
@@ -360,13 +396,13 @@ namespace Persistence.Migrations
                 name: "Calls");
 
             migrationBuilder.DropTable(
-                name: "Materials");
-
-            migrationBuilder.DropTable(
                 name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "UserContacts");
+
+            migrationBuilder.DropTable(
+                name: "UserOperations");
 
             migrationBuilder.DropTable(
                 name: "UserTasks");
@@ -376,6 +412,9 @@ namespace Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Contacts");
+
+            migrationBuilder.DropTable(
+                name: "Operations");
 
             migrationBuilder.DropTable(
                 name: "DelegatedTasks");

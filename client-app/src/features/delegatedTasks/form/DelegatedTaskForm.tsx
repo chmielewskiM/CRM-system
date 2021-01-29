@@ -13,7 +13,6 @@ import { combineValidators, isRequired } from 'revalidate';
 import { RootStoreContext } from '../../../app/stores/rootStore';
 
 const validation = combineValidators({
-  // assignment: isRequired({ message: 'Choose who should perform the task.' }),
   // type: isRequired({ message: 'Select type of the task.' }),
   // date: isRequired({ message: 'The date is required.' }),
   // time: isRequired({ message: 'The time is required.' }),
@@ -31,7 +30,6 @@ export const DelegatedTaskForm: React.FC<IProps> = () => {
     addDelegatedTask,
     submitting,
     fillForm,
-    assignmentOptions,
   } = rootStore.delegatedTaskStore;
 
   useEffect(() => {}, [setShowDelegatedTaskForm]);
@@ -68,13 +66,6 @@ export const DelegatedTaskForm: React.FC<IProps> = () => {
               render={({ handleSubmit, invalid, pristine }) => (
                 <Form onSubmit={handleSubmit} size="big">
                   <Form.Group>
-                    <Field
-                      options={assignmentOptions}
-                      name="assignment"
-                      placeholder="Assignment"
-                      value={delegatedTask.assignment}
-                      component={SelectInput}
-                    />
                     <Field
                       options={options}
                       name="type"

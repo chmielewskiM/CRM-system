@@ -2,9 +2,9 @@ import axios, { AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
 import { IContact } from '../models/contact';
 import { IOrder } from '../models/order';
-import { IMaterial } from '../models/material';
 import { IDelegatedTaskForm } from '../models/delegatedTask';
-import { IUser, IUserFormValues } from '../models/user';
+import { IUser, IUserFormValues, User } from '../models/user';
+import { IOperation } from '../models/operation';
 
 axios.defaults.baseURL = 'http://localhost:5000';
 
@@ -69,6 +69,7 @@ const DelegatedTasks = {
   update: (delegatedTask: IDelegatedTaskForm) =>
     requests.put(`/delegatedTask/${delegatedTask.id}`, delegatedTask),
   delete: (id: string) => requests.del(`/delegatedTask/${id}`),
+  share: (id: string, user: IUserFormValues) => requests.post(`/delegatedTask/${id}/share/${user.username}`, User),
 };
 
 const Calls = {
@@ -85,13 +86,6 @@ const Orders = {
   delete: (id: string) => requests.del(`/order/${id}`),
 };
 
-const Materials = {
-  list: (): Promise<IMaterial[]> => requests.get('/material'),
-  add: (material: IMaterial) => requests.post('/material', material),
-  update: (material: IMaterial) => requests.put(`/material/${material.id}`, material),
-  delete: (id: string) => requests.del(`/material/${id}`),
-};
-
 const Users = {
   get: (username: String): Promise<IUserFormValues> => requests.get(`/user/${username}`),
   list: (): Promise<IUser[]> => requests.get('/user/list'),
@@ -99,12 +93,18 @@ const Users = {
   login: (user: IUserFormValues): Promise<IUser> => requests.post('/user/login', user),
   register: (user: IUserFormValues): Promise<IUser> => requests.post('/user/register', user),
 };
+const Operations = {
+  // get: (username: String): Promise<IUserFormValues> => requests.get(`/user/${username}`),
+  list: (): Promise<IOperation[]> => requests.get('/operation'),
+  add: (operation: IOperation) => requests.post('/operation', operation),
+  delete: (id: string) => requests.del(`/operation/${id}`),
+};
 
 export default {
   Contacts,
   Leads,
   Orders,
-  Materials,
   DelegatedTasks,
   Users,
+  Operations
 };

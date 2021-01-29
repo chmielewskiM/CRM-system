@@ -29,6 +29,7 @@ const data = [
     fill: '#c81d25',
   },
 ];
+const d = {}
 const shape: TrapezoidProps = {};
 
 export const Pipeline = () => {

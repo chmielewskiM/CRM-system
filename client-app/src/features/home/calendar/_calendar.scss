@@ -40,7 +40,6 @@
                     }
                 }
 
-                & .rbc-toolbar-label {}
             }
 
             & .rbc-month-view {
@@ -57,9 +56,11 @@
                     & .rbc-row-content {
                         & .rbc-event {
                             background-color: $color9;
-                            width: 1rem;
-                            height: 1rem;
-                            margin: .2rem;
+                            color: $color9;
+                            text-overflow: clip;
+                            // width: 1rem;
+                            height: .7rem;
+                            // margin: .2rem;
                             transition: all .1s linear;
 
                             &:focus {
@@ -69,6 +70,10 @@
                             &:hover {
                                 background-color: $color-secondary;
                                 transition: all .1s linear;
+                            }
+
+                            &-content {
+                                display: none;
                             }
                         }
 

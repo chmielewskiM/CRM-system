@@ -1,4 +1,4 @@
-import { observable, computed, action, runInAction } from 'mobx';
+import { observable, computed, action, runInAction, reaction } from 'mobx';
 import { IUser, IUserFormValues, UserFormValues, User } from '../models/user';
 import agent from '../api/agent';
 import { RootStore } from './rootStore';
@@ -12,6 +12,16 @@ export default class UserStore {
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
+    // reaction(
+    //   ()=>this.user,
+    //   async ()=>{
+    //     const user = await agent.Users.logged();
+    //     runInAction(() => {
+    //     this.user = user;
+    //     })
+    //     this.render();
+    //   }
+    // );
   }
   @observable fieldContent = '';
   @observable fields = document.getElementsByClassName('field');
@@ -31,19 +41,19 @@ export default class UserStore {
     this.rr = !this.rr;
   }
   @computed get usersByName() {
-    let t;
-    let e: Array<Object> = [];
-    let a = Array.from(this.userList.values());
-    a.map((user, el) => {
-      t = {
+    let User;
+    let Users: Array<Object> = [];
+    let list = Array.from(this.userList.values());
+    list.map((user, el) => {
+      User = {
         key: user.id,
         text: user.userName,
         value: user.userName,
       };
-      e.push(t);
+      Users.push(User);
     });
 
-    return e;
+    return Users;
   }
 
   @action getUserList = async () => {
@@ -53,7 +63,6 @@ export default class UserStore {
         us.forEach((element) => {
           this.userList.set(element.id, element);
         });
-
         this.render();
       });
     } catch (error) {
@@ -80,7 +89,9 @@ export default class UserStore {
       const user = await agent.Users.register(values);
       this.rootStore.commonStore.setToken(user.token);
       this.rootStore.modalStore.closeModal();
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   @action getUser = async (username: string) => {
@@ -92,12 +103,28 @@ export default class UserStore {
           this.selectedUser = users2;
           this.checked = true;
         });
-        console.log(this.selectedUser);
         this.render();
       } catch (error) {
         console.log(error);
       }
     }
+  };
+  @action getLoggedUser = async () => {
+    
+      try {
+        const users = await agent.Users.logged();
+        if(users){
+        const users2 = new User(users);
+        runInAction(() => {
+          this.user = users2;
+          this.checked = true;
+        });
+      }
+        this.render();
+      } catch (error) {
+        console.log(error);
+      }
+    
   };
 
   @action logout = () => {

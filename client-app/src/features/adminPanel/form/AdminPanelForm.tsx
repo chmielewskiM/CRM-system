@@ -28,7 +28,6 @@ export const AdminPanelForm: React.FC<IProps> = (props) => {
 
   useEffect(() => {
     setUser(selectedUser);
-    console.log('fORM');
   }, [rr]);
 
   const [user2, setUser] = useState(new UserFormValues());
@@ -55,11 +54,11 @@ export const AdminPanelForm: React.FC<IProps> = (props) => {
                 name="type"
                 placeholder="Select user"
                 value={user2?.username}
-                onClick={(click, v) => {
+                onClick={() => {
                   getUserList();
                 }}
-                onChange={(val, val2) => {
-                  getUser(val2.value!.toString());
+                onChange={(e, data) => {
+                  getUser(data.value!.toString());
                 }}
               />
             )}
