@@ -6,63 +6,40 @@ import { history } from '../..';
 import { toast } from 'react-toastify';
 import { toJS } from 'mobx';
 import { Input } from 'semantic-ui-react';
-import { isThisSecond } from 'date-fns';
 
 export default class UserStore {
   rootStore: RootStore;
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
-    reaction(
-      () => this.isLoggedIn,
-      async () => {
-        const user = await agent.Users.logged();
-        console.log('USER');
-        runInAction(() => {
-          this.topAccess = this.midAccess = this.lowAccess = false;
-          this.user = user;
-          if(user.level == 'top')
-          this.topAccess = true;
-          else if(user.level == 'mid')
-          this.midAccess = true;
-          else 
-          this.lowAccess = true;
-        });
-        this.render();
-      }
-    );
+    // reaction(
+    //   ()=>this.user,
+    //   async ()=>{
+    //     const user = await agent.Users.logged();
+    //     runInAction(() => {
+    //     this.user = user;
+    //     })
+    //     this.render();
+    //   }
+    // );
   }
-
-  //Observables
   @observable fieldContent = '';
-
   @observable fields = document.getElementsByClassName('field');
-
   @observable user: IUser | null = null;
-
-  @observable topAccess: boolean = false;
-  @observable midAccess: boolean = false;
-  @observable lowAccess: boolean = false;
-
   @observable checked: boolean = false;
-
   @observable userList = new Map();
-
-  @observable selectedUser: IUserFormValues = new UserFormValues();
-
-  @observable e: any = [];
-
-  @observable rr = false;
-
-  @observable c = document.getElementById('form');
-
-  @observable inputValue = '';
-
-  //Computeds
+  @observable
+  selectedUser: IUserFormValues = new UserFormValues();
   @computed get isLoggedIn() {
     return !!this.user;
   }
-
+  @observable e: any = [];
+  @observable rr = false;
+  @observable c = document.getElementById('form');
+  @observable inputValue = '';
+  @action render() {
+    this.rr = !this.rr;
+  }
   @computed get usersByName() {
     let User;
     let Users: Array<Object> = [];
@@ -77,11 +54,6 @@ export default class UserStore {
     });
 
     return Users;
-  }
-
-  //Actions
-  @action render() {
-    this.rr = !this.rr;
   }
 
   @action getUserList = async () => {
@@ -137,21 +109,22 @@ export default class UserStore {
       }
     }
   };
-
   @action getLoggedUser = async () => {
-    try {
-      const users = await agent.Users.logged();
-      if (users) {
+    
+      try {
+        const users = await agent.Users.logged();
+        if(users){
         const users2 = new User(users);
         runInAction(() => {
           this.user = users2;
           this.checked = true;
         });
       }
-      this.render();
-    } catch (error) {
-      console.log(error);
-    }
+        this.render();
+      } catch (error) {
+        console.log(error);
+      }
+    
   };
 
   @action logout = () => {

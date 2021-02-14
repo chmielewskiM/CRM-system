@@ -1,5 +1,6 @@
 using System;
 using Xunit;
+using Application.Contacts;
 using Domain;
 namespace ApplicationTests
 {

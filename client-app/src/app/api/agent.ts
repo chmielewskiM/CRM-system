@@ -4,8 +4,7 @@ import { IContact } from '../models/contact';
 import { IOrder } from '../models/order';
 import { IDelegatedTaskForm } from '../models/delegatedTask';
 import { IUser, IUserFormValues, User } from '../models/user';
-import { IOperation, CompleteStats, ICompleteStats } from '../models/operation';
-import { wait } from '@testing-library/react';
+import { IOperation } from '../models/operation';
 
 axios.defaults.baseURL = 'http://localhost:5000';
 
@@ -96,10 +95,7 @@ const Users = {
 };
 const Operations = {
   // get: (username: String): Promise<IUserFormValues> => requests.get(`/user/${username}`),
-  // list: (params: URLSearchParams): Promise<CompleteStats[]> => 
-  // axios.get(`/operation/`, {params: params}).then(delay(1000)).then(responseBody),
-  list: (): Promise<ICompleteStats> => 
-  axios.get(`/operation/`).then(delay(1000)).then(responseBody),
+  list: (): Promise<IOperation[]> => requests.get('/operation'),
   add: (operation: IOperation) => requests.post('/operation', operation),
   delete: (id: string) => requests.del(`/operation/${id}`),
 };

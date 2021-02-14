@@ -7,7 +7,6 @@ import { ContactForm } from '../form/ContactForm';
 import { RootStoreContext } from '../../../app/stores/rootStore';
 import { ArchivedLog } from '../../archivedLogs/ArchivedLog';
 import { CallLog } from '../callLogs/CallLog';
-import LoaderComponent from '../../../app/layout/LoaderComponent';
 
 export const ContactDashboard: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
@@ -20,7 +19,6 @@ export const ContactDashboard: React.FC = () => {
     editContactForm,
     deleteContact,
     submitting,
-    loadingInitial
   } = rootStore.contactStore;
   const { expandMenu } = rootStore.commonStore;
 
@@ -29,8 +27,8 @@ export const ContactDashboard: React.FC = () => {
     if (selectedContact) selectContact(selectedContact!.id);
   }, [showContactForm]);
 
-  if (loadingInitial)
-    return <LoaderComponent content="Loading..." />;
+  // if (contactStore.loadingInitial)
+  //   return <LoaderComponent content="Loading..." />;
 
   return (
     <Grid stackable centered className="main-grid">

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\vsc\\syscrm\\crm\\api\\API.csproj": {}
+    "e:\\VSC\\sysCRM\\CRM\\API\\API.csproj": {}
   },
   "projects": {
-    "E:\\vsc\\syscrm\\crm\\api\\API.csproj": {
+    "e:\\VSC\\sysCRM\\CRM\\API\\API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\vsc\\syscrm\\crm\\api\\API.csproj",
+        "projectUniqueName": "e:\\VSC\\sysCRM\\CRM\\API\\API.csproj",
         "projectName": "API",
-        "projectPath": "E:\\vsc\\syscrm\\crm\\api\\API.csproj",
+        "projectPath": "e:\\VSC\\sysCRM\\CRM\\API\\API.csproj",
         "packagesPath": "C:\\Users\\mc\\.nuget\\packages\\",
-        "outputPath": "E:\\vsc\\syscrm\\crm\\api\\obj\\",
+        "outputPath": "e:\\VSC\\sysCRM\\CRM\\API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Microsoft\\Xamarin\\NuGet\\"
@@ -31,11 +31,11 @@
         "frameworks": {
           "netcoreapp3.1": {
             "projectReferences": {
-              "E:\\vsc\\syscrm\\crm\\Application\\Application.csproj": {
-                "projectPath": "E:\\vsc\\syscrm\\crm\\Application\\Application.csproj"
+              "e:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj": {
+                "projectPath": "e:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj"
               },
-              "E:\\vsc\\syscrm\\crm\\Infrastructure\\Infrastructure.csproj": {
-                "projectPath": "E:\\vsc\\syscrm\\crm\\Infrastructure\\Infrastructure.csproj"
+              "e:\\VSC\\sysCRM\\CRM\\Infrastructure\\Infrastructure.csproj": {
+                "projectPath": "e:\\VSC\\sysCRM\\CRM\\Infrastructure\\Infrastructure.csproj"
               }
             }
           }
@@ -51,7 +51,7 @@
           "dependencies": {
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[3.1.0, )"
+              "version": "[3.0.0, )"
             },
             "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
               "target": "Package",
@@ -88,14 +88,14 @@
         }
       }
     },
-    "E:\\vsc\\syscrm\\crm\\Application\\Application.csproj": {
+    "e:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\vsc\\syscrm\\crm\\Application\\Application.csproj",
+        "projectUniqueName": "e:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj",
         "projectName": "Application",
-        "projectPath": "E:\\vsc\\syscrm\\crm\\Application\\Application.csproj",
+        "projectPath": "e:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj",
         "packagesPath": "C:\\Users\\mc\\.nuget\\packages\\",
-        "outputPath": "E:\\vsc\\syscrm\\crm\\Application\\obj\\",
+        "outputPath": "e:\\VSC\\sysCRM\\CRM\\Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Microsoft\\Xamarin\\NuGet\\"
@@ -106,20 +106,20 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "netcoreapp3.1"
+          "netstandard2.1"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "netcoreapp3.1": {
+          "netstandard2.1": {
             "projectReferences": {
-              "E:\\vsc\\syscrm\\crm\\Domain\\Domain.csproj": {
-                "projectPath": "E:\\vsc\\syscrm\\crm\\Domain\\Domain.csproj"
+              "e:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj": {
+                "projectPath": "e:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj"
               },
-              "E:\\vsc\\syscrm\\crm\\Persistence\\Persistence.csproj": {
-                "projectPath": "E:\\vsc\\syscrm\\crm\\Persistence\\Persistence.csproj"
+              "e:\\VSC\\sysCRM\\CRM\\Persistence\\Persistence.csproj": {
+                "projectPath": "e:\\VSC\\sysCRM\\CRM\\Persistence\\Persistence.csproj"
               }
             }
           }
@@ -131,7 +131,7 @@
         }
       },
       "frameworks": {
-        "netcoreapp3.1": {
+        "netstandard2.1": {
           "dependencies": {
             "AutoMapper.Extensions.Microsoft.DependencyInjection": {
               "target": "Package",
@@ -147,7 +147,7 @@
             },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[3.1.0, )"
+              "version": "[2.2.0, )"
             }
           },
           "imports": [
@@ -161,7 +161,7 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
-            "Microsoft.NETCore.App": {
+            "NETStandard.Library": {
               "privateAssets": "all"
             }
           },
@@ -169,14 +169,14 @@
         }
       }
     },
-    "E:\\vsc\\syscrm\\crm\\Domain\\Domain.csproj": {
+    "e:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\vsc\\syscrm\\crm\\Domain\\Domain.csproj",
+        "projectUniqueName": "e:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj",
         "projectName": "Domain",
-        "projectPath": "E:\\vsc\\syscrm\\crm\\Domain\\Domain.csproj",
+        "projectPath": "e:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj",
         "packagesPath": "C:\\Users\\mc\\.nuget\\packages\\",
-        "outputPath": "E:\\vsc\\syscrm\\crm\\Domain\\obj\\",
+        "outputPath": "e:\\VSC\\sysCRM\\CRM\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Microsoft\\Xamarin\\NuGet\\"
@@ -187,14 +187,14 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "netcoreapp3.1"
+          "netstandard2.1"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "netcoreapp3.1": {
+          "netstandard2.1": {
             "projectReferences": {}
           }
         },
@@ -205,11 +205,11 @@
         }
       },
       "frameworks": {
-        "netcoreapp3.1": {
+        "netstandard2.1": {
           "dependencies": {
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[3.1.0, )"
+              "version": "[2.2.0, )"
             },
             "Newtonsoft.Json": {
               "target": "Package",
@@ -227,7 +227,7 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
-            "Microsoft.NETCore.App": {
+            "NETStandard.Library": {
               "privateAssets": "all"
             }
           },
@@ -235,14 +235,14 @@
         }
       }
     },
-    "E:\\vsc\\syscrm\\crm\\Infrastructure\\Infrastructure.csproj": {
+    "e:\\VSC\\sysCRM\\CRM\\Infrastructure\\Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\vsc\\syscrm\\crm\\Infrastructure\\Infrastructure.csproj",
+        "projectUniqueName": "e:\\VSC\\sysCRM\\CRM\\Infrastructure\\Infrastructure.csproj",
         "projectName": "Infrastructure",
-        "projectPath": "E:\\vsc\\syscrm\\crm\\Infrastructure\\Infrastructure.csproj",
+        "projectPath": "e:\\VSC\\sysCRM\\CRM\\Infrastructure\\Infrastructure.csproj",
         "packagesPath": "C:\\Users\\mc\\.nuget\\packages\\",
-        "outputPath": "E:\\vsc\\syscrm\\crm\\Infrastructure\\obj\\",
+        "outputPath": "e:\\VSC\\sysCRM\\CRM\\Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Microsoft\\Xamarin\\NuGet\\"
@@ -253,17 +253,17 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "netcoreapp3.1"
+          "netstandard2.1"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "netcoreapp3.1": {
+          "netstandard2.1": {
             "projectReferences": {
-              "E:\\vsc\\syscrm\\crm\\Application\\Application.csproj": {
-                "projectPath": "E:\\vsc\\syscrm\\crm\\Application\\Application.csproj"
+              "e:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj": {
+                "projectPath": "e:\\VSC\\sysCRM\\CRM\\Application\\Application.csproj"
               }
             }
           }
@@ -275,7 +275,7 @@
         }
       },
       "frameworks": {
-        "netcoreapp3.1": {
+        "netstandard2.1": {
           "dependencies": {
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
@@ -297,7 +297,7 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
-            "Microsoft.NETCore.App": {
+            "NETStandard.Library": {
               "privateAssets": "all"
             }
           },
@@ -305,14 +305,14 @@
         }
       }
     },
-    "E:\\vsc\\syscrm\\crm\\Persistence\\Persistence.csproj": {
+    "e:\\VSC\\sysCRM\\CRM\\Persistence\\Persistence.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\vsc\\syscrm\\crm\\Persistence\\Persistence.csproj",
+        "projectUniqueName": "e:\\VSC\\sysCRM\\CRM\\Persistence\\Persistence.csproj",
         "projectName": "Persistence",
-        "projectPath": "E:\\vsc\\syscrm\\crm\\Persistence\\Persistence.csproj",
+        "projectPath": "e:\\VSC\\sysCRM\\CRM\\Persistence\\Persistence.csproj",
         "packagesPath": "C:\\Users\\mc\\.nuget\\packages\\",
-        "outputPath": "E:\\vsc\\syscrm\\crm\\Persistence\\obj\\",
+        "outputPath": "e:\\VSC\\sysCRM\\CRM\\Persistence\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Microsoft\\Xamarin\\NuGet\\"
@@ -323,17 +323,17 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "netcoreapp3.1"
+          "netstandard2.1"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "netcoreapp3.1": {
+          "netstandard2.1": {
             "projectReferences": {
-              "E:\\vsc\\syscrm\\crm\\Domain\\Domain.csproj": {
-                "projectPath": "E:\\vsc\\syscrm\\crm\\Domain\\Domain.csproj"
+              "e:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj": {
+                "projectPath": "e:\\VSC\\sysCRM\\CRM\\Domain\\Domain.csproj"
               }
             }
           }
@@ -345,7 +345,7 @@
         }
       },
       "frameworks": {
-        "netcoreapp3.1": {
+        "netstandard2.1": {
           "dependencies": {
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
@@ -371,7 +371,7 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
-            "Microsoft.NETCore.App": {
+            "NETStandard.Library": {
               "privateAssets": "all"
             }
           },

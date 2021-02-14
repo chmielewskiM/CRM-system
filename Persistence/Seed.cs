@@ -268,12 +268,57 @@ namespace Persistence
             {
                 calls = new List<Call> {
                     new Call {
-                        Date = DateTime
+                        DateCalled = DateTime
                             .Now
-                            .AddDays(-36),
+                            .AddDays(-36)
+                            .ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Notes = "1",
                         Accepted = false
                     },
+                    new Call {
+                        DateCalled = DateTime
+                            .Now
+                            .AddDays(-190)
+                            .ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
+                        Notes = "2",
+                        Accepted = true
+                    },
+                    new Call {
+                        // Name = Contact,
+                        DateCalled = DateTime
+                            .Now
+                            .AddDays(-55)
+                            .ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
+                        Notes = "3",
+                        Accepted = false
+                    },
+                    new Call {
+                        // Name = Contact,
+                        DateCalled = DateTime
+                            .Now
+                            .AddDays(-9)
+                            .ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
+                        Notes = "4",
+                        Accepted = true
+                    },
+                    new Call {
+                        // Name = Contact,
+                        DateCalled = DateTime
+                            .Now
+                            .AddDays(-22)
+                            .ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
+                        Notes = "5",
+                        Accepted = false
+                    },
+                    new Call {
+                        // Name = Contact,
+                        DateCalled = DateTime
+                            .Now
+                            .AddDays(-12)
+                            .ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
+                        Notes = "6",
+                        Accepted = true
+                    }
                 };
 
                 context
@@ -344,59 +389,55 @@ namespace Persistence
                 int randomDay = 0;
                 int randomSource = 0;
                 var sources = new List<String>{
-                    "Web", "Flyers", "Commercial", "Social media", "Former client"
+                    "Web", "Flyers", "Commercial", "Social media"
                 };
                 var operation = new Operation();
 
-                for (int i = 0; i < 200; i++)
+                for (int i = 0; i < 50; i++)
                 {
-                    randomProperty = random.Next(106);
+                    randomProperty = random.Next(4);
                     randomRevenue = random.Next(15000);
-                    randomDay = random.Next(160);
-                    randomSource = random.Next(5);
+                    randomDay = random.Next(50);
+                    randomSource = random.Next(4);
 
                     operation = new Operation
                     {
                         Lead = 0,
                         Opportunity = 0,
-                        Quote = 0,
-                        Invoice = 0,
-                        Conversion = 0,
+                        Converted = 0,
                         Order = 0,
                         Revenue = 0,
                         Source = "",
                         Date = DateTime
                           .Now
-                          .AddDays(-randomDay),
+                          .AddDays(randomDay),
                     };
 
-                    if (randomProperty < 40)
+                    switch (randomProperty)
                     {
-                        operation.Lead = 1;
-                        operation.Source = sources[randomSource];
+                        case 0:
+                            {
+                                operation.Lead = 1;
+                                operation.Source = sources[randomProperty];
+                                break;
+                            }
+                        case 1:
+                            {
+                                operation.Opportunity = 1;
+                                break;
+                            }
+                        case 2:
+                            {
+                                operation.Converted = 1;
+                                operation.Revenue = randomRevenue;
+                                break;
+                            }
+                        case 3:
+                            {
+                                operation.Order = 1;
+                                break;
+                            }
                     }
-                    else if (randomProperty >= 40 && randomProperty < 68)
-                    {
-                        operation.Opportunity = 1;
-                    }
-                    else if (randomProperty >= 68 && randomProperty < 87)
-                    {
-                        operation.Quote = 1;
-                    }
-                    else if (randomProperty >= 87 && randomProperty < 95)
-                    {
-                        operation.Invoice = 1;
-                    }
-                    else if (randomProperty >= 95 && randomProperty < 101)
-                    {
-                        operation.Conversion = 1;
-                        operation.Revenue = randomRevenue;
-                    }
-                    else
-                    {
-                        operation.Order = 1;
-                    }
-
                     operations.Add(operation);
                 };
 
@@ -412,9 +453,9 @@ namespace Persistence
                 int randomUser = 0;
                 var userOperations = new List<UserOperation> { };
 
-                for (int i = 0; i < 200; i++)
+                for (int i = 0; i < 40; i++)
                 {
-                    randomUser = random.Next(1, 5);
+                    randomUser = random.Next(1, 4);
 
                     var userOperation = new UserOperation
                     {

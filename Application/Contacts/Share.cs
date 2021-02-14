@@ -8,11 +8,7 @@ using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-////////////////////////////////////////////
-//////
-//////     *** NOT IMPLEMENTED ***
-//////
-////////////////////////////////////////////
+
 namespace Application.Contacts
 {
     public class Share

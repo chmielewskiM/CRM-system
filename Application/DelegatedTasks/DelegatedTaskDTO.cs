@@ -15,8 +15,9 @@ namespace Application.DelegatedTasks
         public string CreatedBy { get; set; }
         public Boolean Done { get; set; }
         public Boolean Accepted {get; set; }
-        public Boolean Refused { get; set; } 
-        [JsonProperty("visible to")]
-        public ICollection<UserAccessDTO> UserTasks { get; set; }
+        public Boolean Refused { get; set; }
+        
+        [JsonProperty("users")]
+        public virtual ICollection<UserTask> UserTasks { get; set; }
     }
 }

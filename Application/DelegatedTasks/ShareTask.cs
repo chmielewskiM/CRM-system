@@ -48,7 +48,7 @@ namespace Application.DelegatedTasks
                     });
 
                 var user = await _userManager.FindByNameAsync(request.Username);
-
+                // username = request.Username;
                 var share = await _context
                     .UserTasks
                     .SingleOrDefaultAsync(x => x.DelegatedTaskId == task.Id && x.UserId == user.Id);

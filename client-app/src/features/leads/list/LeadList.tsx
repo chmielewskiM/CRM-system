@@ -12,7 +12,7 @@ export const LeadList: React.FC = () => {
   const { contactsByDate, loadingInitial, loadLeads, rr, progress, focused } = rootStore.leadStore;
 
   useEffect(() => {}, [rr]);
-  
+
   if (loadingInitial) return <LoaderComponent content="Loading..." />;
 
   return (

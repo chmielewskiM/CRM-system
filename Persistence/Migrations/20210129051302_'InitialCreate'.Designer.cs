@@ -9,7 +9,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210214024428_InitialCreate")]
+    [Migration("20210129051302_'InitialCreate'")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,7 +27,7 @@ namespace Persistence.Migrations
                     b.Property<bool>("Accepted")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<string>("DateCalled")
                         .HasColumnType("TEXT");
 
                     b.Property<double>("Duration")
@@ -123,14 +123,11 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<long>("Conversion")
+                    b.Property<long>("Converted")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
-
-                    b.Property<long>("Invoice")
-                        .HasColumnType("INTEGER");
 
                     b.Property<long>("Lead")
                         .HasColumnType("INTEGER");
@@ -139,9 +136,6 @@ namespace Persistence.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<long>("Order")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long>("Quote")
                         .HasColumnType("INTEGER");
 
                     b.Property<double>("Revenue")
@@ -291,7 +285,8 @@ namespace Persistence.Migrations
 
                     b.HasKey("UserId", "OperationId");
 
-                    b.HasIndex("OperationId");
+                    b.HasIndex("OperationId")
+                        .IsUnique();
 
                     b.ToTable("UserOperations");
                 });
@@ -460,8 +455,8 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.UserOperation", b =>
                 {
                     b.HasOne("Domain.Operation", "Operation")
-                        .WithMany("UserOperations")
-                        .HasForeignKey("OperationId")
+                        .WithOne("UserOperations")
+                        .HasForeignKey("Domain.UserOperation", "OperationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

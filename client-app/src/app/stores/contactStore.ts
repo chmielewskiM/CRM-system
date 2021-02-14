@@ -34,14 +34,11 @@ export default class ContactStore {
   }
 
   @computed get contactsByDate() {
-    // console.log(Array.from(this.contactRegistry.values()))
-    // console.log(this.contactRegistry)
-    
     return Array.from(this.contactRegistry.values())
       .slice(0)
       .sort((a, b) => Date.parse(b.dateAdded) - Date.parse(a.dateAdded));
   }
-  
+
   @action loadContacts = async () => {
     this.loadingInitial = true;
     try {
@@ -50,7 +47,6 @@ export default class ContactStore {
         contacts.forEach((contact) => {
           this.contactRegistry.set(contact.id, contact);
         });
-        // console.log(this.contactRegistry)
         this.loadingInitial = false;
         this.render();
       });

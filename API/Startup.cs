@@ -1,5 +1,6 @@
 using API.Middleware;
 using Application.Interfaces;
+// using Application.Contacts;
 using Domain;
 using FluentValidation.AspNetCore;
 using Infrastructure.Security;
@@ -67,6 +68,7 @@ namespace API
                     .Filters
                     .Add(new AuthorizeFilter(policy));
             }).AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Add>());
+            // .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             services
                 .AddControllers()

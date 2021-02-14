@@ -1,21 +1,17 @@
 #root {
-    & #leadsChart, & #leadsBySourceChart{
-        margin-top: 5rem;
-    }
-    & .chart {
+    & .chart-lead {
 
         padding: 0;
-        // margin: 2rem 0;
+        margin: 2rem 0;
         margin-right: 2rem;
 
         & .buttons {
-            // margin: 0;
+
             & .button {
                 border: thin solid #fff;
                 color: #fff !important;
 
-                &:hover, &.active {
-                    background-color: #fff !important;
+                &:hover {
                     color: #000 !important;
                 }
             }
@@ -23,7 +19,7 @@
 
         & .chart-container {
 
-            
+            margin-top: 3rem;
 
             & .recharts-wrapper {
                 display: flex;

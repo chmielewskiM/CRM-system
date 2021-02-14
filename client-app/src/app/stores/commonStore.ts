@@ -74,7 +74,7 @@ export default class CommonStore {
       }
       case 'converted': {
         let operation = new OperationValues();
-        operation.conversion++;
+        operation.converted++;
         return operation;
       }
       case 'order': {

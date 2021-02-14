@@ -34,7 +34,7 @@ namespace Application.AppUser
             public async Task<AppUser> Handle(Query request, CancellationToken cancellationToken)
             {
                 var user =  await _userManager.FindByNameAsync(request.Username);
-
+                // _userManager.FindByIdAsync
                 return new AppUser
                 {   
                     DisplayName = user.DisplayName,

@@ -9,11 +9,7 @@ using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-////////////////////////////////////////////
-//////
-//////     ***FEATURE NOT IMPLEMENTED ***
-//////
-////////////////////////////////////////////
+
 namespace Application.Contacts
 {
     public class Unshare
