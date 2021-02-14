@@ -11,6 +11,7 @@ import ShareTaskForm from '../form/ShareTaskForm';
 
 export const DelegatedTaskDashboard: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
+
   const {
     loadDelegatedTasks,
     showDelegatedTaskForm,
@@ -24,6 +25,7 @@ export const DelegatedTaskDashboard: React.FC = () => {
     showShareTaskForm,
     calendarEvents,
   } = rootStore.delegatedTaskStore;
+
   useEffect(() => {
     loadDelegatedTasks();
     calendarEvents;
@@ -61,7 +63,7 @@ export const DelegatedTaskDashboard: React.FC = () => {
         {selectedDelegatedTask && (
           <Button icon="check" content="Mark as done" onClick={() => console.log(calendarEvents)} />
         )}
-        {selectedDelegatedTask && (
+        {selectedDelegatedTask && (rootStore.userStore.topAccess || rootStore.userStore.midAccess) && (
           <Button
             // icon =
             content="Share"
@@ -91,18 +93,17 @@ export const DelegatedTaskDashboard: React.FC = () => {
         <Grid.Column width={6}>
           <Segment basic className="task log">
             {' '}
-              <ArchivedLog
-                showAll={true}
-                // filling={{
-                //   header: task.createdBy,
-                //   dateOne: task.dateStarted,
-                //   dateTwo: task.deadline,
-                //   done: task.done,
-                //   info: task.notes,
-                // }}
-                list={rootStore.delegatedTaskStore.userClosedTasks}
-              />
-            
+            <ArchivedLog
+              showAll={true}
+              // filling={{
+              //   header: task.createdBy,
+              //   dateOne: task.dateStarted,
+              //   dateTwo: task.deadline,
+              //   done: task.done,
+              //   info: task.notes,
+              // }}
+              list={rootStore.delegatedTaskStore.userClosedTasks}
+            />
           </Segment>
         </Grid.Column>
       </Grid.Row>

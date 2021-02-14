@@ -44,7 +44,7 @@ export default class LeadStore {
 
   @observable selected: string | null = '';
 
-  @observable status: string = '';
+  @observable status: string = 'active';
 
   @observable confirmation = false;
 

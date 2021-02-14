@@ -8,7 +8,6 @@ using Persistence;
 using Application.Errors;
 using System.Net;
 using AutoMapper;
-using Application.Contacts;
 
 namespace Application.Leads
 {
@@ -18,7 +17,6 @@ namespace Application.Leads
         {
             public Guid Id { get; set; }
         }
-
         public class Handler : IRequestHandler<Query, LeadDTO>
         {
             private readonly DataContext _context;

@@ -17,7 +17,9 @@ namespace Application.Operations
             public Guid Id { get; set; }
             public Int64 Lead { get; set; }
             public Int64 Opportunity { get; set; }
-            public Int64 Converted { get; set; }
+            public Int64 Quote { get; set; }
+            public Int64 Invoice { get; set; }
+            public Int64 Conversion { get; set; }
             public Int64 Order { get; set; }
             public Double Revenue { get; set; }
             public string Source { get; set; }
@@ -54,7 +56,9 @@ namespace Application.Operations
                     Id = request.Id,
                     Lead = request.Lead,
                     Opportunity = request.Opportunity,
-                    Converted = request.Converted,
+                    Quote = request.Quote,
+                    Invoice = request.Invoice,
+                    Conversion = request.Conversion,
                     Order = request.Order,
                     Revenue = request.Revenue,
                     Source = request.Source,

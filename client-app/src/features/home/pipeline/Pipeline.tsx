@@ -1,47 +1,35 @@
-import React, { Fragment } from 'react';
-import { FunnelChart, Tooltip, Funnel, TrapezoidProps, ResponsiveContainer } from 'recharts';
+import React, { PureComponent, Fragment, useLayoutEffect } from 'react';
+import * as am4core from '@amcharts/amcharts4/core';
+import * as am4charts from '@amcharts/amcharts4/charts';
+import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { observer } from 'mobx-react-lite';
+am4core.useTheme(am4themes_animated);
+interface IProps {
+  data: { name: string; value: number }[];
+}
 
-const data = [
-  {
-    value: 100,
-    name: 'Lead',
-    fill: '#3a1772',
-  },
-  {
-    value: 80,
-    name: 'Opportunity',
-    fill: '#16c79a',
-  },
-  {
-    value: 50,
-    name: 'Quote',
-    fill: '#087e8b',
-  },
-  {
-    value: 40,
-    name: 'Invoice',
-    fill: '#fbff00',
-  },
-  {
-    value: 26,
-    name: 'Converted',
-    fill: '#c81d25',
-  },
-];
-const d = {}
-const shape: TrapezoidProps = {};
+const Pipeline: React.FC<IProps> = (props) => {
 
-export const Pipeline = () => {
+  useLayoutEffect(() => {
+    am4core.useTheme(am4themes_animated);
+
+    let pipeline = am4core.create('pipeline', am4charts.SlicedChart);
+    pipeline.data = props.data;
+
+    let series = pipeline.series.push(new am4charts.FunnelSeries());
+    series.dataFields.value = 'value';
+    series.dataFields.category = 'name';
+    series.bottomRatio = 1;
+    return () => {
+      pipeline.dispose();
+    };
+  }, [props.data]);
+
   return (
     <Fragment>
-      <ResponsiveContainer className="pipeline-container">
-        <FunnelChart>
-          <Tooltip payload={data} />
-          <Funnel dataKey="value" data={data} isAnimationActive={true} activeShape={shape}></Funnel>
-        </FunnelChart>
-      </ResponsiveContainer>
+      <div id="pipeline" style={{ width: '80%', height: '80%' }}></div>
     </Fragment>
   );
 };
+
 export default observer(Pipeline);
