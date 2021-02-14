@@ -1,4 +1,7 @@
 #root {
+    & #opportunitiesChart, & #opportunitiesByEmployeeChart{
+        margin-top: 5rem;
+    }
     & .chart-container {
 
         & .recharts-wrapper {

@@ -1,13 +1,18 @@
 #root {
-    & .pipeline-container {
-        & .recharts-wrapper {
-            display: flex;
-            align-items: center;
-            height: 100%;
+    & .pipeline-calendar {
+        & .buttons {
+            & .button {
+                border: thin solid #fff;
+                color: #fff !important;
 
-            & .recharts-surface {
-                height: 75%;
+                &:hover, &.active {
+                    background-color: #fff !important;
+                    color: #000 !important;
+                }
             }
+        }
+        & #pipeline{
+            margin: 5rem auto 0 auto;
         }
     }
 }

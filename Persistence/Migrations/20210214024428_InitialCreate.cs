@@ -53,7 +53,7 @@ namespace Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    DateCalled = table.Column<string>(nullable: true),
+                    Date = table.Column<DateTime>(nullable: false),
                     Accepted = table.Column<bool>(nullable: false),
                     Notes = table.Column<string>(nullable: true),
                     Duration = table.Column<double>(nullable: false)
@@ -110,7 +110,9 @@ namespace Persistence.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     Lead = table.Column<long>(nullable: false),
                     Opportunity = table.Column<long>(nullable: false),
-                    Converted = table.Column<long>(nullable: false),
+                    Quote = table.Column<long>(nullable: false),
+                    Invoice = table.Column<long>(nullable: false),
+                    Conversion = table.Column<long>(nullable: false),
                     Order = table.Column<long>(nullable: false),
                     Revenue = table.Column<double>(nullable: false),
                     Source = table.Column<string>(nullable: true),
@@ -366,8 +368,7 @@ namespace Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_UserOperations_OperationId",
                 table: "UserOperations",
-                column: "OperationId",
-                unique: true);
+                column: "OperationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserTasks_DelegatedTaskId",

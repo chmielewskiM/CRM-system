@@ -5,13 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using System.Threading;
 using Application.Operations;
+using static Application.Operations.List;
 
 namespace API.Controllers
 {
     public class OperationController : BaseController
     {
         [HttpGet]
-        public async Task<ActionResult<List<OperationDTO>>> List(CancellationToken ct)
+        public async Task<ActionResult<CompleteStats>> List( CancellationToken ct)
         {
             return await Mediator.Send(new List.Query(), ct);
         }

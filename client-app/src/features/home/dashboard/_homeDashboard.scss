@@ -33,8 +33,11 @@
                 justify-content: space-around;
                 flex-direction: row;
                 flex-wrap: wrap;
-                padding-bottom: 5rem;
-
+                min-height: 40%;
+                margin-bottom: 10rem;
+                & .chart{
+                    height: 100%;
+                }
             }
 
 
