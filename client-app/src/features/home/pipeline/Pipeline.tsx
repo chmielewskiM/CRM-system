@@ -27,7 +27,7 @@ const Pipeline: React.FC<IProps> = (props) => {
 
   return (
     <Fragment>
-      <div id="pipeline" style={{ width: '80%', height: '80%' }}></div>
+      <div id="pipeline" style={{ width: '90%', height: '90%' }}></div>
     </Fragment>
   );
 };

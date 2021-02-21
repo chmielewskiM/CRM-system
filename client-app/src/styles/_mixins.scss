@@ -79,7 +79,7 @@
 
 @mixin gradient-primary-dark {
     background: rgb(191, 215, 234);
-    background: linear-gradient(0deg, rgba(191, 215, 234, 1) 0%, rgba(11, 57, 84, 1) 100%);
+    background: linear-gradient(0deg, #001435e5 0%, rgba(11, 57, 84, 1) 100%);
 }
 
 @mixin reset-div {

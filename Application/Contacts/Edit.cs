@@ -49,16 +49,16 @@ namespace Application.Contacts
             {
                 var contact = await _context.Contacts.FindAsync(request.Id);
 
-                if (contact.Name == request.Name &&
-                contact.Type == request.Type &&
-                contact.Company == request.Company &&
-                contact.PhoneNumber == request.PhoneNumber &&
-                contact.DateAdded == contact.DateAdded &&
-                contact.Email == request.Email &&
-                contact.Notes == request.Notes &&
-                contact.Status == request.Status)
+                // if (contact.Name == request.Name &&
+                // contact.Type == request.Type &&
+                // contact.Company == request.Company &&
+                // contact.PhoneNumber == request.PhoneNumber &&
+                // contact.DateAdded == contact.DateAdded &&
+                // contact.Email == request.Email &&
+                // contact.Notes == request.Notes &&
+                // contact.Status == request.Status)
 
-                    throw new Exception("There were no changes");
+                //     throw new Exception("There were no changes");
 
 
                 if (contact == null)

@@ -45,6 +45,7 @@
     "start": "react-scripts start",
     "start-watch": "react-scripts start --watch",
     "build": "react-scripts build",
+    "postbuild": "move build ../API/wwwroot",
     "test": "jest",
     "test:watch": "jest --watch",
     "eject": "react-scripts eject"

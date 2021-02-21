@@ -9,7 +9,7 @@ export const TaskNotifier: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
   const { loadingInitial, rr, notes, displayDimmer, receivedTasksByDate } = rootStore.delegatedTaskStore;
 
-  useEffect(() => {}, [rr]);
+  useEffect(() => {console.log('TASK NOTIFIER')}, [rr]);
 
   if (loadingInitial) return <LoaderComponent content="Loading..." />;
   return (

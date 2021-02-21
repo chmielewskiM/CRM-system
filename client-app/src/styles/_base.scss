@@ -55,7 +55,6 @@ body {
 
             @include breakpoint(smartphone) {
                 width: 90%;
-                ;
             }
 
             & .content {
@@ -142,7 +141,7 @@ body {
         margin: 0 !important;
         height: inherit;
         flex: 1 0;
-
+        background-color: #060f1d;
         & .grid.main-grid {
             height: inherit;
             padding: 0;

@@ -25,7 +25,8 @@ export const TaskNotification: React.FC<IProps> = (props) => {
   } = rootStore.delegatedTaskStore;
 
   useEffect(() => {
-  }, []);
+    console.log('TASK NOTIFICATION')
+  }, [rr]);
 
   if (loadingInitial) return <LoaderComponent content="Loading..." />;
   return (

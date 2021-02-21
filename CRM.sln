@@ -15,8 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F444375A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API.Tests", "Tests\API.Tests\API.Tests.csproj", "{B0EA04AB-7D9A-4544-BB16-592554CC81DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Tests", "Tests\Application.Tests\Application.Tests.csproj", "{31D7311D-2AC9-4E22-922A-C01EC6A87AF7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{7122709B-2697-4F28-ABEC-7F5515C68F44}"
 EndProject
 Global
@@ -119,7 +117,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B0EA04AB-7D9A-4544-BB16-592554CC81DC} = {F444375A-D04A-4348-83FD-040E9A9F3D85}
-		{31D7311D-2AC9-4E22-922A-C01EC6A87AF7} = {F444375A-D04A-4348-83FD-040E9A9F3D85}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {85732E8B-4472-401A-92A7-1EA92C9B9AE8}

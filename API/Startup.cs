@@ -21,13 +21,16 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using AutoMapper;
 using Application.Contacts;
+using System;
 
 namespace API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment _env;
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
+            _env = env;
             Configuration = configuration;
         }
 
@@ -38,14 +41,29 @@ namespace API
 
         // This method gets called by the runtime. Use this method to add services to
         // the container.
+        // public void ConfigureDevelopmentServices(IServiceCollection services)
+        // {
+        //     services.AddDbContext<DataContext>(opt =>
+        //     {
+        //         opt.UseLazyLoadingProxies();
+        //         opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+        //     });
+        //     ConfigureServices(services);
+        // }
+        // public void Configure(IServiceCollection services)
+        // {
+
+        // }
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddDbContext<DataContext>(opt =>
             {
                 opt.UseLazyLoadingProxies();
-                opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+                if (_env.IsProduction())
+                    opt.UseSqlServer(Configuration.GetConnectionString("RemoteConnection"));
+                else opt.UseSqlServer(Configuration.GetConnectionString("LocalConnection"));
             });
+
             services.AddCors(opt =>
             {
                 opt.AddPolicy("CorsPolicy", policy =>
@@ -53,7 +71,7 @@ namespace API
                     policy
                         .AllowAnyHeader()
                         .AllowAnyMethod()
-                        .WithOrigins("http://localhost:3000", "http://localhost:5000/order");
+                        .WithOrigins("http://localhost:3000", "http://localhost:5000");
                 });
             });
             services.AddMediatR(typeof(Application.Contacts.List.Handler).Assembly, typeof(Application.DelegatedTasks.List.Handler).Assembly);
@@ -79,7 +97,7 @@ namespace API
             identityBuilder.AddEntityFrameworkStores<DataContext>();
             identityBuilder.AddSignInManager<SignInManager<User>>();
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("veryvery secret key"));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Key"]));
 
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -110,13 +128,19 @@ namespace API
             }
 
             app.UseRouting();
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
             app.UseAuthentication();
             app.UseCors("CorsPolicy");
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "spa-homepage",
+                    pattern: "{controller=Homepage}/{action=Index}"
+                );
             });
+            // app.UseMvc();
         }
     }
 }

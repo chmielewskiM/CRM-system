@@ -1,14 +1,20 @@
 ﻿using Domain;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Persistence
 {
     public class DataContext : IdentityDbContext<User>
     {
+        // protected readonly IConfiguration Configuration;
+
+        // public DataContext(IConfiguration configuration)
+        // {
+        //     Configuration = configuration;
+        // }
         public DataContext(DbContextOptions options) : base(options)
         {
-
         }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<DelegatedTask> DelegatedTasks { get; set; }
@@ -63,7 +69,7 @@ namespace Persistence
                     .WithMany(t => t.UserOperations)
                     .HasForeignKey(u => u.UserId)
                     .OnDelete(DeleteBehavior.Restrict);
-                    
+
             });
         }
     }

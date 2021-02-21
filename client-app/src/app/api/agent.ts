@@ -7,7 +7,7 @@ import { IUser, IUserFormValues, User } from '../models/user';
 import { IOperation, CompleteStats, ICompleteStats } from '../models/operation';
 import { wait } from '@testing-library/react';
 
-axios.defaults.baseURL = 'http://localhost:5000';
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
 axios.interceptors.request.use(
   (cfg) => {

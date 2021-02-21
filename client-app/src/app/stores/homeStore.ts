@@ -20,7 +20,7 @@ export default class homeStore {
   rootStore: RootStore;
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
-    this.loadOperations();
+    // this.loadOperations();
     reaction(
       () => this.predicate.keys(),
       () => {
@@ -32,11 +32,11 @@ export default class homeStore {
   //Observables
   @observable loadingInitial = false;
 
-  @observable operationsRegistry = new Map();
+  @observable.shallow operationsRegistry = new Map();
 
-  @observable operationsTotalRegistry = new Map();
+  @observable.shallow operationsTotalRegistry = new Map();
 
-  @observable operationsByUserRegistry = new Map();
+  @observable.shallow operationsByUserRegistry = new Map();
 
   @observable predicate = new Map();
 
@@ -74,7 +74,7 @@ export default class homeStore {
     return params;
   }
 
-  @computed get pipelineData() {
+  @computed.struct get pipelineData() {
     let chartProps: Array<{ name: string; value: number }> = [];
     let range;
     if (this.dataFetched) {
@@ -93,7 +93,7 @@ export default class homeStore {
     return chartProps;
   }
 
-  @computed get thisMonthStats() {
+  @computed.struct get thisMonthStats() {
     let chartProps: {
       leads?: number;
       conversions?: number;
@@ -112,7 +112,7 @@ export default class homeStore {
     return chartProps;
   }
 
-  @computed get leadsChartData() {
+  @computed.struct get leadsChartData() {
     if (this.leadsChart && this.dataFetched) {
       console.log(this.leadsBySourceData);
       return this.leadsBySourceData;
@@ -120,7 +120,7 @@ export default class homeStore {
     else return [];
   }
 
-  @computed get leadsOverallData() {
+  @computed.struct get leadsOverallData() {
     let chartProps: Array<{ name: Date; value: number }> = [];
     let range;
 
@@ -160,40 +160,14 @@ export default class homeStore {
     }
     return chartProps;
   }
-  @computed get opportunitiesChartData() {
+  @computed.struct get opportunitiesChartData() {
     if (!this.opportunitiesChart && this.dataFetched) {
       // console.log(this.opportunitiesBySourceData)
       return this.opportunitiesByEmployeeData;
     } else if (this.dataFetched) return this.opportunitiesOverallData;
     else return [];
-    // let chartProps: Array<{ name: string; value: number; value2: number }> = [];
-    // if (this.operationsByUserRegistry.get('sixMonths') != undefined) {
-    //   let { ...opportunities }: IOpportunitiesByUser[] = Array.from(
-    //     this.operationsByUserRegistry.get('sixMonths')
-    //   );
-    //   let operations = Object.values(opportunities);
-
-    //   if (this.opportunitiesChart == false)
-    //     operations.forEach((x) => {
-    //       chartProps.push({
-    //         name: x.userDisplayName,
-    //         value: x.leadsTotal,
-    //         value2: x.opportunitiesTotal,
-    //       });
-    //       console.log(chartProps)
-    //     });
-    //   else
-    //     operations.forEach((x) => {
-    //       chartProps.push({
-    //         name: ,
-    //         value: x.leadsTotal,
-    //         value2: x.opportunitiesTotal,
-    //       });
-    //     });
-    // }
-    // return chartProps;
   }
-  @computed get opportunitiesOverallData() {
+  @computed.struct get opportunitiesOverallData() {
     let chartProps: Array<{ name: Date; value: number; value2: number }> = [];
     let range;
 

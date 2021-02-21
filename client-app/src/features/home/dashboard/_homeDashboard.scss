@@ -1,11 +1,34 @@
 #root {
     & .ui.container.wrapper {
-        background-color: #060f1d;
 
         & .main-grid.home {
+            & .column {
+                padding:0;
+                margin:1rem .5rem;
+                // border:thin solid #000;
+                & .buttons {
+                    border: thin solid #fff;
+                    
+                    & .button {
+                        border:none;
+                        background-color: $color-primary-dark !important;
+                        font-weight: 500;
+                        font-size: 1.2rem;
+                        padding:.7rem;
+                        color: #fff !important;
+                        border-radius: 0;
+                        &:hover, &.active {
+                            background-color: #fff !important;
+                            // border-color: #000;
+                            color: #000 !important;
+                        }
+                    }
+                }
+            }
 
             & .row-content-1.pipeline-calendar {
                 min-height: 60%;
+                justify-content: space-around;
                 @include breakpoint(tablet) {
                     max-height: min-content;
 
@@ -19,13 +42,6 @@
                         min-height: 30rem;
                     }
                 }
-
-                //calendar
-                & #rbc {
-                    @include breakpoint(tablet) {
-                        min-height: 40rem;
-                    }
-                }
             }
 
             & .row.row-content-2.charts {
@@ -35,8 +51,11 @@
                 flex-wrap: wrap;
                 min-height: 40%;
                 margin-bottom: 10rem;
-                & .chart{
+
+                & .chart {
+                    background-color: rgba(255, 255, 255, 0.116);
                     height: 100%;
+                    padding-bottom: 1rem;
                 }
             }
 

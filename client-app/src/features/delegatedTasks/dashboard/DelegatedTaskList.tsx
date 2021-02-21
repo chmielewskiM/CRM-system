@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Table, Segment, Grid } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import { format } from 'date-fns';
@@ -10,8 +10,12 @@ export const DelegatedTaskList: React.FC = () => {
     delegatedTasksByDate,
     selectDelegatedTask,
     selectedDelegatedTask,
+    rr
   } = rootStore.delegatedTaskStore;
-
+  
+  useEffect(() => {
+    console.log('TASK LIST')
+  }, [rr])
   return (
     <>
       <Segment basic as={Grid.Column} className="task list">

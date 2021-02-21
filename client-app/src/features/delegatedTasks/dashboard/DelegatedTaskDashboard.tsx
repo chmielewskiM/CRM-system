@@ -24,11 +24,13 @@ export const DelegatedTaskDashboard: React.FC = () => {
     setShowShareTaskForm,
     showShareTaskForm,
     calendarEvents,
+    rr
   } = rootStore.delegatedTaskStore;
 
   useEffect(() => {
     loadDelegatedTasks();
     calendarEvents;
+    console.log('TASK DASH')
   }, [showShareTaskForm]);
 
   // if (delegatedTaskStore.loadingInitial)

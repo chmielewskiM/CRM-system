@@ -1,6 +1,11 @@
-bin
-obj
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Dd]ebugPublic/
 .vscode
 DS_Store
 node_modules
-appsettings.json
+*.db
+wwwroot
+publish
+API/appsettings.json

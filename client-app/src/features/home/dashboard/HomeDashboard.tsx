@@ -51,7 +51,7 @@ export const HomeDashboard: React.FC = () => {
     <Grid relaxed="very" centered className="main-grid home" padded>
       
       <Grid.Row className="row-content-1 pipeline-calendar">
-        <Grid.Column computer={7} tablet={7} mobile={16}>
+        <Grid.Column computer={6} tablet={6} mobile={15} className="pipeline-column">
           <ButtonGroup floated="right">
             <Button
               basic
@@ -66,9 +66,9 @@ export const HomeDashboard: React.FC = () => {
               onClick={() => setTimeRange('pipeline', true)}
             />
           </ButtonGroup>
-          <Pipeline data={pipelineData} />
+          <Pipeline data={pipelineData}/>
         </Grid.Column>
-        <Grid.Column computer={9} tablet={9} mobile={16}>
+        <Grid.Column computer={9} tablet={9} mobile={15}>
           <MyCalendar events={rootStore.delegatedTaskStore.calendarEvents} />
         </Grid.Column>
       </Grid.Row>

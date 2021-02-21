@@ -3,11 +3,11 @@
         width: 100%;
         min-height: 10%;
         overflow: hidden;
-        padding: 2rem 0;
+        padding: 1rem 0;
         margin-bottom: 4rem;
         border-top: thin solid #fff;
         border-bottom: thin solid #fff;
-        background-color: rgba(0, 0, 0, 0.548);
+        background-color: #001435;
 
         & * {
             margin: 0;
@@ -21,7 +21,7 @@
             height: 100%;
             background-color: transparent;
             border: 0;
-
+            box-shadow: none;
             & * {
 
                 color: #fff;

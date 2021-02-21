@@ -1,18 +1,12 @@
 #root {
     & .pipeline-calendar {
-        & .buttons {
-            & .button {
-                border: thin solid #fff;
-                color: #fff !important;
-
-                &:hover, &.active {
-                    background-color: #fff !important;
-                    color: #000 !important;
-                }
+        & .pipeline-column{
+            // background-color: rgba(172, 147, 5, 0.445);
+            & #pipeline{
+                margin: 4rem auto 0 auto;
+                padding:0 2rem;
             }
         }
-        & #pipeline{
-            margin: 5rem auto 0 auto;
-        }
+        
     }
 }

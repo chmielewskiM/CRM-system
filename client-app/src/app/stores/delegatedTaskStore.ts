@@ -1,4 +1,4 @@
-import { observable, action, computed, configure, runInAction } from 'mobx';
+import { observable, action, computed, configure, runInAction, reaction } from 'mobx';
 import { toast } from 'react-toastify';
 import { IDelegatedTask, DelegatedTaskFormValues } from '../models/delegatedTask';
 import agent from '../api/agent';
@@ -12,6 +12,12 @@ export default class DelegatedTaskStore {
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
+    reaction(
+      () => this.showDelegatedTaskForm,
+      () => {
+        this.loadDelegatedTasks();
+      }
+    );
   }
 
   @observable delegatedTasks: IDelegatedTask[] = [];
@@ -39,6 +45,7 @@ export default class DelegatedTaskStore {
   @observable displayDimmer: boolean = false;
 
   @action render() {
+    console.log('rendered')
     this.rr = !this.rr;
   }
 
@@ -61,7 +68,7 @@ export default class DelegatedTaskStore {
       start: Date;
       end: Date;
       title: string;
-      allDay:boolean;
+      allDay: boolean;
     }[] = [];
 
     tasks.forEach((task, index) => {
@@ -197,8 +204,9 @@ export default class DelegatedTaskStore {
         toast.success('DelegatedTask added');
         this.showDelegatedTaskForm = false;
         this.submitting = false;
-        this.render();
       });
+      
+      this.render();
     } catch (error) {
       runInAction('Loading delegatedTasks', () => {
         this.submitting = false;

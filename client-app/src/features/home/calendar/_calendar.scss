@@ -3,11 +3,15 @@
 #root {
     & #rbc {
         box-sizing: content-box;
-        margin: .5rem;
+        margin: auto .5rem;
         padding: 1rem;
         @include gradient-primary-dark;
         border-radius: .5rem;
-        height: 90%;
+        height: 95%;
+
+        @include breakpoint(tablet) {
+            min-height: 40rem;
+        }
 
         & .rbc-calendar {
 
@@ -58,9 +62,7 @@
                             background-color: $color9;
                             color: $color9;
                             text-overflow: clip;
-                            // width: 1rem;
                             height: .7rem;
-                            // margin: .2rem;
                             transition: all .1s linear;
 
                             &:focus {
