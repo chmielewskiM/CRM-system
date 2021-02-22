@@ -8,4 +8,3 @@ node_modules
 *.db
 wwwroot
 publish
-API/appsettings.json
