@@ -8,22 +8,6 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Persistence
 {
-    // public class DrawNumber
-    // {
-    //     private readonly int _max;
-    //     private readonly int? _min;
-    //     public DrawNumber(int max, int? min)
-    //     {
-    //         _min = min;
-    //         _max = max;
-
-    //     }
-
-    //     public void GetRandom(){
-    //         Random randomNumber = new Random((int) DateTime.Now.Ticks & 0x0000FFFF);
-    //         randomNumber.Next(_max, _min);
-    //     }
-    // }
     public class Seed
     {
         public static async Task SeedData(DataContext context, UserManager<User> userManager)
@@ -91,10 +75,9 @@ namespace Persistence
                         DateAdded = DateTime
                             .Now
                             .AddDays(-12),
-                        // .ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "michael@one.com",
                         Notes = "talk about price",
-                        Status = "Inactive"
+                        Status = "Inactive",
                     },
                     new Contact {
                         Name = "Evan Whitaker",
@@ -104,10 +87,9 @@ namespace Persistence
                         DateAdded = DateTime
                             .Now
                             .AddDays(-7),
-                        // .ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "evan@two.com",
                         Notes = "inform about new purchase",
-                        Status = "Inactive"
+                        Status = "Inactive",
                     },
                     new Contact {
                         Name = "Evelyn More",
@@ -117,10 +99,9 @@ namespace Persistence
                         DateAdded = DateTime
                             .Now
                             .AddDays(-7),
-                        // .ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "evelyn@three.com",
                         Notes = "report",
-                        Status = "Inactive"
+                        Status = "Inactive",
                     },
                     new Contact {
                         Name = "Mert Sauer",
@@ -130,10 +111,9 @@ namespace Persistence
                         DateAdded = DateTime
                             .Now
                             .AddDays(-2),
-                        // .ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "mert@four.com",
                         Notes = "present the offer",
-                        Status = "Inactive"
+                        Status = "Inactive",
                     },
                     new Contact {
                         Name = "Vivian Jang",
@@ -143,10 +123,9 @@ namespace Persistence
                         DateAdded = DateTime
                             .Now
                             .AddDays(-3),
-                        // .ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "vivian@five.com",
                         Notes = "",
-                        Status = "Inactive"
+                        Status = "Inactive",
                     },
                     new Contact {
                         Name = "Sam Ford",
@@ -156,10 +135,9 @@ namespace Persistence
                         DateAdded = DateTime
                             .Now
                             .AddDays(-4),
-                        // .ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "sam@six.com",
                         Notes = "",
-                        Status = "Inactive"
+                        Status = "Inactive",
                     },
                     new Contact {
                         Name = "Robert Guide",
@@ -169,10 +147,9 @@ namespace Persistence
                         DateAdded = DateTime
                             .Now
                             .AddDays(-2),
-                        // .ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "robert@seven.com",
                         Notes = "",
-                        Status = "Inactive"
+                        Status = "Inactive",
                     },
                     new Contact {
                         Name = "Lars Hammer",
@@ -182,10 +159,9 @@ namespace Persistence
                         DateAdded = DateTime
                             .Now
                             .AddDays(-10),
-                        // .ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "lars@eight.com",
                         Notes = "",
-                        Status = "Inactive"
+                        Status = "Inactive",
                     },
                     new Contact {
                         Name = "Larry Graham",
@@ -195,10 +171,9 @@ namespace Persistence
                         DateAdded = DateTime
                             .Now
                             .AddDays(-2),
-                        // .ToString("o", CultureInfo.CreateSpecificCulture("en-US")),
                         Email = "larry@nine.com",
                         Notes = "ask about the needs",
-                        Status = "Inactive"
+                        Status = "Inactive",
                     }
                 };
                 context
@@ -210,76 +185,63 @@ namespace Persistence
 
             if (!context.Orders.Any())
             {
-                orders = new List<Order> {
-                    new Order {
-                        Client = "Wheeler",
-                        Type = false,
-                        Product = "Rod S220",
-                        Amount = 70,
-                        Price = 7000,
-                        DateOrderOpened = DateTime
-                            .Now
-                            .AddDays(-2),
-                        Notes = "123"
-                    },
-                    new Order {
-                        Client = "SaIO",
-                        Type = false,
-                        Product = "Rod S220",
-                        Amount = 15,
-                        Price = 1200,
-                        DateOrderOpened = DateTime
-                            .Now
-                            .AddDays(-7),
-                        Notes = "123"
-                    },
-                    new Order {
-                        Client = "Wrecker",
-                        Type = true,
-                        Product = "H13",
-                        Amount = 110,
-                        Price = 8900,
-                        DateOrderOpened = DateTime
-                            .Now
-                            .AddDays(-3),
-                        Notes = "123"
-                    },
-                    new Order {
-                        Client = "Mark",
-                        Type = false,
-                        Product = "Rod S220",
-                        Amount = 40,
-                        Price = 2400,
-                        DateOrderOpened = DateTime
-                            .Now
-                            .AddDays(-12),
-                        Notes = "123"
-                    }
+                int randomContact;
+                int randomProduct;
+                int randomAmount;
+                int randomPrice;
+                int randomOpenDate;
+                int orderNumber = 0;
+                bool type;
+                bool closed = false;
+                DateTime dateClosed = DateTime.MinValue;
+                var products = new List<String>{
+                    "H13", "HS14", "2H13S1", "1H228"
                 };
+                
+                var order = new Order();
+                for (int i = 0; i < 40; i++)
+                {
+                    type = false;
+                    randomContact = random.Next(0, 9);
+                    randomProduct = random.Next(0, 4);
+                    randomAmount = random.Next(10, 100);
+                    randomPrice = random.Next(1000, 15000);
+                    randomOpenDate = random.Next(3, 15);
+                    orderNumber = i + 1;
+
+                    if (i > 14)
+                    {
+                        closed = true;
+                        randomOpenDate = randomOpenDate * 5;
+                        dateClosed = DateTime.Now.AddDays(-randomOpenDate + randomContact);
+                    }
+                    if (i % 4 == 0)
+                        type = true;
+
+                    order = new Order
+                    {
+                        ClientId = contacts[randomContact].Id,
+                        Client = contacts[randomContact],
+                        OrderNumber = orderNumber,
+                        Type = type,
+                        Product = products[randomProduct],
+                        Closed = closed,
+                        Amount = randomAmount,
+                        Price = randomPrice,
+                        DateOrderOpened = DateTime
+                                .Now
+                                .AddDays(-randomOpenDate),
+                        DateOrderClosed = dateClosed,
+                        Notes = "Order #" + orderNumber + ". " + contacts[randomContact].Name + " ordered " + randomAmount + " pieces of " + products[randomProduct] + " for " + randomPrice + "$."
+                    };
+                    orders.Add(order);
+                }
 
                 context
                     .Orders
                     .AddRange(orders);
                 context.SaveChanges();
-            }
 
-            //CALLS
-            if (!context.Calls.Any())
-            {
-                calls = new List<Call> {
-                    new Call {
-                        Date = DateTime
-                            .Now
-                            .AddDays(-36),
-                        Notes = "1",
-                        Accepted = false
-                    },
-                };
-
-                context
-                    .Calls
-                    .AddRange(calls);
-                context.SaveChanges();
             }
 
             //TASKS
@@ -299,7 +261,7 @@ namespace Persistence
 
                 for (int i = 0; i < 40; i++)
                 {
-                    randomUser = random.Next(1, 4);
+                    randomUser = random.Next(1, 5);
                     randomDayStart = random.Next(12);
                     randomDayEnd = random.Next(8);
                     randomType = random.Next(4);

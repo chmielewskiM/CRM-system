@@ -1,20 +1,17 @@
 import React, { useState, useContext, useEffect, Fragment } from 'react';
 import { Form, Segment, Button, Modal, Label } from 'semantic-ui-react';
-import { v4 as uuid } from 'uuid';
 import { observer } from 'mobx-react-lite';
 import { Form as FinalForm, Field } from 'react-final-form';
-import { IOrderForm, OrderFormValues } from '../../../app/models/order';
-import TextInput from '../../../app/common/form/TextInput';
 import TextAreaInput from '../../../app/common/form/TextAreaInput';
 import SelectInput from '../../../app/common/form/SelectInput';
 import { combineValidators, isRequired } from 'revalidate';
-import { material } from '../../../app/common/options/product';
+import { material, products } from '../../../app/common/options/product';
 import NumberInput from '../../../app/common/form/NumberInput';
 import RadioInput from '../../../app/common/form/RadioInput';
 import { RootStoreContext } from '../../../app/stores/rootStore';
 
 const validation = combineValidators({
-  client: isRequired({ message: 'Choose who should perform the task.' }),
+  // client: isRequired({ message: 'Choose who should perform the task.' }),
   // type: isRequired({ message: 'Choose who should perform the task.' }),
   // product: isRequired({ message: 'Select type of the task.' }),
   // amount: isRequired({ message: 'Select type of the task.' }),
@@ -22,10 +19,10 @@ const validation = combineValidators({
 });
 
 interface IProps {
-  order: IOrderForm | undefined;
+  className?: string;
 }
 
-export const OrderForm: React.FC<IProps> = () => {
+export const OrderForm: React.FC<IProps> = (props) => {
   const rootStore = useContext(RootStoreContext);
   const {
     setShowOrderForm,
@@ -33,101 +30,131 @@ export const OrderForm: React.FC<IProps> = () => {
     addOrder,
     submitting,
     fillForm,
-    selectedValue,
+    sale,
+    handleFinalFormSubmit,
+    selectedOrder,
+    toggleSelect,
   } = rootStore.orderStore;
+  const { contactsByName, selectedContact, loadContacts, getContact } = rootStore.contactStore;
 
-  useEffect(() => {}, [setShowOrderForm]);
-
-  const [order, setOrder] = useState(new OrderFormValues());
-  const [loading, setLoading] = useState(false);
-
-  const handleFinalFormSubmit = (values: any) => {
-    const { ...order } = values;
-    if (!order.id) {
-      let newOrder = {
-        ...order,
-        id: uuid(),
-      };
-      addOrder(newOrder);
-    } else {
-      editOrder(order);
-    }
-  };
+  useEffect(() => {
+    loadContacts();
+  }, [addOrder, editOrder]);
 
   return (
     <Segment clearing>
       <Modal open>
         <Modal.Content>
-          <Segment clearing size="big">
+          <Segment clearing size="big" className={props.className}>
             <FinalForm
               validate={validation}
               initialValues={fillForm()}
               onSubmit={handleFinalFormSubmit}
-              render={({ handleSubmit, invalid, pristine, form, values, touched }) => (
+              render={({ handleSubmit }) => (
                 <Form onSubmit={handleSubmit} size="big">
-                  <Field
+                  <Form.Select
+                    options={contactsByName}
                     name="client"
-                    placeholder="Client"
-                    value={order.client}
-                    component={TextInput}
+                    placeholder="Select client"
+                    value={selectedContact?.name}
+                    onClick={() => {}}
+                    onChange={(e, data) => {
+                      getContact(data.value!.toString());
+                      loadContacts();
+                    }}
                   />
-                  <Form.Group inline>
+                  <Form.Group inline className="btn-group-1">
                     <Label>Sale</Label>
                     <Field
                       name="sale"
                       label="Sale"
-                      value={selectedValue}
+                      value={sale}
                       type="radio"
                       component={RadioInput}
+                      func={() => toggleSelect(sale)}
                     />
                     {''}
                     <Label>Purchase</Label>
                     <Field
                       name="sale"
                       label="Purchase"
-                      value={!selectedValue}
+                      value={!sale}
                       type="radio"
+                      func={() => toggleSelect(sale)}
                       component={RadioInput}
                     />
                     {''}
+                    {sale == false && (
+                      <Field
+                        options={material}
+                        className="product"
+                        name="product"
+                        placeholder="Product"
+                        value={selectedOrder?.product}
+                        component={SelectInput}
+                      />
+                    )}
+                    {sale != false && (
+                      <Field
+                        options={products}
+                        className="product"
+                        name="product"
+                        placeholder="Product"
+                        value={selectedOrder?.product}
+                        component={SelectInput}
+                      />
+                    )}
                   </Form.Group>
-                  {selectedValue == false && (
+                  {sale == false && (
                     <Fragment>
-                      <Form.Group>
+                      <Form.Group className="btn-group-2">
+                        <Label content="Amount (lb)" />
                         <Field
-                          options={material}
-                          name="type"
-                          placeholder="Type"
-                          value={order.notes}
-                          component={SelectInput}
+                          className="amount"
+                          name="amount"
+                          placeholder="Amount"
+                          component={NumberInput}
+                          value={selectedOrder?.amount}
                         />
-                        <Field name="amount" placeholder="Amount" component={NumberInput} />
-                        <Field name="price" placeholder="Price" component={NumberInput} />
+                        <Label content="Price" />
+                        <Field
+                          className="price"
+                          name="price"
+                          placeholder="Price"
+                          component={NumberInput}
+                          value={selectedOrder?.price}
+                        />
                       </Form.Group>
                     </Fragment>
                   )}
-                  {selectedValue != false && (
+                  {sale != false && (
                     <Fragment>
-                      <Form.Group>
-                        <Field name="length" placeholder="Length" component={NumberInput} />
-                        <Field name="diameter" placeholder="Diameter" component={NumberInput} />
+                      <Form.Group className="btn-group-2">
+                        <Label content="Amount (pc)" />
                         <Field
-                          options={material}
-                          name="type"
-                          placeholder="Type"
-                          value={order.notes}
-                          component={SelectInput}
+                          className="amount"
+                          name="amount"
+                          placeholder="Amount"
+                          component={NumberInput}
+                          value={selectedOrder?.amount}
                         />
-                        <Field name="amount" placeholder="Amount" component={NumberInput} />
-                        <Field name="price" placeholder="Price" component={NumberInput} />
+                        <Label content="Price" />
+                        <Field
+                          className="price"
+                          name="price"
+                          placeholder="Price"
+                          component={NumberInput}
+                          value={selectedOrder?.price}
+                        />
                       </Form.Group>
                     </Fragment>
                   )}
 
                   <Field
+                    className="notes"
                     name="notes"
                     placeholder="Notes"
-                    value={order.notes}
+                    value={selectedOrder?.notes}
                     component={TextAreaInput}
                   />
 
@@ -148,7 +175,7 @@ export const OrderForm: React.FC<IProps> = () => {
                     size="big"
                     content="Confirm"
                     loading={submitting}
-                    // disabled={loading}
+                    // onClick={handleFinalFormSubmit}
                   />
                 </Form>
               )}

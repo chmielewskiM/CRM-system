@@ -1,0 +1,27 @@
+#root{
+    & .minor-header{
+        background: rgb(0, 48, 63);
+        background: linear-gradient(0deg, rgba(0, 48, 63, 1) 0, rgba(0, 48, 63, .6) 100%);
+        @include reset-div;
+        padding: 1.5rem 2rem;
+        width:100%;
+        border:thin solid #fff;
+        // border-bottom: none;
+        border-bottom: .3rem inset $color-detail;
+        height: max-content;
+        & .header{
+            font-size: 2.2rem;
+            color:#fff;
+            margin:0;
+        }
+        & .button {
+            position: absolute;
+            top: -.5rem;
+            right: -.5rem;
+            z-index: 1;
+            font-size: 1.5rem;
+            background-color: transparent;
+            color: $color-secondary-light;
+        }
+    }
+}

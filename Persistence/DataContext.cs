@@ -7,29 +7,31 @@ namespace Persistence
 {
     public class DataContext : IdentityDbContext<User>
     {
-        // protected readonly IConfiguration Configuration;
-
-        // public DataContext(IConfiguration configuration)
-        // {
-        //     Configuration = configuration;
-        // }
         public DataContext(DbContextOptions options) : base(options)
         {
         }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<DelegatedTask> DelegatedTasks { get; set; }
-        public DbSet<Call> Calls { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Operation> Operations { get; set; }
         public DbSet<UserContact> UserContacts { get; set; }
         public DbSet<UserTask> UserTasks { get; set; }
         public DbSet<UserOperation> UserOperations { get; set; }
-        // public DbSet<UserStatistic> UserStatistics { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
+            builder.Entity<Order>(x =>
+            {
+                x.HasKey(o => new { o.Id });
+
+                builder.Entity<Order>()
+                    .HasOne<Contact>(u => u.Client)
+                    .WithMany(c => c.Orders)
+                    .HasForeignKey(c => c.ClientId);
+
+            });
             builder.Entity<UserContact>(x =>
             {
                 x.HasKey(uc => new { uc.UserId, uc.ContactId });

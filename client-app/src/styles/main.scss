@@ -2,6 +2,8 @@
 @import 'mixins';
 @import 'typography';
 @import 'variables';
+@import '../app/common/headers/headers';
+@import '../app/common/pagination/historyPagination';
 @import '../features/nav/navbar';
 @import '../features/home/dashboard/homeDashboard';
 @import '../features/contacts/dashboard/contactDashboard';
@@ -14,6 +16,9 @@
 @import '../features/delegatedTasks/details/delegatedTaskDetails';
 @import '../features/delegatedTasks/taskNotifier/taskNotifier';
 @import '../features/orders/dashboard/orderDashboard';
+@import '../features/orders/form/orderForm';
+@import '../features/orders/details/orderDetails';
+@import '../features/orders/history/orderHistory';
 @import '../features/home/pipeline/pipeline';
 @import '../features/home/calendar/calendar';
 @import '../features/home/statistics/statistics';

@@ -1,0 +1,75 @@
+@import 'mixins';
+
+#root {
+    & .wrapper {
+        & .order-details {
+            @include reset-div;
+            @include component-border;
+            width: 100%;
+            border: thin solid #fff;
+            background-color: $color-primary-light;
+
+            @include breakpoint(tablet) {
+                margin-bottom: 3rem;
+            }
+
+            &::before {
+                background-color: $color-primary-light;
+            }
+
+            & .grid {
+                margin: 0;
+
+            }
+
+            & .header {
+                padding: 0;
+                display: flex;
+                color: #fff;
+                font-size: 2.2rem;
+                width: 100%;
+
+            }
+
+            & .column {
+                @include reset-div;
+                font-size: 1.5rem;
+                width: 100% !important;
+
+                & .row {
+                    @include reset-div;
+                    color: #000;
+                    position: relative;
+                    z-index: 3;
+                    display: flex;
+                    justify-content: space-around;
+                    border-top: .1rem solid $color-primary-light;
+
+                    &:first-of-type {
+                        border-top: .1rem solid $color-detail;
+                    }
+
+                    & .detail,
+                    & .detail-value {
+                        padding: .5rem 1rem .5rem 2rem;
+                    }
+
+                    & .detail {
+                        flex: .4 0;
+                        background-color: $color-primary-dark;
+                        color: #fff;
+                        width: 25%;
+                    }
+
+                    & .detail-value {
+                        padding-left: 1.5rem;
+                        flex: .6 0;
+                        background-color: $color-primary-light;
+                        width: 75%;
+                    }
+
+                }
+            }
+        }
+    }
+}

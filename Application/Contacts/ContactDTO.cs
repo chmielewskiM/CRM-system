@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Domain;
 using Newtonsoft.Json;
 
 namespace Application.Contacts
@@ -19,5 +20,7 @@ namespace Application.Contacts
         public Int16 UnsuccessfulDeals { get; set; }
         [JsonProperty("users")]
         public ICollection<UserAccessDTO> UserContacts { get; set; }
+        [JsonProperty("orders")]
+        public ICollection<Order> Orders { get; set; }
     }
 }

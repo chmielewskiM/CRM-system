@@ -5,7 +5,8 @@
       "dom",
       "dom.iterable",
       "esnext",
-      "es2018.promise"
+      "es2018.promise",
+      "es2020"
     ],
     "allowJs": true,
     "skipLibCheck": true,

@@ -72,6 +72,7 @@ namespace API
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .WithOrigins("http://localhost:3000", "http://localhost:5000");
+                        // .AllowCredentials();
                 });
             });
             services.AddMediatR(typeof(Application.Contacts.List.Handler).Assembly, typeof(Application.DelegatedTasks.List.Handler).Assembly);

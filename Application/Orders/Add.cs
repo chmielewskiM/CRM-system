@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Persistence;
 using Domain;
+using System.Linq;
 
 namespace Application.Orders
 {
@@ -12,8 +13,11 @@ namespace Application.Orders
         public class Command : IRequest
         {
             public Guid Id { get; set; }
-            public string Client { get; set; }
+            public int OrderNumber { get; set; }
+            public Guid ClientId { get; set; }
+            public Contact Client { get; set; }
             public Boolean Type { get; set; }
+            public Boolean Closed { get; set; }
             public string Product { get; set; }
             public Double Amount { get; set; }
             public Double Price { get; set; }
@@ -33,11 +37,17 @@ namespace Application.Orders
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
+                var client =  await _context.Contacts.FindAsync(request.ClientId);
+                var orderCount = _context.Orders.Count();
+
                 var order = new Order
                 {
                     Id = request.Id,
-                    Client = request.Client,
+                    OrderNumber = orderCount++,
+                    ClientId = request.ClientId,
+                    Client = client,
                     Type = request.Type,
+                    Closed = request.Closed,
                     Product = request.Product,
                     Amount = request.Amount,
                     Price = request.Price,

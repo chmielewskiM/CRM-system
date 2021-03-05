@@ -17,16 +17,12 @@ export default class UserStore {
       () => this.isLoggedIn,
       async () => {
         const user = await agent.Users.logged();
-        console.log('USER');
         runInAction(() => {
           this.topAccess = this.midAccess = this.lowAccess = false;
           this.user = user;
-          if(user.level == 'top')
-          this.topAccess = true;
-          else if(user.level == 'mid')
-          this.midAccess = true;
-          else 
-          this.lowAccess = true;
+          if (user.level == 'top') this.topAccess = true;
+          else if (user.level == 'mid') this.midAccess = true;
+          else this.lowAccess = true;
         });
         this.render();
       }

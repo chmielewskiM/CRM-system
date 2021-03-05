@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
-import { IContact } from '../models/contact';
+import { IContact, ContactFormValues } from '../models/contact';
 import { IOrder } from '../models/order';
 import { IDelegatedTaskForm } from '../models/delegatedTask';
 import { IUser, IUserFormValues, User } from '../models/user';
@@ -41,13 +41,14 @@ const delay = (ms: number) => (response: AxiosResponse) =>
   new Promise<AxiosResponse>((resolve) => setTimeout(() => resolve(response), ms));
 
 const requests = {
-  get: (url: string) => axios.get(url).then(delay(10)).then(responseBody),
-  post: (url: string, body: {}) => axios.post(url, body).then(delay(10)).then(responseBody),
-  put: (url: string, body: {}) => axios.put(url, body).then(delay(10)).then(responseBody),
-  del: (url: string) => axios.delete(url).then(delay(10)).then(responseBody),
+  get: (url: string) => axios.get(url).then(responseBody),
+  post: (url: string, body: {}) => axios.post(url, body).then(responseBody),
+  put: (url: string, body: {}) => axios.put(url, body).then(responseBody),
+  del: (url: string) => axios.delete(url).then(responseBody),
 };
 
 const Contacts = {
+  get: (name: String): Promise<IContact> => requests.get(`/contact/name/${name}`),
   list: (): Promise<IContact[]> => requests.get('/contact'),
   details: (id: string) => requests.get(`/contact/${id}`),
   add: (contact: IContact) => requests.post('/contact', contact),
@@ -81,10 +82,11 @@ const Calls = {
 };
 
 const Orders = {
-  list: (): Promise<IOrder[]> => requests.get('/order'),
+  list: (params: URLSearchParams): Promise<IOrder[]> => axios.get(`/order`, {params: params}).then(responseBody),
   add: (order: IOrder) => requests.post('/order', order),
   update: (order: IOrder) => requests.put(`/order/${order.id}`, order),
   delete: (id: string) => requests.del(`/order/${id}`),
+  closeOrder:(order: IOrder)  => requests.put(`/order/close/${order.id}`, order),
 };
 
 const Users = {
@@ -95,9 +97,6 @@ const Users = {
   register: (user: IUserFormValues): Promise<IUser> => requests.post('/user/register', user),
 };
 const Operations = {
-  // get: (username: String): Promise<IUserFormValues> => requests.get(`/user/${username}`),
-  // list: (params: URLSearchParams): Promise<CompleteStats[]> => 
-  // axios.get(`/operation/`, {params: params}).then(delay(1000)).then(responseBody),
   list: (): Promise<ICompleteStats> => 
   axios.get(`/operation/`).then(delay(1000)).then(responseBody),
   add: (operation: IOperation) => requests.post('/operation', operation),

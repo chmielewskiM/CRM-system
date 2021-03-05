@@ -41,7 +41,22 @@ export default class ContactStore {
       .slice(0)
       .sort((a, b) => Date.parse(b.dateAdded) - Date.parse(a.dateAdded));
   }
-  
+
+  @computed get contactsByName() {
+    let contact;
+    let contacts: Array<Object> = [];
+    let list = Array.from(this.contactRegistry.values());
+    list.map((c, el) => {
+      contact = {
+        key: c.id,
+        text: c.name,
+        value: c.name,
+      };
+      contacts.push(contact);
+    });
+
+    return contacts;
+  }
   @action loadContacts = async () => {
     this.loadingInitial = true;
     try {
@@ -62,11 +77,30 @@ export default class ContactStore {
     }
   };
 
+  @action getContact = async (name: string) => {
+    if (name) {
+      try {
+        let contact = new ContactFormValues();
+        // console.log(name)
+        
+        contact = await agent.Contacts.get(encodeURI(name));
+        
+        runInAction(() => {
+          this.selectedContact = new ContactFormValues(contact);
+          // this.rootStore.orderStore.selectedClient = contact.name;
+        });
+        // console.log(this.selectedContact)
+        // this.render();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
   @action selectContact = (id: string) => {
     if (id !== '') {
       this.selectedContact = this.contactRegistry.get(id);
       this.contact = this.selectedContact;
-      this.render();
+      // this.render();
     } else {
       this.selectedContact = undefined;
       this.render();
@@ -100,6 +134,7 @@ export default class ContactStore {
   };
   handleFinalFormSubmit = (values: any) => {
     const { ...contact } = values;
+    console.log(values)
     if (!contact.id) {
       let newContact = {
         ...contact,
