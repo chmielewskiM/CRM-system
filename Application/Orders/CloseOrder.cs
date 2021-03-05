@@ -7,7 +7,7 @@ using Persistence;
 
 namespace Application.Orders
 {
-    public class Edit
+    public class CloseOrder
     {
         public class Command : IRequest
         {
@@ -37,22 +37,14 @@ namespace Application.Orders
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var order = await _context.Orders.FindAsync(request.Id);
-                var client =  await _context.Contacts.FindAsync(request.ClientId);
-
+                Console.WriteLine("LOL");
                 if (order == null)
                     throw new Exception("Could not find order");
 
-                order.OrderNumber = request.OrderNumber;
-                order.ClientId = request.ClientId;
-                order.Client = client;
-                order.Type = request.Type;
-                order.Closed = request.Closed;
-                order.Product = request.Product ?? order.Product;
-                order.Amount = request.Amount;
-                order.Price = request.Price;
-                order.DateOrderOpened = request.DateOrderOpened;
-                order.DateOrderClosed = request.DateOrderClosed;
-                order.Notes = request.Notes ?? order.Notes;
+
+                order.Closed = true;
+
+                order.DateOrderClosed = DateTime.Now;
 
                 var success = await _context.SaveChangesAsync() > 0;
 

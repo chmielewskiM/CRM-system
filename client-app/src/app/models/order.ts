@@ -1,12 +1,18 @@
+import { IContact, ContactFormValues } from "./contact";
+
 export interface IOrder {
   id: string;
-  client: string;
+  orderNumber: number;
+  clientId: string;
+  client: IContact;
+  clientName?: string;
   type: boolean;
+  closed: boolean;
   product: string;
   amount: ConstrainDouble;
   price: ConstrainDouble;
-  dateOrderOpened?: Date;
-  dateOrderClosed?: Date;
+  dateOrderOpened: Date;
+  dateOrderClosed: Date;
   notes: string;
 }
 export interface IOrderForm extends Partial<IOrder> {
@@ -14,23 +20,25 @@ export interface IOrderForm extends Partial<IOrder> {
   timeOrderClosed?: Date;
 }
 
-export class OrderFormValues implements IOrderForm {
+export class OrderFormValues implements Partial<IOrder> {
   id: string = '';
-  client: string = '';
-  type?: boolean = undefined;
+  orderNumber: number = 0;
+  clientId: string = '';
+  // client: IContact = new ContactFormValues();
+  clientName: string = '';
+  type: boolean = false;
+  closed: boolean = false;
   product: string = '';
   amount: ConstrainDouble = 0;
-  price?: ConstrainDouble = undefined;
-  dateOrderOpened?: Date = undefined;
-  timeOrderOpened?: Date = undefined;
-  dateOrderClosed?: Date = undefined;
-  timeOrderClosed?: Date = undefined;
+  price: ConstrainDouble = 0;
+  dateOrderOpened: Date = new Date();
+  dateOrderClosed: Date = new Date(0);
   notes: string = '';
 
-  constructor(init?: IOrderForm) {
-    if (init && init.dateOrderOpened) {
-      init.timeOrderOpened = init.dateOrderOpened;
-    }
+  constructor(init?: IOrder) {
+    // if (init && init.dateOrderOpened) {
+    //   init.timeOrderOpened = init.dateOrderOpened;
+    // }
     Object.assign(this, init);
   }
 }

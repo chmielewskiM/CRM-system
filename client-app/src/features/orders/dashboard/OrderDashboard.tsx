@@ -1,9 +1,13 @@
 import React, { useContext, useEffect, Fragment } from 'react';
-import { Grid, Button } from 'semantic-ui-react';
+import { Grid, Button, GridColumn, Label, Segment, Input } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import { OrderList } from './OrderList';
 import { OrderForm } from '../form/OrderForm';
 import { RootStoreContext } from '../../../app/stores/rootStore';
+import { OrderDetails } from '../details/OrderDetails';
+import { OrderHistory } from '../history/OrderHistory';
+import { orderButtons } from '../../../app/common/options/buttons';
+import HistoryPagination from '../../../app/common/pagination/HistoryPagination';
 
 export const OrderDashboard: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
@@ -16,6 +20,9 @@ export const OrderDashboard: React.FC = () => {
     editOrderForm,
     deleteOrder,
     setOrderList,
+    closeOrder,
+    handleSearch,
+    setPagination,
     rr,
   } = rootStore.orderStore;
 
@@ -24,45 +31,36 @@ export const OrderDashboard: React.FC = () => {
 
   return (
     <Fragment>
-      <Grid stackable centered divided="vertically" className="main-grid">
+      <Grid stackable centered className="main-grid">
         {showOrderForm && (
-          <OrderForm key={(selectedOrder && selectedOrder.id) || 0} order={selectedOrder!} />
+          <OrderForm key={(selectedOrder && selectedOrder.id) || 0} className={'order-form'} />
         )}
         <Grid.Row className="buttons-row">
-          <Button positive content="Add order" onClick={addOrderForm} />
-          <Button
-            content="All orders"
-            color="yellow"
-            onClick={() => {
-              setOrderList('default');
-            }}
-          />
-          <Button
-            content="Open orders"
-            color="yellow"
-            onClick={() => {
-              setOrderList('open');
-            }}
-          />
-          <Button
-            content="Closed orders"
-            color="yellow"
-            onClick={() => {
-              setOrderList('closed');
-            }}
-          />
+          <Button positive icon="plus" content="Add order" onClick={addOrderForm} />
           {selectedOrder && (
             <Button
+              icon="pencil alternate"
               content="Edit order"
               color="blue"
               onClick={() => editOrderForm(selectedOrder.id)}
             />
           )}
-          {selectedOrder && new Date(selectedOrder.dateOrderClosed!).getFullYear() < 2 && (
-            <Button negative content="Mark as done" onClick={() => openModal('as', '', '')} />
+          {selectedOrder && new Date(selectedOrder.dateOrderClosed!).getFullYear() < 2000 && (
+            // onClick={() => openModal('as', '', '')}
+            <Button
+              negative
+              icon="check"
+              content="Close order"
+              onClick={() => closeOrder(selectedOrder)}
+            />
           )}
           {selectedOrder && (
-            <Button negative content="Delete order" onClick={() => deleteOrder(selectedOrder.id)} />
+            <Button
+              negative
+              icon="eraser"
+              content="Delete order"
+              onClick={() => deleteOrder(selectedOrder.id)}
+            />
           )}
           <Button
             icon="angle down"
@@ -70,9 +68,41 @@ export const OrderDashboard: React.FC = () => {
             onClick={(event) => rootStore.commonStore.expandMenu(event)}
           />
         </Grid.Row>
-        <Grid.Row className="row-content-1">
-          <Grid.Column width={10}>
-            <OrderList />
+        <Grid.Row className="row-content-1 orders">
+          <Segment attached="top" floated="left" className="filter-buttons">
+            <Button.Group floated="left">
+              <Label basic content="Filter orders:" />
+              {orderButtons.map((button) => (
+                <Button
+                  key={button.key}
+                  as={button.as}
+                  content={button.content}
+                  size={button.size}
+                  compact={button.compact}
+                  className={button.className}
+                  onClick={(e) => setOrderList(button.functionArg, false, e.currentTarget)}
+                />
+              ))}
+            </Button.Group>
+            <Input className="filter-input" onChange={handleSearch} icon="search" label="Search" />
+          </Segment>
+          <Segment attached="bottom" className="list">
+            <Grid.Column width={16}>
+              <OrderList />
+            </Grid.Column>
+          </Segment>
+        </Grid.Row>
+        <Grid.Row className="row-content-2">
+          <GridColumn computer={7} mobile={10}>
+            {selectedOrder && <OrderDetails />}
+          </GridColumn>
+          <Grid.Column computer={8} mobile={10}>
+            <OrderHistory />
+            <HistoryPagination
+              totalPages={10}
+              onPageChange={(pageSize, activePage) => setPagination(pageSize, activePage)}
+              pageSize={5}
+            />
           </Grid.Column>
         </Grid.Row>
       </Grid>

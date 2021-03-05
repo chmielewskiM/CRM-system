@@ -1,15 +1,124 @@
 #root {
-    & .row-content-1 {
-        & .ui.table-container.orders {
-            & .head {
+    & .row-content-1.orders {
+        padding: 1rem .5rem 0 .5rem;
 
-                & tr {
+        & .filter-buttons,
+        & .list {
+            @include reset-div;
+            background-color: transparent;
+        }
 
-                    & h2 {}
+        & .list {
+            height: 90%;
+        }
 
-                    & th {}
+        & .filter-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            @include breakpoint(tablet) {
+                justify-content: flex-start;
+
+            }
+
+            & .buttons {
+                display: flex;
+                border: 0;
+                width: max-content;
+                box-shadow: none;
+                background-color: #fff;
+                border-radius: .3rem;
+                border: thin solid $color-primary-dark;
+                align-content: center;
+
+                & .button.small,
+                & .label {
+                    padding: .5rem 1rem;
+                    font-size: 1.5rem;
+                    color: #000;
+                    border: none !important;
+                    box-shadow: none !important;
+                    cursor: pointer;
+                    background-color: transparent !important;
+
+                    @include breakpoint(tablet) {
+                        padding: .3rem .5rem;
+                    }
+
+                    &:hover {
+                        border-radius: 0;
+                        box-shadow: none !important;
+                    }
+
+                    &.active,
+                    &:focus {
+                        color: $color-secondary !important;
+                        background-color: transparent !important;
+                    }
+
+                    &:first-child {
+                        cursor: default;
+                    }
+                }
+
+                & .label {
+                    @include breakpoint(smartphone) {
+                        display: none;
+                    }
+                }
+            }
+
+            & .filter-input {
+                width: min-content;
+                width: 30%;
+                margin-left: auto;
+
+                @include breakpoint(smartphone) {
+                    width: 40%;
+
+                    overflow: hidden;
+
+                }
+
+                & .label {
+                    padding: 0;
+                    margin-right: .5rem;
+                    align-self: center;
+                    background-color: transparent;
+                    color: #fff;
+                    font-weight: $light;
+                    font-size: 1.7rem;
+
+                    @include breakpoint(tablet) {
+
+                        font-size: 1.4rem;
+
+                    }
+
+                }
+
+                & input {
+                    padding-top: .4rem;
+                    padding-bottom: .4rem;
+                    border-radius: 1rem;
+                    font-size: 1.3rem;
+                    width: 50%;
                 }
             }
         }
+
+        & .ui.table-container.orders {
+            & tr {
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+        }
+
+
+
     }
+
+
 }

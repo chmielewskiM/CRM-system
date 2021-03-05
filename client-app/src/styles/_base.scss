@@ -35,11 +35,12 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
+
     & ::-webkit-scrollbar {
         display: none;
     }
 
-    & .ui.page.modals.dimmer.transition.visible.active {
+    & .ui.page.modals.dimmer.transition {
         background: hsla(207, 51%, 83%, 1);
 
         background: radial-gradient(circle, hsla(207, 51%, 83%, 1) 25%, hsla(194, 100%, 12%, 0.5) 100%);
@@ -141,7 +142,8 @@ body {
         margin: 0 !important;
         height: inherit;
         flex: 1 0;
-        background-color: #060f1d;
+        background-color: #2f5792;
+
         & .grid.main-grid {
             height: inherit;
             padding: 0;
@@ -164,7 +166,8 @@ body {
                 padding: 0;
                 border-bottom: 1px solid $color-primary-dark;
                 position: sticky;
-                background-color: $color-primary-light;
+                background: rgb(10,17,40);
+background: linear-gradient(180deg, rgba(83,98,106,0.8) 0%, rgba(10,17,40,0.75) 60%, rgba(10,17,40,1) 100%, rgba(83,98,106,0.85) 100%);
 
                 &.expanded {
 
@@ -191,7 +194,7 @@ body {
                     font-weight: $bold;
                     font-size: 1.2rem;
                     margin: 0 .4rem;
-                    color: $color-primary-dark;
+                    color: #fff;
                     background-color: transparent;
                     padding: 0 2rem;
                     border-radius: 0;
@@ -242,11 +245,11 @@ body {
 
                 @include breakpoint(tablet) {
                     min-height: 30rem;
+                    margin:2rem 0 4rem 0;
                 }
 
                 & .column {
                     max-height: 100%;
-                    overflow: hidden;
                     position: relative;
                     overflow: auto;
 
@@ -254,19 +257,12 @@ body {
                         border: thin solid $color-primary-dark;
                         min-width: min-content;
 
-
                         &>* {
                             border: none;
                         }
 
                         & .head {
                             @include table-head;
-                            white-space: nowrap;
-
-                            & th {
-                                font-weight: $light;
-
-                            }
                         }
 
                         & tbody {
@@ -296,9 +292,6 @@ body {
                                     border: none;
                                     white-space: nowrap;
                                     font-size: 1.2rem;
-
-                                    @include breakpoint(tablet) {}
-
                                 }
                             }
                         }

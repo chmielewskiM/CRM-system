@@ -11,10 +11,11 @@ const NumberInput: React.FC<IProps> = ({
   type,
   placeholder,
   meta: { touched, error },
+  className
 }) => {
   return (
     <Form.Field error={touched && !!error} type={type} width={width}>
-      <input {...input} placeholder={placeholder} />
+      <input {...input} placeholder={placeholder} className={className}/>
       {touched && error && (
         <Label basic color="red">
           {error}

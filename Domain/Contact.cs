@@ -16,6 +16,7 @@ namespace Domain
         public string Status { get; set; }
         public Int16 SuccessfulDeals { get; set; }
         public Int16 UnsuccessfulDeals { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<UserContact> UserContacts { get; set; }
 
     }

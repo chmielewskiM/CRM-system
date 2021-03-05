@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using System.Threading;
 using Application.Contacts;
+using Domain;
 
 namespace API.Controllers
 {
@@ -14,6 +15,13 @@ namespace API.Controllers
         public async Task<ActionResult<List<ContactDTO>>> List(CancellationToken ct)
         {
             return await Mediator.Send(new List.Query(), ct);
+        }
+        [HttpGet("name/{name}")]
+        
+        public async Task<ActionResult<Contact>> GetContact(String name)
+        {
+            // var n = name.Replace("%20", " ");
+            return await Mediator.Send(new GetContact.Query { Name = name });
         }
 
         [HttpGet("{id}")]

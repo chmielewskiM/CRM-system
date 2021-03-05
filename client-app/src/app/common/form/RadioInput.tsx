@@ -3,7 +3,9 @@ import { FieldRenderProps } from 'react-final-form';
 import { FormFieldProps, Form, Label } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import { RootStoreContext } from '../../stores/rootStore';
-export interface IProps extends FieldRenderProps<boolean, HTMLElement>, FormFieldProps {}
+export interface IProps extends FieldRenderProps<boolean, HTMLElement>, FormFieldProps {
+  func:(value: boolean)=>void;
+}
 
 const RadioInput: React.FC<IProps> = ({
   input,
@@ -12,6 +14,7 @@ const RadioInput: React.FC<IProps> = ({
   placeholder,
   meta: { touched, error },
   control,
+  func
 }) => {
   const rootStore = useContext(RootStoreContext);
   const { toggleSelect } = rootStore.orderStore;
@@ -22,7 +25,7 @@ const RadioInput: React.FC<IProps> = ({
         checked={input.value}
         onChange={
           (input.onChange = (e) => {
-            toggleSelect(input.value);
+            func(input.value);
           })
         }
       />

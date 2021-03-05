@@ -21,9 +21,10 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Order>>> List(CancellationToken ct)
+        public async Task<ActionResult<List<OrderDTO>>> ListOrders(string allOrders, string saleOrders, string closedOrders, 
+                                                                        string orderBy, string filterInput, int? pageNumber, int? pageSize)
         {
-            return await _mediator.Send(new List.Query(), ct);
+            return await _mediator.Send(new ListOrders.Query(allOrders, saleOrders, closedOrders, orderBy, filterInput, pageNumber, pageSize));
         }
 
         [HttpPost]
@@ -38,11 +39,17 @@ namespace API.Controllers
             command.Id = id;
             return await _mediator.Send(command);
         }
+        [HttpPut("close/{id}")]
+        public async Task<ActionResult<Unit>> CloseOrder(Guid id, CloseOrder.Command command)
+        {
+            command.Id = id;
+            return await _mediator.Send(command);
+        }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(Guid id)
         {
-            return await _mediator.Send(new Delete.Command{Id = id});
+            return await _mediator.Send(new Delete.Command { Id = id });
         }
     }
 }
