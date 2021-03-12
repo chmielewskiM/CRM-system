@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, Fragment } from 'react';
 import { Grid, Button, GridColumn, Label, Segment, Input } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
-import { OrderList } from './OrderList';
+import { OrderList } from '../list/OrderList';
 import { OrderForm } from '../form/OrderForm';
 import { RootStoreContext } from '../../../app/stores/rootStore';
 import { OrderDetails } from '../details/OrderDetails';
@@ -35,7 +35,7 @@ export const OrderDashboard: React.FC = () => {
         {showOrderForm && (
           <OrderForm key={(selectedOrder && selectedOrder.id) || 0} className={'order-form'} />
         )}
-        <Grid.Row className="buttons-row">
+        <Grid.Row className="topbar">
           <Button positive icon="plus" content="Add order" onClick={addOrderForm} />
           {selectedOrder && (
             <Button
@@ -87,13 +87,13 @@ export const OrderDashboard: React.FC = () => {
             <Input className="filter-input" onChange={handleSearch} icon="search" label="Search" />
           </Segment>
           <Segment attached="bottom" className="list">
-            <Grid.Column width={16}>
+            <Grid.Column width={16} className='list-col'>
               <OrderList />
             </Grid.Column>
           </Segment>
         </Grid.Row>
         <Grid.Row className="row-content-2">
-          <GridColumn computer={7} mobile={10}>
+          <GridColumn mobile={10} computer={7} className='details-col'>
             {selectedOrder && <OrderDetails />}
           </GridColumn>
           <Grid.Column computer={8} mobile={10}>

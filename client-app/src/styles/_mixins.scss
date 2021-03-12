@@ -60,34 +60,54 @@
     font-size: 1.4rem;
     font-weight: $light;
     white-space: nowrap;
-    
+
     & tr {
         padding: .3rem !important;
         font-size: 1.5;
 
-        & th {
-            color: $color-primary-light;
+    }
+
+    & th {
+        color: $color-primary-light;
+        background-color: transparent;
+        margin: .5rem;
+        border-radius: 0;
+        font-weight: $light;
+        position: sticky;
+        top: -2px;
+        background: #4b6cb7;
+        /* fallback for old browsers */
+        background: -webkit-linear-gradient(to top, #182848, #4b6cb7);
+        /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to top, #182848, #4b6cb7);
+        /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+        z-index: 5;
+
+        & i::before {
+            color: $color-detail;
+            font-size: 1.5rem;
+        }
+
+        & i.unset-icon::before {
             background-color: transparent;
-            margin: .5rem;
-            border-radius: 0;
-            font-weight: $light;
-            position: sticky;
-            top: -2px;
-            background-color: $color-primary-dark;
-            & i::before{
-                color:$color-detail;
-                font-size: 1.5rem;
-            }
-            & i.unset-icon::before{
-                background-color: transparent;
-                opacity:0.4;
-                font-size: 1.3rem;
-                content:"\f0dc";
-                color:#fff;
+            opacity: 0.4;
+            font-size: 1.3rem;
+            content: "\f0dc";
+            color: #fff;
+        }
+    }
+    @include breakpoint(tablet) {
+        
+        & tr {
+            
+            & th {
+                
             }
         }
     }
 }
+
 
 @mixin gradient-primary-dark {
     background: rgb(191, 215, 234);
@@ -102,8 +122,9 @@
 }
 
 @mixin component-border {
-    position:relative;
+    position: relative;
     background-color: $color-primary-dark;
+
     &:before {
         background-color: #fff;
         content: '';

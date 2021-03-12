@@ -5,10 +5,12 @@ import { RootStoreContext } from '../../../app/stores/rootStore';
 import { orderButtons } from '../../../app/common/options/buttons';
 import MinorHeader from '../../../app/common/headers/MinorHeader';
 import { destructureDate } from '../../../app/common/util/util';
+import LoaderComponent from '../../../app/layout/LoaderComponent';
 
 export const OrderHistory: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
   const {
+    loadingInitial,
     closedOrdersByDate,
     selectOrder,
     selectedOrder,
@@ -18,10 +20,10 @@ export const OrderHistory: React.FC = () => {
   } = rootStore.orderStore;
   useEffect(() => {
     setOrderList('allOrders', true);
-    setOrderBy('date');
-    loadOrders(true);
+    // setOrderBy('date');
+    // loadOrders(true);
   }, []);
-
+  if (loadingInitial) return <LoaderComponent content="Loading..." />;
   return (
     <Fragment>
       <MinorHeader as="h1" content="History" />

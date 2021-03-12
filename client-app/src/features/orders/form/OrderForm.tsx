@@ -9,6 +9,7 @@ import { material, products } from '../../../app/common/options/product';
 import NumberInput from '../../../app/common/form/NumberInput';
 import RadioInput from '../../../app/common/form/RadioInput';
 import { RootStoreContext } from '../../../app/stores/rootStore';
+import LoaderComponent from '../../../app/layout/LoaderComponent';
 
 const validation = combineValidators({
   // client: isRequired({ message: 'Choose who should perform the task.' }),
@@ -25,6 +26,7 @@ interface IProps {
 export const OrderForm: React.FC<IProps> = (props) => {
   const rootStore = useContext(RootStoreContext);
   const {
+    loadingInitial,
     setShowOrderForm,
     editOrder,
     addOrder,
@@ -40,7 +42,7 @@ export const OrderForm: React.FC<IProps> = (props) => {
   useEffect(() => {
     loadContacts();
   }, [addOrder, editOrder]);
-
+  if (loadingInitial || submitting) return <LoaderComponent content="Loading..." />;
   return (
     <Segment clearing>
       <Modal open>

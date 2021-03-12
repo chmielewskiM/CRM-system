@@ -1,0 +1,10 @@
+#root{
+    & .row-content-1.orders{
+        & .list {
+            height: 90%;
+            & .list-col{
+                overflow: scroll;
+            }
+        }
+    }
+}

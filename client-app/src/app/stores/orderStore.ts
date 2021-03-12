@@ -112,7 +112,7 @@ export default class OrderStore {
     this.render();
   };
 
-  @action setOrderList = (value: string, closed: boolean, ev?: HTMLElement) => {
+  @action setOrderList = (value: string, closed: boolean, ev?: HTMLElement ) => {
     if (ev?.parentElement) {
       for (var child of ev?.parentElement!.children) child.classList.remove('active');
       ev?.classList.add('active');
@@ -134,6 +134,8 @@ export default class OrderStore {
           this.closedOrders = closed;
           break;
       }
+
+      this.loadOrders(closed);
     });
   };
 
@@ -184,7 +186,6 @@ export default class OrderStore {
           orders.forEach((order) => {
             this.closedOrderRegistry.set(order.id, order);
           });
-          this.render();
         }
         this.loadingInitial = false;
         this.render();
@@ -259,17 +260,18 @@ export default class OrderStore {
   };
 
   @action editOrderForm = async (id: string) => {
+    this.submitting = true;
     const order = new OrderFormValues(this.selectedOrder);
     var contact = await agent.Contacts.get(encodeURI(order.clientName));
     console.log(contact);
     runInAction('Loading orders', () => {
       if (!this.rootStore.contactStore.contactRegistry.has(contact.id) && contact.id) {
-        console.log('FAIL');
         this.addTemporaryContact(contact);
       } else this.selectedClient = contact;
       this.rootStore.contactStore.selectedContact = contact;
       this.selectedOrder = this.openOrderRegistry.get(id);
       this.showOrderForm = true;
+      this.submitting = false;
     });
 
     this.render();

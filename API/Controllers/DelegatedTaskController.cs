@@ -11,10 +11,16 @@ namespace API.Controllers
 {
     public class DelegatedTaskController : BaseController
     {
-        [HttpGet]
-        public async Task<ActionResult<List<DelegatedTaskDTO>>> List(CancellationToken ct)
+        private readonly IMediator _mediator;
+        public DelegatedTaskController(IMediator mediator)
         {
-            return await Mediator.Send(new List.Query(), ct);
+            _mediator = mediator;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<CompleteTaskData>> ListTasks(bool myTasks, bool accepted, bool refused, bool pending, bool done)
+        {
+            return await Mediator.Send(new ListTasks.Query(myTasks, accepted, refused, pending, done));
         }
 
         [HttpGet("{id}")]
@@ -46,6 +52,24 @@ namespace API.Controllers
         public async Task<ActionResult<Unit>> Share(Guid id, string username)
         {
             return await Mediator.Send(new ShareTask.Command { Id = id, Username = username });
+        }
+        [HttpPost("accept/{id}")]
+        public async Task<ActionResult<Unit>> AcceptTask(Guid id, AcceptTask.Command command)
+        {
+            // command.Id = id;
+            return await Mediator.Send(new AcceptTask.Command { Id = id });
+        }
+        [HttpPost("refuse/{id}")]
+        public async Task<ActionResult<Unit>> RefuseTask(Guid id, RefuseTask.Command command)
+        {
+            // command.Id = id;
+            return await Mediator.Send(new RefuseTask.Command { Id = id });
+        }
+        [HttpPost("finish/{id}")]
+        public async Task<ActionResult<Unit>> CloseTask(Guid id, FinishTask.Command command)
+        {
+            // command.Id = id;
+            return await Mediator.Send(new FinishTask.Command { Id = id });
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Interfaces;
@@ -29,6 +30,7 @@ namespace Application.AppUser
 
                 return new AppUser
                 {
+                    Id = new Guid(user.Id),
                     DisplayName = user.DisplayName,
                     Username = user.UserName,
                     Token = _jwtGenerator.CreateToken(user),

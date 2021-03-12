@@ -19,8 +19,7 @@ namespace Application.DelegatedTasks
             public DateTime DateStarted { get; set; }
             public DateTime Deadline { get; set; }
             public string Notes { get; set; }
-            public string CreatedBy { get; set; }
-            public Boolean Done { get; set; }
+            public string FinishedBy { get; set; }
             public Boolean Accepted { get; set; }
             public Boolean Refused { get; set; }
 
@@ -53,11 +52,12 @@ namespace Application.DelegatedTasks
                     Type = request.Type,
                     Deadline = request.Deadline,
                     Notes = request.Notes,
-                    CreatedBy = request.CreatedBy,
                     DateStarted = DateTime.Now,
                     Accepted = true,
                     Refused = request.Refused,
-                    Done = request.Done
+                    Pending = false,
+                    Done = false,
+                    FinishedBy = ""
                 };
 
                 _context.DelegatedTasks.Add(task);
@@ -67,7 +67,9 @@ namespace Application.DelegatedTasks
 
                 var userAccess = new UserTask
                 {
-                    User = user,
+                    CreatedBy = user,
+                    CreatedById = user.Id,
+                    SharedWith = null,
                     DelegatedTask = task,
                     DateAdded = request.DateStarted
                 };

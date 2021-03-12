@@ -25,7 +25,7 @@
                 bottom: 0;
                 max-width: unset;
                 width: unset;
-                z-index: 5;
+                z-index: 90;
 
             }
 
@@ -64,8 +64,12 @@
         }
 
         & .sideBar {
-            background-color: #0a1128;
+            background: #000046;
+            background: -webkit-linear-gradient(to top, #1CB5E0, #000046);
+            background: linear-gradient(to top, #1CB5E0, #000046);
+            margin:0 !important;
             height: 100%;
+            width:100%;
             display: flex;
             border: 0;
             font-size: 1.6rem;
@@ -96,8 +100,8 @@
                     margin-top: 10px;
 
                     @include breakpoint(tablet) {
-                        max-width: 5rem;
-                        max-height: 5rem;
+                        max-width: 15rem;
+                        max-height: 15rem;
                     }
                 }
 
@@ -177,38 +181,6 @@
                 }
             }
 
-            & #btns {
-                display: flex;
-                position: relative;
-                width: 100%;
-                height: min-content;
-                margin: 0;
-
-                & .buttons-row {
-                    position: relative;
-                    height: max-content;
-                    margin: 0;
-                    border-top: thin solid #fff;
-                    border-bottom: thin solid #fff;
-                    padding-top: 1.5rem;
-                    display: flex;
-                    width: 100%;
-                    flex-direction: column;
-
-                    & .button {
-                        position: relative;
-                        display: block;
-                        flex: 1 1;
-                        color: #fff;
-                        margin: 0 auto;
-                        padding-bottom: 2rem;
-                        width: 100%;
-                        left: 0;
-                        font-size: 1.7rem;
-                    }
-                }
-            }
-
             & :last-child {
                 align-self: flex-start;
                 margin: auto 0 5rem 0;
@@ -249,7 +221,7 @@
                     bottom: 0;
 
                     & .item.logout {
-                        margin: 0 !important;
+                        margin: .5rem !important;
                         padding: 0;
 
                         &:hover {
@@ -257,8 +229,8 @@
 
                             & .label,
                             i.power.icon {
-                                color: $color-secondary;
-                            }
+                                color: $color-secondary-light;
+                                                            }
                         }
 
                         & .label {
@@ -267,9 +239,12 @@
 
                         & .label,
                         i.power.icon {
-                            margin: 0 !important;
+                            display: block;
+                            margin: 0 auto !important;
                             color: $color-primary-light;
                             font-size: 1rem;
+                            transition: color .15s linear;
+
                         }
                     }
                 }

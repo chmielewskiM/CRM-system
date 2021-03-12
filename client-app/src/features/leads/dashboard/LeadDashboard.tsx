@@ -29,7 +29,7 @@ export const LeadDashboard: React.FC = () => {
       {showLeadForm && (
         <LeadForm key={(selectedLead && selectedLead.id) || 0} contact={selectedLead!} />
       )}
-      <Grid.Row className="buttons-row">
+      <Grid.Row className="topbar">
         <Button positive icon="plus" content="Add lead" onClick={addLeadForm} />
         <Button
           icon="angle down"

@@ -75,8 +75,8 @@ namespace API
                         // .AllowCredentials();
                 });
             });
-            services.AddMediatR(typeof(Application.Contacts.List.Handler).Assembly, typeof(Application.DelegatedTasks.List.Handler).Assembly);
-            services.AddAutoMapper(typeof(Application.Contacts.List.Handler), typeof(Application.DelegatedTasks.List.Handler));
+            services.AddMediatR(typeof(Application.Contacts.List.Handler).Assembly, typeof(Application.DelegatedTasks.ListTasks.Handler).Assembly, typeof(Application.Orders.ListOrders.Handler).Assembly);
+            services.AddAutoMapper(typeof(Application.Contacts.List.Handler), typeof(Application.DelegatedTasks.ListTasks.Handler), typeof(Application.Orders.ListOrders.Handler));
             services.AddMvc(opt =>
             {
                 var policy = new AuthorizationPolicyBuilder()

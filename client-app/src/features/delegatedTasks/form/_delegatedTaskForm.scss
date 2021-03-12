@@ -1,0 +1,27 @@
+.task-form{
+    & .fields{
+        display: flex;
+        justify-content: flex-start;
+        // overflow: hidden;
+    }
+    & .label {
+            min-width: 5.5rem;
+            margin-left: 1rem;
+            padding: 0;
+            text-align: right;
+            font-size: 1.3rem;
+            background-color: transparent;
+            color: #fff;
+            align-self: center;
+        }
+    & .field{
+        padding:.5rem !important;
+        flex: .8 0 !important;
+        & .rw-input{
+            padding: .5rem !important;
+        }
+    }
+    & .dropdown{
+        height: 1rem !important;
+    }
+}

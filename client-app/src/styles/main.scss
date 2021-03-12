@@ -9,13 +9,15 @@
 @import '../features/contacts/dashboard/contactDashboard';
 @import '../features/contacts/details/contactDetails';
 @import '../features/archivedLogs/archivedLog';
-@import '../features/contacts/callLogs/callLog';
 @import '../features/leads/dashboard/leadDashboard';
 @import '../features/leads/list/leadList';
 @import '../features/delegatedTasks/dashboard/delegatedTaskDashboard';
+@import '../features/delegatedTasks/list/delegatedTaskList';
 @import '../features/delegatedTasks/details/delegatedTaskDetails';
+@import '../features/delegatedTasks/form/delegatedTaskForm';
 @import '../features/delegatedTasks/taskNotifier/taskNotifier';
 @import '../features/orders/dashboard/orderDashboard';
+@import '../features/orders/list/orderList';
 @import '../features/orders/form/orderForm';
 @import '../features/orders/details/orderDetails';
 @import '../features/orders/history/orderHistory';

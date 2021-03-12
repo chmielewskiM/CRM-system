@@ -3,6 +3,7 @@
 [Dd]ebug/
 [Dd]ebugPublic/
 .vscode
+.vs/
 DS_Store
 node_modules
 *.db

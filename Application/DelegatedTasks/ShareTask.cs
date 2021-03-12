@@ -40,32 +40,34 @@ namespace Application.DelegatedTasks
                 var task = await _context
                     .DelegatedTasks
                     .FindAsync(request.Id);
-
+                Console.WriteLine("LOL");
                 if (task == null)
                     throw new RestException(HttpStatusCode.NotFound, new
                     {
                         Task = "Could not find task"
                     });
-
-                var user = await _userManager.FindByNameAsync(request.Username);
+                
+                var user = await _userManager.FindByNameAsync(_userAccessor.GetLoggedUsername());
+                var targetUser = await _userManager.FindByNameAsync(request.Username);
 
                 var share = await _context
                     .UserTasks
-                    .SingleOrDefaultAsync(x => x.DelegatedTaskId == task.Id && x.UserId == user.Id);
+                    .SingleOrDefaultAsync(x => x.DelegatedTaskId == task.Id && x.SharedWith.Id == user.Id);
 
                 if (share != null)
                     throw new RestException(HttpStatusCode.BadRequest,
                     new { Assign = "Already shared with this employee" });
 
                 task.Accepted = false;
-                share = new UserTask
-                {
-                    DelegatedTask = task,
-                    User = user,
-                    DateAdded = task.DateStarted
-                };
+                task.Refused = false;
+                task.Pending = true;
 
-                _context.UserTasks.Add(share);
+                share = await _context.UserTasks.SingleOrDefaultAsync(x => x.DelegatedTask == task);
+
+                share.SharedWith = targetUser;
+                share.SharedWithId = targetUser.Id;
+
+                // _context.UserTasks.Add(share);
 
                 var success = await _context.SaveChangesAsync() > 0;
 

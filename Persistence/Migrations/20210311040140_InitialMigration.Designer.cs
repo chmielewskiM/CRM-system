@@ -10,7 +10,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210305123022_InitialMigration")]
+    [Migration("20210311040140_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,9 +71,6 @@ namespace Persistence.Migrations
                     b.Property<bool>("Accepted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("DateStarted")
                         .HasColumnType("datetime2");
 
@@ -83,8 +80,14 @@ namespace Persistence.Migrations
                     b.Property<bool>("Done")
                         .HasColumnType("bit");
 
+                    b.Property<string>("FinishedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Pending")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("Refused")
                         .HasColumnType("bit");
@@ -280,14 +283,15 @@ namespace Persistence.Migrations
 
                     b.HasKey("UserId", "OperationId");
 
-                    b.HasIndex("OperationId");
+                    b.HasIndex("OperationId")
+                        .IsUnique();
 
                     b.ToTable("UserOperations");
                 });
 
             modelBuilder.Entity("Domain.UserTask", b =>
                 {
-                    b.Property<string>("UserId")
+                    b.Property<string>("CreatedById")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<Guid>("DelegatedTaskId")
@@ -296,9 +300,15 @@ namespace Persistence.Migrations
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("UserId", "DelegatedTaskId");
+                    b.Property<string>("SharedWithId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasIndex("DelegatedTaskId");
+                    b.HasKey("CreatedById", "DelegatedTaskId");
+
+                    b.HasIndex("DelegatedTaskId")
+                        .IsUnique();
+
+                    b.HasIndex("SharedWithId");
 
                     b.ToTable("UserTasks");
                 });
@@ -439,7 +449,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Contact", "Client")
                         .WithMany("Orders")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Client");
@@ -450,13 +460,13 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Contact", "Contact")
                         .WithMany("UserContacts")
                         .HasForeignKey("ContactId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.User", "User")
                         .WithMany("UserContacts")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Contact");
@@ -467,9 +477,9 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.UserOperation", b =>
                 {
                     b.HasOne("Domain.Operation", "Operation")
-                        .WithMany("UserOperations")
-                        .HasForeignKey("OperationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne("UserOperation")
+                        .HasForeignKey("Domain.UserOperation", "OperationId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.User", "User")
@@ -485,21 +495,27 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.UserTask", b =>
                 {
-                    b.HasOne("Domain.DelegatedTask", "DelegatedTask")
+                    b.HasOne("Domain.User", "CreatedBy")
                         .WithMany("UserTasks")
-                        .HasForeignKey("DelegatedTaskId")
+                        .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.User", "User")
-                        .WithMany("UserTasks")
-                        .HasForeignKey("UserId")
+                    b.HasOne("Domain.DelegatedTask", "DelegatedTask")
+                        .WithOne("UserTask")
+                        .HasForeignKey("Domain.UserTask", "DelegatedTaskId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Domain.User", "SharedWith")
+                        .WithMany()
+                        .HasForeignKey("SharedWithId");
+
+                    b.Navigation("CreatedBy");
 
                     b.Navigation("DelegatedTask");
 
-                    b.Navigation("User");
+                    b.Navigation("SharedWith");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -562,12 +578,12 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.DelegatedTask", b =>
                 {
-                    b.Navigation("UserTasks");
+                    b.Navigation("UserTask");
                 });
 
             modelBuilder.Entity("Domain.Operation", b =>
                 {
-                    b.Navigation("UserOperations");
+                    b.Navigation("UserOperation");
                 });
 
             modelBuilder.Entity("Domain.User", b =>

@@ -70,7 +70,6 @@ export const Navbar: React.FC = () => {
             to="/panel"
           />
         )}
-        <Menu.Item id="btns" />
         <Menu.Item>
           <Dropdown size="big" text={`Logged as ${user?.displayName}`}>
             <Dropdown.Menu>

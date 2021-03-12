@@ -29,7 +29,8 @@ namespace Persistence
                 builder.Entity<Order>()
                     .HasOne<Contact>(u => u.Client)
                     .WithMany(c => c.Orders)
-                    .HasForeignKey(c => c.ClientId);
+                    .HasForeignKey(c => c.ClientId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
             });
             builder.Entity<UserContact>(x =>
@@ -37,41 +38,45 @@ namespace Persistence
                 x.HasKey(uc => new { uc.UserId, uc.ContactId });
 
                 builder.Entity<UserContact>()
-                    .HasOne(u => u.User)
-                    .WithMany(c => c.UserContacts)
-                    .HasForeignKey(u => u.UserId);
+                    .HasOne(uc => uc.User)
+                    .WithMany(u => u.UserContacts)
+                    .HasForeignKey(uc => uc.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 builder.Entity<UserContact>()
-                    .HasOne(c => c.Contact)
-                    .WithMany(u => u.UserContacts)
-                    .HasForeignKey(c => c.ContactId);
+                    .HasOne(uc => uc.Contact)
+                    .WithMany(c => c.UserContacts)
+                    .HasForeignKey(c => c.ContactId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
             });
 
             builder.Entity<UserTask>(x =>
             {
-                x.HasKey(ut => new { ut.UserId, ut.DelegatedTaskId });
+                x.HasKey(ut => new { ut.CreatedById, ut.DelegatedTaskId });
 
-                x.HasOne(u => u.User)
-                    .WithMany(t => t.UserTasks)
-                    .HasForeignKey(u => u.UserId)
+                x.HasOne(ut => ut.CreatedBy)
+                    .WithMany(u => u.UserTasks)
+                    .HasForeignKey(ut => ut.CreatedById)
                     .OnDelete(DeleteBehavior.Restrict);
 
-                x.HasOne(t => t.DelegatedTask)
-                    .WithMany(u => u.UserTasks)
-                    .HasForeignKey(t => t.DelegatedTaskId)
+                x.HasOne(ut => ut.DelegatedTask)
+                    .WithOne(t => t.UserTask)
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
             builder.Entity<UserOperation>(x =>
             {
-                x.HasKey(ut => new { ut.UserId, ut.OperationId });
+                x.HasKey(uo => new { uo.UserId, uo.OperationId });
 
-                x.HasOne(u => u.User)
-                    .WithMany(t => t.UserOperations)
-                    .HasForeignKey(u => u.UserId)
+                x.HasOne(uo => uo.User)
+                    .WithMany(u => u.UserOperations)
+                    .HasForeignKey(uo => uo.UserId)
                     .OnDelete(DeleteBehavior.Restrict);
 
+                x.HasOne(uo => uo.Operation)
+                    .WithOne(o => o.UserOperation)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
         }
     }

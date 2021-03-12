@@ -11,6 +11,7 @@ import DateInput from '../../../app/common/form/DateInput';
 import { combineDateAndTime } from '../../../app/common/util/util';
 import { combineValidators, isRequired } from 'revalidate';
 import { RootStoreContext } from '../../../app/stores/rootStore';
+import LoaderComponent from '../../../app/layout/LoaderComponent';
 
 const validation = combineValidators({
   // type: isRequired({ message: 'Select type of the task.' }),
@@ -25,19 +26,22 @@ interface IProps {
 export const DelegatedTaskForm: React.FC<IProps> = () => {
   const rootStore = useContext(RootStoreContext);
   const {
+    loadingInitial,
     setShowDelegatedTaskForm,
-    editDelegatedTask,
+    editTask,
     addDelegatedTask,
     submitting,
     fillForm,
     setShowShareTaskForm,
-    selectedDelegatedTask,
+    selectedTask,
     shareTask
   } = rootStore.delegatedTaskStore;
 
   const {
     usersByName,
     getUser,
+    user,
+    getLoggedUser,
     getUserList,
     selectedUser,
     rr
@@ -48,7 +52,7 @@ export const DelegatedTaskForm: React.FC<IProps> = () => {
   const handleFinalFormSubmit = (values: any) => {
       console.log(values)
   }
-
+  if (loadingInitial) return <LoaderComponent content="Loading..." />;
   return (
     <Segment clearing>
       <Modal open>
@@ -65,7 +69,7 @@ export const DelegatedTaskForm: React.FC<IProps> = () => {
                     placeholder="Select user"
                     value={selectedUser.username}
                     onClick={() => {
-                      getUserList();
+                      getUserList(true);
                     }}
                     onChange={(e, data) => {
                       getUser(data.value!.toString());
@@ -91,7 +95,7 @@ export const DelegatedTaskForm: React.FC<IProps> = () => {
                     size="big"
                     content="Confirm"
                     loading={submitting}
-                    onClick={() => shareTask(selectedDelegatedTask!.id, selectedUser)}
+                    onClick={() => shareTask(selectedTask!.id, selectedUser)}
                     // disabled={loading}
                   />
           </Segment>

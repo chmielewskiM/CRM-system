@@ -1,55 +1,167 @@
 #root {
-    & .segment.task-notifier {
-        overflow-y: scroll;
-        background-color: transparent;
-        border-top: 0.1rem outset $color11;
-        border-bottom: 0.1rem outset $color11;
-
-        & .shutter {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            box-shadow: 0 -2rem 2rem -2rem inset black;
-            padding-bottom: 1.5rem;
+    & .notifier-col {
+        & .minor-header.notifier {
+            font-size: 1.2rem;
+            height: 14%;
+            min-height: 5rem;
         }
 
-        &::-webkit-scrollbar {
-            display: none;
-        }
-
-        & .card {
-            position: relative;
-            margin: 1rem 0;
+        & .segment.task-notifier {
+            @include reset-div;
+            width: 100%;
+            min-height: 10rem;
+            padding: 0 .7rem;
+            overflow-y: scroll;
+            background: #fff;
+            border-bottom-left-radius: 3px;
+            border-bottom-right-radius: 3px;
+            transition: width .3s ease-out;
 
             & .card {
+                @include reset-div;
+                position: relative;
+                display: block;
                 width: 100%;
-            }
+                height: 20%;
+                min-height: 6.5rem;
+                margin: .4rem 0;
+                transition: transform .15s ease-out,
+                    box-shadow .2s ease-out;
+                transition-delay: .1s;
 
-            & .content {
-                background-color: rgba($color9, 0.8);
-                font-size: 1.2rem;
+                &:hover {
+                    transform: scale(1.03);
+                    box-shadow: 0 1px 5px 0 #000;
 
-                &>* {
-                    color: $color7;
+                    & .meta,
+                    & .header {
+                        padding-left: 3rem;
+                        transform: scale(1.3);
+                        transition: transform .1s ease-in .12s, padding-left .12s ease-in;
+                    }
                 }
-            }
 
-            & .buttons {
-                position: absolute;
-                right: 0;
-                top: 0;
-                background: rgb(0, 48, 63);
-                background: linear-gradient(0deg, rgba(0, 48, 63, 1) 57%, rgba(33, 68, 74, 1) 74%, rgba(76, 94, 88, 1) 84%, rgba(120, 121, 102, 1) 99%, rgba(205, 172, 129, 1) 100%, rgba(205, 172, 129, 1) 100%);
-                border-bottom-left-radius: 1.7rem;
-                border: thin solid $color7;
+                & .header {
+                    font-size: 1.2rem;
+                    font-weight: 700;
+                    transition: transform .1s ease-in, padding-left .12s ease-in;
+                }
 
-                &>* {
-                    margin: 0.5rem 0.8rem;
+                & .meta {
+                    transition: transform .1s ease-in, padding-left .12s ease-in;
+                }
 
-                    & i:before {
+                & .content {
+                    background: #084c61;
+                    background: #000046;
+                    background: -webkit-linear-gradient(to left, #1CB5E0, #000046);
+                    background: linear-gradient(to left, #1CB5E0, #000046);
+
+                    font-size: 1.2rem;
+                    height: 100%;
+
+                    &>* {
                         color: $color7;
-                        font-size: 1.5rem;
+                    }
+                }
+
+                & .buttons {
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                    border-bottom-left-radius: 1.7rem;
+                    border-top-right-radius: 3px;
+
+
+
+                    & .button {
+
+                        &:hover {
+                            background-color: transparent !important;
+
+                            & .check::before {
+                                color: rgb(0, 255, 0) !important;
+                            }
+
+                            & .cancel::before {
+                                color: red !important;
+                            }
+
+                        }
+
+                        &:active,
+                        &:focus {
+                            background-color: transparent !important;
+                        }
+                    }
+
+                    &>* {
+                        & i:before {
+                            color: $color6 !important;
+                            font-size: 1.2rem;
+                            transition: color .15s ease-in;
+                        }
+                    }
+
+                }
+
+                & .info-btn {
+                    position: absolute;
+                    bottom: 1rem;
+                    right: .5rem;
+                    color: #fff;
+                    background-color: $color3;
+                    border-radius: 100%;
+                    width: 2rem;
+                    height: 2rem;
+                    font-size: .8rem;
+                    transition: background-color .12s ease-out;
+
+                    &:hover,
+                    &:active,
+                    &:focus {
+                        background-color: $color-primary-dark;
+
+                        & ::before {
+                            color: #fff;
+                        }
+
+                    }
+
+                    & ::before {
+                        position: absolute;
+                        right: .9rem;
+                        bottom: .6rem;
+                        color: #FFFDE4 !important;
+                    }
+                }
+
+                &.empty {
+                    text-align: center;
+                    box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.6);
+
+                    &:hover,
+                    &:hover .header {
+                        transform: none;
+                        padding-left: 0;
+                    }
+
+                    & .content {
+                        background: #c3cbdc;
+                        background-image: linear-gradient(147deg, #c3cbdc 0%, #dddfe0 74%);
+                        display: flex;
+                        align-items: center;
+
+                        & .header {
+                            font-size: 1.4rem;
+                            font-style: italic;
+                            color: rgba(0, 0, 0, 0.3);
+                            margin: auto;
+
+                            @include breakpoint(tablet) {
+                                font-size: 2rem;
+                            }
+                        }
                     }
                 }
             }

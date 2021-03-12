@@ -1,112 +1,108 @@
-import React, { useContext, useEffect } from 'react';
-import { Grid, Button, Segment } from 'semantic-ui-react';
+import React, { useContext, useEffect, useState } from 'react';
+import { Grid, Button, Segment, Label, Icon } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
-import { DelegatedTaskList } from './DelegatedTaskList';
+import { DelegatedTaskList } from '../list/DelegatedTaskList';
 import { DelegatedTaskForm } from '../form/DelegatedTaskForm';
 import { RootStoreContext } from '../../../app/stores/rootStore';
 import { TaskNotifier } from '../taskNotifier/TaskNotifier';
 import { DelegatedTaskDetails } from '../details/DelegatedTaskDetails';
-import ArchivedLog from '../../archivedLogs/ArchivedLog';
 import ShareTaskForm from '../form/ShareTaskForm';
+import { filterTasksButtons, filterSharedTasksButtons } from '../../../app/common/options/buttons';
+import LoaderComponent from '../../../app/layout/LoaderComponent';
 
 export const DelegatedTaskDashboard: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
 
   const {
-    loadDelegatedTasks,
+    loadingInitial,
     showDelegatedTaskForm,
-    selectedDelegatedTask,
+    selectedTask,
     addDelegatedTaskForm,
-    editDelegatedTaskForm,
-    deleteDelegatedTask,
-    loadUsers,
-    displayDimmer,
-    setShowShareTaskForm,
+    setTaskList,
     showShareTaskForm,
-    calendarEvents,
-    rr
+    pendingTasksCount,
+    pendingTasksNotifier,
+    displayPendingTaskNotifier,
+    myTasks,
+    finishTask,
+    rr,
   } = rootStore.delegatedTaskStore;
-
+  const { user } = rootStore.userStore;
   useEffect(() => {
-    loadDelegatedTasks();
-    calendarEvents;
-    console.log('TASK DASH')
-  }, [showShareTaskForm]);
+    console.log('TASK DASH');
+  }, [rr]);
 
-  // if (delegatedTaskStore.loadingInitial)
-  //   return <LoaderComponent content="Loading..." />;
-
+  // if (loadingInitial) return <LoaderComponent content="Loading..." />;
   return (
-    <Grid stackable centered divided="vertically" className="main-grid">
+    <Grid stackable centered className="main-grid">
       {showDelegatedTaskForm && (
         <DelegatedTaskForm
-          key={(selectedDelegatedTask && selectedDelegatedTask.id) || 0}
-          delegatedTask={selectedDelegatedTask!}
+          className={'task-form'}
+          key={(selectedTask && selectedTask.id) || 0}
+          delegatedTask={selectedTask!}
         />
       )}
-      {showShareTaskForm && <ShareTaskForm delegatedTask={selectedDelegatedTask} />}
-      <Grid.Row className="buttons-row">
+      {showShareTaskForm && <ShareTaskForm delegatedTask={selectedTask} />}
+      <Grid.Row className="topbar">
         <Button positive content="Add task" icon="plus" onClick={addDelegatedTaskForm} />
-        <Button content="Done tasks" icon="history" />
-        {selectedDelegatedTask && (
-          <Button
-            icon="pencil alternate"
-            content="Edit task"
-            onClick={() => editDelegatedTaskForm(selectedDelegatedTask.id!)}
-          />
+        {selectedTask && myTasks && (
+          <Button icon="check" content="Mark as done" onClick={() => finishTask(selectedTask)} />
         )}
-        {selectedDelegatedTask && (
-          <Button
-            icon="eraser"
-            content="Delete task"
-            onClick={() => deleteDelegatedTask(selectedDelegatedTask.id!)}
-          />
-        )}
-        {selectedDelegatedTask && (
-          <Button icon="check" content="Mark as done" onClick={() => console.log(calendarEvents)} />
-        )}
-        {selectedDelegatedTask && (rootStore.userStore.topAccess || rootStore.userStore.midAccess) && (
-          <Button
-            // icon =
-            content="Share"
-            onClick={() => setShowShareTaskForm(true)}
-          />
-        )}
-
+        <Button className="pendingBtn" onClick={displayPendingTaskNotifier}>
+          
+          <div><Icon name="wait" />Pending<div className='count'><span>{pendingTasksCount}</span></div></div>
+        </Button>
         <Button
           icon="angle down"
           className="expand-menu"
           onClick={(event) => rootStore.commonStore.expandMenu(event)}
         />
       </Grid.Row>
-      <Grid.Row className="row-content-1" stretched={true}>
-        <Grid.Column width={12}>
-          <DelegatedTaskList />
+      <Grid.Row className="row-content-1 tasks" stretched={true}>
+        <Grid.Column className="list-col">
+          <Segment attached="top" floated="right" className="filter-buttons">
+            <Button.Group floated="left">
+              <Label basic content="Filter tasks:" />
+              {filterTasksButtons.map((button) => (
+                <Button
+                  key={button.key}
+                  as={button.as}
+                  content={button.content}
+                  size={button.size}
+                  compact={button.compact}
+                  className={button.className}
+                  onClick={(e) => setTaskList(button.functionArg, e.currentTarget)}
+                />
+              ))}
+            </Button.Group>
+            {!myTasks && (
+              <Button.Group floated="left">
+                {filterSharedTasksButtons.map((button) => (
+                  <Button
+                    key={button.key}
+                    as={button.as}
+                    content={button.content}
+                    size={button.size}
+                    compact={button.compact}
+                    className={button.className}
+                    onClick={(e) => setTaskList(button.functionArg, e.currentTarget)}
+                  />
+                ))}
+              </Button.Group>
+            )}
+          </Segment>
+          <DelegatedTaskList user={user} />
         </Grid.Column>
-        <Grid.Column width={4}>
-          <TaskNotifier />
-        </Grid.Column>
+        {pendingTasksNotifier && (
+          <Grid.Column width={4} className="notifier-col">
+            <TaskNotifier className="notifier" taskCount={pendingTasksCount}/>
+          </Grid.Column>
+        )}
       </Grid.Row>
 
       <Grid.Row className="row-content-2" stretched={true}>
-        <Grid.Column width={6}>
-          {selectedDelegatedTask !== undefined && <DelegatedTaskDetails />}
-        </Grid.Column>
-        <Grid.Column width={6}>
-          <Segment basic className="task log">
-            {' '}
-            <ArchivedLog
-              showAll={true}
-              // filling={{
-              //   header: task.createdBy,
-              //   dateOne: task.dateStarted,
-              //   dateTwo: task.deadline,
-              //   done: task.done,
-              //   info: task.notes,
-              // }}
-              list={rootStore.delegatedTaskStore.userClosedTasks}
-            />
-          </Segment>
+        <Grid.Column computer={7} tablet={10} className="details-col">
+          {selectedTask !== undefined && <DelegatedTaskDetails />}
         </Grid.Column>
       </Grid.Row>
     </Grid>

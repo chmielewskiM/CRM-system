@@ -23,7 +23,7 @@ export const OrderList: React.FC = () => {
 
   useEffect(() => {
     setOrderList('allOrders', false);
-    loadOrders(false);
+  
   }, []);
   if (loadingInitial) return <LoaderComponent content="Loading..." />;
   return (
