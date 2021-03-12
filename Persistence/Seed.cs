@@ -15,7 +15,6 @@ namespace Persistence
             var users = new List<User> { };
             var contacts = new List<Contact> { };
             var delegatedTasks = new List<DelegatedTask> { };
-            var calls = new List<Call> { };
             var orders = new List<Order> { };
             var operations = new List<Operation> { };
 
@@ -197,7 +196,7 @@ namespace Persistence
                 var products = new List<String>{
                     "H13", "HS14", "2H13S1", "1H228"
                 };
-                
+
                 var order = new Order();
                 for (int i = 0; i < 40; i++)
                 {
@@ -265,6 +264,7 @@ namespace Persistence
                     randomDayStart = random.Next(12);
                     randomDayEnd = random.Next(8);
                     randomType = random.Next(4);
+                    
                     orderNumber++;
 
                     delegatedTask = new DelegatedTask
@@ -272,21 +272,21 @@ namespace Persistence
                         Type = type[randomType],
                         DateStarted = DateTime
                             .Now
-                            .AddDays(-randomDayStart),
+                            .AddDays(-randomDayStart)
+                            .AddTicks(random.Next(30000, 1300000)),
                         Deadline = DateTime
                             .Now
-                            .AddDays(-randomDayStart + randomDayEnd),
+                            .AddDays(-randomDayStart + randomDayEnd)
+                            .AddTicks(random.Next(30000, 1300000)),
                         Notes = "",
-                        CreatedBy = users[randomUser].DisplayName,
-                        Done = false,
+                        FinishedBy = "",
                         Accepted = true,
-                        Refused = false
-
+                        Refused = false,
                     };
 
                     delegatedTask.Notes = "#" + orderNumber + "/ " + type[randomType] + " and do it before " + delegatedTask.Deadline.ToLocalTime() + ".";
-                    if (i % 5 == 0) { delegatedTask.Accepted = false; delegatedTasks.Add(delegatedTask); continue; }
-                    else if (i % 7 == 0) { delegatedTask.Done = true; delegatedTasks.Add(delegatedTask); continue; }
+                    if (i % 5 == 0) { delegatedTask.Accepted = false; delegatedTask.Pending = true; delegatedTasks.Add(delegatedTask); continue; }
+                    else if (i % 7 == 0) { delegatedTask.FinishedBy = users[randomUser].DisplayName; delegatedTask.Done = true; delegatedTasks.Add(delegatedTask); continue; }
                     else if (i % 13 == 0) { delegatedTask.Accepted = false; delegatedTask.Refused = true; delegatedTasks.Add(delegatedTask); continue; }
 
                     delegatedTasks.Add(delegatedTask);
@@ -424,27 +424,41 @@ namespace Persistence
             if (!context.UserTasks.Any())
             {
                 int randomUser = 0;
+                int randomShare = 0;
                 var userTasks = new List<UserTask> { };
-
+                var userTask = new UserTask();
                 for (int i = 0; i < 40; i++)
                 {
-                    randomUser = random.Next(1, 5);
-
-                    var userTask = new UserTask
+                    var task = delegatedTasks[i];
+                    bool pending = task.Pending;
+                    randomUser = random.Next(2, 5);
+                    randomShare = random.Next(2, 5);
+                    if (task.Pending = true || task.Refused == true || task.Done == true || (i % 3 == 0 && task.Accepted == true))
                     {
-                        User = users[randomUser],
-                        DelegatedTask = delegatedTasks[i],
-                        DateAdded = delegatedTasks[i].DateStarted
-                    };
+                        while(randomUser == randomShare)
+                        randomShare = random.Next(2, 5);
+
+                        userTask = new UserTask
+                        {
+                            CreatedBy = users[randomUser],
+                            CreatedById = users[randomUser].Id,
+                            DelegatedTask = task,
+                            DelegatedTaskId = task.Id,
+                            SharedWith = users[randomShare],
+                            SharedWithId = users[randomShare].Id,
+                            DateAdded = delegatedTasks[i].DateStarted
+                        };
+                    }
+                    task.Pending = pending;
 
                     userTasks.Add(userTask);
-                };
+                }
 
                 context
-                    .UserTasks
-                    .AddRange(userTasks);
+                .UserTasks
+                .AddRange(userTasks);
                 context.SaveChanges();
-            }
+            };
         }
     }
 }

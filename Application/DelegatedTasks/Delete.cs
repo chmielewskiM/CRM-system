@@ -46,12 +46,12 @@ namespace Application.DelegatedTasks
 
                 var share = await _context
                     .UserTasks
-                    .SingleOrDefaultAsync(x => x.DelegatedTaskId == delegatedTask.Id && x.UserId == user.Id);
+                    .SingleOrDefaultAsync(x => x.DelegatedTaskId == delegatedTask.Id && x.CreatedBy.Id == user.Id);
 
                 if (share == null)
                     return Unit.Value;
 
-                if (share.UserId != user.Id)
+                if (share.CreatedBy.Id != user.Id)
                     throw new RestException(HttpStatusCode.BadRequest, new { Share = "You cannot unshare this delegatedTask" });
 
                 _context.UserTasks.Remove(share);

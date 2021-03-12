@@ -10,8 +10,10 @@ namespace Application.DelegationTasks
         {
             CreateMap<DelegatedTask, DelegatedTaskDTO>();
             CreateMap<UserTask, UserAccessDTO>()
-            .ForMember(d => d.Username, o => o.MapFrom(s => s.User.UserName))
-            .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.User.DisplayName));
+            .ForMember(d => d.CreatedByUsername, o => o.MapFrom(s => s.CreatedBy.UserName))
+            .ForMember(d => d.CreatedBy, o => o.MapFrom(s => s.CreatedBy.DisplayName))
+            .ForMember(d => d.SharedWithUsername, o => o.MapFrom(s => s.SharedWith.UserName))
+            .ForMember(d => d.SharedWith, o => o.MapFrom(s => s.SharedWith.DisplayName));
         }
     }
 }

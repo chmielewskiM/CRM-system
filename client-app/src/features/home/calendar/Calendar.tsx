@@ -61,7 +61,7 @@ export const MyCalendar: React.FC<IProps> = (props) => {
   const { render, rr, sel, bool, body, selectedEvent } = rootStore.homeStore;
   const { closeModal, confirmModal, modal, openModal } = rootStore.modalStore;
   useEffect(() => {
-    rootStore.delegatedTaskStore.loadDelegatedTasks()
+    // rootStore.delegatedTaskStore.loadTasks()
     rootStore.delegatedTaskStore.calendarEvents
   }, [rr]);
 

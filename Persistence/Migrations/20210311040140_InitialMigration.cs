@@ -78,10 +78,11 @@ namespace Persistence.Migrations
                     DateStarted = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Deadline = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Done = table.Column<bool>(type: "bit", nullable: false),
+                    FinishedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Accepted = table.Column<bool>(type: "bit", nullable: false),
-                    Refused = table.Column<bool>(type: "bit", nullable: false)
+                    Refused = table.Column<bool>(type: "bit", nullable: false),
+                    Pending = table.Column<bool>(type: "bit", nullable: false),
+                    Done = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -238,7 +239,7 @@ namespace Persistence.Migrations
                         column: x => x.ClientId,
                         principalTable: "Contacts",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -257,29 +258,36 @@ namespace Persistence.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_UserContacts_Contacts_ContactId",
                         column: x => x.ContactId,
                         principalTable: "Contacts",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "UserTasks",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CreatedById = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     DelegatedTaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SharedWithId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserTasks", x => new { x.UserId, x.DelegatedTaskId });
+                    table.PrimaryKey("PK_UserTasks", x => new { x.CreatedById, x.DelegatedTaskId });
                     table.ForeignKey(
-                        name: "FK_UserTasks_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_UserTasks_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserTasks_AspNetUsers_SharedWithId",
+                        column: x => x.SharedWithId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -313,7 +321,7 @@ namespace Persistence.Migrations
                         column: x => x.OperationId,
                         principalTable: "Operations",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -368,12 +376,19 @@ namespace Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_UserOperations_OperationId",
                 table: "UserOperations",
-                column: "OperationId");
+                column: "OperationId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserTasks_DelegatedTaskId",
                 table: "UserTasks",
-                column: "DelegatedTaskId");
+                column: "DelegatedTaskId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserTasks_SharedWithId",
+                table: "UserTasks",
+                column: "SharedWithId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

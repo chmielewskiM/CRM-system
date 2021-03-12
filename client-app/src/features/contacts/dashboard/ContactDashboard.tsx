@@ -6,7 +6,6 @@ import { ContactDetails } from '../details/ContactDetails';
 import { ContactForm } from '../form/ContactForm';
 import { RootStoreContext } from '../../../app/stores/rootStore';
 import { ArchivedLog } from '../../archivedLogs/ArchivedLog';
-import { CallLog } from '../callLogs/CallLog';
 import LoaderComponent from '../../../app/layout/LoaderComponent';
 
 export const ContactDashboard: React.FC = () => {
@@ -40,7 +39,7 @@ export const ContactDashboard: React.FC = () => {
           contact={selectedContact!}
         />
       )}
-      <Grid.Row className="buttons-row">
+      <Grid.Row className="topbar">
         <Button positive icon="plus" content="Add contact" onClick={addContactForm} />
         <Button content="Call log" />
         <Button content="Deal log" />
@@ -69,7 +68,6 @@ export const ContactDashboard: React.FC = () => {
       </Grid.Row>
       <Grid.Row columns={6} className="row-content-2">
         <Grid.Column width={6}>{selectedContact !== undefined && <ContactDetails />}</Grid.Column>
-        <Grid.Column width={6}>{selectedContact !== undefined && <CallLog showAll />}</Grid.Column>
       </Grid.Row>
     </Grid>
   );

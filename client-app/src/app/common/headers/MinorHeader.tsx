@@ -6,11 +6,12 @@ import { IContact } from '../../models/contact';
 
 interface IProps extends HeaderProps {
     function?: (() => void) | undefined;
+    // show?: boolean;
 }
 
 export const MinorHeader: React.FC<IProps> = (props) => {
   return (
-    <Segment attached="top" className='minor-header'>
+    <Segment attached="top" className={'minor-header ' + props.className}>
       <Header as={props.as} content={props.content}/>
       {props.function && <Button
           icon="close"

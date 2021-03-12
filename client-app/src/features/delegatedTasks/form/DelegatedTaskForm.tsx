@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Form, Segment, Button, Modal } from 'semantic-ui-react';
-import { v4 as uuid } from 'uuid';
+import { Form, Segment, Button, Modal, Label } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import { Form as FinalForm, Field } from 'react-final-form';
 import { IDelegatedTaskForm, DelegatedTaskFormValues } from '../../../app/models/delegatedTask';
@@ -9,27 +8,33 @@ import SelectInput from '../../../app/common/form/SelectInput';
 import { options } from '../../../app/common/options/delegatedTaskType';
 import DateInput from '../../../app/common/form/DateInput';
 import { combineDateAndTime } from '../../../app/common/util/util';
-import { combineValidators, isRequired } from 'revalidate';
+import { combineValidators, isRequired, composeValidators } from 'revalidate';
 import { RootStoreContext } from '../../../app/stores/rootStore';
+import { isAfter } from 'date-fns';
+import LoaderComponent from '../../../app/layout/LoaderComponent';
 
 const validation = combineValidators({
-  // type: isRequired({ message: 'Select type of the task.' }),
-  // date: isRequired({ message: 'The date is required.' }),
-  // time: isRequired({ message: 'The time is required.' }),
+  type: isRequired({ message: 'Select type of the task.' }),
+  date: isRequired({ message: 'The date is required.' }),
+  time: isRequired({ message: 'The time is required.' }),
 });
 
 interface IProps {
   delegatedTask: IDelegatedTaskForm | undefined;
+  className?: string;
 }
 
-export const DelegatedTaskForm: React.FC<IProps> = () => {
+export const DelegatedTaskForm: React.FC<IProps> = (props) => {
   const rootStore = useContext(RootStoreContext);
   const {
+    loadingInitial,
     setShowDelegatedTaskForm,
-    editDelegatedTask,
+    editTask,
     addDelegatedTask,
     submitting,
     fillForm,
+    handleFinalFormSubmit,
+    formDateValidation,
   } = rootStore.delegatedTaskStore;
 
   useEffect(() => {}, [setShowDelegatedTaskForm]);
@@ -37,28 +42,12 @@ export const DelegatedTaskForm: React.FC<IProps> = () => {
   const [delegatedTask, setDelegatedTask] = useState(new DelegatedTaskFormValues());
 
   const [loading, setLoading] = useState(false);
-
-  const handleFinalFormSubmit = (values: any) => {
-    const deadline = combineDateAndTime(values.date, values.time);
-    const { date, time, ...delegatedTask } = values;
-    delegatedTask.deadline = deadline;
-
-    if (!delegatedTask.id) {
-      let newTask = {
-        ...delegatedTask,
-        id: uuid(),
-      };
-      addDelegatedTask(newTask);
-    } else {
-      editDelegatedTask(delegatedTask);
-    }
-  };
-
+  if (loadingInitial) return <LoaderComponent content="Loading..." />;
   return (
     <Segment clearing>
       <Modal open>
         <Modal.Content>
-          <Segment clearing size="big">
+          <Segment clearing size="big" className={props.className}>
             <FinalForm
               validate={validation}
               initialValues={fillForm()}
@@ -66,6 +55,7 @@ export const DelegatedTaskForm: React.FC<IProps> = () => {
               render={({ handleSubmit, invalid, pristine }) => (
                 <Form onSubmit={handleSubmit} size="big">
                   <Form.Group>
+                    <Label>Task</Label>
                     <Field
                       options={options}
                       name="type"
@@ -75,12 +65,14 @@ export const DelegatedTaskForm: React.FC<IProps> = () => {
                     />
                   </Form.Group>
                   <Form.Group>
+                    <Label>Deadline</Label>
                     <Field
                       name="date"
                       placeholder="Date"
                       date={true}
                       value={delegatedTask.date}
                       component={DateInput}
+                      minDate={new Date()}
                     />
                     <Field
                       name="time"

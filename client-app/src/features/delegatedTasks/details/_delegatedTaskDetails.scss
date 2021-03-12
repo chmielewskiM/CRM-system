@@ -1,80 +1,9 @@
-#root {
-    & .wrapper {
-        & .task.details {
-            position: relative;
-            font-size: 1.4rem;
-            box-shadow: none;
-            padding: .1rem;
-            border: .4rem inset $color-primary;
-
-            & * {
-                margin: 0;
-                padding: 0;
-                background-color: transparent;
-            }
-
-            & .button {
-                position: absolute;
-                top: .5rem;
-                right: .5rem;
-                z-index: 1;
-                font-size: 2rem;
-                background-color: transparent;
-                color: $color-secondary;
-            }
-
-            & .ui.grid {
-                height: 100%;
-                padding: 0;
-                align-content: baseline;
-                overflow: hidden;
-
-                & .row {
-                    &.header {
-                        height: 20%;
-                        justify-content: center;
-                        align-items: center;
-                        background-color: $color-primary-dark;
-
-                        & h2 {
-                            background-color: transparent;
-                        }
-
-                        &>* {
-                            color: $color-secondary-dark;
-                        }
-                    }
-
-                    &.equal {
-                        height: 80%;
-
-
-                        & .column {
-                            display: flex;
-                            flex-direction: column;
-                            justify-content: space-evenly;
-                            color: #fff;
-                            font-weight: $bold;
-
-                            & :nth-child(-n+2) {
-                                flex: .25 0;
-                                padding: .3rem;
-                                justify-items: center;
-                            }
-
-                            & :last-child {
-                                flex: .5 0;
-                                padding: .3rem;
-                            }
-
-                        }
-                    }
-                }
-
-                & .divider {
-                    border: thin inset #fff;
-                }
-            }
-        }
+#root{
+    & .task-details-header{
+        height: max-content;
+        max-height: 6rem;
+    }
+    & .task-details{
+        
     }
 }

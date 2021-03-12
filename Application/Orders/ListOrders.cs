@@ -107,7 +107,6 @@ namespace Application.Orders
                         else orders = orders.OrderByDescending(x => x.DateOrderClosed);
                         break;
                     case "date_asc":
-                        Console.WriteLine(request.ClosedOrders);
                         if (request.ClosedOrders == "false")
                             orders = orders.OrderBy(x => x.DateOrderOpened);
                         else orders = orders.OrderBy(x => x.DateOrderClosed);

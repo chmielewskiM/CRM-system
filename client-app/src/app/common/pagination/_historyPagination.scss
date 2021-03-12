@@ -1,53 +1,59 @@
-#root{
-    & .history-pagination{
+#root {
+    & .history-pagination {
         @include reset-div;
         display: flex;
         background-color: transparent;
         justify-content: center;
+
         @include breakpoint(tablet) {
             margin-bottom: 3rem;
         }
-        & .pagination{
+
+        & .pagination {
             margin: 0 auto;
             background-color: transparent;
             @include reset-div;
-            border:0;
+            border: 0;
             box-shadow: none;
-            & .item{
-                border:0;
+
+            & .item {
+                border: 0;
                 box-shadow: none;
-                color:#fff;
+                color: #fff;
                 font-size: 1.1rem;
                 border-radius: 100%;
                 height: 3rem;
                 width: 2rem;
-                // padding: .9rem .5rem;
                 text-align: center;
                 transition: background-color 0s linear;
                 margin: .3rem;
-                opacity:0.5;
-                &:before{
-                    width:0;
+                opacity: 0.5;
+
+                &:before {
+                    width: 0;
                 }
-                &.active{
+
+                &.active {
                     font-size: 1.3rem;
                     font-weight: $bold;
                     border: thin dotted #fff;
                     border-style: ridge;
-                    // color:#fff;
-                    background-color: rgba(0, 0, 0, 0.349);
+                    background: rgb(0, 0, 70);
+                    background: -webkit-linear-gradient(to top, rgba(28, 181, 224, 0.7), rgba(0, 0, 70, 0.5));
+                    background: linear-gradient(to top, rgba(28, 181, 224, 0.7), rgba(0, 0, 70, 0.5));
                     transition: background-color .2s ease-in-out;
-                    opacity:1;
+                    opacity: 1;
                 }
-                
+
             }
+
             & :nth-child(1),
             & :nth-child(2),
             & :nth-last-child(1),
-            & :nth-last-child(2){
-                opacity:1;    
+            & :nth-last-child(2) {
+                opacity: 1;
             }
-            
+
         }
     }
 }

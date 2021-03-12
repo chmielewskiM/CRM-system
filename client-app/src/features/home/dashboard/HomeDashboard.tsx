@@ -40,7 +40,7 @@ export const HomeDashboard: React.FC = () => {
   } = rootStore.homeStore;
 
   useEffect(() => {
-    rootStore.delegatedTaskStore.loadDelegatedTasks();
+    rootStore.delegatedTaskStore.setTaskList('myTasks');
     rootStore.delegatedTaskStore.calendarEvents;
     loadOperations()
   }, [bool, leadsChart]);

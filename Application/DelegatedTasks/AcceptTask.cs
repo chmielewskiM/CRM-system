@@ -7,15 +7,13 @@ using Domain;
 using MediatR;
 using Persistence;
 
-namespace Application.Orders
+namespace Application.DelegatedTasks
 {
-    public class CloseOrder
+    public class AcceptTask
     {
         public class Command : IRequest
         {
             public Guid Id { get; set; }
-            public Boolean Closed { get; set; }
-            public DateTime DateOrderClosed { get; set; }
         }
 
         public class Handler : IRequestHandler<Command>
@@ -29,16 +27,14 @@ namespace Application.Orders
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var order = await _context.Orders.FindAsync(request.Id);
+                var delegatedTask = await _context.DelegatedTasks.FindAsync(request.Id);
 
-                if (order == null)
+                if (delegatedTask == null)
                     throw new RestException(HttpStatusCode.NotFound,
                     new { delegatedTask = "Not found" });
 
-
-                order.Closed = true;
-
-                order.DateOrderClosed = DateTime.Now;
+                delegatedTask.Accepted = true;
+                delegatedTask.Pending = false;
 
                 var success = await _context.SaveChangesAsync() > 0;
 

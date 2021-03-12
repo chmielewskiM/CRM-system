@@ -37,6 +37,19 @@ body {
 
 
     & ::-webkit-scrollbar {
+        scrollbar-width: .2rem !important;
+        background-color: $color-primary-dark;
+        width: 2px;
+
+        &-track {
+            border-radius: 10px !important;
+        }
+
+        &-thumb {
+            background-color: #fff !important;
+            border-radius: 10px !important;
+        }
+
         display: none;
     }
 
@@ -52,21 +65,20 @@ body {
         & .modal {
             width: 40%;
             padding: .1rem;
-            background-color: $color11;
 
             @include breakpoint(smartphone) {
                 width: 90%;
             }
 
             & .content {
-                background-color: $color-primary-dark;
+                background-image: linear-gradient(to top, #09203f 0%, #537895 100%);
 
                 & .clearing.segment {
                     @include reset-div;
+                    background-image: linear-gradient(to top, #09203f 0%, #537895 100%);
                     background-color: $color-primary-dark;
 
                     & .big.form {
-
                         & .field {
 
                             & input,
@@ -113,18 +125,35 @@ body {
 
                         & .button {
                             opacity: 0.7;
+                            font-size: 1.5rem;
+                            padding: .5rem;
+                            transition: all .2s linear;
 
                             &:hover {
                                 opacity: 1;
                             }
 
                             &.positive {
-                                background-color: #008000;
+                                background-color: #fff;
+                                color: green;
+
+                                border: 0 !important;
+
+                                &:hover {
+                                    color: #fff;
+                                    background-image: linear-gradient(179.1deg, rgba(43, 170, 96, 1) 2.3%, rgba(129, 204, 104, 1) 98.3%);
+                                }
                             }
 
                             &.negative {
-                                background-color: #9d0208;
+                                background-color: #fff;
+                                color: red;
+                                border: 0 !important;
 
+                                &:hover {
+                                    color: #fff;
+                                    background-image: radial-gradient(circle farthest-corner at 81.9% 53.5%, rgba(173, 53, 53, 1) 16.3%, rgba(240, 60, 60, 1) 100.2%);
+                                }
                             }
                         }
                     }
@@ -142,7 +171,21 @@ body {
         margin: 0 !important;
         height: inherit;
         flex: 1 0;
-        background-color: #2f5792;
+        background: #4b6cb7;
+        /* fallback for old browsers */
+        background: -webkit-linear-gradient(to bottom, #182848, #4b6cb7);
+        /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to bottom, #182848, #4b6cb7);
+        /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+        //                 background: #16222A;  /* fallback for old browsers */
+        // background: -webkit-linear-gradient(to bottom, #3A6073, #16222A);  /* Chrome 10-25, Safari 5.1-6 */
+        // background: linear-gradient(to bottom, #3A6073, #16222A); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+        // background: #0F2027;  /* fallback for old browsers */
+        // background: -webkit-linear-gradient(to top, #2C5364, #203A43, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
+        // background: linear-gradient(to top, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
 
         & .grid.main-grid {
             height: inherit;
@@ -158,21 +201,27 @@ body {
                 display: none;
             }
 
-            & .buttons-row {
+            & .topbar {
                 position: relative;
+                flex-direction: row;
                 height: 3.5rem;
                 justify-content: flex-end;
                 align-items: stretch;
                 padding: 0;
-                border-bottom: 1px solid $color-primary-dark;
+                border-bottom: 1px solid #fff;
                 position: sticky;
-                background: rgb(10,17,40);
-background: linear-gradient(180deg, rgba(83,98,106,0.8) 0%, rgba(10,17,40,0.75) 60%, rgba(10,17,40,1) 100%, rgba(83,98,106,0.85) 100%);
+
+                @include breakpoint(tablet) {
+                    background: #000046;
+                    background: -webkit-linear-gradient(to right, #000046, #101099, #000046);
+                    background: linear-gradient(to right, #000046, #101099, #000046);
+
+                }
 
                 &.expanded {
 
                     flex-direction: column;
-
+                    align-items: center;
                     & .button:not(:last-child) {
                         padding: 2rem 0;
                         font-size: 1.5rem;
@@ -198,6 +247,10 @@ background: linear-gradient(180deg, rgba(83,98,106,0.8) 0%, rgba(10,17,40,0.75) 
                     background-color: transparent;
                     padding: 0 2rem;
                     border-radius: 0;
+
+                    & div {
+                        color: #fff;
+                    }
 
                     &.expand-menu {
                         display: none;
@@ -245,17 +298,18 @@ background: linear-gradient(180deg, rgba(83,98,106,0.8) 0%, rgba(10,17,40,0.75) 
 
                 @include breakpoint(tablet) {
                     min-height: 30rem;
-                    margin:2rem 0 4rem 0;
+                    max-height: min-content;
+                    margin: 2rem 0 4rem 0;
                 }
 
                 & .column {
                     max-height: 100%;
                     position: relative;
-                    overflow: auto;
 
                     & table.ui.table.table-container {
                         border: thin solid $color-primary-dark;
                         min-width: min-content;
+                        // overflow: scroll;
 
                         &>* {
                             border: none;
@@ -304,16 +358,12 @@ background: linear-gradient(180deg, rgba(83,98,106,0.8) 0%, rgba(10,17,40,0.75) 
                         width: 100%;
                         overflow-y: scroll;
                         position: relative;
-
-                        &::-webkit-scrollbar {
-                            display: none;
-                        }
                     }
                 }
             }
 
             & .row-content-2 {
-                margin: 0;
+                margin: 2rem 0 0 0;
                 padding: 0;
                 justify-content: space-between;
                 width: 100%;

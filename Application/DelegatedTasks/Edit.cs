@@ -17,10 +17,9 @@ namespace Application.DelegatedTasks
             public string Type { get; set; }
             public DateTime Deadline { get; set; }
             public string Notes { get; set; }
-            public string CreatedBy { get; set; }
-            public Boolean Done { get; set; }
-            public Boolean Accepted { get; set; }
-            public Boolean Refused { get; set; }
+            // public string FinishedBy { get; set; }
+            // public Boolean Accepted { get; set; }
+            // public Boolean Refused { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -49,14 +48,13 @@ namespace Application.DelegatedTasks
                 if (delegatedTask == null)
                     throw new RestException(HttpStatusCode.NotFound,
                     new { delegatedTask = "Not found" });
-
+                Console.WriteLine(request.Deadline);
                 delegatedTask.Type = request.Type ?? delegatedTask.Type;
-                delegatedTask.Deadline = request.Deadline;
+                delegatedTask.Deadline = request.Deadline.AddHours(1);
                 delegatedTask.Notes = request.Notes ?? delegatedTask.Notes;
-                delegatedTask.CreatedBy = request.CreatedBy ?? delegatedTask.CreatedBy;
-                delegatedTask.Accepted = request.Accepted;
-                delegatedTask.Refused = request.Refused;
-                delegatedTask.Done = request.Done;
+                // delegatedTask.Accepted = request.Accepted;
+                // delegatedTask.Refused = request.Refused;
+                // delegatedTask.FinishedBy = request.FinishedBy;
 
                 var success = await _context.SaveChangesAsync() > 0;
 

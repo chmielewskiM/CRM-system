@@ -229,8 +229,8 @@ namespace Application.Operations
 
                     foreach (var u in usersStats)
                     {
-                        u.LeadsTotal += operations.Count(x => x.Lead == 1 && x.UserOperations.Any(x => x.User.DisplayName.Equals(u.UserDisplayName) == true));
-                        u.OpportunitiesTotal += operations.Count(x => x.Opportunity == 1 && x.UserOperations.Any(x => x.User.DisplayName.Equals(u.UserDisplayName) == true));
+                        u.LeadsTotal += operations.Count(x => x.Lead == 1 && x.UserOperation.User.DisplayName.Equals(u.UserDisplayName) == true);
+                        u.OpportunitiesTotal += operations.Count(x => x.Opportunity == 1 && x.UserOperation.User.DisplayName.Equals(u.UserDisplayName) == true);
                     }
 
                 }

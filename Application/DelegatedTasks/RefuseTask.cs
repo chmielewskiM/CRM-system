@@ -9,14 +9,14 @@ using Persistence;
 
 namespace Application.DelegatedTasks
 {
-    public class Accept
+    public class RefuseTask
     {
-        public class Query : IRequest<DelegatedTask>
+        public class Command : IRequest
         {
             public Guid Id { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query, DelegatedTask>
+        public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
 
@@ -25,7 +25,7 @@ namespace Application.DelegatedTasks
                 _context = context;
             }
 
-            public async Task<DelegatedTask> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var delegatedTask = await _context.DelegatedTasks.FindAsync(request.Id);
 
@@ -33,7 +33,15 @@ namespace Application.DelegatedTasks
                     throw new RestException(HttpStatusCode.NotFound,
                     new { delegatedTask = "Not found" });
 
-                return delegatedTask;
+                delegatedTask.Refused = true;
+                delegatedTask.Pending = false;
+
+                var success = await _context.SaveChangesAsync() > 0;
+
+                if (success) return Unit.Value;
+
+                throw new Exception("Problem saving changes");
+
             }
         }
     }

@@ -15,7 +15,7 @@ namespace Domain
         public Double Revenue { get; set; }
         public string Source { get; set; }
         public DateTime Date { get; set; }
-        public virtual ICollection<UserOperation> UserOperations { get; set; }
+        public virtual UserOperation UserOperation { get; set; }
 
     }
 }

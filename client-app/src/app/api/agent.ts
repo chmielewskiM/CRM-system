@@ -2,10 +2,9 @@ import axios, { AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
 import { IContact, ContactFormValues } from '../models/contact';
 import { IOrder } from '../models/order';
-import { IDelegatedTaskForm } from '../models/delegatedTask';
+import { IDelegatedTaskForm, ICompleteTaskData, IDelegatedTask } from '../models/delegatedTask';
 import { IUser, IUserFormValues, User } from '../models/user';
 import { IOperation, CompleteStats, ICompleteStats } from '../models/operation';
-import { wait } from '@testing-library/react';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
@@ -65,20 +64,16 @@ const Leads = {
 };
 
 const DelegatedTasks = {
-  list: (): Promise<IDelegatedTaskForm[]> => requests.get('/delegatedTask'),
+  list: (params: URLSearchParams): Promise<ICompleteTaskData> => axios.get('/delegatedTask', {params: params}).then(responseBody),
   details: (id: string) => requests.get(`/delegatedTask/${id}`),
-  add: (delegatedTask: IDelegatedTaskForm) => requests.post('/delegatedTask', delegatedTask),
-  update: (delegatedTask: IDelegatedTaskForm) =>
-    requests.put(`/delegatedTask/${delegatedTask.id}`, delegatedTask),
+  add: (task: IDelegatedTaskForm) => requests.post('/delegatedTask', task),
+  update: (task: IDelegatedTaskForm) =>
+    requests.put(`/delegatedTask/${task.id}`, task),
   delete: (id: string) => requests.del(`/delegatedTask/${id}`),
   share: (id: string, user: IUserFormValues) => requests.post(`/delegatedTask/${id}/share/${user.username}`, User),
-};
-
-const Calls = {
-  list: (): Promise<IContact[]> => requests.get('/contact'),
-  add: (contact: IContact) => requests.post('/contact', contact),
-  update: (contact: IContact) => requests.put(`/contact/${contact.id}`, contact),
-  delete: (id: string) => requests.del(`/contact/${id}`),
+  accept: (task: IDelegatedTask) => requests.post(`/delegatedTask/accept/${task.id}/`, task),
+  refuse: (task: IDelegatedTask) => requests.post(`/delegatedTask/refuse/${task.id}/`, task),
+  finish: (task: IDelegatedTask) => requests.post(`/delegatedTask/finish/${task.id}/`, task),
 };
 
 const Orders = {
@@ -98,7 +93,7 @@ const Users = {
 };
 const Operations = {
   list: (): Promise<ICompleteStats> => 
-  axios.get(`/operation/`).then(delay(1000)).then(responseBody),
+  axios.get(`/operation/`).then(responseBody),
   add: (operation: IOperation) => requests.post('/operation', operation),
   delete: (id: string) => requests.del(`/operation/${id}`),
 };

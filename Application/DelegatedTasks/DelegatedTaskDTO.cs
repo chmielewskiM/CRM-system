@@ -12,11 +12,12 @@ namespace Application.DelegatedTasks
         public DateTime DateStarted { get; set; }
         public DateTime Deadline { get; set; }
         public string Notes { get; set; }
-        public string CreatedBy { get; set; }
-        public Boolean Done { get; set; }
+        public string FinishedBy { get; set; }
         public Boolean Accepted {get; set; }
-        public Boolean Refused { get; set; } 
-        [JsonProperty("visible to")]
-        public ICollection<UserAccessDTO> UserTasks { get; set; }
+        public Boolean Refused { get; set; }
+        public Boolean Pending { get; set; }
+        public Boolean Done { get; set; }
+        [JsonProperty("access")]
+        public UserAccessDTO UserTask { get; set; }
     }
 }
