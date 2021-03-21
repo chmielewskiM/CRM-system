@@ -42,7 +42,7 @@ namespace Application.Orders
 
                 var order = new Order
                 {
-                    Id = request.Id,
+                    Id = Guid.NewGuid(),
                     OrderNumber = orderCount++,
                     ClientId = request.ClientId,
                     Client = client,

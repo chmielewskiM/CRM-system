@@ -77,7 +77,7 @@ export const MyCalendar: React.FC<IProps> = (props) => {
           eventPropGetter={eventPropGetter}
           onView={()=>rootStore.delegatedTaskStore.calendarEvents}
           views={['month', 'day']}
-          onSelectEvent={(data, e) => openModal(data.title, '', '')}
+          onSelectEvent={(data, e) => openModal(data.title)}
         />
         <InfoModal open={false} body="sdsds" />
       </div>

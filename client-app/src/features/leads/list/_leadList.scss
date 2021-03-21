@@ -1,81 +1,390 @@
 #root {
     & .ui.container.wrapper .grid.main-grid .row-content-1.leads {
-        & .column {
-            display: flex;
-            flex-direction: column;
-            padding: 0;
+        display: inline-flex;
+        flex-flow: row wrap;
+        max-height: none;
+        align-content: flex-start;
+        overflow: visible;
 
-            & .buttons-status {
-                @include reset-div;
-                padding: 3rem 0;
-                margin: 0 auto !important;
-                background-color: transparent;
 
-                @include breakpoint(tablet) {
-                    & .buttons {
-                        justify-content: center;
-                    }
-                }
-
-                @include breakpoint(smartphone) {
-                    width: 100%;
-
-                    & .buttons {
-                        display: flex-start;
-                        width: 100%;
-                        justify-content: space-between;
-
-                        & .button {
-                            text-align: left;
-                        }
-
-                        & .icon {
-                            max-width: 10px;
-                        }
-                    }
-                }
-
-                & .button {
-                    background-color: transparent;
-                    font-size: 2rem;
-                    color: #fff;
-                    flex: .2 0;
-                    padding: 0;
-                    font-size: 2rem;
-
-                    @include breakpoint(tablet) {
-                        flex: .1 0;
-                        font-size: 1.6rem;
-                    }
-
-                    &:hover {
-                        color: $color4;
-                    }
-
-                    &.focused,
-                    &:active {
-                        color: $color10;
-                    }
-                }
-
-                & .icon {
-                    flex: .1 0;
-                    color: #fff;
-                    font-size: 3rem;
-
-                    @include breakpoint(tablet) {
-                        font-size: 1rem;
-                    }
-
-                }
-            }
-            & .table-container{
-                & menu{
-                    z-index: 2;
-                }
-            }
-
+        @include breakpoint(tablet) {
+            max-height: 80%;
+            overflow: scroll;
+            margin-top: 8rem;
+            width: 100%;
         }
 
+        @include breakpoint(smartphone) {
+            max-height: 70%;
+            overflow: scroll;
+            margin-top: 10rem;
+            width: 100%;
+        }
+
+        & .lead-item {
+            flex: 1 1 auto;
+            padding: 0;
+            margin: .5rem;
+            min-height: 180px;
+            height: 10rem;
+            max-width: 15%;
+            min-width: 250px;
+            border-radius: 6px;
+
+            background-color: #f9fcff;
+            background-image: linear-gradient(147deg, #f9fcff 0%, #dee4ea 74%);
+            box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.6);
+            border: 2px ridge $color5;
+
+            &.active {
+                border-color: #d95c5c;
+            }
+
+            &.opportunity {
+                border-color: #e6bb48;
+            }
+
+            &.quote {
+                border-color: #b4d95c;
+            }
+
+            &.invoice {
+                border-color: #66da81;
+            }
+
+            @include breakpoint(smartphone) {
+                max-width: 320px;
+                width: 200px;
+            }
+
+            & .grid {
+                width: 100%;
+                height: 100%;
+                display: inline-block;
+                position: relative;
+                margin: 0;
+                padding: 0;
+                border: 0;
+
+                & .row {
+                    display: block;
+                    padding: 0 !important;
+
+                    &>* {
+                        margin: 0;
+                    }
+
+                    &-header {
+                        display: flex;
+                        align-content: space-between;
+                        justify-content: flex-start;
+                        height: 55%;
+                        width: 100%;
+                        padding: .5rem !important;
+
+                        & .header {
+                            width: 100%;
+                            height: min-content;
+
+                            &.name {
+                                font-size: 1.5rem;
+                                margin-top: 1rem;
+                            }
+
+                            &.company {
+                                // margin:.3rem 0;
+                                font-size: 1.3rem;
+                                font-style: italic;
+                            }
+                        }
+
+                        & .order {
+                            font-size: 1.3rem;
+                            align-self: flex-end;
+
+                            @include breakpoint(tablet_landscape) {
+                                margin: 0 !important;
+                            }
+                        }
+
+                        @include breakpoint(tablet_landscape) {
+                            &>*:not(.more) {
+                                font-size: 1.5rem !important;
+                            }
+                        }
+
+                        & .more {
+                            position: absolute;
+                            top: 0;
+                            right: .2rem;
+                            font-size: 1rem;
+                            cursor: pointer;
+
+                            @include breakpoint(tablet_landscape) {
+                                font-size: 1.2rem;
+                            }
+                        }
+                    }
+
+                    &.lead-controls {
+                        display: block;
+                        height: 28%;
+                        background-image: linear-gradient(109.6deg, rgba(20, 30, 48, .7) 11.2%, rgba(36, 59, 85, 1) 91.1%);
+                        padding: 0 !important;
+                        overflow: visible;
+                        background-color: #42378f;
+                        background-image: linear-gradient(315deg, #43378f9a 0%, #f538455e 74%);
+                        background: #0f0c29;
+                        background: -webkit-linear-gradient(to right, #24243e, #302b63, #0f0c29);
+                        background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
+
+
+                        & .buttons {
+                            height: 100%;
+                            overflow: visible;
+                            width: 100%;
+                            padding-left: 2rem;
+                            justify-content: flex-end;
+                            overflow: visible !important;
+
+                            & .button {
+                                font-size: 1rem;
+                                flex: .1 0;
+                                background-color: transparent;
+                                padding: 0;
+
+                                &.abandon,
+                                &.downgrade,
+                                &.upgrade,
+                                &.mail,
+                                &.invoice,
+                                &.convert,
+                                &.mail,
+                                &.edit {
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                    max-width: min-content !important;
+                                    margin-right: 1.5rem;
+                                    transition: all .075s linear;
+                                    @include breakpoint(tablet_landscape) {
+                                       margin-right: 2rem;
+                                    }
+                                    & .icon {
+                                        display: flex;
+                                        justify-content: center;
+                                        align-items: center;
+
+                                        &:before {
+                                            font-size: 2.2rem;
+                                            @include breakpoint(tablet_landscape) {
+                                                font-size: 2.7rem;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                &.edit {
+                                    color: $color-primary-dark;
+                                    position: absolute;
+                                    margin: 0;
+                                    top: -2.5rem;
+                                    right: .75rem;
+                                    
+                                    @include breakpoint(tablet_landscape) {
+                                        top:-3rem;
+                                    }
+                                    &:hover .icon:before {
+                                        color: blue;
+                                        opacity: 1;
+                                    }
+
+                                    & .icon:before {
+                                        transition: all .05s linear;
+                                        opacity: 0.8;
+                                        font-size: 1.7rem;
+                                        @include breakpoint(tablet_landscape) {
+                                            font-size: 1.9rem;
+                                        }
+                                    }
+                                }
+
+                                &.mail {
+                                    color: rgb(59, 175, 214);
+                                    margin-right: auto;
+
+                                    &:hover .icon:before {
+                                        color: #fff;
+                                        opacity: 1;
+                                    }
+
+                                    & .icon:before {
+                                        transition: all .1s linear;
+                                        opacity: 0.8;
+                                    }
+                                }
+
+                                &.convert {
+                                    font-size: 1.2rem;
+                                    float: left;
+                                    @include breakpoint(tablet_landscape) {
+                                        font-size: 1.6rem;
+                                    }
+
+                                    & i {
+                                        margin-right: 1.5rem;
+                                    }
+
+                                    &:hover {
+
+                                        &.convert .icon:before,
+                                        .button-description {
+                                            color: rgba(86, 255, 86, 1);
+                                            opacity: 1;
+                                        }
+                                    }
+
+                                    &.convert .icon:before,
+                                    .button-description {
+                                        transition: color .1s linear;
+                                        color: $color10;
+                                        opacity: 0.6;
+                                    }
+
+                                }
+
+                                &.invoice,
+                                &.invoice .icon:before {
+                                    font-size: 1.3rem;
+                                    @include breakpoint(tablet_landscape) {
+                                        font-size: 1.7rem;
+                                    }
+                                }
+
+                                &.upgrade,
+                                &.invoice {
+                                    color: rgba(58, 187, 58, 0.7);
+
+
+                                    &:hover {
+                                        color: rgba(86, 255, 86, 1);
+                                        opacity: 1;
+                                    }
+                                }
+
+                                &.downgrade {
+                                    color: rgba(230, 142, 61, 0.7);
+
+
+                                    &:hover {
+
+                                        color: rgb(255, 153, 57);
+
+                                    }
+                                }
+
+                                &.abandon {
+                                    color: rgba(255, 0, 0, 0.7);
+
+                                    &:hover {
+                                        color: rgba(255, 0, 0, 1);
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    &-progress {
+                        display: block;
+                        height: 17%;
+                        width: 100%;
+                        padding: 2rem 2rem;
+                        background: #0f0c29;
+                        background: -webkit-linear-gradient(to right, #24243e, #302b63, #0f0c29);
+                        background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
+                        border-bottom-left-radius: 4px;
+                        border-bottom-right-radius: 4px;
+
+                        & .progress {
+                            width: 80% !important;
+                            margin: 0 auto;
+                            height: 1rem;
+                            background-color: rgba(255, 255, 255, 0.301);
+                            border: thin solid #fff;
+                            border-radius: 4px;
+                            box-sizing: content-box;
+
+                            & .bar,
+                            .bar:after {
+                                height: 1rem;
+                                width: 100%;
+                            }
+
+                            & .bar {}
+                        }
+                    }
+                }
+            }
+
+            & .details {
+                position: absolute;
+                top: -5px;
+                left: -5px;
+                right: -5px;
+                margin: 0;
+                min-height: 105%;
+                z-index: 3;
+                border-radius: 5px;
+                padding: .3rem;
+                border: thin solid $color-primary-dark;
+                background-color: #537895;
+                background-image: linear-gradient(315deg, #537895 0%, #09203f 74%);
+                box-shadow: 0 0 3px 0 #fff;
+
+
+                & .icon {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    margin: .5rem .5rem 0 0;
+                    font-size: 1.2rem;
+                    background-color: transparent;
+                    color: #fff;
+
+                    &:hover {
+                        color: $color-secondary-light;
+                    }
+                }
+
+                & div {
+                    width: 100%;
+                    font-size: 1.2rem;
+                    margin: .2rem auto;
+                    color: $color10;
+                    border-bottom: thin solid $color-primary-light;
+                    cursor: default;
+
+                    &:first-of-type {
+                        margin-top: 1.5rem !important;
+                    }
+
+                    &:last-child {
+                        border: 0;
+                    }
+                    @include breakpoint(tablet_landscape) {
+                        font-size: 1.5rem;
+                    }
+                }
+
+                
+
+                & span {
+                    color: #fff;
+                    font-weight: $light;
+                    cursor: initial;
+                }
+            }
+        }
     }
 }

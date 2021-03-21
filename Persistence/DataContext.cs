@@ -17,6 +17,7 @@ namespace Persistence
         public DbSet<UserContact> UserContacts { get; set; }
         public DbSet<UserTask> UserTasks { get; set; }
         public DbSet<UserOperation> UserOperations { get; set; }
+        public DbSet<SaleProcess> SaleProcess { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -40,14 +41,14 @@ namespace Persistence
                 builder.Entity<UserContact>()
                     .HasOne(uc => uc.User)
                     .WithMany(u => u.UserContacts)
-                    .HasForeignKey(uc => uc.UserId)
+                    .HasPrincipalKey(uc => uc.Id)
                     .OnDelete(DeleteBehavior.Restrict);
 
                 builder.Entity<UserContact>()
                     .HasOne(uc => uc.Contact)
                     .WithMany(c => c.UserContacts)
                     .HasForeignKey(c => c.ContactId)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    .OnDelete(DeleteBehavior.Cascade);
 
             });
 
@@ -71,12 +72,24 @@ namespace Persistence
 
                 x.HasOne(uo => uo.User)
                     .WithMany(u => u.UserOperations)
-                    .HasForeignKey(uo => uo.UserId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
+                    .HasPrincipalKey(uc => uc.Id)
+                    .OnDelete(DeleteBehavior.Cascade);
                 x.HasOne(uo => uo.Operation)
                     .WithOne(o => o.UserOperation)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            builder.Entity<SaleProcess>(x =>
+            {
+                x.HasKey(co => new { co.ContactId, co.OperationId });
+
+                x.HasOne(co => co.Contact)
+                    .WithMany(u => u.CurrentSale)
+                    .HasForeignKey(co => co.ContactId)
+                    .OnDelete(DeleteBehavior.Cascade);
+                x.HasOne(co => co.Operation)
+                    .WithOne(o => o.CurrentSale)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }

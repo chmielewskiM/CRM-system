@@ -10,19 +10,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Leads
 {
-    public class Add
+    public class AddLead
     {
         public class Command : IRequest
         {
-            public Guid Id { get; set; }
-            public string Name { get; set; }
-            public string Type { get; set; }
-            public string Company { get; set; }
-            public string PhoneNumber { get; set; }
-            public string Email { get; set; }
-            public DateTime DateAdded { get; set; }
-            public string Notes { get; set; }
-            public string Status { get; set; }
+            public Lead Lead { get; set; }
 
         }
         public class CommandValidator : AbstractValidator<Command>
@@ -49,17 +41,20 @@ namespace Application.Leads
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
+                var guid = Guid.NewGuid();
+
                 var contact = new Contact
                 {
-                    Id = request.Id,
-                    Name = request.Name,
+                    Id = Guid.NewGuid(),
+                    Name = request.Lead.Contact.Name,
                     Type = "Lead",
-                    Company = request.Company,
-                    PhoneNumber = request.PhoneNumber,
-                    DateAdded = request.DateAdded,
-                    Email = request.Email,
-                    Notes = request.Notes,
-                    Status = request.Status
+                    Company = request.Lead.Contact.Company,
+                    PhoneNumber = request.Lead.Contact.PhoneNumber,
+                    DateAdded = DateTime.Now,
+                    Email = request.Lead.Contact.Email,
+                    Notes = request.Lead.Contact.Notes,
+                    Status = "Active",
+                    Source = request.Lead.Contact.Source
                 };
 
                 _context.Contacts.Add(contact);
@@ -69,12 +64,41 @@ namespace Application.Leads
 
                 var userAccess = new UserContact
                 {
+                    Id = Guid.NewGuid(),
                     User = user,
+                    UserId = new Guid(user.Id),
                     Contact = contact,
-                    DateAdded = request.DateAdded
+                    ContactId = contact.Id,
+                    DateAdded = request.Lead.Contact.DateAdded
                 };
 
                 _context.UserContacts.Add(userAccess);
+
+                var newOperation = new Operations.Add();
+
+                //***GUID check in case someone being afraid of drawing 1/2^128 scenario ;)
+                // Operation checkGuid = null;
+                // do
+                // {
+                //     newOperation.Id = Guid.NewGuid();
+                //     checkGuid = await _contexts.FindAsync(newOperation.Id);
+                // } while (checkGuid != null);
+
+                newOperation.Lead++;
+                newOperation.Source = request.Lead.Contact.Source;
+
+                await newOperation.addOperation(newOperation, _context, user);
+
+                var saleProcess = new SaleProcess
+                {
+                    Contact = contact,
+                    ContactId = contact.Id,
+                    Operation = newOperation,
+                    OperationId = newOperation.Id,
+                    Index = 0
+                };
+
+                _context.SaleProcess.Add(saleProcess);
 
                 var success = await _context.SaveChangesAsync() > 0;
 

@@ -66,7 +66,6 @@ export const OrderForm: React.FC<IProps> = (props) => {
                     }}
                   />
                   <Form.Group inline className="btn-group-1">
-                    <Label>Sale</Label>
                     <Field
                       name="sale"
                       label="Sale"
@@ -76,7 +75,6 @@ export const OrderForm: React.FC<IProps> = (props) => {
                       func={() => toggleSelect(sale)}
                     />
                     {''}
-                    <Label>Purchase</Label>
                     <Field
                       name="sale"
                       label="Purchase"

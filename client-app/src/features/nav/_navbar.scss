@@ -1,112 +1,116 @@
 @import '../../styles/variables';
 
 #root {
-    .ui.vertical.menu.pointing {
-        width: 0;
-        flex: 0.15 1;
+    & .menu.sidebar {
+        position: relative;
+        visibility: visible;
+        flex: .15 0;
         border: 0;
         margin: 0;
-        display: initial;
+        min-width: 6rem;
         transition: flex .5s ease-out;
+        overflow-y: visible !important;
 
         @include breakpoint(tablet) {
             max-width: 0;
+            min-width: 0;
         }
 
-        &.off {
-            flex: 0 1;
-            transition-duration: .3s;
-
-            @include breakpoint(tablet) {
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                max-width: unset;
-                width: unset;
-                z-index: 90;
-
-            }
-
-            & .sideBar {
-                @include breakpoint(tablet) {
-                    overflow-y: scroll;
-                    scrollbar-color: red !important;
-                    scroll-padding: 0;
-                    padding: 0;
-
-                    & :-webkit-scrollbar {
-                        appearance: none !important;
-                        height: 0;
-                        width: 0;
-                    }
-                }
-
-                & .button .icon {
-                    transition: color .3s ease-out;
-                    color: $color-primary-dark;
-
-                    @include breakpoint(tablet) {
-                        color: #fff;
-                    }
-                }
-
-                & *:not(.icon) {
-                    transition: opacity .1s ease-out;
-                    opacity: 0;
-
-                    @include breakpoint(tablet) {
-                        opacity: 1;
-                    }
-                }
-            }
+        @include breakpoint(tablet_landscape) {
+            flex: 0.25 1;
         }
 
-        & .sideBar {
+        & .container {
+            display: flex;
+            height: 100%;
+            flex: 1 0;
+            margin: 0 !important;
+            border: 0;
             background: #000046;
             background: -webkit-linear-gradient(to top, #1CB5E0, #000046);
             background: linear-gradient(to top, #1CB5E0, #000046);
-            margin:0 !important;
-            height: 100%;
-            width:100%;
-            display: flex;
-            border: 0;
             font-size: 1.6rem;
-            transition: none;
-            flex: 1 0;
-            overflow: hidden;
+           
+
+            @include breakpoint(tablet) {
+                overflow-y: scroll;
+                scrollbar-color: red !important;
+                scroll-padding: 0;
+                padding: 0;
+
+                & :-webkit-scrollbar {
+                    appearance: none !important;
+                    height: 0;
+                    width: 0;
+                }
+            }
+
+            & .toggle-sidebar.button {
+                position: fixed;
+                z-index: 1;
+                right: .5rem;
+                top: .5rem;
+                margin: 0;
+                padding: 0;
+                background-color: transparent;
+                font-size: 3rem;
+                color: rgba(255, 255, 255, 0.4);
+                transition: color .1s ease-in;
+
+                @include breakpoint(tablet) {
+                    left: 5rem;
+                }
+
+                & .icon {
+                    transition: all .1s ease-out;
+
+                    @include breakpoint(tablet) {
+                        z-index: 200;
+                        margin-left: 5rem;
+                        color: #fff;
+                    }
+                }
+            }
+
+            & *:not(.icon) {
+
+                @include breakpoint(tablet) {
+                    opacity: 1;
+                }
+
+            }
 
             & *:not(.icon) {
                 transition: opacity .15s ease-in .3s;
                 opacity: 1;
             }
 
-            & .nav-header {
+            & .sidebar-header {
                 display: flex;
                 flex: .4 0;
                 justify-content: flex-start;
                 align-items: center;
                 flex-direction: column;
                 color: $color-primary-light;
-                margin: 0;
+                margin: 2rem auto;
                 padding: 0;
                 width: 100%;
                 height: min-content;
+                transition: opacity .2s ease-in .3s;
 
                 & img {
                     max-width: 10vw;
                     max-height: 10vw;
                     margin-top: 10px;
 
-                    @include breakpoint(tablet) {
+                    @include breakpoint(tablet_landscape) {
                         max-width: 15rem;
                         max-height: 15rem;
                     }
                 }
 
                 & h3 {
-                    margin: 10px;
+                    margin: 0 auto 2rem 0;
                     font-size: 3rem;
                     color: rgba(255, 255, 255, 0.842);
                     border: 0;
@@ -125,12 +129,15 @@
                 flex-direction: row-reverse;
                 justify-content: flex-start;
                 padding-right: 0;
+                transition: color .05s ease-in, font-size .1s ease-in .4s;
 
                 @include breakpoint(tablet) {
                     justify-content: center;
+                    transition: color .05s ease-in;
                 }
 
                 &.admin {
+                    white-space: nowrap;
                     color: red;
 
                     &.active,
@@ -150,6 +157,11 @@
                 & .icon {
                     flex: 0;
                     padding: 0 1rem;
+                    transition: color .05s linear, font-size .15s ease-in .4s;
+                    @include breakpoint(tablet) {
+                      
+                        transition: color .05s linear;
+                    }
                 }
 
                 &.active,
@@ -163,21 +175,6 @@
                     color: $color-detail;
                     background-color: $color-primary-dark;
                     border-color: $color-secondary-light;
-                }
-            }
-
-            & .button {
-                font-size: 3rem;
-                padding: 0;
-                margin: 0;
-                position: fixed;
-                left: 10%;
-                background-color: transparent;
-                z-index: 1;
-
-                & .icon {
-                    transition: color .5s ease-in;
-                    color: white;
                 }
             }
 
@@ -219,7 +216,7 @@
                     margin: 1rem 0;
                     top: 0;
                     bottom: 0;
-
+                    
                     & .item.logout {
                         margin: .5rem !important;
                         padding: 0;
@@ -230,7 +227,7 @@
                             & .label,
                             i.power.icon {
                                 color: $color-secondary-light;
-                                                            }
+                            }
                         }
 
                         & .label {
@@ -243,8 +240,142 @@
                             margin: 0 auto !important;
                             color: $color-primary-light;
                             font-size: 1rem;
-                            transition: color .15s linear;
+                            transition: color .1s linear;
+                        }
+                    }
+                }
+            }
+        }
 
+        &.off {
+            flex: .01 0;
+            min-width: 6rem;
+            transition-duration: .3s;
+
+            @include breakpoint(tablet) {
+                max-width: unset;
+                min-width: 0;
+                width: 100% !important;
+                flex: 1 0;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 90;
+                
+            }
+
+            @include breakpoint(tablet_landscape) {
+                flex: 0.07 0;
+            }
+
+            @include breakpoint(computer) {
+                flex: 0.05 0;
+            }
+
+            & .container {
+                & .toggle-sidebar.button {
+                    color: #fff !important;
+
+                    & .sidebar-header {
+
+                        transition: opacity .1s ease-in;
+                    }
+
+                    & a.link.item {
+                        color: white !important;
+                    }
+                }
+
+
+                & .sidebar-header {
+                    opacity: 0;
+                    transition: opacity .1s ease-in;
+
+                    @include breakpoint(tablet) {
+                        opacity: 1;
+                    }
+                }
+
+                & a.link.item {
+                    color: transparent !important;
+                    transition: color .1s ease-in, font-size .1s ease-in .4s !important;
+
+                    @include breakpoint(tablet) {
+                        color: #edf6f9 !important;
+                        justify-content: center;
+                        width: 40%;
+                        justify-content: space-between;
+                        align-self: center;
+                        transition: font-size 0s;
+                        &.active,
+                        &.active:focus {
+                            color: $color-primary-dark !important;
+                            & .icon {
+                                color: $color-primary-dark !important;
+                            }
+                            &:hover {
+                                color: $color-primary-dark !important;
+                            
+                            }
+                        }
+                        &:focus,&:not(.active) {
+                            color: #fff !important;
+                            & .icon{
+                                color:#fff !important;
+                            }
+                        }
+                    }
+
+                    & .icon {
+                        font-size: 2rem;
+                        color: #edf6f9;
+                    }
+
+                    &:hover,
+                    &:focus,
+                    &:active,
+                    &.active {
+                        color: transparent;
+
+                        &:hover {
+                            color: transparent;
+                        }
+                    }
+
+                    &:hover {
+                        & .icon {
+                            color: $color-detail;
+                        }
+                    }
+
+                    &.active,
+                    &:active,
+                    &:focus {
+                        & .icon {
+                            color: $color-primary-dark;
+                        }
+                    }
+                }
+
+                & :last-child {
+                    & .menu{
+                        box-shadow: none;
+                    }
+                    & .ui.dropdown {
+                        & .text {
+                            font-size: 1.2rem;
+
+                            @include breakpoint(tablet) {
+                                font-size: 1.5rem;
+                            }
+                        }
+
+                        & .menu .item.logout {
+                            font-size: 3rem;
+                            margin: 4rem 0 !important;
+                            padding: 0 !important;
                         }
                     }
                 }

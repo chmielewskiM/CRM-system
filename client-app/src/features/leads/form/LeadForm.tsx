@@ -3,11 +3,14 @@ import { Form, Segment, Button, Modal } from 'semantic-ui-react';
 import { v4 as uuid } from 'uuid';
 import { observer } from 'mobx-react-lite';
 import { Form as FinalForm, Field } from 'react-final-form';
-import { IContact, ContactFormValues } from '../../../app/models/contact';
+import { ContactFormValues } from '../../../app/models/contact';
 import TextInput from '../../../app/common/form/TextInput';
 import TextAreaInput from '../../../app/common/form/TextAreaInput';
 import { combineValidators, isRequired } from 'revalidate';
 import { RootStoreContext } from '../../../app/stores/rootStore';
+import { sources } from '../../../app/common/options/leadSource';
+import SelectInput from '../../../app/common/form/SelectInput';
+import { ILead, LeadFormValues } from '../../../app/models/lead';
 
 const validation = combineValidators({
   name: isRequired({ message: 'The name is required.' }),
@@ -19,27 +22,38 @@ const validation = combineValidators({
 });
 
 interface IProps {
-  contact: IContact | undefined;
+  lead: ILead | undefined;
 }
 
 export const LeadForm: React.FC<IProps> = () => {
   const rootStore = useContext(RootStoreContext);
-  const { setShowLeadForm, submitting, addLead, editLead, fillForm, rr } = rootStore.leadStore;
+  const {
+    setShowLeadForm,
+    submitting,
+    addLead,
+    editLead,
+    fillForm,
+  } = rootStore.leadStore;
 
-  useEffect(() => {}, [rr]);
+  useEffect(() => {}, []);
 
   const [contact, setContact] = useState(new ContactFormValues());
 
-  const handleFinalFormSubmit = (values: any) => {
-    const { ...contact } = values;
-    if (!contact.id) {
-      let newLead = {
-        ...contact,
+  const handleFinalFormSubmit = (values: ILead) => {
+    let lead: ILead = new LeadFormValues();
+    Object.assign(lead.contact, values);
+
+    if (!lead.contact.id) {
+      let newContact = {
+        ...lead.contact,
         id: uuid(),
       };
-      addLead(newLead);
+      lead.order!.id = uuid();
+      lead.contact.id = newContact.id;
+      lead.order!.clientId = lead.contact.id;
+      addLead(lead);
     } else {
-      editLead(contact);
+      editLead(lead);
     }
   };
 
@@ -54,6 +68,13 @@ export const LeadForm: React.FC<IProps> = () => {
               initialValues={fillForm()}
               render={({ handleSubmit }) => (
                 <Form onSubmit={handleSubmit} size="big">
+                  <Field
+                    options={sources}
+                    name="source"
+                    placeholder="Source"
+                    value={contact.source}
+                    component={SelectInput}
+                  />
                   <Field
                     name="name"
                     placeholder="Name"

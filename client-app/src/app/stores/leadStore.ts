@@ -3,32 +3,32 @@ import { toast } from 'react-toastify';
 import { IContact, ContactFormValues } from '../models/contact';
 import agent from '../api/agent';
 import { RootStore } from './rootStore';
-import { IOperation } from '../models/operation';
+import { ILead, Lead } from '../models/lead';
+import React from 'react';
 
 export default class LeadStore {
   rootStore: RootStore;
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
-    reaction(
-      () => this.modalDecision,
-      () => {
-        if (this.modalDecision.refuse) {
-          this.modalDecision.refuse = false;
-          this.deleteLead(this.modalDecision.lead.id);
-          this.render();
-        } else if (this.modalDecision.accept) {
-          this.modalDecision.refuse = false;
-          this.modalDecision.lead.type = 'Client';
-          this.editLead(this.modalDecision.lead);
-          this.render();
-        } else console.log('Failed to make changes');
-      }
-    );
+    // reaction(
+    //   () => this.modalDecision,
+    //   () => {
+    //     if (this.modalDecision.refuse) {
+    //       this.modalDecision.refuse = false;
+    //       this.abandonLead();
+    //       // this.abandonLead(this.modalDecision.lead.id);
+    //       this.render();
+    //     } else if (this.modalDecision.accept) {
+    //       this.modalDecision.refuse = false;
+    //       this.modalDecision.lead.type = 'Client';
+    //       // this.editLead(this.modalDecision.lead);
+    //       this.render();
+    //     } else console.log('Failed to make changes');
+    //   }
+    // );
   }
 
-  @observable contacts: IContact[] = [];
-
-  @observable selectedLead: IContact | undefined;
+  @observable selectedLead: ILead | undefined;
 
   @observable loadingInitial = false;
 
@@ -36,15 +36,13 @@ export default class LeadStore {
 
   @observable submitting = false;
 
-  @observable contactRegistry = new Map();
+  @observable leadRegistry = new Map();
 
   @observable selectedValue = '';
 
   @observable rr = false;
 
   @observable selected: string | null = '';
-
-  @observable status: string = 'active';
 
   @observable confirmation = false;
 
@@ -55,78 +53,62 @@ export default class LeadStore {
     accept: false,
     lead: new ContactFormValues(),
   };
-  @action transferChanges(refuse: boolean, accept: boolean, lead: IContact) {
-    this.modalDecision = { refuse, accept, lead };
-    this.render();
-  }
-  @action render() {
-    this.rr = !this.rr;
-  }
-  handleSettings = (opt: string, contact: IContact) => {
-    if (opt === 'details') console.log('show details');
-    else if (opt === 'upgrade') this.changeStatus(contact, 1);
-    else if (opt === 'downgrade') this.changeStatus(contact, -1);
-  };
-  statuses = [
-    { key: 'Inactive', value: 0 },
-    { key: 'Active', value: 1 },
-    { key: 'Opportunity', value: 2 },
-    { key: 'Quote', value: 3 },
-    { key: 'Invoice', value: 4 },
-  ];
-  @action changeStatus = async (contact: IContact, modifier: number) => {
-    this.loadingInitial = true;
-    var c = this.statuses.find((el: { key: string; value: number }) => {
-      if (el.key == contact.status) {
-        return (contact.status = this.statuses[el.value + modifier].key);
-      }
-    });
-    await this.editLead(contact);
-    this.loadLeads(contact.status);
-  };
+  //controls
+  @observable allLeads = true;
 
-  @computed get contactsByDate() {
-    return Array.from(this.contactRegistry.values())
-      .slice(0)
-      .sort((a, b) => Date.parse(b.dateAdded) - Date.parse(a.dateAdded));
+  @observable status: string = 'all';
+  @observable sortBy: string = 'date';
+
+  @observable keepRecords: boolean = true;
+  @observable saveContact: boolean = true;
+  @observable targetLead: ILead = new Lead();
+
+  @observable contactId: string = '';
+  ///////////////////////////////////////
+
+  ///////////
+  //Computeds
+  //
+  @computed get listAxiosParams() {
+    const params = new URLSearchParams();
+    params.append('allLeads', `${this.allLeads}`);
+    params.append('status', `${this.status}`);
+    params.append('sortBy', `${this.sortBy}`);
+    return params;
+  }
+
+  @computed get abandonAxiosParams() {
+    const params = new URLSearchParams();
+    params.append('id', `${this.contactId}`);
+    params.append('keepRecords', `${this.keepRecords}`);
+    params.append('saveContact', `${this.saveContact}`);
+    return params;
+  }
+
+  @computed get leadsList() {
+    return Array.from(this.leadRegistry.values());
   }
 
   @computed get leadsByStatus() {
-    var contacts: Array<IContact>;
-    this.contactRegistry.forEach((contact) => {
-      if (contact.status == status) contacts.push(contact);
+    var leads: Array<IContact>;
+    this.leadRegistry.forEach((lead) => {
+      if (lead.status == status) leads.push(lead);
     });
     return;
   }
-  @action loadLeads = async (status: string) => {
-    this.loadingInitial = true;
-    try {
-      const contacts = await agent.Leads.list();
-      this.contactRegistry.clear();
-      runInAction('Loading contacts', () => {
-        contacts.forEach((contact) => {
-          if (contact.status == status) this.contactRegistry.set(contact.id, contact);
-        });
-        this.status = status;
-        this.loadingInitial = false;
-        this.render();
-      });
-    } catch (error) {
-      runInAction('Loading error', () => {
-        this.loadingInitial = false;
-      });
-      console.log(error);
-    }
-  };
 
-  @action selectLead = (id: string) => {
-    if (id !== '') {
-      this.selectedLead = this.contactRegistry.get(id);
-      this.render();
-    } else {
-      this.selectedLead = undefined;
-      this.render();
-    }
+  /////////
+  //Actions
+  //
+  @action save = (save: boolean) => {
+    save ? (this.saveContact = false) : (this.saveContact = true);
+  };
+  @action keep = (keep: boolean) => {
+    keep ? (this.keepRecords = false) : (this.keepRecords = true);
+  };
+  @action setTargetLead = (lead: ILead) => {
+    this.targetLead = lead;
+    this.contactId = lead.contact.id;
   };
 
   @action addLeadForm = () => {
@@ -137,8 +119,8 @@ export default class LeadStore {
     this.render();
   };
 
-  @action editLeadForm = (id: string) => {
-    this.selectedLead = this.contactRegistry.get(id);
+  @action editLeadForm = (lead: ILead) => {
+    this.selectedLead = this.leadRegistry.get(lead.contact.id);
     this.showLeadForm = true;
     this.render();
   };
@@ -149,50 +131,115 @@ export default class LeadStore {
   };
 
   @action fillForm = () => {
-    if (this.selectedLead) {
-      return this.selectedLead;
+    if (this.selectedLead?.contact) {
+      return this.selectedLead.contact;
     }
     return new ContactFormValues();
   };
 
-  @action addLead = async (contact: IContact) => {
-    this.submitting = true;
-    let newStat = this.rootStore.commonStore.newStatistic('lead')
-    var date = new Date(Date.now());
-    contact.dateAdded = date;
-    contact.status = 'Active';
-    contact.type = 'Lead';
-    console.log(newStat)
+  // @action transferChanges(refuse: boolean, accept: boolean, lead: IContact) {
+  //   this.modalDecision = { refuse, accept, lead };
+  //   this.render();
+  // }
+
+  @action render() {
+    this.rr = !this.rr;
+  }
+
+  @action setLeadList = (
+    arg: string,
+    sortBy: string,
+    ev?: EventTarget & HTMLButtonElement,
+    active?:React.Component
+  ) => {
+    if (ev != undefined) {
+      for (var child of ev?.parentElement!.children)
+        child.classList.remove('active');
+      ev.classList.add('active');
+      // child.getElementsByClassName
+    }
+    runInAction('Loading leads', () => {
+      if (arg == 'all') {
+        this.allLeads = true;
+      } else {
+        this.allLeads = false;
+      }
+      this.status = arg;
+      this.sortBy = sortBy;
+      this.listAxiosParams;
+    });
+    this.loadLeads();
+  };
+
+  @action loadLeads = async () => {
     try {
-      await agent.Leads.add(contact).then(()=> agent.Operations.add(newStat!));
-      runInAction('Loading contacts', () => {
-        this.contactRegistry.set(contact.id, contact);
-        toast.success('Lead added');
-        this.showLeadForm = false;
+      const leads = await agent.Leads.list(this.listAxiosParams);
+      this.leadRegistry.clear();
+      runInAction('Loading leads', () => {
+        leads.forEach((lead) => {
+          this.leadRegistry.set(lead.contact.id, lead);
+        });
+        this.loadingInitial = false;
         this.submitting = false;
-        this.render();
       });
+      this.render();
     } catch (error) {
-      runInAction('Loading contacts', () => {
+      runInAction('Loading error', () => {
+        this.loadingInitial = false;
         this.submitting = false;
       });
       console.log(error);
     }
-    this.loadLeads('Active');
   };
 
-  @action editLead = async (contact: ContactFormValues) => {
+  @action addLead = async (values: ILead) => {
     this.submitting = true;
+    let lead = values;
+    lead.contact.status = 'Active';
+    lead.contact.type = 'Lead';
+    try {
+      await agent.Leads.add(lead);
+      runInAction('Loading leads', () => {
+        this.leadRegistry.set(lead.contact.id, lead);
+        this.showLeadForm = false;
+        this.submitting = false;
+      });
+      toast.success('Lead added');
+      //reload list with status of added lead
+      this.setLeadList(lead.contact.status, this.sortBy);
+    } catch (error) {
+      runInAction('Loading leads', () => {
+        this.submitting = false;
+      });
+      console.log(error);
+    }
+  };
 
-    if (this.selectedLead !== contact) {
+  @action changeLeadStatus = async (lead: ILead, upgrade: boolean) => {
+    this.submitting = true;
+    try {
+      await agent.Leads.changeStatus(lead.contact.id, upgrade);
+      this.loadLeads();
+    } catch (error) {
+      runInAction('Loading error', () => {
+        this.loadingInitial = false;
+        this.submitting = false;
+      });
+      console.log(error);
+    }
+  };
+
+  @action editLead = async (lead: ILead) => {
+    this.submitting = true;
+    if (this.selectedLead !== lead) {
       try {
-        await agent.Leads.update(contact);
+        await agent.Contacts.update(lead.contact);
         runInAction('Loading contacts', () => {
-          this.contactRegistry.set(contact.id, contact);
+          this.leadRegistry.set(lead.contact.id, lead);
           this.showLeadForm = false;
           this.submitting = false;
-          this.render();
         });
+        this.render();
       } catch (error) {
         runInAction('Loading contacts', () => {
           this.submitting = false;
@@ -207,32 +254,43 @@ export default class LeadStore {
     }
   };
 
-  @action deleteLead = async (id: string) => {
+  @action abandonLead = async () => {
     this.submitting = true;
     try {
-      await agent.Leads.delete(id);
-      runInAction('Loading contacts', () => {
-        this.contactRegistry.delete(id);
+      await agent.Leads.abandonLead(this.abandonAxiosParams);
+      this.loadLeads();
+      runInAction('Loading leads', () => {
+        this.leadRegistry.delete(this.contactId);
         this.selectedLead = undefined;
         this.submitting = false;
-
-        this.render();
       });
+      toast.success('Lead has been removed');
+      this.render();
     } catch (error) {
-      runInAction('Loading contacts', () => {
+      runInAction('Loading error', () => {
         this.submitting = false;
       });
       console.log(error);
     }
   };
 
-  @action focused = (progress: number) => {
-    const target = event!.target as HTMLButtonElement;
-    target.parentElement?.childNodes.forEach((child) => {
-      var el = child as HTMLElement;
-      el.classList.remove('focused');
-    });
-    target.classList.add('focused');
-    this.progress = progress;
+  handleLead = (arg: string, lead: ILead) => {
+    switch (arg) {
+      case 'upgrade':
+        this.changeLeadStatus(lead, true);
+        break;
+      case 'downgrade':
+        this.changeLeadStatus(lead, false);
+        break;
+      case 'abandon':
+        this.rootStore.modalStore.openModal(
+          'Would you like to save the data of that sale process?',
+          'abandon'
+        );
+        break;
+      case 'edit':
+        this.editLeadForm(lead);
+        break;
+    }
   };
 }

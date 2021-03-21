@@ -55,12 +55,10 @@ namespace Application.Orders
                 if (request.SaleOrders.Equals("true") && request.AllOrders.Equals("false"))
                 {
                     sortedOrders.RemoveAll(x => x.Type == true);
-                    sortedOrders.ForEach(x => Console.WriteLine(x));
                 }
                 else if (request.SaleOrders.Equals("false") && request.AllOrders.Equals("false"))
                 {
                     sortedOrders.RemoveAll(x => x.Type == false);
-                    sortedOrders.ForEach(x => Console.WriteLine(x));
                 }
 
                 //remove closed or open orders

@@ -26,6 +26,8 @@ export default class ModalStore {
 
   @observable refusal: boolean = false;
 
+  @observable abandonModal:boolean = false;
+
   @action render() {
     this.rr = !this.rr;
   }
@@ -35,18 +37,18 @@ export default class ModalStore {
     body: null,
   };
 
-  @action openModal = (content: any, value: any, doubleCheckContent: string) => {
+  @action openModal = (content: any, type?: string) => {
     this.modal.open = true;
+    type == 'abandon' ? this.abandonModal = true : this.abandonModal = false;
     this.modal.body = content;
-    this.triggeredFunction = value;
-    this.doubleCheckContent = doubleCheckContent;
+    console.log('OPEN MODAL '+type)
     this.rr = !this.rr;
   };
 
   @action closeModal = async () => {
     this.modal.open = false;
     this.modal.body = null;
-    if (this.firstCheck) this.refuse();
+    // if (this.firstCheck) this.refuse();
     this.final = false;
     this.firstCheck = false;
     this.rr = !this.rr;
@@ -54,27 +56,27 @@ export default class ModalStore {
 
   @action confirmModal = (contact: IContact) => {
     this.contact = contact;
-    this.firstCheck = true;
-    this.handleDoubleCheck();
+    // this.firstCheck = true;
+    // this.handleDoubleCheck();
     this.rr = !this.rr;
   };
 
-  @action handleDoubleCheck = () => {
-    if (!this.final) {
-      this.final = true;
-      this.openModal(this.doubleCheckContent, this.triggeredFunction, '');
-    } else {
-      this.accepted();
-      this.firstCheck = false;
-      this.closeModal();
-    }
-  };
+  // @action handleDoubleCheck = () => {
+  //   if (!this.final) {
+  //     this.final = true;
+  //     this.openModal(this.doubleCheckContent, this.triggeredFunction, '');
+  //   } else {
+  //     this.accepted();
+  //     this.firstCheck = false;
+  //     this.closeModal();
+  //   }
+  // };
 
-  @action refuse = () => {
-    this.rootStore.leadStore.transferChanges(true, false, this.contact);
-  };
+  // @action refuse = () => {
+  //   this.rootStore.leadStore.transferChanges(true, false, this.contact);
+  // };
 
-  @action accepted = () => {
-    this.rootStore.leadStore.transferChanges(false, true, this.contact);
-  };
+  // @action accepted = () => {
+  //   this.rootStore.leadStore.transferChanges(false, true, this.contact);
+  // };
 }

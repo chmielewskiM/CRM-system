@@ -6,7 +6,7 @@ export const orderButtons = [
     size: 'small' as const,
     compact: true,
     className: 'active',
-    functionArg: 'allOrders'
+    functionArg: 'allOrders',
   },
   {
     key: 2,
@@ -14,7 +14,7 @@ export const orderButtons = [
     as: 'a',
     size: 'small' as const,
     compact: true,
-    functionArg: 'saleOrders'
+    functionArg: 'saleOrders',
   },
   {
     key: 3,
@@ -22,7 +22,7 @@ export const orderButtons = [
     as: 'a',
     size: 'small' as const,
     compact: true,
-    functionArg: 'purchaseOrders'
+    functionArg: 'purchaseOrders',
   },
 ];
 
@@ -34,7 +34,7 @@ export const filterTasksButtons = [
     size: 'small' as const,
     compact: true,
     className: 'active',
-    functionArg: 'myTasks'
+    functionArg: 'myTasks',
   },
   {
     key: 2,
@@ -42,7 +42,7 @@ export const filterTasksButtons = [
     as: 'a',
     size: 'small' as const,
     compact: true,
-    functionArg: 'allSharedTasks'
+    functionArg: 'allSharedTasks',
   },
 ];
 export const filterSharedTasksButtons = [
@@ -53,7 +53,7 @@ export const filterSharedTasksButtons = [
     size: 'small' as const,
     compact: true,
     className: 'active',
-    functionArg: 'allSharedTasks'
+    functionArg: 'allSharedTasks',
   },
   {
     key: 2,
@@ -61,7 +61,7 @@ export const filterSharedTasksButtons = [
     as: 'a',
     size: 'small' as const,
     compact: true,
-    functionArg: 'acceptedTasks'
+    functionArg: 'acceptedTasks',
   },
   {
     key: 3,
@@ -69,7 +69,7 @@ export const filterSharedTasksButtons = [
     as: 'a',
     size: 'small' as const,
     compact: true,
-    functionArg: 'refusedTasks'
+    functionArg: 'refusedTasks',
   },
   {
     key: 4,
@@ -77,6 +77,255 @@ export const filterSharedTasksButtons = [
     as: 'a',
     size: 'small' as const,
     compact: true,
-    functionArg: 'doneTasks'
-  }
+    functionArg: 'doneTasks',
+  },
+];
+
+export const filterLeads = [
+  {
+    key: 1,
+    content:'All',
+    as:'a',
+    active:true,
+    size: 'small' as const,
+    compact: true,
+    className: 'all',
+    functionArg: 'all',
+    btnActive:'all'
+  },
+  {
+    key: 2,
+    content: 'Lead',
+    as:'',
+    size: 'small' as const,
+    compact: true,
+    className: 'lead',
+    functionArg: 'lead',
+    btnActive:'active'
+  },
+  {
+    key: 3,
+    content: 'Opportunity',
+    as:'',
+    size: 'small' as const,
+    compact: true,
+    className: 'opportunity',
+    functionArg: 'opportunity',
+    btnActive:'opportunity'
+  },
+  {
+    key: 4,
+    content: 'Quote',
+    as:'',
+    size: 'small' as const,
+    compact: true,
+    className: 'quote',
+    functionArg: 'quote',
+    btnActive:'quote'
+  },
+  {
+    key: 5,
+    content: 'Invoice',
+    as:'',
+    size: 'small' as const,
+    compact: true,
+    className: 'invoice',
+    functionArg: 'invoice',
+    btnActive:'invoice'
+  },
+];
+
+export const leadControls = [
+  {
+    key: 1,
+    content:'',
+    icon: 'edit outline',
+    size: 'small' as const,
+    compact: true,
+    className: 'edit',
+    functionArg: 'edit',
+  },
+  {
+    key: 2,
+    content:'',
+    as:'a',
+    icon: 'mail outline',
+    size: 'small' as const,
+    compact: true,
+    className: 'mail',
+    functionArg: 'mail',
+  },
+  {
+    key: 3,
+    content: '',
+    as:'',
+    icon: 'angle double up',
+    size: 'small' as const,
+    compact: true,
+    className: 'upgrade',
+    functionArg: 'upgrade',
+  },
+  {
+    key: 4,
+    content: '',
+    as:'',
+    icon: 'user cancel',
+    size: 'small' as const,
+    compact: true,
+    className: 'abandon',
+    functionArg: 'abandon',
+  },
+];
+export const opportunityControls = [
+  {
+    key: 1,
+    content:'',
+    icon: 'edit outline',
+    size: 'small' as const,
+    compact: true,
+    className: 'edit',
+    functionArg: 'edit',
+  },
+  {
+    key: 2,
+    content: '',
+    as:'a',
+    icon: 'mail outline',
+    size: 'small' as const,
+    compact: true,
+    className: 'mail',
+    functionArg: 'mail',
+  },
+  {
+    key: 3,
+    content: '',
+    as:'',
+    icon: 'angle double up',
+    size: 'small' as const,
+    compact: true,
+    className: 'upgrade',
+    functionArg: 'upgrade',
+  },
+  {
+    key: 4,
+    content: '',
+    as:'',
+    icon: 'angle double down',
+    size: 'small' as const,
+    compact: true,
+    className: 'downgrade',
+    functionArg: 'downgrade',
+  },
+  {
+    key: 5,
+    content: '',
+    as:'',
+    icon: 'user cancel',
+    size: 'small' as const,
+    compact: true,
+    className: 'abandon',
+    functionArg: 'abandon',
+  },
+];
+export const quoteControls = [
+  {
+    key: 1,
+    content:'',
+    icon: 'edit outline',
+    size: 'small' as const,
+    compact: true,
+    className: 'edit',
+    functionArg: 'edit',
+  },
+  {
+    key: 2,
+    content: '',
+    as:'a',
+    icon: 'mail outline',
+    size: 'small' as const,
+    compact: true,
+    className: 'mail',
+    functionArg: 'mail',
+  },
+  {
+    key: 3,
+    content: 'Invoice',
+    as:'',
+    icon: 'send',
+    size: 'small' as const,
+    compact: true,
+    className: 'invoice',
+    functionArg: 'upgrade',
+  },
+  {
+    key: 4,
+    content: '',
+    as:'',
+    icon: 'angle double down',
+    size: 'small' as const,
+    compact: true,
+    className: 'downgrade',
+    functionArg: 'downgrade',
+  },
+  {
+    key: 5,
+    content: '',
+    as:'',
+    icon: 'user cancel',
+    size: 'small' as const,
+    compact: true,
+    className: 'abandon',
+    functionArg: 'abandon',
+  },
+];
+export const invoiceControls = [
+  {
+    key: 1,
+    content:'',
+    icon: 'edit outline',
+    size: 'small' as const,
+    compact: true,
+    className: 'edit',
+    functionArg: 'edit',
+  },
+  {
+    key: 2,
+    content: '',
+    as:'a',
+    icon: 'mail outline',
+    size: 'small' as const,
+    compact: true,
+    className: 'mail',
+    functionArg: 'mail',
+  },
+  {
+    key: 3,
+    content: 'Convert',
+    as:'',
+    icon: 'handshake outline',
+    size: 'small' as const,
+    compact: true,
+    className: 'convert',
+    functionArg: 'upgrade',
+  },
+  {
+    key: 4,
+    content: '',
+    as:'',
+    icon: 'angle double down',
+    size: 'small' as const,
+    compact: true,
+    className: 'downgrade',
+    functionArg: 'downgrade',
+  },
+  {
+    key: 5,
+    content: '',
+    as:'',
+    icon: 'user cancel',
+    size: 'small' as const,
+    compact: true,
+    className: 'abandon',
+    functionArg: 'abandon',
+  },
 ];

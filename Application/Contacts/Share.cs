@@ -52,7 +52,7 @@ namespace Application.Contacts
 
                 var share = await _context
                     .UserContacts
-                    .SingleOrDefaultAsync(x => x.ContactId == contact.Id && x.UserId == user.Id);
+                    .SingleOrDefaultAsync(x => x.ContactId == contact.Id && x.UserId.Equals(user.Id));
 
                 if (share != null)
                     throw new RestException(HttpStatusCode.BadRequest,

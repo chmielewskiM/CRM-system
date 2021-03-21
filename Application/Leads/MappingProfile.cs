@@ -1,3 +1,5 @@
+using Application.Contacts;
+using Application.Orders;
 using AutoMapper;
 using Domain;
 
@@ -7,11 +9,11 @@ namespace Application.Leads
     {
         public MappingProfile()
         {
-            CreateMap<Contact, LeadDTO>();
-            CreateMap<UserContact, Application.Contacts.UserAccessDTO>()
-            .ForMember(d => d.Username, o => o.MapFrom(s => s.User.UserName))
-            .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.User.DisplayName))
-            .ForMember(d => d.Level, o => o.MapFrom(s => s.User.Level));
+            CreateMap<Lead, LeadDTO>();
+            // CreateMap<Contact, ContactDTO>()
+            // .ForMember(c =>c.Status, d => d.MapFrom(s=>s.Status));
+            // CreateMap<Order, OrderDTO>()
+            // .ForMember(c => c.OrderNumber, d => d.MapFrom(s=>s.OrderNumber));
         }
     }
 }

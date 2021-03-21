@@ -69,8 +69,11 @@ namespace Application.Contacts
 
                 var userAccess = new UserContact
                 {
+                    Id = Guid.NewGuid(),
                     User = user,
+                    UserId = new Guid(user.Id),
                     Contact = contact,
+                    ContactId = contact.Id,
                     DateAdded = request.DateAdded
                 };
 

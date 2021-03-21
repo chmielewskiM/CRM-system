@@ -25,7 +25,7 @@ export default class CommonStore {
   @observable rowButtons?: Element;
   @observable appLoaded = false;
   @observable row?: Element;
-  @observable toggleIcon = 'toggle on';
+  @observable toggleIcon = 'bars';
   @observable toggledNav = true;
   @observable expandedMenu = false;
   @observable rr = false;
@@ -44,7 +44,7 @@ export default class CommonStore {
 
   @action toggleNav = () => {
     this.toggledNav = !this.toggledNav;
-    this.toggledNav ? (this.toggleIcon = 'toggle on') : (this.toggleIcon = 'toggle off');
+    this.toggledNav ? (this.toggleIcon = 'bars') : (this.toggleIcon = 'bars off');
     this.rootStore.contactStore.render();
   };
   @action closeMobileNav = () => {
@@ -60,38 +60,5 @@ export default class CommonStore {
     this.expandedMenu = !this.expandedMenu;
     this.render();
   };
-  newStatistic = (stat: string) => {
-    switch (stat) {
-      case 'lead': {
-        let operation = new OperationValues();
-        operation.lead++;
-        return operation;
-      }
-      case 'opportunity': {
-        let operation = new OperationValues();
-        operation.opportunity++;
-        return operation;
-      }
-      case 'converted': {
-        let operation = new OperationValues();
-        operation.conversion++;
-        return operation;
-      }
-      case 'order': {
-        let operation = new OperationValues();
-        operation.order++;
-        return operation;
-      }
-      case 'revenue': {
-        let operation = new OperationValues();
-        operation.revenue++;
-        return operation;
-      }
-      case 'source': {
-        let operation = new OperationValues();
-        // operation.source = value!;
-        return operation;
-      }
-    }
-  };
+  
 }

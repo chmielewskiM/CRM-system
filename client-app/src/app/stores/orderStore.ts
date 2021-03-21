@@ -35,7 +35,7 @@ export default class OrderStore {
 
   @observable temporaryContact: IContact | undefined;
 
-  //sorting
+  //URLparams
   @observable allOrders = true;
 
   @observable saleOrders = false;
@@ -197,6 +197,7 @@ export default class OrderStore {
       console.log(error);
     }
   };
+  
   typeOfOrder = (order: IOrder) => {
     var type = '';
     order.type ? (type = 'Sale') : (type = 'Purchase');
@@ -262,7 +263,7 @@ export default class OrderStore {
   @action editOrderForm = async (id: string) => {
     this.submitting = true;
     const order = new OrderFormValues(this.selectedOrder);
-    var contact = await agent.Contacts.get(encodeURI(order.clientName));
+    var contact = await agent.Contacts.get(encodeURI(order.clientName!));
     console.log(contact);
     runInAction('Loading orders', () => {
       if (!this.rootStore.contactStore.contactRegistry.has(contact.id) && contact.id) {
@@ -296,7 +297,6 @@ export default class OrderStore {
   };
   handleFinalFormSubmit = (values: any) => {
     const { ...order } = values;
-    console.log(values);
     if (!order.id) {
       let newOrder = {
         ...order,

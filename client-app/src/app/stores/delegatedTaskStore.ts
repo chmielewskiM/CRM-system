@@ -61,7 +61,9 @@ export default class DelegatedTaskStore {
   @observable pendingTasksCount: number = 0;
   @observable pendingTasksNotifier: boolean = false;
   @observable formDateValidation = new Date();
-
+  @action env(){
+    console.log('ENV')
+  }
   @action render() {
     console.log('rendered');
     this.rr = !this.rr;

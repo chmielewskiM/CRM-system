@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { Fragment, useContext } from 'react';
 import { FieldRenderProps } from 'react-final-form';
 import { FormFieldProps, Form, Label } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
@@ -14,12 +14,16 @@ const RadioInput: React.FC<IProps> = ({
   placeholder,
   meta: { touched, error },
   control,
-  func
+  func,
+  label,
+  className
 }) => {
   const rootStore = useContext(RootStoreContext);
   const { toggleSelect } = rootStore.orderStore;
   return (
-    <Form.Field error={touched && !!error} type={type} width={width}>
+    <Fragment>
+      <Label className='radio-label' content={label}/>
+    <Form.Field error={touched && !!error} type={type} width={width} className={className}>
       <input
         type="radio"
         checked={input.value}
@@ -28,6 +32,7 @@ const RadioInput: React.FC<IProps> = ({
             func(input.value);
           })
         }
+        
       />
       {touched && error && (
         <Label basic color="red">
@@ -35,6 +40,7 @@ const RadioInput: React.FC<IProps> = ({
         </Label>
       )}
     </Form.Field>
+    </Fragment>
   );
 };
 

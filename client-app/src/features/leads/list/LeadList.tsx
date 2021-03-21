@@ -1,100 +1,140 @@
-import React, { useContext, useEffect, ReactElement, Fragment } from 'react';
-import { Table, Breadcrumb, Segment, Button, Icon, Progress } from 'semantic-ui-react';
+import React, { useContext, useEffect, Fragment, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import LoaderComponent from '../../../app/layout/LoaderComponent';
 import { RootStoreContext } from '../../../app/stores/rootStore';
-import LeadSettings from './LeadSettings';
-import { ContactFormValues } from '../../../app/models/contact';
-import { changeDependenciesStateTo0 } from 'mobx/lib/internal';
+import {
+  Button,
+  Container,
+  Grid,
+  Header,
+  Icon,
+  Progress,
+  Segment,
+} from 'semantic-ui-react';
+import { ILead, LeadFormValues } from '../../../app/models/lead';
+import LeadControls from './LeadControls';
+import ConfirmationModal from '../../../app/common/modals/ConfirmationModal';
+import LoaderComponent from '../../../app/layout/LoaderComponent';
 
-export const LeadList: React.FC = () => {
+interface IProps {
+  sortBy: string;
+}
+
+export const LeadList: React.FC<IProps> = (props) => {
   const rootStore = useContext(RootStoreContext);
-  const { contactsByDate, loadingInitial, loadLeads, rr, progress, focused } = rootStore.leadStore;
+  const { modal } = rootStore.modalStore;
 
-  useEffect(() => {}, [rr]);
-  
-  if (loadingInitial) return <LoaderComponent content="Loading..." />;
+  const {
+    loadingInitial,
+    submitting,
+    loadLeads,
+    leadRegistry,
+    leadsList,
+    abandonLead,
+    targetLead,
+    rr,
+  } = rootStore.leadStore;
+
+  useEffect(() => {
+    loadLeads();
+  }, []);
+
+  const progress = (status: string) => {
+    switch (status) {
+      case 'Active':
+        return 25;
+      case 'Opportunity':
+        return 50;
+      case 'Quote':
+        return 75;
+      case 'Invoice':
+        return 95;
+    }
+  };
+
+  const [showDetails, setShowDetails] = useState(false);
+  const [target, setTarget] = useState(new LeadFormValues());
 
   return (
     <Fragment>
-      <Segment className="buttons-status">
-        <Button.Group>
-          <Button
-            content="Active"
-            onClick={() => {
-              loadLeads('Active');
-              focused(15);
-            }}
-          />
-          <div className="icon">
-            <Icon name="angle double right" size="huge" />
-          </div>
-          <Button
-            content="Opportunity"
-            onClick={() => {
-              loadLeads('Opportunity');
-              focused(50);
-            }}
-          />
-          <div className="icon">
-            <Icon name="angle double right" size="huge" />
-          </div>
-          <Button
-            content="Quote"
-            onClick={() => {
-              loadLeads('Quote');
-              focused(75);
-            }}
-          />
-          <div className="icon">
-            <Icon name="angle double right" size="huge" />
-          </div>
-          <Button
-            content="Invoice"
-            onClick={() => {
-              loadLeads('Invoice');
-              focused(100);
-            }}
-          />
-        </Button.Group>
-        <Progress percent={progress} indicating />
-      </Segment>
-      <Segment className="list">
-        <Table
-          unstackable
-          striped
-          selectable
-          size="small"
-          className="table-container"
-          scrollable="true"
-          style={{ overflow: 'visible' }}
+      {leadsList.map((lead: ILead) => (
+        <Segment
+          key={lead.contact.id}
+          className={`lead-item ${lead.contact.status.toLowerCase()}`}
         >
-          <Table.Header className="head">
-            <Table.Row>
-              <Table.HeaderCell>Name</Table.HeaderCell>
-              <Table.HeaderCell>Company</Table.HeaderCell>
-              <Table.HeaderCell>Status</Table.HeaderCell>
-              <Table.HeaderCell>Phone number</Table.HeaderCell>
-              <Table.HeaderCell>E-mail</Table.HeaderCell>
-              <Table.HeaderCell></Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          {contactsByDate.map((contact) => (
-            <Table.Body key={contact.id}>
-              <Table.Row>
-                <Table.Cell>{contact.name}</Table.Cell>
-                <Table.Cell>{contact.company}</Table.Cell>
-                <Table.Cell>{contact.status}</Table.Cell>
-                <Table.Cell>{contact.phoneNumber}</Table.Cell>
-                <Table.Cell>{contact.email}</Table.Cell>
-                <Table.Cell transparent="true">
-                  <LeadSettings contact={new ContactFormValues(contact)}></LeadSettings>
-                </Table.Cell>
-              </Table.Row>
-            </Table.Body>
-          ))}
-        </Table>
-      </Segment>
+          {loadingInitial ||
+            (submitting && <LoaderComponent content="Loading..." />)}
+          {modal.open && lead == targetLead && (
+            <ConfirmationModal
+              contact={lead.contact}
+              function={() => abandonLead()}
+              header={lead.contact.name}
+            />
+          )}
+          {showDetails && lead == target && (
+            <Fragment>
+              <div className="details">
+                <Button icon="minus" onClick={() => setShowDetails(false)} />
+                <div className="email">
+                  Email: <span>{lead.contact.email}</span>
+                </div>
+                <div className="status">
+                  Tel.No.: <span>{lead.contact.phoneNumber}</span>
+                </div>
+                <div className="source">
+                  Source: <span>{lead.contact.source}</span>
+                </div>
+                <div className="notes">
+                  Notes: <span>{lead.contact.notes}</span>
+                </div>
+              </div>
+            </Fragment>
+          )}
+          <Grid>
+            <Grid.Row className="row-header">
+              <span
+                className="more"
+                onClick={(e) => {
+                  setShowDetails(true);
+                  setTarget(lead);
+                }}
+              >
+                Show more...
+              </span>
+              <Header
+                className="name"
+                content={`Client: ${lead.contact.name}`}
+              />
+              <Header
+                className="company"
+                content={`Company: ${lead.contact.company}`}
+              />
+              <Container className="order" text>
+                Order: {lead.order?.orderNumber}
+                {lead.order?.id == null && (
+                  <Icon
+                    name="question circle outline"
+                    style={{ color: 'red' }}
+                  />
+                )}
+                {/* {lead.order?.id == null && lead.contact.status =='Quote' && (
+                  <p style={{color:'red'}}>Add an order to proceed</p>
+                )} */}
+
+              </Container>
+            </Grid.Row>
+            <Grid.Row className="row lead-controls">
+              <LeadControls lead={lead} />
+            </Grid.Row>
+            <Grid.Row className="row-progress">
+              <Progress
+                label=""
+                percent={progress(lead.contact.status)}
+                indicating
+              />
+            </Grid.Row>
+          </Grid>
+        </Segment>
+      ))}
     </Fragment>
   );
 };

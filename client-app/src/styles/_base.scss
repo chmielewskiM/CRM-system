@@ -61,13 +61,16 @@ body {
         background: -moz-radial-gradient(circle, hsla(207, 51%, 83%, 1) 25%, hsla(194, 100%, 12%, 0.5) 100%);
 
         background: -webkit-radial-gradient(circle, hsla(207, 51%, 83%, 1) 25%, hsla(194, 100%, 12%, 0.5) 100%);
-
+        //modal forms
         & .modal {
             width: 40%;
             padding: .1rem;
-
+            box-shadow: 1px 1px 3px 1px #000 !important;
             @include breakpoint(smartphone) {
                 width: 90%;
+            }
+            @include breakpoint(tablet) {
+                width: 70%;
             }
 
             & .content {
@@ -121,6 +124,18 @@ body {
                                     }
                                 }
                             }
+                            &.error{
+                                position: relative;
+                                opacity:1;
+                                & .label{
+                                    position: absolute;
+                                    right:5rem;
+                                    margin: 5px 0;
+                                    border:0;
+                                    white-space: nowrap;
+                                    font-size: 1.3rem;
+                                }
+                            }
                         }
 
                         & .button {
@@ -159,6 +174,66 @@ body {
                     }
                 }
             }
+            //confirmation modal
+            &.confirmation{
+                background-image: linear-gradient(to top, #09203f 0%, #537895 100%);
+                border: 2px ridge #fff;
+                @include breakpoint(smartphone) {
+                    width: 98%;
+                }
+                & .header, .actions{
+                    border:0;
+                }
+                & .header{
+                    text-align: left;
+                    margin: 1rem 0 0 1rem;
+                }
+                & .content{
+                    background-image: none;
+                    font-size: 1.4rem;border:0;
+                    border-top: thin $color-primary-light;
+                    border-style: groove;
+                }
+                & .form {
+                    display: inline-block;
+                    width: 100%;
+                    &>*{
+                        cursor: default;
+                    }
+                    & .save,
+                    .keep {
+                        width: 100%;
+                        display: block;
+                        margin: 1rem;
+                        // align-content: center;
+                        & .fields{
+                            margin-left: 2rem;
+                        }
+                    }
+                    & .radio-label{
+                        float:right;
+                    }
+                    & .field.yes, & .field.no{
+                        & input{
+                            cursor: pointer;
+                        }
+                    }
+                    & .label {
+                        background-color: transparent;
+                        color: #fff;
+                        font-size: 1.2rem;
+                        padding: 0;
+                        margin: 1rem;
+                    }
+                
+                    & .field {
+                        width: min-content;
+                        float: left;
+                        margin: auto 0;
+                    }
+                }
+
+            }
         }
     }
 }
@@ -172,11 +247,8 @@ body {
         height: inherit;
         flex: 1 0;
         background: #4b6cb7;
-        /* fallback for old browsers */
         background: -webkit-linear-gradient(to bottom, #182848, #4b6cb7);
-        /* Chrome 10-25, Safari 5.1-6 */
         background: linear-gradient(to bottom, #182848, #4b6cb7);
-        /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
         //                 background: #16222A;  /* fallback for old browsers */
         // background: -webkit-linear-gradient(to bottom, #3A6073, #16222A);  /* Chrome 10-25, Safari 5.1-6 */
@@ -210,7 +282,8 @@ body {
                 padding: 0;
                 border-bottom: 1px solid #fff;
                 position: sticky;
-
+                z-index: 10;
+                
                 @include breakpoint(tablet) {
                     background: #000046;
                     background: -webkit-linear-gradient(to right, #000046, #101099, #000046);
@@ -222,6 +295,7 @@ body {
 
                     flex-direction: column;
                     align-items: center;
+
                     & .button:not(:last-child) {
                         padding: 2rem 0;
                         font-size: 1.5rem;
@@ -343,9 +417,18 @@ body {
                                 }
 
                                 & td {
+
                                     border: none;
                                     white-space: nowrap;
                                     font-size: 1.2rem;
+                                    overflow: hidden;
+
+                                }
+
+                                & .notes-cell {
+                                    max-width: 12rem;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
                                 }
                             }
                         }

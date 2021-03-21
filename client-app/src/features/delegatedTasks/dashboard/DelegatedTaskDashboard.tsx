@@ -25,12 +25,11 @@ export const DelegatedTaskDashboard: React.FC = () => {
     displayPendingTaskNotifier,
     myTasks,
     finishTask,
+    env,
     rr,
   } = rootStore.delegatedTaskStore;
   const { user } = rootStore.userStore;
-  useEffect(() => {
-    console.log('TASK DASH');
-  }, [rr]);
+  useEffect(() => {}, [rr]);
 
   // if (loadingInitial) return <LoaderComponent content="Loading..." />;
   return (
@@ -49,8 +48,13 @@ export const DelegatedTaskDashboard: React.FC = () => {
           <Button icon="check" content="Mark as done" onClick={() => finishTask(selectedTask)} />
         )}
         <Button className="pendingBtn" onClick={displayPendingTaskNotifier}>
-          
-          <div><Icon name="wait" />Pending<div className='count'><span>{pendingTasksCount}</span></div></div>
+          <div>
+            <Icon name="wait" />
+            Pending
+            <div className="count">
+              <span>{pendingTasksCount}</span>
+            </div>
+          </div>
         </Button>
         <Button
           icon="angle down"
@@ -95,7 +99,7 @@ export const DelegatedTaskDashboard: React.FC = () => {
         </Grid.Column>
         {pendingTasksNotifier && (
           <Grid.Column width={4} className="notifier-col">
-            <TaskNotifier className="notifier" taskCount={pendingTasksCount}/>
+            <TaskNotifier className="notifier" taskCount={pendingTasksCount} />
           </Grid.Column>
         )}
       </Grid.Row>

@@ -2,7 +2,7 @@
 
     & .row-content-1.orders,
     & .row-content-1.tasks {
-        padding: 1rem .5rem 0 .5rem;
+        // padding: 1rem .5rem 0 .5rem;
 
         & .filter-buttons,
         & .list {
@@ -18,7 +18,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-
+            border:0;
+            border-radius: 0;
+            padding: 0 .5rem;
+            // background-color: rgba(255, 255, 255, 0.2);
+            background-image: linear-gradient(to top, lightgrey 0%, lightgrey 1%, #e0e0e0 26%, #efefef 48%, #d9d9d9 75%, #bcbcbc 100%);
             @include breakpoint(tablet) {
                 justify-content: flex-start;
 
@@ -29,23 +33,19 @@
                 border: 0;
                 width: max-content;
                 box-shadow: none;
-                background: #4b6cb7;
-                background: -webkit-linear-gradient(to right, #182848, #4b6cb7);
-                background: linear-gradient(to right, #182848, #4b6cb7);
-                border-radius: .3rem;
-                border: thin solid $color-primary-dark;
                 align-content: center;
-
+                margin-right: .5rem;
+            
                 & .button.small,
                 & .label {
                     padding: .2rem 1rem;
                     font-size: 1.3rem;
-                    color: #fff;
+                    color: $color-primary-dark;
                     border: none !important;
                     box-shadow: none !important;
                     cursor: pointer;
                     background-color: transparent !important;
-
+                    border-radius: .3rem !important;
                     
 
                     &:hover {
@@ -55,8 +55,8 @@
 
                     &.active,
                     &:focus {
-                        color: $color-primary-dark !important;
-                        background-color: #fff !important;
+                        color: #fff !important;
+                        background-color: $color-primary-dark !important;
                     }
 
                     &:first-child {
@@ -69,12 +69,6 @@
                         &:hover{
                             border-radius: 3px;
                         }
-                    }
-                }
-
-                & .label {
-                    @include breakpoint(smartphone) {
-                        // display: none;
                     }
                 }
             }
@@ -96,7 +90,7 @@
                     margin-right: .5rem;
                     align-self: center;
                     background-color: transparent;
-                    color: #fff;
+                    color: $color-primary-dark;
                     font-weight: $light;
                     font-size: 1.7rem;
 

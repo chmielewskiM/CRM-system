@@ -63,402 +63,403 @@ namespace Persistence
 
             //CONTACTS
 
-            if (!context.Contacts.Any())
-            {
-                contacts = new List<Contact> {
-                    new Contact {
-                        Name = "Michael Storm",
-                        Company = "S Solutions",
-                        Type = "Lead",
-                        PhoneNumber = "111 111 111",
-                        DateAdded = DateTime
-                            .Now
-                            .AddDays(-12),
-                        Email = "michael@one.com",
-                        Notes = "talk about price",
-                        Status = "Inactive",
-                    },
-                    new Contact {
-                        Name = "Evan Whitaker",
-                        Company = "ChainQ",
-                        Type = "Supplier",
-                        PhoneNumber = "222 111 111",
-                        DateAdded = DateTime
-                            .Now
-                            .AddDays(-7),
-                        Email = "evan@two.com",
-                        Notes = "inform about new purchase",
-                        Status = "Inactive",
-                    },
-                    new Contact {
-                        Name = "Evelyn More",
-                        Company = "A-Rest",
-                        Type = "Client",
-                        PhoneNumber = "333 111 111",
-                        DateAdded = DateTime
-                            .Now
-                            .AddDays(-7),
-                        Email = "evelyn@three.com",
-                        Notes = "report",
-                        Status = "Inactive",
-                    },
-                    new Contact {
-                        Name = "Mert Sauer",
-                        Company = "VoiceTen",
-                        Type = "Lead",
-                        PhoneNumber = "444 111 111",
-                        DateAdded = DateTime
-                            .Now
-                            .AddDays(-2),
-                        Email = "mert@four.com",
-                        Notes = "present the offer",
-                        Status = "Inactive",
-                    },
-                    new Contact {
-                        Name = "Vivian Jang",
-                        Company = "Mining inc.",
-                        Type = "Supplier",
-                        PhoneNumber = "555 111 111",
-                        DateAdded = DateTime
-                            .Now
-                            .AddDays(-3),
-                        Email = "vivian@five.com",
-                        Notes = "",
-                        Status = "Inactive",
-                    },
-                    new Contact {
-                        Name = "Sam Ford",
-                        Company = "K-Express",
-                        Type = "Client",
-                        PhoneNumber = "666 111 111",
-                        DateAdded = DateTime
-                            .Now
-                            .AddDays(-4),
-                        Email = "sam@six.com",
-                        Notes = "",
-                        Status = "Inactive",
-                    },
-                    new Contact {
-                        Name = "Robert Guide",
-                        Company = "Individual client",
-                        Type = "Client",
-                        PhoneNumber = "777 111 111",
-                        DateAdded = DateTime
-                            .Now
-                            .AddDays(-2),
-                        Email = "robert@seven.com",
-                        Notes = "",
-                        Status = "Inactive",
-                    },
-                    new Contact {
-                        Name = "Lars Hammer",
-                        Company = "Manufacturers inc.",
-                        Type = "Lead",
-                        PhoneNumber = "888 111 111",
-                        DateAdded = DateTime
-                            .Now
-                            .AddDays(-10),
-                        Email = "lars@eight.com",
-                        Notes = "",
-                        Status = "Inactive",
-                    },
-                    new Contact {
-                        Name = "Larry Graham",
-                        Company = "SunTerra",
-                        Type = "Lead",
-                        PhoneNumber = "999 111 111",
-                        DateAdded = DateTime
-                            .Now
-                            .AddDays(-2),
-                        Email = "larry@nine.com",
-                        Notes = "ask about the needs",
-                        Status = "Inactive",
-                    }
-                };
-                context
-                    .Contacts
-                    .AddRange(contacts);
-                context.SaveChanges();
-            }
-            // ORDERS
+        //     if (!context.Contacts.Any())
+        //     {
+        //         contacts = new List<Contact> {
+        //             new Contact {
+        //                 Name = "Michael Storm",
+        //                 Company = "S Solutions",
+        //                 Type = "Lead",
+        //                 PhoneNumber = "111 111 111",
+        //                 DateAdded = DateTime
+        //                     .Now
+        //                     .AddDays(-12),
+        //                 Email = "michael@one.com",
+        //                 Notes = "talk about price",
+        //                 Status = "Inactive",
+        //             },
+        //             new Contact {
+        //                 Name = "Evan Whitaker",
+        //                 Company = "ChainQ",
+        //                 Type = "Supplier",
+        //                 PhoneNumber = "222 111 111",
+        //                 DateAdded = DateTime
+        //                     .Now
+        //                     .AddDays(-7),
+        //                 Email = "evan@two.com",
+        //                 Notes = "inform about new purchase",
+        //                 Status = "Inactive",
+        //             },
+        //             new Contact {
+        //                 Name = "Evelyn More",
+        //                 Company = "A-Rest",
+        //                 Type = "Client",
+        //                 PhoneNumber = "333 111 111",
+        //                 DateAdded = DateTime
+        //                     .Now
+        //                     .AddDays(-7),
+        //                 Email = "evelyn@three.com",
+        //                 Notes = "report",
+        //                 Status = "Inactive",
+        //             },
+        //             new Contact {
+        //                 Name = "Mert Sauer",
+        //                 Company = "VoiceTen",
+        //                 Type = "Lead",
+        //                 PhoneNumber = "444 111 111",
+        //                 DateAdded = DateTime
+        //                     .Now
+        //                     .AddDays(-2),
+        //                 Email = "mert@four.com",
+        //                 Notes = "present the offer",
+        //                 Status = "Inactive",
+        //             },
+        //             new Contact {
+        //                 Name = "Vivian Jang",
+        //                 Company = "Mining inc.",
+        //                 Type = "Supplier",
+        //                 PhoneNumber = "555 111 111",
+        //                 DateAdded = DateTime
+        //                     .Now
+        //                     .AddDays(-3),
+        //                 Email = "vivian@five.com",
+        //                 Notes = "",
+        //                 Status = "Inactive",
+        //             },
+        //             new Contact {
+        //                 Name = "Sam Ford",
+        //                 Company = "K-Express",
+        //                 Type = "Client",
+        //                 PhoneNumber = "666 111 111",
+        //                 DateAdded = DateTime
+        //                     .Now
+        //                     .AddDays(-4),
+        //                 Email = "sam@six.com",
+        //                 Notes = "",
+        //                 Status = "Inactive",
+        //             },
+        //             new Contact {
+        //                 Name = "Robert Guide",
+        //                 Company = "Individual client",
+        //                 Type = "Client",
+        //                 PhoneNumber = "777 111 111",
+        //                 DateAdded = DateTime
+        //                     .Now
+        //                     .AddDays(-2),
+        //                 Email = "robert@seven.com",
+        //                 Notes = "",
+        //                 Status = "Inactive",
+        //             },
+        //             new Contact {
+        //                 Name = "Lars Hammer",
+        //                 Company = "Manufacturers inc.",
+        //                 Type = "Lead",
+        //                 PhoneNumber = "888 111 111",
+        //                 DateAdded = DateTime
+        //                     .Now
+        //                     .AddDays(-10),
+        //                 Email = "lars@eight.com",
+        //                 Notes = "",
+        //                 Status = "Inactive",
+        //             },
+        //             new Contact {
+        //                 Name = "Larry Graham",
+        //                 Company = "SunTerra",
+        //                 Type = "Lead",
+        //                 PhoneNumber = "999 111 111",
+        //                 DateAdded = DateTime
+        //                     .Now
+        //                     .AddDays(-2),
+        //                 Email = "larry@nine.com",
+        //                 Notes = "ask about the needs",
+        //                 Status = "Inactive",
+        //             }
+        //         };
+        //         context
+        //             .Contacts
+        //             .AddRange(contacts);
+        //         context.SaveChanges();
+        //     }
+        //     // ORDERS
 
-            if (!context.Orders.Any())
-            {
-                int randomContact;
-                int randomProduct;
-                int randomAmount;
-                int randomPrice;
-                int randomOpenDate;
-                int orderNumber = 0;
-                bool type;
-                bool closed = false;
-                DateTime dateClosed = DateTime.MinValue;
-                var products = new List<String>{
-                    "H13", "HS14", "2H13S1", "1H228"
-                };
+        //     if (!context.Orders.Any())
+        //     {
+        //         int randomContact;
+        //         int randomProduct;
+        //         int randomAmount;
+        //         int randomPrice;
+        //         int randomOpenDate;
+        //         int orderNumber = 0;
+        //         bool type;
+        //         bool closed = false;
+        //         DateTime dateClosed = DateTime.MinValue;
+        //         var products = new List<String>{
+        //             "H13", "HS14", "2H13S1", "1H228"
+        //         };
 
-                var order = new Order();
-                for (int i = 0; i < 40; i++)
-                {
-                    type = false;
-                    randomContact = random.Next(0, 9);
-                    randomProduct = random.Next(0, 4);
-                    randomAmount = random.Next(10, 100);
-                    randomPrice = random.Next(1000, 15000);
-                    randomOpenDate = random.Next(3, 15);
-                    orderNumber = i + 1;
+        //         var order = new Order();
+        //         for (int i = 0; i < 40; i++)
+        //         {
+        //             type = false;
+        //             randomContact = random.Next(0, 9);
+        //             randomProduct = random.Next(0, 4);
+        //             randomAmount = random.Next(10, 100);
+        //             randomPrice = random.Next(1000, 15000);
+        //             randomOpenDate = random.Next(3, 15);
+        //             orderNumber = i + 1;
 
-                    if (i > 14)
-                    {
-                        closed = true;
-                        randomOpenDate = randomOpenDate * 5;
-                        dateClosed = DateTime.Now.AddDays(-randomOpenDate + randomContact);
-                    }
-                    if (i % 4 == 0)
-                        type = true;
+        //             if (i > 14)
+        //             {
+        //                 closed = true;
+        //                 randomOpenDate = randomOpenDate * 5;
+        //                 dateClosed = DateTime.Now.AddDays(-randomOpenDate + randomContact);
+        //             }
+        //             if (i % 4 == 0)
+        //                 type = true;
 
-                    order = new Order
-                    {
-                        ClientId = contacts[randomContact].Id,
-                        Client = contacts[randomContact],
-                        OrderNumber = orderNumber,
-                        Type = type,
-                        Product = products[randomProduct],
-                        Closed = closed,
-                        Amount = randomAmount,
-                        Price = randomPrice,
-                        DateOrderOpened = DateTime
-                                .Now
-                                .AddDays(-randomOpenDate),
-                        DateOrderClosed = dateClosed,
-                        Notes = "Order #" + orderNumber + ". " + contacts[randomContact].Name + " ordered " + randomAmount + " pieces of " + products[randomProduct] + " for " + randomPrice + "$."
-                    };
-                    orders.Add(order);
-                }
+        //             order = new Order
+        //             {
+        //                 ClientId = contacts[randomContact].Id,
+        //                 Client = contacts[randomContact],
+        //                 OrderNumber = orderNumber,
+        //                 Type = type,
+        //                 Product = products[randomProduct],
+        //                 Closed = closed,
+        //                 Amount = randomAmount,
+        //                 Price = randomPrice,
+        //                 DateOrderOpened = DateTime
+        //                         .Now
+        //                         .AddDays(-randomOpenDate),
+        //                 DateOrderClosed = dateClosed,
+        //                 Notes = "Order #" + orderNumber + ". " + contacts[randomContact].Name + " ordered " + randomAmount + " pieces of " + products[randomProduct] + " for " + randomPrice + "$."
+        //             };
+        //             orders.Add(order);
+        //         }
 
-                context
-                    .Orders
-                    .AddRange(orders);
-                context.SaveChanges();
+        //         context
+        //             .Orders
+        //             .AddRange(orders);
+        //         context.SaveChanges();
 
-            }
+        //     }
 
-            //TASKS
-            if (!context.DelegatedTasks.Any())
-            {
-                int randomUser;
-                var type = new List<String>{
-                    "Call", "Manage", "Order", "Send Invoice"
-                };
-                int randomType;
-                int randomDayStart;
-                int randomDayEnd;
-                int orderNumber = 0;
+        //     //TASKS
+        //     if (!context.DelegatedTasks.Any())
+        //     {
+        //         int randomUser;
+        //         var type = new List<String>{
+        //             "Call", "Manage", "Order", "Send Invoice"
+        //         };
+        //         int randomType;
+        //         int randomDayStart;
+        //         int randomDayEnd;
+        //         int orderNumber = 0;
 
-                var userOperations = new List<UserOperation> { };
-                var delegatedTask = new DelegatedTask();
+        //         var userOperations = new List<UserOperation> { };
+        //         var delegatedTask = new DelegatedTask();
 
-                for (int i = 0; i < 40; i++)
-                {
-                    randomUser = random.Next(1, 5);
-                    randomDayStart = random.Next(12);
-                    randomDayEnd = random.Next(8);
-                    randomType = random.Next(4);
-                    
-                    orderNumber++;
+        //         for (int i = 0; i < 40; i++)
+        //         {
+        //             randomUser = random.Next(1, 5);
+        //             randomDayStart = random.Next(12);
+        //             randomDayEnd = random.Next(8);
+        //             randomType = random.Next(4);
 
-                    delegatedTask = new DelegatedTask
-                    {
-                        Type = type[randomType],
-                        DateStarted = DateTime
-                            .Now
-                            .AddDays(-randomDayStart)
-                            .AddTicks(random.Next(30000, 1300000)),
-                        Deadline = DateTime
-                            .Now
-                            .AddDays(-randomDayStart + randomDayEnd)
-                            .AddTicks(random.Next(30000, 1300000)),
-                        Notes = "",
-                        FinishedBy = "",
-                        Accepted = true,
-                        Refused = false,
-                    };
+        //             orderNumber++;
 
-                    delegatedTask.Notes = "#" + orderNumber + "/ " + type[randomType] + " and do it before " + delegatedTask.Deadline.ToLocalTime() + ".";
-                    if (i % 5 == 0) { delegatedTask.Accepted = false; delegatedTask.Pending = true; delegatedTasks.Add(delegatedTask); continue; }
-                    else if (i % 7 == 0) { delegatedTask.FinishedBy = users[randomUser].DisplayName; delegatedTask.Done = true; delegatedTasks.Add(delegatedTask); continue; }
-                    else if (i % 13 == 0) { delegatedTask.Accepted = false; delegatedTask.Refused = true; delegatedTasks.Add(delegatedTask); continue; }
+        //             delegatedTask = new DelegatedTask
+        //             {
+        //                 Type = type[randomType],
+        //                 DateStarted = DateTime
+        //                     .Now
+        //                     .AddDays(-randomDayStart)
+        //                     .AddTicks(random.Next(30000, 1300000)),
+        //                 Deadline = DateTime
+        //                     .Now
+        //                     .AddDays(-randomDayStart + randomDayEnd)
+        //                     .AddTicks(random.Next(30000, 1300000)),
+        //                 Notes = "",
+        //                 FinishedBy = "",
+        //                 Accepted = true,
+        //                 Refused = false,
+        //             };
 
-                    delegatedTasks.Add(delegatedTask);
-                };
+        //             delegatedTask.Notes = "#" + orderNumber + "/ " + type[randomType] + " and do it before " + delegatedTask.Deadline.ToLocalTime() + ".";
+        //             if (i % 5 == 0) { delegatedTask.Accepted = false; delegatedTask.Pending = true; delegatedTasks.Add(delegatedTask); continue; }
+        //             else if (i % 7 == 0) { delegatedTask.FinishedBy = users[randomUser].DisplayName; delegatedTask.Done = true; delegatedTasks.Add(delegatedTask); continue; }
+        //             else if (i % 13 == 0) { delegatedTask.Accepted = false; delegatedTask.Refused = true; delegatedTasks.Add(delegatedTask); continue; }
 
-                context
-                    .DelegatedTasks
-                    .AddRange(delegatedTasks);
-                context.SaveChanges();
-            }
+        //             delegatedTasks.Add(delegatedTask);
+        //         };
 
-            //OPERATIONS
-            if (!context.Operations.Any())
-            {
-                int randomProperty = 0;
-                int randomRevenue = 0;
-                int randomDay = 0;
-                int randomSource = 0;
-                var sources = new List<String>{
-                    "Web", "Flyers", "Commercial", "Social media", "Former client"
-                };
-                var operation = new Operation();
+        //         context
+        //             .DelegatedTasks
+        //             .AddRange(delegatedTasks);
+        //         context.SaveChanges();
+        //     }
 
-                for (int i = 0; i < 200; i++)
-                {
-                    randomProperty = random.Next(106);
-                    randomRevenue = random.Next(15000);
-                    randomDay = random.Next(160);
-                    randomSource = random.Next(5);
+        //     //OPERATIONS
+        //     if (!context.Operations.Any())
+        //     {
+        //         int randomProperty = 0;
+        //         int randomRevenue = 0;
+        //         int randomDay = 0;
+        //         int randomSource = 0;
+        //         var sources = new List<String>{
+        //             "Web", "Flyers", "Commercial", "Social media", "Former client"
+        //         };
+        //         var operation = new Operation();
 
-                    operation = new Operation
-                    {
-                        Lead = 0,
-                        Opportunity = 0,
-                        Quote = 0,
-                        Invoice = 0,
-                        Conversion = 0,
-                        Order = 0,
-                        Revenue = 0,
-                        Source = "",
-                        Date = DateTime
-                          .Now
-                          .AddDays(-randomDay),
-                    };
+        //         for (int i = 0; i < 200; i++)
+        //         {
+        //             randomProperty = random.Next(106);
+        //             randomRevenue = random.Next(15000);
+        //             randomDay = random.Next(160);
+        //             randomSource = random.Next(5);
 
-                    if (randomProperty < 40)
-                    {
-                        operation.Lead = 1;
-                        operation.Source = sources[randomSource];
-                    }
-                    else if (randomProperty >= 40 && randomProperty < 68)
-                    {
-                        operation.Opportunity = 1;
-                    }
-                    else if (randomProperty >= 68 && randomProperty < 87)
-                    {
-                        operation.Quote = 1;
-                    }
-                    else if (randomProperty >= 87 && randomProperty < 95)
-                    {
-                        operation.Invoice = 1;
-                    }
-                    else if (randomProperty >= 95 && randomProperty < 101)
-                    {
-                        operation.Conversion = 1;
-                        operation.Revenue = randomRevenue;
-                    }
-                    else
-                    {
-                        operation.Order = 1;
-                    }
+        //             operation = new Operation
+        //             {
+        //                 Id = Guid.NewGuid(),
+        //                 Lead = 0,
+        //                 Opportunity = 0,
+        //                 Quote = 0,
+        //                 Invoice = 0,
+        //                 Conversion = 0,
+        //                 Order = 0,
+        //                 Revenue = 0,
+        //                 Source = "",
+        //                 Date = DateTime
+        //                   .Now
+        //                   .AddDays(-randomDay),
+        //             };
 
-                    operations.Add(operation);
-                };
+        //             if (randomProperty < 40)
+        //             {
+        //                 operation.Lead = 1;
+        //                 operation.Source = sources[randomSource];
+        //             }
+        //             else if (randomProperty >= 40 && randomProperty < 68)
+        //             {
+        //                 operation.Opportunity = 1;
+        //             }
+        //             else if (randomProperty >= 68 && randomProperty < 87)
+        //             {
+        //                 operation.Quote = 1;
+        //             }
+        //             else if (randomProperty >= 87 && randomProperty < 95)
+        //             {
+        //                 operation.Invoice = 1;
+        //             }
+        //             else if (randomProperty >= 95 && randomProperty < 101)
+        //             {
+        //                 operation.Conversion = 1;
+        //                 operation.Revenue = randomRevenue;
+        //             }
+        //             else
+        //             {
+        //                 operation.Order = 1;
+        //             }
 
-                context
-                    .Operations
-                    .AddRange(operations);
-                context.SaveChanges();
-            }
+        //             operations.Add(operation);
+        //         };
 
-            //UserOperations
-            if (!context.UserOperations.Any())
-            {
-                int randomUser = 0;
-                var userOperations = new List<UserOperation> { };
+        //         context
+        //             .Operations
+        //             .AddRange(operations);
+        //         context.SaveChanges();
+        //     }
 
-                for (int i = 0; i < 200; i++)
-                {
-                    randomUser = random.Next(1, 5);
+        //     //UserOperations
+        //     if (!context.UserOperations.Any())
+        //     {
+        //         int randomUser = 0;
+        //         var userOperations = new List<UserOperation> { };
 
-                    var userOperation = new UserOperation
-                    {
-                        User = users[randomUser],
-                        Operation = operations[i],
-                        DateAdded = operations[i].Date
-                    };
+        //         for (int i = 0; i < 200; i++)
+        //         {
+        //             randomUser = random.Next(1, 5);
 
-                    userOperations.Add(userOperation);
-                };
+        //             var userOperation = new UserOperation
+        //             {
+        //                 User = users[randomUser],
+        //                 Operation = operations[i],
+        //                 DateAdded = operations[i].Date
+        //             };
 
-                context
-                    .UserOperations
-                    .AddRange(userOperations);
-                context.SaveChanges();
-            }
+        //             userOperations.Add(userOperation);
+        //         };
 
-            //UserContacts
-            if (!context.UserContacts.Any())
-            {
-                int randomUser = 0;
-                var userContacts = new List<UserContact> { };
+        //         context
+        //             .UserOperations
+        //             .AddRange(userOperations);
+        //         context.SaveChanges();
+        //     }
 
-                for (int i = 0; i < 9; i++)
-                {
-                    randomUser = random.Next(1, 4);
+        //     //UserContacts
+        //     if (!context.UserContacts.Any())
+        //     {
+        //         int randomUser = 0;
+        //         var userContacts = new List<UserContact> { };
 
-                    var userContact = new UserContact
-                    {
-                        User = users[randomUser],
-                        Contact = contacts[i],
-                        DateAdded = contacts[i].DateAdded
-                    };
+        //         for (int i = 0; i < 9; i++)
+        //         {
+        //             randomUser = random.Next(1, 4);
 
-                    userContacts.Add(userContact);
-                };
+        //             var userContact = new UserContact
+        //             {
+        //                 User = users[randomUser],
+        //                 Contact = contacts[i],
+        //                 DateAdded = contacts[i].DateAdded
+        //             };
 
-                context
-                    .UserContacts
-                    .AddRange(userContacts);
-                context.SaveChanges();
-            }
+        //             userContacts.Add(userContact);
+        //         };
 
-            //UserTasks
-            if (!context.UserTasks.Any())
-            {
-                int randomUser = 0;
-                int randomShare = 0;
-                var userTasks = new List<UserTask> { };
-                var userTask = new UserTask();
-                for (int i = 0; i < 40; i++)
-                {
-                    var task = delegatedTasks[i];
-                    bool pending = task.Pending;
-                    randomUser = random.Next(2, 5);
-                    randomShare = random.Next(2, 5);
-                    if (task.Pending = true || task.Refused == true || task.Done == true || (i % 3 == 0 && task.Accepted == true))
-                    {
-                        while(randomUser == randomShare)
-                        randomShare = random.Next(2, 5);
+        //         context
+        //             .UserContacts
+        //             .AddRange(userContacts);
+        //         context.SaveChanges();
+        //     }
 
-                        userTask = new UserTask
-                        {
-                            CreatedBy = users[randomUser],
-                            CreatedById = users[randomUser].Id,
-                            DelegatedTask = task,
-                            DelegatedTaskId = task.Id,
-                            SharedWith = users[randomShare],
-                            SharedWithId = users[randomShare].Id,
-                            DateAdded = delegatedTasks[i].DateStarted
-                        };
-                    }
-                    task.Pending = pending;
+        //     //UserTasks
+        //     if (!context.UserTasks.Any())
+        //     {
+        //         int randomUser = 0;
+        //         int randomShare = 0;
+        //         var userTasks = new List<UserTask> { };
+        //         var userTask = new UserTask();
+        //         for (int i = 0; i < 40; i++)
+        //         {
+        //             var task = delegatedTasks[i];
+        //             bool pending = task.Pending;
+        //             randomUser = random.Next(2, 5);
+        //             randomShare = random.Next(2, 5);
+        //             if (task.Pending = true || task.Refused == true || task.Done == true || (i % 3 == 0 && task.Accepted == true))
+        //             {
+        //                 while (randomUser == randomShare)
+        //                     randomShare = random.Next(2, 5);
 
-                    userTasks.Add(userTask);
-                }
+        //                 userTask = new UserTask
+        //                 {
+        //                     CreatedBy = users[randomUser],
+        //                     CreatedById = users[randomUser].Id,
+        //                     DelegatedTask = task,
+        //                     DelegatedTaskId = task.Id,
+        //                     SharedWith = users[randomShare],
+        //                     SharedWithId = users[randomShare].Id,
+        //                     DateAdded = delegatedTasks[i].DateStarted
+        //                 };
+        //             }
+        //             task.Pending = pending;
 
-                context
-                .UserTasks
-                .AddRange(userTasks);
-                context.SaveChanges();
-            };
+        //             userTasks.Add(userTask);
+        //         }
+
+        //         context
+        //         .UserTasks
+        //         .AddRange(userTasks);
+        //         context.SaveChanges();
+        //     };
         }
     }
 }
