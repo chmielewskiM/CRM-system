@@ -22,6 +22,7 @@ namespace Application.Contacts
             public DateTime DateAdded { get; set; }
             public string Notes { get; set; }
             public string Status { get; set; }
+            public string Source { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -47,6 +48,7 @@ namespace Application.Contacts
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
+
                 var contact = await _context.Contacts.FindAsync(request.Id);
 
                 // if (contact.Name == request.Name &&
@@ -73,6 +75,7 @@ namespace Application.Contacts
                 contact.Email = request.Email ?? contact.Email;
                 contact.Notes = request.Notes ?? contact.Notes;
                 contact.Status = request.Status ?? contact.Status;
+                contact.Source = request.Source ?? contact.Source;
 
                 var success = await _context.SaveChangesAsync() > 0;
 

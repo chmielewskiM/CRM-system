@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System;
@@ -13,12 +12,13 @@ namespace Application.Contacts
 {
     public class GetContact
     {
-        public class Query : IRequest<Contact> { 
+        public class Query : IRequest<Contact>
+        {
 
             public String Name { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query,  Contact>
+        public class Handler : IRequestHandler<Query, Contact>
         {
             private readonly DataContext _context;
             private readonly ILogger<List> _logger;
@@ -32,10 +32,10 @@ namespace Application.Contacts
             }
 
             public async Task<Contact> Handle(Query request, CancellationToken cancellationToken)
-            {Console.WriteLine("1");
-            var name  = request.Name.Replace("%20"," ");
-                var contact =  await _context.Contacts.FirstOrDefaultAsync(x=> x.Name == name);
-                
+            {
+                var name = request.Name.Replace("%20", " ");
+                var contact = await _context.Contacts.FirstOrDefaultAsync(x => x.Name == name);
+
                 return contact;
                 // {   
                 //     Id = contact.Id,

@@ -133,7 +133,7 @@ namespace Application.Operations
                 }
             }
 
-            static (List<List<Operation>>, DateTime[], DateTime[]) sortOperations(IQueryable<Operation> queriedOperations, DateTime dateStart, DateTime dateEnd, double rangeDays,
+            private static (List<List<Operation>>, DateTime[], DateTime[]) sortOperations(IQueryable<Operation> queriedOperations, DateTime dateStart, DateTime dateEnd, double rangeDays,
                                             double[] intervalDays, int[] intervalMonths)
             {
                 List<List<Operation>> sortedOperations = new List<List<Operation>>();
@@ -157,7 +157,7 @@ namespace Application.Operations
             }
 
             //count total revenue
-            static double countRevenue(List<Operation> operations)
+            private static double countRevenue(List<Operation> operations)
             {
                 double revenue = 0;
                 foreach (Operation operation in operations)
@@ -169,7 +169,7 @@ namespace Application.Operations
             }
 
             //count amount of the particular lead source and create instance of Sources
-            static Sources countSources(List<Operation> operations)
+            private static Sources countSources(List<Operation> operations)
             {
                 int web = operations.Count(x => x.Source == "Web");
                 int socialMedia = operations.Count(x => x.Source == "Social media");
@@ -180,7 +180,7 @@ namespace Application.Operations
                 return new Sources(web, socialMedia, flyers, commercial, formerClient);
             }
 
-            static (List<CollectedOperationData>, Totals, List<OpportunitiesByUser>) collectSortedData(List<List<Operation>> list, DateTime[] startDate, DateTime[] endDate, List<User> users)
+            private static (List<CollectedOperationData>, Totals, List<OpportunitiesByUser>) collectSortedData(List<List<Operation>> list, DateTime[] startDate, DateTime[] endDate, List<User> users)
             {
 
                 Totals totals = new Totals(0, 0, 0, 0, 0, 0, 0, new Sources(0, 0, 0, 0, 0));

@@ -40,7 +40,6 @@ namespace Application.DelegatedTasks
                 var task = await _context
                     .DelegatedTasks
                     .FindAsync(request.Id);
-                Console.WriteLine("LOL");
                 if (task == null)
                     throw new RestException(HttpStatusCode.NotFound, new
                     {

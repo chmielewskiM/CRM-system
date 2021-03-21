@@ -16,6 +16,7 @@ namespace Domain
         public string Source { get; set; }
         public DateTime Date { get; set; }
         public virtual UserOperation UserOperation { get; set; }
+        public virtual SaleProcess CurrentSale { get; set; }
 
     }
 }

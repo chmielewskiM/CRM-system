@@ -58,12 +58,6 @@ namespace Application.DelegatedTasks
                 //get count of pending tasks shared with logged user
                 int pendingTasksCount = userTasks.Where(x => x.SharedWith == user && x.DelegatedTask.Pending.Equals(true)).Count();
 
-                Console.WriteLine(request.MyTasks);
-                Console.WriteLine(request.Pending);
-                Console.WriteLine(request.Accepted);
-                Console.WriteLine(request.Done);
-
-
                 //select tasks
                 //created by current user, admin can see all tasks
                 if (request.MyTasks.Equals(true) && user.Level != "top")
@@ -113,7 +107,6 @@ namespace Application.DelegatedTasks
                 else if (pending)
                 {
                     sortedTasks = sortedTasks.Where(x => x.DelegatedTask.Pending.Equals(true) && x.SharedWith == user);
-                    Console.WriteLine(sortedTasks.Count());
                 }
                 else if (done)
                 {

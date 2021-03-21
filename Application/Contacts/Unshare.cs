@@ -53,12 +53,12 @@ namespace Application.Contacts
 
                 var share = await _context
                     .UserContacts
-                    .SingleOrDefaultAsync(x => x.ContactId == contact.Id && x.UserId == user.Id);
+                    .SingleOrDefaultAsync(x => x.ContactId == contact.Id && x.UserId.Equals(user.Id));
 
                 if (share == null)
                     return Unit.Value;
 
-                if (share.UserId != user.Id)
+                if (!share.UserId.Equals(user.Id))
                     throw new RestException(HttpStatusCode.BadRequest, new { Share = "You cannot unshare this contact" });
 
                 _context.UserContacts.Remove(share);

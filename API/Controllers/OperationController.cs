@@ -17,11 +17,11 @@ namespace API.Controllers
             return await Mediator.Send(new List.Query(), ct);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Unit>> Add(Add.Command command)
-        {
-            return await Mediator.Send(command);
-        }
+        // [HttpPost]
+        // public async Task<ActionResult<Unit>> Add(Add.Command command)
+        // {
+        //     return await Mediator.Send(command);
+        // }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(Guid id)

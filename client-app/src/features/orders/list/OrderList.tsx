@@ -89,7 +89,7 @@ export const OrderList: React.FC = () => {
               <Table.Cell>{order.amount}</Table.Cell>
               <Table.Cell>{order.price}</Table.Cell>
               <Table.Cell>{destructureDate(new Date(order.dateOrderOpened))}</Table.Cell>
-              <Table.Cell>{order.notes}</Table.Cell>
+              <Table.Cell className='notes-cell'>{order.notes}</Table.Cell>
             </Table.Row>
           </Table.Body>
         ))}

@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Interfaces;
@@ -31,24 +33,23 @@ namespace Application.Contacts
 
             public async Task<List<ContactDTO>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var contacts = await _context.Contacts
-                .ToListAsync();
-                var contactsOwnedByUser = new List<Contact>();
+                List<Contact> contacts = new List<Contact>();
+                IQueryable<UserContact> userContacts = _context.UserContacts.Where(x => x.Contact.Status == "Inactive");
+
                 var user = await _context
                     .Users
                     .SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetLoggedUsername());
 
-                if (user.Level == "top")
-                    return _mapper.Map<List<Contact>, List<ContactDTO>>(contacts);
+                if (user.Level != "top")
+                    userContacts = userContacts.Where(x => x.User == user);
 
-                foreach (var contact in contacts)
+                foreach (var userContact in userContacts)
                 {
-                    var userHasContact = await _context.UserContacts.SingleOrDefaultAsync(x => x.ContactId == contact.Id && x.UserId == user.Id);
-                    if (userHasContact != null && userHasContact.Contact.Type != "Lead")
-                        contactsOwnedByUser.Add(contact);
+                    contacts.Add(userContact.Contact);
                 }
 
-                return _mapper.Map<List<Contact>, List<ContactDTO>>(contactsOwnedByUser);
+                // contacts.AddRange(userContacts.Where(x=>x.Contact));
+                return _mapper.Map<List<Contact>, List<ContactDTO>>(contacts);
             }
         }
     }

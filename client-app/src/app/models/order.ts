@@ -4,7 +4,7 @@ export interface IOrder {
   id: string;
   orderNumber: number;
   clientId: string;
-  client: IContact;
+  client?: IContact;
   clientName?: string;
   type: boolean;
   closed: boolean;
@@ -25,7 +25,7 @@ export class OrderFormValues implements Partial<IOrder> {
   orderNumber: number = 0;
   clientId: string = '';
   // client: IContact = new ContactFormValues();
-  clientName: string = '';
+  clientName?: string = '';
   type: boolean = false;
   closed: boolean = false;
   product: string = '';

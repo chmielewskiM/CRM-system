@@ -41,19 +41,6 @@ namespace API
 
         // This method gets called by the runtime. Use this method to add services to
         // the container.
-        // public void ConfigureDevelopmentServices(IServiceCollection services)
-        // {
-        //     services.AddDbContext<DataContext>(opt =>
-        //     {
-        //         opt.UseLazyLoadingProxies();
-        //         opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-        //     });
-        //     ConfigureServices(services);
-        // }
-        // public void Configure(IServiceCollection services)
-        // {
-
-        // }
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(opt =>
@@ -72,11 +59,11 @@ namespace API
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .WithOrigins("http://localhost:3000", "http://localhost:5000");
-                        // .AllowCredentials();
+                    // .AllowCredentials();
                 });
             });
-            services.AddMediatR(typeof(Application.Contacts.List.Handler).Assembly, typeof(Application.DelegatedTasks.ListTasks.Handler).Assembly, typeof(Application.Orders.ListOrders.Handler).Assembly);
-            services.AddAutoMapper(typeof(Application.Contacts.List.Handler), typeof(Application.DelegatedTasks.ListTasks.Handler), typeof(Application.Orders.ListOrders.Handler));
+            services.AddMediatR(typeof(Application.Contacts.List.Handler).Assembly, typeof(Application.DelegatedTasks.ListTasks.Handler).Assembly, typeof(Application.Orders.ListOrders.Handler).Assembly, typeof(Application.Leads.ListLeads.Handler).Assembly);
+            services.AddAutoMapper(typeof(Application.Contacts.List.Handler), typeof(Application.DelegatedTasks.ListTasks.Handler), typeof(Application.Orders.ListOrders.Handler), typeof(Application.Leads.ListLeads.Handler));
             services.AddMvc(opt =>
             {
                 var policy = new AuthorizationPolicyBuilder()

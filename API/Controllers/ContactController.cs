@@ -20,7 +20,6 @@ namespace API.Controllers
         
         public async Task<ActionResult<Contact>> GetContact(String name)
         {
-            // var n = name.Replace("%20", " ");
             return await Mediator.Send(new GetContact.Query { Name = name });
         }
 

@@ -5,6 +5,7 @@ import { IOrder } from '../models/order';
 import { IDelegatedTaskForm, ICompleteTaskData, IDelegatedTask } from '../models/delegatedTask';
 import { IUser, IUserFormValues, User } from '../models/user';
 import { IOperation, CompleteStats, ICompleteStats } from '../models/operation';
+import { ILead, Lead } from '../models/lead';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
@@ -56,11 +57,12 @@ const Contacts = {
 };
 
 const Leads = {
-  list: (): Promise<IContact[]> => requests.get('/lead'),
+  list: (params: URLSearchParams): Promise<ILead[]> => axios.get(`/lead`, {params: params}).then(responseBody),
   details: (id: string) => requests.get(`/lead/${id}`),
-  add: (contact: IContact) => requests.post('/lead', contact),
-  update: (contact: IContact) => requests.put(`/lead/${contact.id}`, contact),
-  delete: (id: string) => requests.del(`/lead/${id}`),
+  add: (lead: ILead) => requests.post('/lead', lead),
+  changeStatus: (contactId: string, upgrade:boolean) => requests.put(`/lead/${contactId}%${upgrade}`, {}),
+  editLead: (contact: IContact) => requests.put(`/lead/edit/${contact.id}`, contact),
+  abandonLead: (params: URLSearchParams) => axios.delete(`/lead`, {params: params}).then(responseBody),
 };
 
 const DelegatedTasks = {
@@ -77,6 +79,7 @@ const DelegatedTasks = {
 };
 
 const Orders = {
+  getOrder:(id:string): Promise<IOrder> => requests.get(`/order%${id}`),
   list: (params: URLSearchParams): Promise<IOrder[]> => axios.get(`/order`, {params: params}).then(responseBody),
   add: (order: IOrder) => requests.post('/order', order),
   update: (order: IOrder) => requests.put(`/order/${order.id}`, order),

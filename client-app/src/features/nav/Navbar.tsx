@@ -6,17 +6,33 @@ import { observer } from 'mobx-react-lite';
 
 export const Navbar: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
-  const { isLoggedIn, user, logout, topAccess } = rootStore.userStore;
-  const { toggledNav, toggleIcon, toggleNav, closeMobileNav, rowButtons } = rootStore.commonStore;
+  const { user, logout, topAccess } = rootStore.userStore;
+  const {
+    toggledNav,
+    toggleIcon,
+    toggleNav,
+    closeMobileNav,
+  } = rootStore.commonStore;
   const { addLeadForm, rr } = rootStore.leadStore;
 
   useEffect(() => {}, [user]);
 
   return (
-    <Menu position="left" pointing secondary vertical className={toggleIcon}>
-      <Container className="sideBar">
-        <Button onClick={toggleNav} toggle={toggledNav} icon={toggleIcon} />
-        <Menu.Item header className="nav-header">
+    <Menu
+      position="left"
+      pointing
+      secondary
+      vertical
+      className={`${toggleIcon} sidebar`}
+    >
+      <Container>
+        <Button
+          onClick={toggleNav}
+          toggle={toggledNav}
+          icon={toggleIcon.split(' ')[0]}
+          className={`${toggleIcon.split(' ')[1]} toggle-sidebar`}
+        />
+        <Menu.Item header className="sidebar-header">
           <Image fluid centered src="/assets/logo.png" alt="logo" />
           <h3>SteelBay</h3>
         </Menu.Item>

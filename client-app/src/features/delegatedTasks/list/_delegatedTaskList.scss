@@ -3,7 +3,7 @@
         & .tasks.row-content-1 {
             @include breakpoint(tablet) {
                 min-height: 50% !important;
-                
+
             }
 
             & .list-col {
@@ -41,10 +41,10 @@
                                 justify-content: space-evenly !important;
                                 background-image: radial-gradient(circle farthest-corner at 85.4% 50.8%, rgba(14, 72, 222, 1) 0%, rgba(3, 22, 65, 1) 74.2%) !important;
                                 cursor: default;
+                                box-shadow: 1px 1px 3px 1px #000 !important;
 
                                 & th,
                                 & td {
-                                    // height: min-content !important;
                                     flex: 1 0;
                                     max-width: 100% !important;
                                     background: transparent !important;
@@ -67,18 +67,15 @@
                                 background: #8e9eab !important;
                                 background: -webkit-linear-gradient(to right, #eef2f3, #8e9eab) !important;
                                 background: linear-gradient(to right, #eef2f3, #8e9eab) !important;
-
-                                box-shadow: 0 0 1px 1px #fff !important;
-                                // border-radius: 2px;
                                 cursor: pointer !important;
 
                                 &.active {
-                                    transform: scale(0.98);
+                                    transform: scale(1.02);
                                     transition: transform .1s ease-out, box-shadow .3s ease-out, padding .1s ease-out;
-                                    box-shadow: 0 0 2px 2px #fff !important;
-                                    // border: thin solid #000 !important;
                                     background-color: #485461;
                                     background-image: linear-gradient(315deg, #485461 0%, #28313b 74%) !important;
+                                    box-shadow: 1px 1px 3px 1px $color4 !important;
+                                    border: 0;
 
                                     & td {
                                         color: #fff;
@@ -129,11 +126,7 @@
                         }
                     }
 
-                    & .notes-cell {
-                        max-width: 12rem;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                    }
+
 
                     & .control-icons {
 

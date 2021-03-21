@@ -12,10 +12,11 @@
 
             & div {
                 position: relative;
-                padding:1rem;
+                padding: 1rem;
+
                 & .count {
                     margin-top: .3rem;
-                    padding:.05rem .25rem;
+                    padding: .05rem .25rem;
                     top: 0;
                     right: 0;
                     font-size: 1rem;
@@ -29,9 +30,11 @@
                     border-radius: 100%;
                     border: thin solid #fff;
                     justify-content: center;
-                    & span{
+
+                    & span {
                         align-self: center;
                     }
+
                     @include breakpoint(tablet) {
                         font-size: 1.3rem;
                     }
@@ -52,39 +55,43 @@
                     min-height: min-content !important;
                 }
 
-                & .filter-buttons {
-                    justify-content: flex-start;
+                & .list-col {
+                    padding:0;
+                    & .filter-buttons {
+                        justify-content: flex-start;
+                        width: 100%;
 
-                    @include breakpoint(tablet) {
-                        flex-wrap: wrap;
-                        padding: .5rem 0;
+                        @include breakpoint(tablet) {
+                            flex-wrap: wrap;
+                            padding: .5rem 0;
+
+                            & .buttons {
+                                margin: .5rem auto;
+                                border: thin solid #fff;
+                                border-radius: 5px;
+
+                                & .button,
+                                .label {
+                                    border-radius: 0;
+                                    padding: .5rem;
+                                }
+                            }
+                        }
 
                         & .buttons {
-                            margin: .5rem auto;
-                            border: thin solid #fff;
-                            border-radius: 5px;
+                            align-items: center;
 
                             & .button,
                             .label {
-                                border-radius: 0;
-                                padding: .5rem;
+                                font-size: 1.4rem;
+                                padding: .2rem .5rem;
                             }
                         }
                     }
 
-                    & .buttons {
-                        align-items: center;
-
-                        & .button,
-                        .label {
-                            font-size: 1.4rem;
-                            padding: .2rem .5rem;
-                        }
+                    & .task.list {
+                        font-size: 1.2rem;
                     }
-                }
-
-                & .task.list {
-                    font-size: 1.2rem;
                 }
             }
         }

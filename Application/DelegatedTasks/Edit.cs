@@ -48,7 +48,7 @@ namespace Application.DelegatedTasks
                 if (delegatedTask == null)
                     throw new RestException(HttpStatusCode.NotFound,
                     new { delegatedTask = "Not found" });
-                Console.WriteLine(request.Deadline);
+
                 delegatedTask.Type = request.Type ?? delegatedTask.Type;
                 delegatedTask.Deadline = request.Deadline.AddHours(1);
                 delegatedTask.Notes = request.Notes ?? delegatedTask.Notes;

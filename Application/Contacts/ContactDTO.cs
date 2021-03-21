@@ -17,6 +17,7 @@ namespace Application.Contacts
         public string Notes { get; set; }
         public string Status { get; set; }
         public Int16 SuccessfulDeals { get; set; }
+        public string Source { get; set; }
         public Int16 UnsuccessfulDeals { get; set; }
         [JsonProperty("users")]
         public ICollection<UserAccessDTO> UserContacts { get; set; }
