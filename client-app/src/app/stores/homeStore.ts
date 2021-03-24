@@ -114,7 +114,6 @@ export default class homeStore {
 
   @computed.struct get leadsChartData() {
     if (this.leadsChart && this.dataFetched) {
-      console.log(this.leadsBySourceData);
       return this.leadsBySourceData;
     } else if (this.dataFetched) return this.leadsOverallData;
     else return [];
@@ -162,7 +161,6 @@ export default class homeStore {
   }
   @computed.struct get opportunitiesChartData() {
     if (!this.opportunitiesChart && this.dataFetched) {
-      // console.log(this.opportunitiesBySourceData)
       return this.opportunitiesByEmployeeData;
     } else if (this.dataFetched) return this.opportunitiesOverallData;
     else return [];
@@ -221,7 +219,6 @@ export default class homeStore {
 
   @action render() {
     this.rr = !this.rr;
-    console.log('RR');
   }
   @action setPredicate = (
     predicate: ICollectedOperationData,
@@ -244,15 +241,6 @@ export default class homeStore {
       this.loadingInitial = false;
       this.render();
     });
-  };
-
-  @action showStats = () => {
-    console.log(Array.from(this.operationsRegistry.keys()));
-    const { ...a } = this.operationsTotalRegistry.get('thisMonth');
-    var b = Array.from(this.operationsByUserRegistry.values());
-
-    console.log(a);
-    console.log(b);
   };
 
   @action loadOperations = async () => {
@@ -281,7 +269,6 @@ export default class homeStore {
         this.operationsByUserRegistry.set('oneMonth', operationsByDate[6]);
         this.operationsByUserRegistry.set('sixMonths', operationsByDate[7]);
 
-        console.log('DATA FETCHED');
         this.dataFetched = true;
         this.loadingInitial = false;
         this.render();
@@ -306,12 +293,10 @@ export default class homeStore {
 
   @action sel = (ev: string, e: React.SyntheticEvent) => {
     var a = this.sel.bind;
-    console.log(a);
     this.selectedEvent = ev;
     var b = ev;
     this.bool = !this.bool;
     this.body = ev;
-    console.log(b);
     this.render();
   };
 

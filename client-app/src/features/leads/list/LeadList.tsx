@@ -27,7 +27,6 @@ export const LeadList: React.FC<IProps> = (props) => {
     loadingInitial,
     submitting,
     loadLeads,
-    leadRegistry,
     leadsList,
     abandonLead,
     targetLead,
@@ -40,7 +39,7 @@ export const LeadList: React.FC<IProps> = (props) => {
 
   const progress = (status: string) => {
     switch (status) {
-      case 'Active':
+      case 'Lead':
         return 25;
       case 'Opportunity':
         return 50;
@@ -55,7 +54,7 @@ export const LeadList: React.FC<IProps> = (props) => {
   const [target, setTarget] = useState(new LeadFormValues());
 
   return (
-    <Fragment>
+    <Segment className='list'>
       {leadsList.map((lead: ILead) => (
         <Segment
           key={lead.contact.id}
@@ -116,9 +115,9 @@ export const LeadList: React.FC<IProps> = (props) => {
                     style={{ color: 'red' }}
                   />
                 )}
-                {/* {lead.order?.id == null && lead.contact.status =='Quote' && (
-                  <p style={{color:'red'}}>Add an order to proceed</p>
-                )} */}
+                {lead.order?.id == null && lead.contact.status =='Quote' && (
+                  <p style={{color:'red'}}>Add an order to proceed.</p>
+                )}
 
               </Container>
             </Grid.Row>
@@ -135,7 +134,7 @@ export const LeadList: React.FC<IProps> = (props) => {
           </Grid>
         </Segment>
       ))}
-    </Fragment>
+    </Segment>
   );
 };
 

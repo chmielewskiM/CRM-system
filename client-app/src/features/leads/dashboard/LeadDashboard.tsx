@@ -38,7 +38,6 @@ export const LeadDashboard: React.FC = () => {
           onClick={(event) => rootStore.commonStore.expandMenu(event)}
         />
       </Grid.Row>
-      <Grid.Row></Grid.Row>
       <Grid.Row className="row-content-1 leads">
         <Segment attached="top" className="filter-buttons">
           <Button.Group floated="left">

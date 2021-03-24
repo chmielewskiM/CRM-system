@@ -42,37 +42,53 @@ namespace Application.Leads
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var guid = Guid.NewGuid();
-
-                var contact = new Contact
-                {
-                    Id = Guid.NewGuid(),
-                    Name = request.Lead.Contact.Name,
-                    Type = "Lead",
-                    Company = request.Lead.Contact.Company,
-                    PhoneNumber = request.Lead.Contact.PhoneNumber,
-                    DateAdded = DateTime.Now,
-                    Email = request.Lead.Contact.Email,
-                    Notes = request.Lead.Contact.Notes,
-                    Status = "Active",
-                    Source = request.Lead.Contact.Source
-                };
-
-                _context.Contacts.Add(contact);
-
+                var contact = new Contact();
+                Console.WriteLine(request.Lead.Contact.Status);
                 var user = await _context.Users.SingleOrDefaultAsync(x =>
-                x.UserName == _userAccessor.GetLoggedUsername());
-
-                var userAccess = new UserContact
+                            x.UserName == _userAccessor.GetLoggedUsername());
+                if (request.Lead.Contact.Status.Equals(""))
                 {
-                    Id = Guid.NewGuid(),
-                    User = user,
-                    UserId = new Guid(user.Id),
-                    Contact = contact,
-                    ContactId = contact.Id,
-                    DateAdded = request.Lead.Contact.DateAdded
-                };
+                    contact = new Contact
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = request.Lead.Contact.Name,
+                        Type = "Client",
+                        Company = request.Lead.Contact.Company,
+                        PhoneNumber = request.Lead.Contact.PhoneNumber,
+                        DateAdded = DateTime.Now,
+                        Email = request.Lead.Contact.Email,
+                        Notes = request.Lead.Contact.Notes,
+                        Status = "Lead",
+                        Source = request.Lead.Contact.Source,
+                        Premium = false
+                    };
 
-                _context.UserContacts.Add(userAccess);
+                    _context.Contacts.Add(contact);
+
+                    var userAccess = new UserContact
+                    {
+                        Id = Guid.NewGuid(),
+                        User = user,
+                        UserId = new Guid(user.Id),
+                        Contact = contact,
+                        ContactId = contact.Id,
+                        DateAdded = request.Lead.Contact.DateAdded
+                    };
+                    _context.UserContacts.Add(userAccess);
+                }
+
+                else
+                {
+                    contact = await _context.Contacts.FindAsync(request.Lead.Contact.Id);
+                    Console.WriteLine(contact);
+                    contact.Status = "Lead";
+                }
+
+
+
+
+
+
 
                 var newOperation = new Operations.Add();
 

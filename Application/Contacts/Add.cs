@@ -12,6 +12,10 @@ namespace Application.Contacts
 {
     public class Add
     {
+        public Add()
+        {
+        }
+
         public class Command : IRequest
         {
             public Guid Id { get; set; }
@@ -23,6 +27,7 @@ namespace Application.Contacts
             public DateTime DateAdded { get; set; }
             public string Notes { get; set; }
             public string Status { get; set; }
+            public Boolean Premium { get; set; }
 
         }
         public class CommandValidator : AbstractValidator<Command>
@@ -59,7 +64,8 @@ namespace Application.Contacts
                     DateAdded = request.DateAdded,
                     Email = request.Email,
                     Notes = request.Notes,
-                    Status = "Active"
+                    Status = "Inactive",
+                    Premium = false
                 };
 
                 _context.Contacts.Add(contact);

@@ -6,46 +6,40 @@ import {
   opportunityControls,
   quoteControls,
   invoiceControls,
+  contactControls,
 } from '../../../app/common/options/buttons';
 import { RootStoreContext } from '../../../app/stores/rootStore';
-import { ILead } from '../../../app/models/lead';
+import { IContact } from '../../../app/models/contact';
+import ShareContactForm from '../form/ShareContactForm';
 
 interface IProps {
-  lead: ILead;
+  contact: IContact;
 }
 
-export const LeadControls: React.FC<IProps> = (props) => {
+export const ContactControls: React.FC<IProps> = (props) => {
   const rootStore = useContext(RootStoreContext);
   const { modal, openModal, confirmModal } = rootStore.modalStore;
 
-  const { submitting, handleLead, setTargetLead, rr } = rootStore.leadStore;
-  useEffect(() => {}, []);
+  const {
+    submitting,
+    handleContact,
+    shareContactForm,
+    rr,
+  } = rootStore.contactStore;
+  useEffect(() => {}, [rr]);
 
-  const status = props.lead.contact.status;
-
-  const importControls = (status: string) => {
-    switch (status) {
-      case 'Lead':
-        return leadControls;
-      case 'Opportunity':
-        return opportunityControls;
-      case 'Quote':
-        return quoteControls;
-      case 'Invoice':
-        return invoiceControls;
-    }
-  };
+  const status = props.contact.status;
 
   return (
     <Fragment>
       <Button.Group>
-        {importControls(status)?.map((button: any) => (
+        {contactControls.map((button: any) => (
           <Fragment key={button.key}>
             <Button
               as={button.as}
               href={
                 button.as == 'a'
-                  ? 'mailto:'.concat(props.lead.contact.email)
+                  ? 'mailto:'.concat(props.contact.email)
                   : undefined
               }
               icon={button.icon}
@@ -56,11 +50,10 @@ export const LeadControls: React.FC<IProps> = (props) => {
               compact={button.compact}
               className={button.className}
               onClick={() => {
-                handleLead(button.functionArg, props.lead);
-                setTargetLead(props.lead);
+                handleContact(button.functionArg, props.contact);
               }}
-              disabled={submitting || (button.className ==  'invoice' && props.lead.order == null) }
-
+              // disabled={submitting || (button.className ==  'invoice' && props.lead.order == null) }
+              disabled={submitting}
             />
           </Fragment>
         ))}
@@ -68,4 +61,4 @@ export const LeadControls: React.FC<IProps> = (props) => {
     </Fragment>
   );
 };
-export default observer(LeadControls);
+export default observer(ContactControls);

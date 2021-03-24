@@ -95,7 +95,6 @@ const OpportunityByEmployeeChart: React.FC<IProps> = (props) => {
   useLayoutEffect(() => {
     var chart = am4core.create('opportunitiesByEmployeeChart', am4charts.XYChart);
     chart.data = props.data;
-    console.log(props.data);
 
     var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
     categoryAxis.dataFields.category = 'name';

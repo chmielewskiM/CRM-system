@@ -1,65 +1,172 @@
 #root {
     .ui.container.wrapper {
-        & .main-grid {
-            & .details {
-                margin: 2rem;
-                background: rgb(0, 48, 63);
-                background: linear-gradient(0deg, rgba(0, 48, 63, 1) 60%, rgba(14, 144, 121, 0.5970763305322129) 80%, rgba(22, 199, 154, 0.5018382352941176) 100%);
-                box-shadow: 0 0 2px 0 #fff;
+        & .grid.main-grid.contacts {
+            & .row-content-2 {
 
-                & * {
-                    color: #fff;
-                }
+                & .contact-details {
+                    background-image: linear-gradient(270deg, #056f92 5%, #063954 95%);
+                    @include reset-div;
+                    padding: 0 1rem;
+                    background-color: #fff;
+                    box-shadow: 0 0 2px 0 #fff;
+                    @include component-border;
+                    padding-bottom: 1.5rem;
+                    
+                    &:before {
+                        background: #E0EAFC;
+                        background: -webkit-linear-gradient(to right, #CFDEF3, #E0EAFC);
+                        background: linear-gradient(to right, #CFDEF3, #E0EAFC);
 
-                & .icon.floated {
-                    background-color: transparent;
-                    font-size: 2rem;
-                }
-
-                & h2.header {
-                    font-size: 2rem;
-                    width: max-content;
-                    max-width: 80%;
-                    padding: .5rem;
-                    background-color: rgba(0, 0, 0, 0.3);
-                    border-radius: .7rem;
-                }
-
-                & h3.header {
-                    font-size: 1.6rem;
-                }
-
-                & .ribbon {
-                    font-size: 1.2rem;
-                    border-color: $color1;
-                    background-color: $color1;
-                }
-
-                & .deals {
-                    display: flex;
-                    justify-content: flex-start;
-
-                    &>* {
-                        background-color: #fff;
-                        font-size: 1.2rem;
                     }
 
-                    & :first-child {
-                        color: green;
+                    & .minor-header {
+                        color: #fff;
                     }
 
-                    & :last-child {
-                        margin-left: 2rem;
-                        color: red;
+                    & .grid {
+                        align-items: flex-start;
+                        height: min-content;
+                        justify-content: space-between;
+                        position: relative;
+                        border:none !important;
+                        & .column {
+
+                            padding: 1rem 0;
+                            height: 100%;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: flex-end;
+
+                            & .ribbon {
+                                width: 30%;
+                                left: -2rem;
+                                font-size: 1.4rem;
+                                color: #000;
+                                border-color: $color5;
+                                background-image: radial-gradient( circle farthest-corner at 10% 20%, rgba(252,251,121,1) 0%, rgba(255,200,124,1) 90% );
+                                cursor: default;
+                                border: 2px inset rgba(0, 0, 0, 0.7);
+                                box-shadow: 0 1px 3px 0 #000;
+                                border-radius: 5px;
+                            }
+
+
+                            & .mark-premium button,
+                            .unmark-premium button {
+                                height: 100%;
+                                padding: 0;
+                                width: 100%;
+                                font-size: 1.2rem;
+                                background-color: transparent;
+                                text-align: left;
+                            }
+
+                            & div {
+                                position: relative;
+                                font-size: 1.4rem;
+
+                                &>* {
+                                    text-align: left;
+                                }
+
+                                &.date {
+                                    margin: 2.5rem 0;
+                                }
+
+                                &.phone,
+                                &.email {
+                                    margin: 1rem 0 0 1rem !important;
+                                    white-space: nowrap;
+                                    min-width: 50%;
+                                    width: min-content;
+                                    color: $color-primary-dark;
+                                    background-color: #fff;
+                                    padding: .5rem;
+                                    border: thin solid $color-primary-dark;
+                                    box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.5);
+                                    border-radius: 3px;
+
+                                    @include breakpoint(smartphone) {
+                                        padding: .5rem .3rem;
+                                        margin-top: 2rem;
+                                        margin-left: .7rem !important;
+                                        font-size: 1.2rem;
+                                    }
+                                }
+                            }
+
+                            &.right {
+                                background-color: #fff;
+                                width: min-content !important;
+                                white-space: nowrap;
+                                padding: .5rem;
+                                margin-top: 2rem;
+                                margin-right: 2rem;
+                                align-self: flex-start;
+                                justify-content: space-between;
+                                border: thin solid $color-primary-dark;
+                                box-shadow: 1px 1px 3px 0 #000;
+                                position: absolute;
+                                top: 0;
+                                right: 0;
+                                height: 40%;
+
+                                @include breakpoint(desktop) {
+                                    margin-top: 2rem;
+                                    margin-right: .7rem;
+                                }
+
+                                @include breakpoint(smartphone) {
+                                    padding: .5rem;
+                                    margin-top: 2rem;
+                                    margin-right: .6rem;
+                                }
+
+                                & .mark-premium .premium,
+                                & .status,
+                                & .deals {
+                                    font-size: 1.5rem;
+
+                                    @include breakpoint(smartphone) {
+                                        font-size: 1.2rem;
+                                    }
+
+
+                                    & .icon:not(.outline):before {
+                                        color: $color-detail !important;
+                                    }
+
+                                }
+                            }
+                        }
+
+                        & .row {
+                            padding: 0 2rem;
+
+                            & .notes {
+                                width: 100%;
+                                min-height: 7rem;
+                                max-height: auto;
+                                border-top: thin solid $color-primary-dark;
+                                padding-top: .2rem;
+
+                                & .header {
+                                    font-style: italic;
+                                }
+
+                                & p {
+                                    text-indent: 2rem;
+                                    font-size: 1.3rem;
+                                    padding: 1rem;
+                                    background-color: #fff;
+                                    border: thin solid $color-primary-dark;
+                                    box-shadow: 1px 1px 3px 0 #000;
+                                    border-radius: 3px;
+                                    margin-bottom: .5rem;
+                                }
+                            }
+                        }
                     }
-                }
-
-                & .divider {
-                    border-color: $color3;
-                }
-
-                & .notes {
-                    font-size: 1.3rem;
                 }
             }
         }

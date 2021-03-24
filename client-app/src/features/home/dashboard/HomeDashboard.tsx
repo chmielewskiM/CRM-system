@@ -26,7 +26,6 @@ export const HomeDashboard: React.FC = () => {
     loadOperations,
     predicate,
     setPredicate,
-    showStats,
     pipelineData,
     pipelineTimeRange,
     thisMonthStats,

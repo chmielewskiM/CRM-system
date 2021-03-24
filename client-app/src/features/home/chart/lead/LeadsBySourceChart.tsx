@@ -11,7 +11,6 @@ interface IProps {
 }
 
 const LeadsBySourceChart: React.FC<IProps> = (props) => {
-  console.log('LOL@');
   useLayoutEffect(() => {
     // Create chart instance
     var chart = am4core.create('leadsBySourceChart', am4charts.PieChart3D);
@@ -23,7 +22,6 @@ const LeadsBySourceChart: React.FC<IProps> = (props) => {
     props.data.forEach((x: any) => data.push(x));
     // Add data
     chart.data = props.data;
-    console.log('LOL');
     // Add and configure Series
     var pieSeries = chart.series.push(new am4charts.PieSeries3D());
     pieSeries.dataFields.value = 'value';
@@ -37,7 +35,9 @@ const LeadsBySourceChart: React.FC<IProps> = (props) => {
     pieSeries.ticks.template.disabled = true;
 
     // Disable sliding out of slices
-    pieSeries.slices.template.states.getKey('hover')!.properties.shiftRadius = 0;
+    pieSeries.slices.template.states.getKey(
+      'hover'
+    )!.properties.shiftRadius = 0;
     pieSeries.slices.template.states.getKey('hover')!.properties.scale = 1.1;
 
     return () => {
@@ -47,7 +47,10 @@ const LeadsBySourceChart: React.FC<IProps> = (props) => {
 
   return (
     <Fragment>
-      <div id="leadsBySourceChart" style={{ width: '100%', height: '100%' }}></div>
+      <div
+        id="leadsBySourceChart"
+        style={{ width: '100%', height: '100%' }}
+      ></div>
     </Fragment>
   );
 };

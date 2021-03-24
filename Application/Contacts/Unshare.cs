@@ -1,5 +1,6 @@
 
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,7 +12,10 @@ using Microsoft.EntityFrameworkCore;
 using Persistence;
 ////////////////////////////////////////////
 //////
-//////     ***FEATURE NOT IMPLEMENTED ***
+//////     Unshare is used for deleting UserContacts entities.
+//////     User 'deletes' a contact (address book is based on UserContact entities),
+//////     but in fact the contact is kept in DB.
+//////     Only admin has access to 'deleted' contacts, he can restore them or remove them completely.
 //////
 ////////////////////////////////////////////
 namespace Application.Contacts
@@ -41,6 +45,8 @@ namespace Application.Contacts
                     .Contacts
                     .FindAsync(request.Id);
 
+                IQueryable<Order> orders = _context.Orders.AsQueryable();
+
                 if (contact == null)
                     throw new RestException(HttpStatusCode.NotFound, new
                     {
@@ -53,13 +59,22 @@ namespace Application.Contacts
 
                 var share = await _context
                     .UserContacts
-                    .SingleOrDefaultAsync(x => x.ContactId == contact.Id && x.UserId.Equals(user.Id));
+                    .SingleOrDefaultAsync(x => x.ContactId == contact.Id && x.UserId.Equals(new Guid(user.Id)));
 
                 if (share == null)
                     return Unit.Value;
 
-                if (!share.UserId.Equals(user.Id))
+                if (!share.UserId.Equals(new Guid(user.Id)))
                     throw new RestException(HttpStatusCode.BadRequest, new { Share = "You cannot unshare this contact" });
+
+                var hasOpenOrder = await orders.SingleOrDefaultAsync(x => x.UserId == user.Id && x.ClientId == contact.Id && x.Closed == false);
+                Console.WriteLine(hasOpenOrder == null);
+                // Console.WriteLine(hasOpenOrder.FirstOrDefault());
+                if (hasOpenOrder != null)
+                    throw new RestException(HttpStatusCode.FailedDependency, new
+                    {
+                        error = "The contact has an open order. Close or delete the order before deleting the contact."
+                    });
 
                 _context.UserContacts.Remove(share);
 

@@ -1,5 +1,4 @@
 export const options = [
-  { key: 'Lead', text: 'Lead', value: 'Lead' },
   { key: 'Client', text: 'Client', value: 'Client' },
   { key: 'Team', text: 'Team', value: 'Team' },
   { key: 'Supplier', text: 'Supplier', value: 'Supplier' },

@@ -20,7 +20,6 @@ export default class AdminStore {
       this.rootStore.userStore.register(newUser);
     } else {
         // this.rootStore.userStore.register(user);
-        console.log('edited user')
     }
   };
 

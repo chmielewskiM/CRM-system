@@ -54,7 +54,7 @@ const App: React.FC<RouteComponentProps> = ({ history }) => {
         render={() => (
           <>
             <Navbar />
-            <Container className="wrapper">
+            <Container fluid className="wrapper">
               <Route path="/dashboard" component={HomeDashboard} />
               <Route path="/contacts" component={ContactDashboard} />
               <Route path="/leads" component={LeadDashboard} />

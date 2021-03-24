@@ -1,8 +1,85 @@
-export const orderButtons = [
+export const contactButtons = [
   {
     key: 1,
     content: 'All',
     as: 'a',
+    icon:'users',
+    size: 'small' as const,
+    compact: true,
+    className: 'all',
+    functionArg: 'all',
+  },
+  {
+    key: 2,
+    content: 'In process',
+    as: 'a',
+    icon:'bolt',
+    size: 'small' as const,
+    compact: true,
+    className: 'process',
+    functionArg: 'inProcess',
+  },
+  {
+    key: 3,
+    content: 'Premium',
+    as: 'a',
+    icon:'star',
+    size: 'small' as const,
+    compact: true,
+    className: 'premium',
+    functionArg: 'premium',
+  },
+];
+
+export const contactControls = [
+
+  {
+    key: 1,
+    content:'',
+    as:'a',
+    icon: 'mail outline',
+    size: 'small' as const,
+    compact: true,
+    className: 'mail',
+    functionArg: 'mail',
+  },
+  {
+    key: 2,
+    content:'',
+    as:'',
+    icon: 'share square',
+    size: 'small' as const,
+    compact: true,
+    className: 'share',
+    functionArg: 'share',
+  },
+  {
+    key: 3,
+    content:'',
+    as:'',
+    icon: 'pencil',
+    size: 'small' as const,
+    compact: true,
+    className: 'edit',
+    functionArg: 'edit',
+  },
+  {
+    key: 4,
+    content: '',
+    as:'',
+    icon: 'eraser',
+    size: 'small' as const,
+    compact: true,
+    className: 'delete',
+    functionArg: 'delete',
+  },
+];
+
+export const orderButtons = [
+  {
+    key: 1,
+    content: 'All',
+    as: '',
     size: 'small' as const,
     compact: true,
     className: 'active',
@@ -49,7 +126,7 @@ export const filterSharedTasksButtons = [
   {
     key: 1,
     content: 'All',
-    as: 'a',
+    as: '',
     size: 'small' as const,
     compact: true,
     className: 'active',
@@ -85,7 +162,7 @@ export const filterLeads = [
   {
     key: 1,
     content:'All',
-    as:'a',
+    as:'',
     active:true,
     size: 'small' as const,
     compact: true,
@@ -101,7 +178,7 @@ export const filterLeads = [
     compact: true,
     className: 'lead',
     functionArg: 'lead',
-    btnActive:'active'
+    btnActive:'lead'
   },
   {
     key: 3,

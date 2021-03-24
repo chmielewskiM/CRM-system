@@ -5,6 +5,10 @@ using MediatR;
 using Persistence;
 using Domain;
 using System.Linq;
+using Application.Errors;
+using Microsoft.EntityFrameworkCore;
+using System.Net;
+using Application.Interfaces;
 
 namespace Application.Orders
 {
@@ -29,21 +33,34 @@ namespace Application.Orders
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
+            private readonly IUserAccessor _userAccessor;
 
-            public Handler(DataContext context)
+            public Handler(DataContext context, IUserAccessor userAccessor)
             {
+                _userAccessor = userAccessor;
                 _context = context;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var client =  await _context.Contacts.FindAsync(request.ClientId);
-                var orderCount = _context.Orders.Count();
+                var client = await _context.Contacts.FindAsync(request.ClientId);
+                var orderCount = _context.Orders.Count() + 1;
+
+                var user = await _context
+                    .Users
+                    .SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetLoggedUsername());
+
+                if (user == null)
+                    throw new RestException(HttpStatusCode.NotFound, new
+                    {
+                        error = "Could not access user. Make sure you are logged in properly."
+                    });
 
                 var order = new Order
                 {
                     Id = Guid.NewGuid(),
-                    OrderNumber = orderCount++,
+                    OrderNumber = orderCount,
+                    UserId = user.Id,
                     ClientId = request.ClientId,
                     Client = client,
                     Type = request.Type,
@@ -57,6 +74,9 @@ namespace Application.Orders
                 };
 
                 _context.Orders.Add(order);
+
+                client.Orders.Append(order);
+
                 var success = await _context.SaveChangesAsync() > 0;
 
                 if (success) return Unit.Value;

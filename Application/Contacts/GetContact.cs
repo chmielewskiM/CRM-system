@@ -21,10 +21,10 @@ namespace Application.Contacts
         public class Handler : IRequestHandler<Query, Contact>
         {
             private readonly DataContext _context;
-            private readonly ILogger<List> _logger;
+            private readonly ILogger<GetContact> _logger;
             private readonly UserManager<User> _userManager;
 
-            public Handler(DataContext context, ILogger<List> logger, UserManager<User> userManager)
+            public Handler(DataContext context, ILogger<GetContact> logger, UserManager<User> userManager)
             {
                 _userManager = userManager;
                 _logger = logger;

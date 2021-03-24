@@ -70,7 +70,8 @@ namespace Application.Leads
                     userContacts = filterLeads(userContacts, user, request.Status);
                 }
                 foreach (UserContact userContact in userContacts)
-                {
+                {   
+
                     data.Add(new Lead
                     {
                         Contact = userContact.Contact,
@@ -100,7 +101,7 @@ namespace Application.Leads
                 {
                     case "lead":
                         userContacts = userContacts
-                        .Where(x => x.Contact.Status == "Active");
+                        .Where(x => x.Contact.Status == "Lead");
                         break;
                     case "opportunity":
                         userContacts = userContacts

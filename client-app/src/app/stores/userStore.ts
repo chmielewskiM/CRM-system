@@ -20,7 +20,6 @@ export default class UserStore {
         runInAction(() => {
           this.topAccess = this.midAccess = this.lowAccess = false;
           this.user = user;
-          console.log('x')
           if (user.level == 'top') this.topAccess = true;
           else if (user.level == 'mid') this.midAccess = true;
           else this.lowAccess = true;
@@ -86,7 +85,10 @@ export default class UserStore {
       const us = await agent.Users.list();
       runInAction(() => {
         us.forEach((element) => {
-          if ((!removeLoggedUser || element.id != this.user?.id) && element.level != 'top')
+          if (
+            (!removeLoggedUser || element.id != this.user?.id) &&
+            element.level != 'top'
+          )
             this.userList.set(element.id, element);
         });
         this.render();
