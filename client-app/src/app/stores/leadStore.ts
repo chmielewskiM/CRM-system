@@ -149,8 +149,7 @@ export default class LeadStore {
   @action setLeadList = (
     arg: string,
     sortBy: string,
-    ev?: EventTarget & HTMLButtonElement,
-    active?:React.Component
+    ev?: EventTarget & HTMLButtonElement
   ) => {
     if (ev != undefined) {
       for (var child of ev?.parentElement!.children)
@@ -195,8 +194,6 @@ export default class LeadStore {
   @action addLead = async (values: ILead) => {
     this.submitting = true;
     let lead = values;
-    lead.contact.status = 'Active';
-    lead.contact.type = 'Lead';
     try {
       await agent.Leads.add(lead);
       runInAction('Loading leads', () => {

@@ -41,7 +41,6 @@ export default class ModalStore {
     this.modal.open = true;
     type == 'abandon' ? this.abandonModal = true : this.abandonModal = false;
     this.modal.body = content;
-    console.log('OPEN MODAL '+type)
     this.rr = !this.rr;
   };
 

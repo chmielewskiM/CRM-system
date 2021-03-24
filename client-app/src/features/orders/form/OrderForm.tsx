@@ -37,12 +37,18 @@ export const OrderForm: React.FC<IProps> = (props) => {
     selectedOrder,
     toggleSelect,
   } = rootStore.orderStore;
-  const { contactsByName, selectedContact, loadContacts, getContact } = rootStore.contactStore;
+  const {
+    uncontractedContacts,
+    selectedContact,
+    loadUncontracted,
+    getContact,
+  } = rootStore.contactStore;
 
   useEffect(() => {
-    loadContacts();
+    loadUncontracted();
   }, [addOrder, editOrder]);
-  if (loadingInitial || submitting) return <LoaderComponent content="Loading..." />;
+  if (loadingInitial || submitting)
+    return <LoaderComponent content="Loading..." />;
   return (
     <Segment clearing>
       <Modal open>
@@ -55,14 +61,14 @@ export const OrderForm: React.FC<IProps> = (props) => {
               render={({ handleSubmit }) => (
                 <Form onSubmit={handleSubmit} size="big">
                   <Form.Select
-                    options={contactsByName}
+                    options={uncontractedContacts}
                     name="client"
                     placeholder="Select client"
                     value={selectedContact?.name}
-                    onClick={() => {}}
+                    // onClick={loadUncontracted}
                     onChange={(e, data) => {
                       getContact(data.value!.toString());
-                      loadContacts();
+                      // loadUncontracted();
                     }}
                   />
                   <Form.Group inline className="btn-group-1">

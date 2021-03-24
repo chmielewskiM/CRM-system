@@ -7,8 +7,7 @@
         flex: .15 0;
         border: 0;
         margin: 0;
-        min-width: 6rem;
-        transition: flex .5s ease-out;
+        transition: all .5s ease-out;
         overflow-y: visible !important;
 
         @include breakpoint(tablet) {
@@ -17,7 +16,7 @@
         }
 
         @include breakpoint(tablet_landscape) {
-            flex: 0.25 1;
+            flex: 0.25 0;
         }
 
         & .container {
@@ -30,7 +29,7 @@
             background: -webkit-linear-gradient(to top, #1CB5E0, #000046);
             background: linear-gradient(to top, #1CB5E0, #000046);
             font-size: 1.6rem;
-           
+            width: unset;
 
             @include breakpoint(tablet) {
                 overflow-y: scroll;
@@ -158,8 +157,9 @@
                     flex: 0;
                     padding: 0 1rem;
                     transition: color .05s linear, font-size .15s ease-in .4s;
+
                     @include breakpoint(tablet) {
-                      
+
                         transition: color .05s linear;
                     }
                 }
@@ -216,7 +216,7 @@
                     margin: 1rem 0;
                     top: 0;
                     bottom: 0;
-                    
+
                     & .item.logout {
                         margin: .5rem !important;
                         padding: 0;
@@ -248,8 +248,8 @@
         }
 
         &.off {
-            flex: .01 0;
-            min-width: 6rem;
+            flex: .01 0 !important;
+            width: 6rem;
             transition-duration: .3s;
 
             @include breakpoint(tablet) {
@@ -263,16 +263,16 @@
                 right: 0;
                 bottom: 0;
                 z-index: 90;
-                
+
             }
 
             @include breakpoint(tablet_landscape) {
                 flex: 0.07 0;
             }
 
-            @include breakpoint(computer) {
-                flex: 0.05 0;
-            }
+            // @include breakpoint(computer) {
+            //     flex: 0.05 0;
+            // }
 
             & .container {
                 & .toggle-sidebar.button {
@@ -309,21 +309,40 @@
                         justify-content: space-between;
                         align-self: center;
                         transition: font-size 0s;
+
                         &.active,
                         &.active:focus {
                             color: $color-primary-dark !important;
+
                             & .icon {
                                 color: $color-primary-dark !important;
                             }
+
                             &:hover {
                                 color: $color-primary-dark !important;
-                            
+
                             }
                         }
-                        &:focus,&:not(.active) {
+
+                        &:focus,
+                        &:not(.active) {
                             color: #fff !important;
-                            & .icon{
-                                color:#fff !important;
+
+                            & .icon {
+                                color: #fff !important;
+                            }
+                        }
+                    }
+
+                    &:focus:not(.active) {
+                        & .icon {
+                            color: #fff !important;
+
+                        }
+
+                        &:hover {
+                            & .icon {
+                                color: $color-detail !important;
                             }
                         }
                     }
@@ -360,9 +379,10 @@
                 }
 
                 & :last-child {
-                    & .menu{
+                    & .menu {
                         box-shadow: none;
                     }
+
                     & .ui.dropdown {
                         & .text {
                             font-size: 1.2rem;

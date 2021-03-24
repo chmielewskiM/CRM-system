@@ -30,8 +30,6 @@ export const DelegatedTaskList: React.FC<IProps> = (props) => {
 
   useEffect(() => {
     setTaskList('myTasks');
-    console.log('TaskList rr');
-    console.log(props.user);
   }, []);
   if (submitting) return <LoaderComponent content="Loading..." />;
   return (

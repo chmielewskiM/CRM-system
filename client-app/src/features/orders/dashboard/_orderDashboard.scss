@@ -1,128 +1,17 @@
 #root {
+    & .row-content-1.orders {
 
-    & .row-content-1.orders,
-    & .row-content-1.tasks {
-        // padding: 1rem .5rem 0 .5rem;
-
-        & .filter-buttons,
-        & .list {
-            @include reset-div;
-            background-color: transparent;
-        }
-
-        & .list {
-            height: 90%;
-        }
-
-        & .filter-buttons {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border:0;
-            border-radius: 0;
-            padding: 0 .5rem;
-            // background-color: rgba(255, 255, 255, 0.2);
-            background-image: linear-gradient(to top, lightgrey 0%, lightgrey 1%, #e0e0e0 26%, #efefef 48%, #d9d9d9 75%, #bcbcbc 100%);
-            @include breakpoint(tablet) {
-                justify-content: flex-start;
-
-            }
-
+        & .ui.segment.filter-buttons {
             & .buttons {
-                display: flex;
-                border: 0;
-                width: max-content;
-                box-shadow: none;
-                align-content: center;
-                margin-right: .5rem;
-            
-                & .button.small,
-                & .label {
-                    padding: .2rem 1rem;
-                    font-size: 1.3rem;
-                    color: $color-primary-dark;
-                    border: none !important;
-                    box-shadow: none !important;
-                    cursor: pointer;
-                    background-color: transparent !important;
-                    border-radius: .3rem !important;
-                    
+                padding: 0 1rem;
 
-                    &:hover {
-                        border-radius: 0;
-                        box-shadow: none !important;
-                    }
-
-                    &.active,
-                    &:focus {
-                        color: #fff !important;
-                        background-color: $color-primary-dark !important;
-                    }
-
-                    &:first-child {
-                        cursor: default;
-                    }
-                    @include breakpoint(tablet) {
-                        padding: .3rem .5rem;
-                        font-size: 1.7rem;
-                        border-radius: 3px;
-                        &:hover{
-                            border-radius: 3px;
-                        }
-                    }
-                }
             }
-
-            & .filter-input {
-                width: min-content;
-                width: 30%;
-                margin-left: auto;
-
-                @include breakpoint(smartphone) {
-                    width: 40%;
-
-                    overflow: hidden;
-
-                }
-
-                & .label {
-                    padding: 0;
-                    margin-right: .5rem;
-                    align-self: center;
-                    background-color: transparent;
-                    color: $color-primary-dark;
-                    font-weight: $light;
-                    font-size: 1.7rem;
-
-                    @include breakpoint(tablet) {
-
-                        font-size: 1.4rem;
-
-                    }
-
-                }
-
-                & input {
-                    padding-top: .4rem;
-                    padding-bottom: .4rem;
-                    border-radius: 1rem;
-                    font-size: 1.3rem;
-                    width: 50%;
+            & .filter-input{
+                
+                @include breakpoint(tablet) {
+                    min-width: 50% !important;
                 }
             }
         }
-
-        & .ui.table-container.orders {
-            & tr {
-                &:hover {
-                    cursor: pointer;
-                }
-            }
-        }
-
-
-
     }
-
-
 }

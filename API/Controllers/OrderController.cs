@@ -44,6 +44,7 @@ namespace API.Controllers
             command.Id = id;
             return await _mediator.Send(command);
         }
+        
         [HttpPut("close/{id}")]
         public async Task<ActionResult<Unit>> CloseOrder(Guid id, CloseOrder.Command command)
         {

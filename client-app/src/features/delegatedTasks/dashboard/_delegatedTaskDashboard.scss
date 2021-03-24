@@ -20,9 +20,6 @@
                     top: 0;
                     right: 0;
                     font-size: 1rem;
-                    // left:95%;
-                    // height: .1rem;
-                    // width: .1rem;
                     display: flex;
                     position: absolute;
                     z-index: 5;
@@ -43,33 +40,23 @@
         }
 
         & .tasks.row-content {
-
-
             &-1 {
                 justify-content: center;
-                border: 0;
-                box-shadow: none;
-                padding-bottom: 2rem;
 
                 @include breakpoint(tablet) {
                     min-height: min-content !important;
                 }
 
                 & .list-col {
-                    padding:0;
-                    & .filter-buttons {
-                        justify-content: flex-start;
-                        width: 100%;
+                    padding: 0;
 
+                    & .ui.segment.filter-buttons {
+                        flex-grow: 0;
+                        justify-content: flex-start;
                         @include breakpoint(tablet) {
                             flex-wrap: wrap;
-                            padding: .5rem 0;
-
+                            justify-content: center;
                             & .buttons {
-                                margin: .5rem auto;
-                                border: thin solid #fff;
-                                border-radius: 5px;
-
                                 & .button,
                                 .label {
                                     border-radius: 0;
@@ -80,11 +67,17 @@
 
                         & .buttons {
                             align-items: center;
-
+                            padding:0 2rem;
                             & .button,
                             .label {
                                 font-size: 1.4rem;
                                 padding: .2rem .5rem;
+                                &.active{
+                                    border-radius: 3px;
+                                }
+                            }
+                            & .ui.button{
+                                cursor: pointer;
                             }
                         }
                     }

@@ -1,6 +1,16 @@
-import { observable, action, computed, configure, runInAction, reaction } from 'mobx';
+import {
+  observable,
+  action,
+  computed,
+  configure,
+  runInAction,
+  reaction,
+} from 'mobx';
 import { toast } from 'react-toastify';
-import { IDelegatedTask, DelegatedTaskFormValues } from '../models/delegatedTask';
+import {
+  IDelegatedTask,
+  DelegatedTaskFormValues,
+} from '../models/delegatedTask';
 import agent from '../api/agent';
 import { RootStore } from './rootStore';
 import { IUser, User, IUserFormValues } from '../models/user';
@@ -42,7 +52,6 @@ export default class DelegatedTaskStore {
   @observable pendingTaskRegistry = new Map();
   @observable.struct windowDimensions = {
     width: window.innerWidth,
-    // height: jquery(window).height()
   };
   @observable selectedValue = '';
 
@@ -61,11 +70,8 @@ export default class DelegatedTaskStore {
   @observable pendingTasksCount: number = 0;
   @observable pendingTasksNotifier: boolean = false;
   @observable formDateValidation = new Date();
-  @action env(){
-    console.log('ENV')
-  }
+
   @action render() {
-    console.log('rendered');
     this.rr = !this.rr;
   }
   ////
@@ -116,7 +122,8 @@ export default class DelegatedTaskStore {
 
   @action setTaskList = async (value: string, ev?: HTMLElement) => {
     if (ev?.parentElement) {
-      for (var child of ev?.parentElement!.children) child.classList.remove('active');
+      for (var child of ev?.parentElement!.children)
+        child.classList.remove('active');
       ev?.classList.add('active');
     }
     switch (value) {
@@ -170,12 +177,10 @@ export default class DelegatedTaskStore {
     try {
       const completeData = await agent.DelegatedTasks.list(this.axiosParams);
       runInAction('Loading Tasks', () => {
-        console.log(completeData);
         this.width = window.innerWidth;
         this.pendingTasksCount = completeData.pendingTasksCount;
         if (this.pendingTasks) {
           let i = 0;
-          console.log('LOADED PENDING');
           this.pendingTaskRegistry.clear();
           completeData.tasks.forEach((task) => {
             this.pendingTaskRegistry.set(task.id, task);
@@ -183,8 +188,6 @@ export default class DelegatedTaskStore {
           });
           this.pendingTasksCount = i;
         } else {
-          console.log('LOADED ACTIVE');
-
           this.activeTaskRegistry.clear();
           completeData.tasks.forEach((task) => {
             this.activeTaskRegistry.set(task.id, task);
@@ -278,9 +281,6 @@ export default class DelegatedTaskStore {
     runInAction('Loading delegatedTasks', () => {
       this.formDateValidation = deadline;
     });
-
-    console.log(values.date);
-    console.log(values.time);
     if (!delegatedTask.id) {
       let newTask = {
         ...delegatedTask,
@@ -317,8 +317,6 @@ export default class DelegatedTaskStore {
     this.submitting = true;
     if (this.selectedTask) {
       try {
-        console.log('EDIT TASK');
-        console.log(delegatedTask.deadline);
         await agent.DelegatedTasks.update(delegatedTask);
         runInAction('Loading delegatedTasks', () => {
           this.activeTaskRegistry.set(delegatedTask.id, delegatedTask);
@@ -359,7 +357,9 @@ export default class DelegatedTaskStore {
   @action shareTask = async (taskId: string, user: IUserFormValues) => {
     this.submitting = true;
     await agent.DelegatedTasks.share(taskId, user);
-    toast.success('Shared ' + this.selectedTask?.type + ' with ' + user.username);
+    toast.success(
+      'Shared ' + this.selectedTask?.type + ' with ' + user.username
+    );
     try {
       runInAction('Loading delegatedTasks', () => {
         this.selectedTask = undefined;

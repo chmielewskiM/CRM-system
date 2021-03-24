@@ -72,7 +72,7 @@ export const OrderDashboard: React.FC = () => {
           <Segment attached="top" floated="left" className="filter-buttons">
             <Button.Group floated="left">
               <Label basic content="Filter orders:" />
-              {orderButtons.map((button) => (
+              {orderButtons.map((button:any) => (
                 <Button
                   key={button.key}
                   as={button.as}
@@ -96,7 +96,7 @@ export const OrderDashboard: React.FC = () => {
           <GridColumn mobile={10} computer={7} className='details-col'>
             {selectedOrder && <OrderDetails />}
           </GridColumn>
-          <Grid.Column computer={8} mobile={10}>
+          <Grid.Column computer={6} mobile={10}>
             <OrderHistory />
             <HistoryPagination
               totalPages={10}

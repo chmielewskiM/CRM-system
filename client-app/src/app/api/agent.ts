@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
-import { IContact, ContactFormValues } from '../models/contact';
+import { IContact, ContactFormValues, ICompleteContactsData } from '../models/contact';
 import { IOrder } from '../models/order';
 import { IDelegatedTaskForm, ICompleteTaskData, IDelegatedTask } from '../models/delegatedTask';
 import { IUser, IUserFormValues, User } from '../models/user';
@@ -49,11 +49,13 @@ const requests = {
 
 const Contacts = {
   get: (name: String): Promise<IContact> => requests.get(`/contact/name/${name}`),
-  list: (): Promise<IContact[]> => requests.get('/contact'),
+  listContacts: (params: URLSearchParams): Promise<ICompleteContactsData> => axios.get(`/contact`, {params: params}).then(responseBody),
   details: (id: string) => requests.get(`/contact/${id}`),
   add: (contact: IContact) => requests.post('/contact', contact),
   update: (contact: IContact) => requests.put(`/contact/${contact.id}`, contact),
   delete: (id: string) => requests.del(`/contact/${id}`),
+  upgradeToPremium: (contact: IContact)  => requests.put(`/contact/premium/upgrade/${contact.id}`, contact),
+  unshare: (id: string) => requests.del(`/contact/remove/${id}`),
 };
 
 const Leads = {

@@ -64,7 +64,7 @@ export const ContactForm: React.FC<IProps> = () => {
                   />
                   <Field
                     name="company"
-                    placeholder="company"
+                    placeholder="Company"
                     value={contact.company}
                     component={TextInput}
                   />

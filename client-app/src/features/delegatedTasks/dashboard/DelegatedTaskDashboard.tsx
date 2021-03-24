@@ -8,7 +8,6 @@ import { TaskNotifier } from '../taskNotifier/TaskNotifier';
 import { DelegatedTaskDetails } from '../details/DelegatedTaskDetails';
 import ShareTaskForm from '../form/ShareTaskForm';
 import { filterTasksButtons, filterSharedTasksButtons } from '../../../app/common/options/buttons';
-import LoaderComponent from '../../../app/layout/LoaderComponent';
 
 export const DelegatedTaskDashboard: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
@@ -25,7 +24,6 @@ export const DelegatedTaskDashboard: React.FC = () => {
     displayPendingTaskNotifier,
     myTasks,
     finishTask,
-    env,
     rr,
   } = rootStore.delegatedTaskStore;
   const { user } = rootStore.userStore;

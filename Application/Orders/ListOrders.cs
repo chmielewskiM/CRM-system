@@ -116,7 +116,7 @@ namespace Application.Orders
                 if (request.ClosedOrders.Equals("true"))
                 {
                     var paginatedList = PaginatedList<Order>.Create(orders, request.PageNumber ?? 1, request.PageSize ?? 3);
-                    
+
                     return _mapper.Map<List<Order>, List<OrderDTO>>(paginatedList);
                 }
 

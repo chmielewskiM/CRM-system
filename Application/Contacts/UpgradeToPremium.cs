@@ -3,16 +3,18 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
+using Domain;
 using MediatR;
 using Persistence;
 
 namespace Application.Contacts
 {
-    public class Delete
+    public class UpgradeToPremium
     {
         public class Command : IRequest
         {
             public Guid Id { get; set; }
+            public Boolean Premium { get; set; }
         }
 
         public class Handler : IRequestHandler<Command>
@@ -30,9 +32,9 @@ namespace Application.Contacts
 
                 if (contact == null)
                     throw new RestException(HttpStatusCode.NotFound,
-                    new { contact = "Not found" });
+                    new { delegatedTask = "Not found" });
 
-                _context.Contacts.Remove(contact);
+                contact.Premium = !contact.Premium;
 
                 var success = await _context.SaveChangesAsync() > 0;
 

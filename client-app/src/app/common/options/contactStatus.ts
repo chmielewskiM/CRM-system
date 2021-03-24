@@ -1,5 +1,5 @@
 export const options = [
-  { key: 'Active', text: 'Active', value: 'Active' },
+  { key: 'Lead', text: 'Lead', value: 'Lead' },
   { key: 'Opportunity', text: 'Opportunity', value: 'Opportunity' },
   { key: 'Quote', text: 'Quote', value: 'Quote' },
   { key: 'Invoice', text: 'Invoice', value: 'Invoice' },

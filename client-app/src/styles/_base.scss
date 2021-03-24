@@ -5,6 +5,12 @@
     font-family: $font-sans;
 }
 
+//////
+//
+// Base styles shared among sections 
+//
+//////
+
 html {
     font-size: 62.5%;
     height: 100vh;
@@ -34,22 +40,10 @@ html {
 body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-
-
-    & ::-webkit-scrollbar {
-        scrollbar-width: .2rem !important;
-        background-color: $color-primary-dark;
-        width: 2px;
-
-        &-track {
-            border-radius: 10px !important;
-        }
-
-        &-thumb {
-            background-color: #fff !important;
-            border-radius: 10px !important;
-        }
-
+    min-height: 100%;
+    //turn off scrollbars
+    & * ::-webkit-scrollbar {
+        scrollbar-width: none;
         display: none;
     }
 
@@ -61,14 +55,16 @@ body {
         background: -moz-radial-gradient(circle, hsla(207, 51%, 83%, 1) 25%, hsla(194, 100%, 12%, 0.5) 100%);
 
         background: -webkit-radial-gradient(circle, hsla(207, 51%, 83%, 1) 25%, hsla(194, 100%, 12%, 0.5) 100%);
-        //modal forms
+
         & .modal {
             width: 40%;
             padding: .1rem;
             box-shadow: 1px 1px 3px 1px #000 !important;
+
             @include breakpoint(smartphone) {
                 width: 90%;
             }
+
             @include breakpoint(tablet) {
                 width: 70%;
             }
@@ -78,8 +74,7 @@ body {
 
                 & .clearing.segment {
                     @include reset-div;
-                    background-image: linear-gradient(to top, #09203f 0%, #537895 100%);
-                    background-color: $color-primary-dark;
+                    background: transparent;
 
                     & .big.form {
                         & .field {
@@ -124,14 +119,16 @@ body {
                                     }
                                 }
                             }
-                            &.error{
+
+                            &.error {
                                 position: relative;
-                                opacity:1;
-                                & .label{
+                                opacity: 1;
+
+                                & .label {
                                     position: absolute;
-                                    right:5rem;
+                                    right: 5rem;
                                     margin: 5px 0;
-                                    border:0;
+                                    border: 0;
                                     white-space: nowrap;
                                     font-size: 1.3rem;
                                 }
@@ -142,7 +139,7 @@ body {
                             opacity: 0.7;
                             font-size: 1.5rem;
                             padding: .5rem;
-                            transition: all .2s linear;
+                            transition: all .1s linear;
 
                             &:hover {
                                 opacity: 1;
@@ -174,50 +171,65 @@ body {
                     }
                 }
             }
+
             //confirmation modal
-            &.confirmation{
+            &.confirmation {
                 background-image: linear-gradient(to top, #09203f 0%, #537895 100%);
                 border: 2px ridge #fff;
+
                 @include breakpoint(smartphone) {
                     width: 98%;
                 }
-                & .header, .actions{
-                    border:0;
+
+                & .header,
+                .actions {
+                    border: 0;
                 }
-                & .header{
+
+                & .header {
                     text-align: left;
                     margin: 1rem 0 0 1rem;
                 }
-                & .content{
+
+                & .content {
                     background-image: none;
-                    font-size: 1.4rem;border:0;
+                    font-size: 1.4rem;
+                    border: 0;
                     border-top: thin $color-primary-light;
                     border-style: groove;
                 }
+
                 & .form {
                     display: inline-block;
                     width: 100%;
-                    &>*{
+
+                    &>* {
                         cursor: default;
                     }
+
                     & .save,
                     .keep {
                         width: 100%;
                         display: block;
                         margin: 1rem;
+
                         // align-content: center;
-                        & .fields{
+                        & .fields {
                             margin-left: 2rem;
                         }
                     }
-                    & .radio-label{
-                        float:right;
+
+                    & .radio-label {
+                        float: right;
                     }
-                    & .field.yes, & .field.no{
-                        & input{
+
+                    & .field.yes,
+                    & .field.no {
+                        & input {
                             cursor: pointer;
                         }
                     }
+
                     & .label {
                         background-color: transparent;
                         color: #fff;
@@ -225,7 +237,7 @@ body {
                         padding: 0;
                         margin: 1rem;
                     }
-                
+
                     & .field {
                         width: min-content;
                         float: left;
@@ -244,20 +256,12 @@ body {
 
     & .ui.container.wrapper {
         margin: 0 !important;
+        width: unset !important;
         height: inherit;
         flex: 1 0;
         background: #4b6cb7;
         background: -webkit-linear-gradient(to bottom, #182848, #4b6cb7);
         background: linear-gradient(to bottom, #182848, #4b6cb7);
-
-        //                 background: #16222A;  /* fallback for old browsers */
-        // background: -webkit-linear-gradient(to bottom, #3A6073, #16222A);  /* Chrome 10-25, Safari 5.1-6 */
-        // background: linear-gradient(to bottom, #3A6073, #16222A); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
-        // background: #0F2027;  /* fallback for old browsers */
-        // background: -webkit-linear-gradient(to top, #2C5364, #203A43, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
-        // background: linear-gradient(to top, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
 
         & .grid.main-grid {
             height: inherit;
@@ -283,8 +287,9 @@ body {
                 border-bottom: 1px solid #fff;
                 position: sticky;
                 z-index: 10;
-                
+
                 @include breakpoint(tablet) {
+                    position: fixed;
                     background: #000046;
                     background: -webkit-linear-gradient(to right, #000046, #101099, #000046);
                     background: linear-gradient(to right, #000046, #101099, #000046);
@@ -369,6 +374,9 @@ body {
                 max-height: 50%;
                 margin: 0;
                 overflow: hidden;
+                box-shadow: none;
+                border: 0;
+                padding: 2rem 0;
 
                 @include breakpoint(tablet) {
                     min-height: 30rem;
@@ -376,73 +384,245 @@ body {
                     margin: 2rem 0 4rem 0;
                 }
 
-                & .column {
-                    max-height: 100%;
-                    position: relative;
+                & .filter-buttons,
+                & .list {
+                    @include reset-div;
+                    background-color: transparent;
+                }
 
-                    & table.ui.table.table-container {
-                        border: thin solid $color-primary-dark;
-                        min-width: min-content;
-                        // overflow: scroll;
+                & .filter-buttons {
+                    display: flex;
+                    justify-content: space-between;
+                    flex-wrap: wrap;
+                    align-items: center;
+                    height: 4rem;
+                    border: 0;
+                    border-radius: 0;
+                    padding: 0 .5rem;
+                    background-image: linear-gradient(to top, lightgrey 0%, lightgrey 1%, #e0e0e0 26%, #efefef 48%, #d9d9d9 75%, #bcbcbc 100%);
 
-                        &>* {
-                            border: none;
-                        }
+                    @include breakpoint(tablet) {
+                        justify-content: space-between;
+                        height: 7rem !important;
+                    }
 
-                        & .head {
-                            @include table-head;
-                        }
-
-                        & tbody {
+                    @include breakpoint(smartphone) {
+                        justify-content: center;
+                    }
 
 
-                            &:nth-child(odd) {
-                                background-color: $color-primary-light;
+
+
+                    & .buttons {
+                        display: flex;
+                        flex-wrap: wrap;
+                        width: max-content;
+                        height: max-content;
+                        margin-right: .5rem;
+                        align-content: center;
+                        white-space: wrap;
+                        overflow: visible;
+                        border: 0;
+                        box-shadow: none;
+
+
+
+                        & .button.small,
+                        & .label,
+                        a {
+                            @include reset-div;
+                            padding: .3rem 1rem;
+                            font-size: 1.3rem;
+                            color: $color-primary-dark;
+                            border: none !important;
+                            box-shadow: none !important;
+                            cursor: pointer;
+                            background-color: transparent !important;
+                            border-radius: 3px;
+
+
+                            &:hover:not(.label):not(.active) {
+                                box-shadow: none !important;
+                                background-color: $color-primary-dark !important;
+                                opacity: .7;
+                                color: #fff;
                             }
 
-                            & tr {
+                            &:focus {
+                                background-color: transparent !important;
+                            }
+
+                            &.active {
+                                color: #fff;
+                                background-color: $color-primary-dark !important;
+                                opacity: 1;
+                            }
+
+
+                            &.active:hover {
+                                opacity: 1;
+                            }
+
+                            &:first-child {
+                                cursor: default;
+                            }
+
+                            @include breakpoint(tablet) {}
+
+                            @include breakpoint(tablet) {
+                                padding: .5rem .3rem !important;
+                                margin: 0 .2rem !important;
+                                font-size: 1.4rem !important;
 
                                 &:hover {
-                                    background-color: rgba($color-primary-dark, 0.6) !important;
-                                    color: #fff !important;
+                                    border-radius: 3px;
                                 }
+                            }
 
-                                &.active {
-                                    background-color: rgba($color-primary-dark, 0.9) !important;
-                                    color: $color-detail2 !important;
+                        }
 
-                                    &:hover {
-                                        background-color: $color-primary-dark !important;
-                                    }
-                                }
+                        & .label {
+                            font-size: 1.3rem;
+                            cursor: default;
+                            @include breakpoint(tablet) {
+                                padding:0 !important;
+                                margin: auto .2rem auto 0  !important;
+                            }
+                        }
 
-                                & td {
+                        & .button {
+                            font-size: 1.4rem;
+                            margin: 0 1rem;
+                            cursor: pointer;
+                            opacity: 0.7;
 
-                                    border: none;
-                                    white-space: nowrap;
-                                    font-size: 1.2rem;
-                                    overflow: hidden;
-
-                                }
-
-                                & .notes-cell {
-                                    max-width: 12rem;
-                                    overflow: hidden;
-                                    text-overflow: ellipsis;
-                                }
+                            &:focus {
+                                background-color: #fff !important;
+                                color: unset;
                             }
                         }
                     }
 
-                    & .list {
-                        background-color: transparent;
-                        margin: 0;
-                        padding: 0;
-                        width: 100%;
-                        overflow-y: scroll;
-                        position: relative;
+                    & .pagination {
+                        width: max-content !important;
+
+                    }
+
+                    & .filter-input {
+                        width: 25%;
+                        margin-left: auto;
+
+                        @include breakpoint(smartphone) {
+                            flex: .8 0;
+                            min-width: 30%;
+                            margin: 0 auto;
+                            overflow: hidden;
+
+                        }
+
+                        // @include breakpoint(tablet) {
+                        //     justify-content: center;
+
+                        // }
+
+                        & .label {
+                            padding: 0;
+                            margin-right: .5rem;
+                            align-self: center;
+                            background-color: transparent;
+                            color: $color-primary-dark;
+                            font-weight: $light;
+                            font-size: 1.7rem;
+
+                            @include breakpoint(tablet) {
+
+                                font-size: 1.4rem;
+
+                            }
+
+                        }
+
+                        & input {
+                            padding-top: .4rem;
+                            padding-bottom: .4rem;
+                            border-radius: 1rem;
+                            font-size: 1.3rem;
+                            width: 50%;
+                            border: 2px inset $color-secondary-dark;
+                        }
                     }
                 }
+
+                // & .column {
+                //     max-height: 100%;
+                //     position: relative;
+
+                & table.ui.table.table-container {
+                    border: thin solid $color-primary-dark;
+                    min-width: min-content;
+                    // overflow: scroll;
+                    cursor: pointer;
+
+                    &>* {
+                        border: none;
+                    }
+
+                    & .head {
+                        @include table-head;
+                    }
+
+                    & tbody {
+
+
+                        &:nth-child(odd) {
+                            background-color: $color-primary-light;
+                        }
+
+                        & tr {
+
+                            &:hover {
+                                background-color: rgba($color-primary-dark, 0.6) !important;
+                                color: #fff !important;
+                            }
+
+                            &.active {
+                                background-color: rgba($color-primary-dark, 0.9) !important;
+                                color: $color-detail2 !important;
+
+                                &:hover {
+                                    background-color: $color-primary-dark !important;
+                                }
+                            }
+
+                            & td {
+
+                                border: none;
+                                white-space: nowrap;
+                                font-size: 1.2rem;
+                                overflow: hidden;
+
+                            }
+
+                            & .notes-cell {
+                                max-width: 12rem;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                            }
+                        }
+                    }
+                }
+
+                & .list {
+                    background-color: transparent;
+                    margin: 0;
+                    padding: 0;
+                    width: 100%;
+                    overflow-y: scroll;
+                    position: relative;
+                }
+
+                // }
+
             }
 
             & .row-content-2 {

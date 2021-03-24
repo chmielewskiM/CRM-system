@@ -31,7 +31,7 @@ namespace Persistence
                     .HasOne<Contact>(u => u.Client)
                     .WithMany(c => c.Orders)
                     .HasForeignKey(c => c.ClientId)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    .OnDelete(DeleteBehavior.SetNull);
 
             });
             builder.Entity<UserContact>(x =>

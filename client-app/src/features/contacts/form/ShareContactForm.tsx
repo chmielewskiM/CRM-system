@@ -1,18 +1,8 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Form, Segment, Button, Modal, Header } from 'semantic-ui-react';
-import { v4 as uuid } from 'uuid';
 import { observer } from 'mobx-react-lite';
-import { Form as FinalForm, Field } from 'react-final-form';
-import {
-  IDelegatedTaskForm,
-  DelegatedTaskFormValues,
-} from '../../../app/models/delegatedTask';
-import TextAreaInput from '../../../app/common/form/TextAreaInput';
-import SelectInput from '../../../app/common/form/SelectInput';
-import { options } from '../../../app/common/options/delegatedTaskType';
-import DateInput from '../../../app/common/form/DateInput';
-import { combineDateAndTime } from '../../../app/common/util/util';
-import { combineValidators, isRequired } from 'revalidate';
+import { Form as FinalForm } from 'react-final-form';
+import { combineValidators } from 'revalidate';
 import { RootStoreContext } from '../../../app/stores/rootStore';
 import LoaderComponent from '../../../app/layout/LoaderComponent';
 
@@ -22,33 +12,27 @@ const validation = combineValidators({
   // time: isRequired({ message: 'The time is required.' }),
 });
 
-interface IProps {
-  delegatedTask: IDelegatedTaskForm | undefined;
-}
-
-export const DelegatedTaskForm: React.FC<IProps> = () => {
+export const ShareContactForm: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
   const {
     loadingInitial,
     submitting,
-    setShowShareTaskForm,
-    selectedTask,
-    shareTask,
-  } = rootStore.delegatedTaskStore;
+    showShareContactForm,
+    selectedContact,
+    shareContact,
+  } = rootStore.contactStore;
 
   const {
     usersByName,
     getUser,
-    user,
     getUserList,
     selectedUser,
     rr,
   } = rootStore.userStore;
 
-  useEffect(() => {}, [setShowShareTaskForm, rr]);
+  useEffect(() => {}, []);
 
   const handleFinalFormSubmit = (values: any) => {
-    console.log(values);
   };
   if (loadingInitial) return <LoaderComponent content="Loading..." />;
   return (
@@ -58,7 +42,7 @@ export const DelegatedTaskForm: React.FC<IProps> = () => {
           <Segment clearing size="big">
             <Header
               as="h2"
-              content="Share task with:"
+              content="Share contact with:"
               style={{ color: '#fff' }}
             />
             <FinalForm
@@ -78,28 +62,41 @@ export const DelegatedTaskForm: React.FC<IProps> = () => {
                       getUser(data.value!.toString());
                     }}
                   />
+                  <Button
+                    negative
+                    floated="right"
+                    type="button"
+                    size="big"
+                    content="Cancel"
+                    onClick={() => showShareContactForm(false)}
+                    loading={submitting}
+                    disabled={submitting}
+                  />
+                  {selectedUser != undefined && (
+                    <Button
+                      positive
+                      floated="right"
+                      type="submit"
+                      size="big"
+                      content="Confirm"
+                      onClick={() =>
+                        shareContact(selectedContact!.id, selectedUser)
+                      }
+                      loading={submitting}
+                      disabled={submitting}
+                    />
+                  )}
+                  {selectedUser == undefined && (
+                    <Button
+                      positive
+                      floated="right"
+                      size="big"
+                      content="Select contact"
+                      disabled={true}
+                    />
+                  )}
                 </Form>
               )}
-            />
-            <Button
-              negative
-              floated="right"
-              type="button"
-              size="big"
-              content="Cancel"
-              onClick={() => setShowShareTaskForm(false)}
-              loading={submitting}
-              disabled={submitting}
-            />
-            <Button
-              positive
-              floated="right"
-              type="submit"
-              size="big"
-              content="Confirm"
-              onClick={() => shareTask(selectedTask!.id, selectedUser)}
-              loading={submitting}
-              disabled={submitting}
             />
           </Segment>
         </Modal.Content>
@@ -108,4 +105,4 @@ export const DelegatedTaskForm: React.FC<IProps> = () => {
   );
 };
 
-export default observer(DelegatedTaskForm);
+export default observer(ShareContactForm);

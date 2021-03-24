@@ -6,7 +6,8 @@ namespace Domain
     {
         public Guid Id { get; set; }
         public int OrderNumber { get; set; }
-        public Guid ClientId { get; set; }
+        public string UserId { get; set; }
+        public Guid? ClientId { get; set; }
         public virtual Contact Client { get; set; }
         public Boolean Type { get; set; }
         public Boolean Closed { get; set; }

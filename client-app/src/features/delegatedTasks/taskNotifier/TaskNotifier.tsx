@@ -34,7 +34,6 @@ export const TaskNotifier: React.FC<IProps> = (props) => {
 
   useEffect(() => {
     setTaskList('pendingTasks');
-    console.log('TASK NOTIFIER');
   }, [pendingTasksCount]);
 
   if (loadingInitial) return <LoaderComponent content="Loading..." />;

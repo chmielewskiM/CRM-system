@@ -61,7 +61,7 @@ namespace Application.Leads
                 saleProcess = saleProcess.OrderByDescending(x=>x.Index);
                 //select sale process element with highest index (containing the most recent operation in chain)
                 var lastProcess = saleProcess.First();
-                string[] statuses = { "Inactive", "Active", "Opportunity", "Quote", "Invoice" };
+                string[] statuses = { "Inactive", "Lead", "Opportunity", "Quote", "Invoice" };
                 //get index of the current lead's status
                 int index = Array.FindIndex(statuses, x => x == contact.Status);
 

@@ -1,0 +1,148 @@
+#root {
+
+    & .row-content-1.contacts,
+    & .row-content-2 {
+        & .control-icons {
+            width: min-content;
+            height: 100%;
+            align-items: center;
+            max-width: 8rem;
+            margin-left: auto;
+            padding: 0;
+
+            @include breakpoint(tablet) {
+                display: none;
+            }
+
+            &.mobile {
+                @include reset-div;
+                display: none;
+                flex: 1 0;
+                min-width: 100%;
+                height: 4rem;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+
+                @include breakpoint(tablet) {
+                    display: flex;
+                }
+
+                & .buttons {
+                    padding-right: 4rem;
+                    align-content: center;
+                    justify-content: flex-end;
+                    height: 100%;
+                    & .button, a {
+                        max-width: 5rem !important;
+                        position: relative;
+                        justify-content: flex-end;
+                        margin: 0 !important;
+                        height: 3rem;
+                        display: flex;
+
+                        &.share,
+                        &.mail,
+                        &.edit,
+                        &.delete {
+                        
+                            & .icon {
+                                padding: 0;
+                                vertical-align: middle !important;
+                                min-height: 100%;
+                            }
+
+                            & .icon:before {
+                                vertical-align: middle !important;
+                            }
+                        }
+                        
+                    }
+                }
+            }
+
+            & .buttons {
+                display: flex;
+                width: 100%;
+                justify-content: flex-end;
+                align-items: center;
+
+                & .button {
+                    background-color: transparent;
+                    padding: 0;
+                    vertical-align: middle;
+                    flex: .1 0 !important;
+                    @include breakpoint(tablet) {
+                        padding:1rem 0 !important;
+                        flex: .01 0 !important;
+                        & .eraser{
+                            font-size: 2rem !important;
+                        }
+                    }
+                    &.mail {
+                        margin: 0 auto;
+
+                    }
+                    
+                    & .icon {
+                        font-size: 1.8rem;
+                        background-color: transparent;
+                        transition: transform .05s ease-in;
+                        margin-right: 1.5rem;
+
+                        &.status {
+                            float: left !important;
+                        }
+
+                        &:hover.share,
+                        &:hover.mail,
+                        &:hover.pencil,
+                        &:hover.eraser {
+                            transform: scale(1.1);
+                            // text-shadow: 0 0 2px #fff;
+                        }
+
+                        &.mail {
+                            color: $color3;
+                            font-size: 2rem;
+                            padding-top: .2rem;
+
+                            &:hover {
+                                color: #fff;
+                            }
+                        }
+
+                        &.share {
+                            color: rgb(0, 150, 0);
+
+                            &:hover {
+                                color: rgb(0, 255, 0);
+                            }
+                        }
+
+                        &.pencil {
+                            color: rgb(214, 130, 52);
+
+                            &:hover {
+                                color: rgb(255, 123, 0);
+                            }
+                        }
+
+                        &.eraser {
+                            color: rgb(151, 22, 22);
+
+                            &:hover {
+                                color: rgb(255, 0, 0);
+                            }
+                        }
+
+                        &.disabled>* {
+                            color: gray;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

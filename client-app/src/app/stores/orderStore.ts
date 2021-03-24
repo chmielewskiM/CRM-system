@@ -1,4 +1,11 @@
-import { observable, action, computed, configure, runInAction, reaction } from 'mobx';
+import {
+  observable,
+  action,
+  computed,
+  configure,
+  runInAction,
+  reaction,
+} from 'mobx';
 import { toast } from 'react-toastify';
 import { IOrder, OrderFormValues } from '../models/order';
 import agent from '../api/agent';
@@ -108,13 +115,13 @@ export default class OrderStore {
   ////
   @action toggleSelect = (value: any) => {
     this.sale = !value;
-    console.log(this.sale);
     this.render();
   };
 
-  @action setOrderList = (value: string, closed: boolean, ev?: HTMLElement ) => {
+  @action setOrderList = (value: string, closed: boolean, ev?: HTMLElement) => {
     if (ev?.parentElement) {
-      for (var child of ev?.parentElement!.children) child.classList.remove('active');
+      for (var child of ev?.parentElement!.children)
+        child.classList.remove('active');
       ev?.classList.add('active');
     }
     runInAction('Sorting orders', () => {
@@ -175,13 +182,11 @@ export default class OrderStore {
       const orders = await agent.Orders.list(this.axiosParams);
       runInAction('Loading orders', () => {
         if (!closed) {
-          console.log('LOADED OPEN');
           this.openOrderRegistry.clear();
           orders.forEach((order) => {
             this.openOrderRegistry.set(order.id, order);
           });
         } else {
-          console.log('LOADED CLOSED');
           this.closedOrderRegistry.clear();
           orders.forEach((order) => {
             this.closedOrderRegistry.set(order.id, order);
@@ -197,14 +202,18 @@ export default class OrderStore {
       console.log(error);
     }
   };
-  
+
   typeOfOrder = (order: IOrder) => {
     var type = '';
     order.type ? (type = 'Sale') : (type = 'Purchase');
 
     return type;
   };
-  @action selectOrder = async (id: string, closed?: boolean, selectedOrder?: IOrder) => {
+  @action selectOrder = async (
+    id: string,
+    closed?: boolean,
+    selectedOrder?: IOrder
+  ) => {
     if (id !== '') {
       var order = new OrderFormValues(selectedOrder);
       runInAction('Selecting order', () => {
@@ -212,7 +221,6 @@ export default class OrderStore {
         else this.selectedOrder = this.closedOrderRegistry.get(id);
         this.sale = this.selectedOrder!.type;
       });
-
       this.render();
     } else {
       this.selectedOrder = undefined;
@@ -229,7 +237,9 @@ export default class OrderStore {
   };
   @action removeTemporaryContact = () => {
     runInAction('Removing temporary contact', () => {
-      this.rootStore.contactStore.contactRegistry.delete(this.temporaryContact?.id);
+      this.rootStore.contactStore.contactRegistry.delete(
+        this.temporaryContact?.id
+      );
       this.temporaryContact = undefined;
       this.selectedClient = undefined;
     });
@@ -264,9 +274,11 @@ export default class OrderStore {
     this.submitting = true;
     const order = new OrderFormValues(this.selectedOrder);
     var contact = await agent.Contacts.get(encodeURI(order.clientName!));
-    console.log(contact);
     runInAction('Loading orders', () => {
-      if (!this.rootStore.contactStore.contactRegistry.has(contact.id) && contact.id) {
+      if (
+        !this.rootStore.contactStore.contactRegistry.has(contact.id) &&
+        contact.id
+      ) {
         this.addTemporaryContact(contact);
       } else this.selectedClient = contact;
       this.rootStore.contactStore.selectedContact = contact;
@@ -295,6 +307,7 @@ export default class OrderStore {
       return new OrderFormValues();
     }
   };
+
   handleFinalFormSubmit = (values: any) => {
     const { ...order } = values;
     if (!order.id) {
@@ -315,10 +328,7 @@ export default class OrderStore {
       var date = new Date(Date.now());
       order.dateOrderOpened = date;
       order.type = this.sale;
-      console.log('ADD ORDER : ');
-
       order.clientId = this.rootStore.contactStore.selectedContact?.id!;
-      console.log(order);
       await agent.Orders.add(order);
       runInAction('Loading orders', () => {
         this.openOrderRegistry.set(order.id, order);
