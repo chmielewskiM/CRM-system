@@ -62,12 +62,11 @@ namespace Application.Contacts
 
                 if (user.Level != "top")
                     userContacts = userContacts.Where(x => x.User == user);
-                Console.WriteLine("B4 process " + userContacts.Count());
                 if (request.InProcess)
                     userContacts = userContacts.Where(x => x.Contact.Status != "Inactive");
                 else if (request.Premium)
                     userContacts = userContacts.Where(x => x.Contact.Premium == true);
-                Console.WriteLine("B4 filter " + userContacts.Count());
+                
                 //select orders which contain given input
                 if (!request.FilterInput.Equals("unfiltered"))
                 {
@@ -78,7 +77,7 @@ namespace Application.Contacts
                     || x.Contact.Email.Contains(request.FilterInput)
                     || x.Contact.PhoneNumber.Contains(request.FilterInput));
                 }
-                Console.WriteLine("B4 sort " + userContacts.Count());
+
                 //sort orders in requested way
                 switch (request.OrderBy)
                 {
@@ -113,8 +112,8 @@ namespace Application.Contacts
                         userContacts = userContacts.OrderBy(x => x.Contact.DateAdded);
                         break;
                 };
+                
                 var total = await userContacts.CountAsync();
-                Console.WriteLine("B4 pagination " + userContacts.Count());
 
                 if (userContacts.Count() > 0 && !request.Uncontracted)
                 {
@@ -136,7 +135,6 @@ namespace Application.Contacts
                     }
                 }
 
-                Console.WriteLine("Total  " + total);
                 return new CompleteContactsData(_mapper.Map<List<Contact>, List<ContactDTO>>(contacts), total);
             }
         }

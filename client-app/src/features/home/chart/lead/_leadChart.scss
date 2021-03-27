@@ -1,29 +1,46 @@
 #root {
-    & #leadsChart, & #leadsBySourceChart{
-        margin-top: 5rem;
+
+    & #leadsChart,
+    & #leadsBySourceChart {
+        padding-top:4rem;
     }
-    & .chart {
 
+    & .chart.column {
+        height: unset !important;
         padding: 0;
-        // margin: 2rem 0;
         margin-right: 2rem;
+        background: #005C97;
+        background: -webkit-linear-gradient(to right, #363795, #005C97);
+        background: linear-gradient(to right, #363795, #005C97);
 
-        & .buttons {
-            // margin: 0;
-            & .button {
-                border: thin solid #fff;
+        box-shadow: 2px 2px 4px 1px rgb(0, 0, 0);
+
+        @include breakpoint(tablet) {
+            padding:0 .5rem !important;
+        }
+        & .ui.floated.buttons {
+
+            & .ui.basic.button:last-child {
+                background-image: linear-gradient(210deg, rgba(34, 219, 231, 1) -0.9%, rgba(52, 118, 246, 1) 88.7%) !important;
                 color: #fff !important;
+                margin-left: 2rem;
+                opacity: .8;
+                border: thin solid #fff;
+                transition: all .1s ease-in !important;
+                box-shadow: 1px 1px 3px 0 rgb(0, 0, 0);
 
-                &:hover, &.active {
-                    background-color: #fff !important;
-                    color: #000 !important;
+                &:hover {
+                    box-shadow: 1px 1px 4px 1px rgb(0, 0, 0);
+                    transition: all .1s ease-in !important;
+                    opacity: 1;
+
                 }
             }
         }
 
         & .chart-container {
 
-            
+
 
             & .recharts-wrapper {
                 display: flex;

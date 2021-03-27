@@ -23,10 +23,10 @@ namespace API.Controllers
         //     return await Mediator.Send(command);
         // }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Unit>> Delete(Guid id)
-        {
-            return await Mediator.Send(new Delete.Command { Id = id });
-        }
+        // [HttpDelete("{id}")]
+        // public async Task<ActionResult<Unit>> DeleteOperation(Guid id)
+        // {
+        //     return await Mediator.Send(new DeleteOperation.Command { Id = id });
+        // }
     }
 }

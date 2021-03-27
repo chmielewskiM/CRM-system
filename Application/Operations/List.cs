@@ -56,6 +56,7 @@ namespace Application.Operations
                                                                 sixMonths.Item1, sixMonths.Item2,
                                                                 oneMonth.Item3, sixMonths.Item3);
 
+
                 return completeStats;
             }
 
@@ -77,7 +78,8 @@ namespace Application.Operations
                 if (period == "thisMonth")
                 {
                     //this month from day one
-                    rangeDays = -(DateTime.Now - rangeStart).Days;
+                    rangeDays = -(DateTime.Now - new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1)).Days - 1;
+
                     int p = rangeDays < 15 ? 3 : 2;
                     for (int i = -1; i < p; i++)
                     {
@@ -103,8 +105,9 @@ namespace Application.Operations
                         intervalDays[i + 1] = -rangeDays * (((double)i + 1) / 4);
                     }
 
-                    //set initial dates
-                    rangeStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddDays(rangeDays);
+
+                    //set initial dates, rangeDays+1 correction to make it last 30 days, including today
+                    rangeStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddDays(rangeDays + 1);
                     rangeEnd = rangeStart;
 
                     var sortedOperations = sortOperations(allOperations, rangeStart, rangeEnd, rangeDays, intervalDays,
@@ -129,7 +132,6 @@ namespace Application.Operations
                                                 intervalMonths);
 
                     return collectSortedData(sortedOperations.Item1, sortedOperations.Item2, sortedOperations.Item3, users);
-
                 }
             }
 
@@ -149,6 +151,11 @@ namespace Application.Operations
                                 && x.Date <= dateEnd.AddMonths(intervalMonths[i + 1]).AddDays((int)intervalDays[i + 1])).ToList();
                     startDates.SetValue(dateStart.AddMonths(intervalMonths[i]).AddDays((int)intervalDays[i]), i);
                     endDates.SetValue(dateEnd.AddMonths(intervalMonths[i + 1]).AddDays((int)intervalDays[i + 1]), i);
+
+                    if (rangeDays == -30 && i == p - 1)
+                    {
+                        endDates[i] = endDates[i].AddDays(1);
+                    }
 
                     sortedOperations.Add(sortedData);
                 }
@@ -172,10 +179,10 @@ namespace Application.Operations
             private static Sources countSources(List<Operation> operations)
             {
                 int web = operations.Count(x => x.Source == "Web");
-                int socialMedia = operations.Count(x => x.Source == "Social media");
+                int socialMedia = operations.Count(x => x.Source.Equals("Social Media"));
                 int flyers = operations.Count(x => x.Source == "Flyers");
                 int commercial = operations.Count(x => x.Source == "Commercial");
-                int formerClient = operations.Count(x => x.Source == "Former client");
+                int formerClient = operations.Count(x => x.Source.Equals("Former Client"));
 
                 return new Sources(web, socialMedia, flyers, commercial, formerClient);
             }
@@ -224,8 +231,8 @@ namespace Application.Operations
                     totals.SourcesTotal.Web += operations.Count(x => x.Source == "Web");
                     totals.SourcesTotal.Flyers += operations.Count(x => x.Source == "Flyers");
                     totals.SourcesTotal.Commercial += operations.Count(x => x.Source == "Commercial");
-                    totals.SourcesTotal.SocialMedia += operations.Count(x => x.Source == "Social media");
-                    totals.SourcesTotal.FormerClient += operations.Count(x => x.Source == "Former client");
+                    totals.SourcesTotal.SocialMedia += operations.Count(x => x.Source.Equals("Social Media"));
+                    totals.SourcesTotal.FormerClient += operations.Count(x => x.Source.Equals("Former Client"));
 
                     foreach (var u in usersStats)
                     {

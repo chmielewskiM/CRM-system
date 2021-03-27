@@ -1,26 +1,23 @@
 #root {
-    & #opportunitiesChart, & #opportunitiesByEmployeeChart{
-        margin-top: 5rem;
-    }
-    & .chart-container {
-
-        & .recharts-wrapper {
-            & .recharts-legend-wrapper {
-
-                & .recharts-default-legend {
-                    position: absolute;
-                    display: flex;
-                    justify-content: center;
-                    bottom: 0;
-                    left: 7rem;
-                    right: 0;
-                    bottom: -2rem;
-
-                }
-
-            }
+    & .row-content-2.charts {
+        & #opportunitiesChart, #opportunitiesByEmployeeChart{
+padding: 3rem 0 1rem 0;
+        }
+        & .buttons {
+            padding-right: 1rem !important;
         }
 
+        & .chart {
+            background-color: rgba(255, 255, 255, 0.116);
+            min-height: 40rem;
+            padding-bottom: 1rem;
+            padding-top: 1.5rem !important;
+            border:thin solid #fff;
+            @include breakpoint(tablet) {
+                height: 50%;
+            }
+        }
     }
+
 
 }

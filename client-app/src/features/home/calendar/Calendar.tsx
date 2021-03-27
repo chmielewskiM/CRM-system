@@ -4,10 +4,12 @@ import parse from 'date-fns/parse';
 import startOfWeek from 'date-fns/startOfWeek';
 import getDay from 'date-fns/getDay';
 import { observer } from 'mobx-react-lite';
-import React, { Fragment, useContext, useEffect } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { Popup, Segment, Modal, Button } from 'semantic-ui-react';
 import { RootStoreContext } from '../../../app/stores/rootStore';
-import InfoModal from '../../../app/common/modals/InfoModal';
+import InfoModal from './CalendarModal';
+import LoaderComponent from '../../../app/layout/LoaderComponent';
+import { IDelegatedTask } from '../../../app/models/delegatedTask';
 
 const locales = {
   'en-US': require('date-fns/locale/en-US'),
@@ -20,28 +22,36 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 const myEventsList = [
-  { start: new Date(), end: new Date('2021-01-31 22:49:42.1744062'), title: '123' },
+  {
+    start: new Date(),
+    end: new Date('2021-01-31 22:49:42.1744062'),
+    title: '123',
+  },
   { start: new Date(), end: new Date(), title: '456' },
 ];
 
-
-const eventPropGetter = (event: any, start: any, end: any, isSelected: boolean) => {
+const eventPropGetter = (
+  event: any,
+  start: any,
+  end: any,
+  isSelected: boolean
+) => {
   var style = {
-    backgroundColor:'',
+    backgroundColor: '',
   };
-  switch(event.title){
-  case 'Call':
-  style.backgroundColor = 'green'
-  break;
-  case 'Manage':
-  style.backgroundColor = 'red'
-  break;
-  case 'Order':
-  style.backgroundColor = 'blue'
-  break;
-  case 'Send Invoice':
-  style.backgroundColor = 'black'
-  break;
+  switch (event.title) {
+    case 'Call':
+      style.backgroundColor = 'green';
+      break;
+    case 'Manage':
+      style.backgroundColor = 'red';
+      break;
+    case 'Order':
+      style.backgroundColor = 'blue';
+      break;
+    case 'Send Invoice':
+      style.backgroundColor = 'black';
+      break;
   }
   return {
     style: style,
@@ -49,11 +59,15 @@ const eventPropGetter = (event: any, start: any, end: any, isSelected: boolean) 
 };
 interface IProps {
   events: {
-    start:Date,
-    end:Date,
-    title:string,
-    allDay:boolean,
-  }[]
+    start: Date;
+    deadline: Date;
+    title: string;
+    allDay: boolean;
+    createdBy: string;
+    pending: boolean;
+    notes: string;
+  }[];
+  loading: boolean;
 }
 
 export const MyCalendar: React.FC<IProps> = (props) => {
@@ -62,24 +76,36 @@ export const MyCalendar: React.FC<IProps> = (props) => {
   const { closeModal, confirmModal, modal, openModal } = rootStore.modalStore;
   useEffect(() => {
     // rootStore.delegatedTaskStore.loadTasks()
-    rootStore.delegatedTaskStore.calendarEvents
-  }, [rr]);
+    closeModal();
+    rootStore.delegatedTaskStore.calendarEvents;
+  }, []);
 
+  // function modalBody(){
+  //   const data = {
+  //     from:props.events.title,
+  //   }
+  // }
+  const [event, setEvent] = useState(props.events[0]);
+  // const [modalON, setModal] = useState(false);
+  
   return (
     <Fragment>
+      {props.loading && <LoaderComponent content="Loading..." />}
       <div id="rbc">
         <Calendar
           localizer={localizer}
           events={props.events}
           startAccessor="start"
-          endAccessor="end"
-          allDayAccessor = 'allDay'
+          endAccessor="deadline"
+          allDayAccessor="allDay"
           eventPropGetter={eventPropGetter}
-          onView={()=>rootStore.delegatedTaskStore.calendarEvents}
+          onView={() => rootStore.delegatedTaskStore.calendarEvents}
           views={['month', 'day']}
-          onSelectEvent={(data, e) => openModal(data.title)}
+          onSelectEvent={(data, e) => {
+            openModal(data.title);
+          }}
         />
-        <InfoModal open={false} body="sdsds" />
+        <InfoModal open={false} event={event} />
       </div>
     </Fragment>
   );

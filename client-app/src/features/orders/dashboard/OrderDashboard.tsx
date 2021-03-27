@@ -31,7 +31,7 @@ export const OrderDashboard: React.FC = () => {
 
   return (
     <Fragment>
-      <Grid stackable centered className="main-grid">
+      <Grid stackable centered className="main-grid orders">
         {showOrderForm && (
           <OrderForm key={(selectedOrder && selectedOrder.id) || 0} className={'order-form'} />
         )}

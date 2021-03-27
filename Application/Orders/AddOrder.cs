@@ -12,7 +12,7 @@ using Application.Interfaces;
 
 namespace Application.Orders
 {
-    public class Add
+    public class AddOrder
     {
         public class Command : IRequest
         {
@@ -68,14 +68,24 @@ namespace Application.Orders
                     Product = request.Product,
                     Amount = request.Amount,
                     Price = request.Price,
-                    DateOrderOpened = request.DateOrderOpened,
+                    DateOrderOpened = DateTime.Now,
                     DateOrderClosed = request.DateOrderClosed,
                     Notes = request.Notes,
                 };
 
                 _context.Orders.Add(order);
 
+                //add the order to the client
                 client.Orders.Append(order);
+
+                //register this operation
+                var newOperation = new Operations.Add();
+
+                newOperation.Order++;
+                newOperation.Date = order.DateOrderOpened;
+
+                await newOperation.addOperation(newOperation, _context, user);
+
 
                 var success = await _context.SaveChangesAsync() > 0;
 

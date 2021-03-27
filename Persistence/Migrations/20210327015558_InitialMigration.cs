@@ -228,8 +228,8 @@ namespace Persistence.Migrations
                     Closed = table.Column<bool>(type: "bit", nullable: false),
                     Product = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Amount = table.Column<double>(type: "float", nullable: true),
-                    Price = table.Column<double>(type: "float", nullable: true),
-                    DateOrderOpened = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Price = table.Column<double>(type: "float", nullable: false),
+                    DateOrderOpened = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateOrderClosed = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },

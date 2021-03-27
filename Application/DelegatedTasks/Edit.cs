@@ -17,19 +17,16 @@ namespace Application.DelegatedTasks
             public string Type { get; set; }
             public DateTime Deadline { get; set; }
             public string Notes { get; set; }
-            // public string FinishedBy { get; set; }
-            // public Boolean Accepted { get; set; }
-            // public Boolean Refused { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
         {
-            public CommandValidator()
-            {
-                RuleFor(x => x.Type).NotEmpty();
-                RuleFor(x => x.Deadline).NotEmpty();
-                RuleFor(x => x.Notes).NotEmpty();
-            }
+            // public CommandValidator()
+            // {
+            //     RuleFor(x => x.Type).NotEmpty();
+            //     RuleFor(x => x.Deadline).NotEmpty();
+            //     RuleFor(x => x.Notes).NotEmpty();
+            // }
         }
 
         public class Handler : IRequestHandler<Command>
@@ -52,9 +49,6 @@ namespace Application.DelegatedTasks
                 delegatedTask.Type = request.Type ?? delegatedTask.Type;
                 delegatedTask.Deadline = request.Deadline.AddHours(1);
                 delegatedTask.Notes = request.Notes ?? delegatedTask.Notes;
-                // delegatedTask.Accepted = request.Accepted;
-                // delegatedTask.Refused = request.Refused;
-                // delegatedTask.FinishedBy = request.FinishedBy;
 
                 var success = await _context.SaveChangesAsync() > 0;
 

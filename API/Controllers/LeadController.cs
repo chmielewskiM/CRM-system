@@ -37,7 +37,7 @@ namespace API.Controllers
             return await Mediator.Send(command);
         }
 
-        [HttpPut("{id}%{upgrade}")]
+        [HttpPut("{id}={upgrade}")]
         public async Task<ActionResult<Unit>> ChangeStatus(Guid id, bool upgrade)
         {
             return await Mediator.Send(new ChangeStatus.Command { Id = id, Upgrade = upgrade });

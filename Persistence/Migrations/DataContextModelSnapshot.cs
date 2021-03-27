@@ -157,7 +157,7 @@ namespace Persistence.Migrations
                     b.Property<DateTime?>("DateOrderClosed")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DateOrderOpened")
+                    b.Property<DateTime>("DateOrderOpened")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Notes")
@@ -166,7 +166,7 @@ namespace Persistence.Migrations
                     b.Property<int>("OrderNumber")
                         .HasColumnType("int");
 
-                    b.Property<double?>("Price")
+                    b.Property<double>("Price")
                         .HasColumnType("float");
 
                     b.Property<string>("Product")

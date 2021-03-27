@@ -1,14 +1,11 @@
 #root {
     & .wrapper {
-        & .tasks.row-content-1 {
-            @include breakpoint(tablet) {
-                min-height: 50% !important;
-
-            }
-
+        & .main-grid.tasks {
             & .list-col {
                 flex: 1 0;
-
+                max-height: 30rem !important;
+                overflow: scroll !important;
+                padding: 0;
                 & table.ui.table.table-container.task-list {
                     @include breakpoint(tablet) {
                         display: flex;
@@ -16,7 +13,6 @@
                         background-color: transparent;
                         border: 0 !important;
                         padding: .2rem;
-                        max-height: 50rem;
 
                         & .head,
                         & tbody {

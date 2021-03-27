@@ -36,9 +36,6 @@ export const ContactDetails: React.FC<IProps> = (props) => {
         contact={props.contact}
         function={() => selectContact('')}
       />
-      {/* <Segment attached='top' className="control-icons mobile">
-        
-      </Segment> */}
       <Segment className="contact-details">
         <Grid>
           <Grid.Column width={8}>
@@ -64,12 +61,16 @@ export const ContactDetails: React.FC<IProps> = (props) => {
                   onClick={() => premiumUpgrade(selectedContact!)}
                 />
               )}
-              {convertPremiumValue == true &&(
+              {convertPremiumValue == true && (
                 <Button
                   className="premium"
                   onClick={() => premiumUpgrade(selectedContact!)}
                 >
-                  <Icon name="star" /> Premium <Icon name='arrow alternate circle down' style={{color:'red'}}/>
+                  <Icon name="star" /> Premium{' '}
+                  <Icon
+                    name="arrow alternate circle down"
+                    style={{ color: 'red' }}
+                  />
                 </Button>
               )}
             </div>

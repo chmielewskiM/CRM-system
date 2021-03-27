@@ -3,6 +3,7 @@
         & .list {
             height: 90%;
             & .list-col{
+                max-height: 30rem;
                 overflow: scroll;
             }
         }

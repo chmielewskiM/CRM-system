@@ -13,8 +13,8 @@ namespace Domain
         public Boolean Closed { get; set; }
         public string Product { get; set; }
         public Double? Amount { get; set; }
-        public Double? Price { get; set; }
-        public DateTime? DateOrderOpened { get; set; }
+        public Double Price { get; set; }
+        public DateTime DateOrderOpened { get; set; }
         public DateTime? DateOrderClosed { get; set; }
         public string Notes { get; set; }
     }

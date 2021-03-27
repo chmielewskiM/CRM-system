@@ -1,5 +1,5 @@
 #root {
-    & .wrapper .main-grid {
+    & .wrapper .main-grid.tasks {
         & .topbar .pendingBtn {
             color: black;
             position: relative;
@@ -39,53 +39,65 @@
             }
         }
 
-        & .tasks.row-content {
+        & .row-content {
             &-1 {
-                justify-content: center;
+                justify-content: flex-start;
+                overflow: unset;
+                max-height: 40rem;
 
+                // @include breakpoint(tablet) {
+                //     min-height: 50% !important;
+
+                // }
                 @include breakpoint(tablet) {
                     min-height: min-content !important;
                 }
 
-                & .list-col {
-                    padding: 0;
+                & .ui.segment.filter-buttons {
+                    flex-grow: 0;
+                    justify-content: flex-start;
 
-                    & .ui.segment.filter-buttons {
-                        flex-grow: 0;
-                        justify-content: flex-start;
-                        @include breakpoint(tablet) {
-                            flex-wrap: wrap;
-                            justify-content: center;
-                            & .buttons {
-                                & .button,
-                                .label {
-                                    border-radius: 0;
-                                    padding: .5rem;
-                                }
-                            }
-                        }
+                    @include breakpoint(tablet) {
+                        flex-wrap: wrap;
+                        justify-content: center;
 
                         & .buttons {
-                            align-items: center;
-                            padding:0 2rem;
+
                             & .button,
                             .label {
-                                font-size: 1.4rem;
-                                padding: .2rem .5rem;
-                                &.active{
-                                    border-radius: 3px;
-                                }
-                            }
-                            & .ui.button{
-                                cursor: pointer;
+                                border-radius: 0;
+                                padding: .5rem;
                             }
                         }
                     }
 
-                    & .task.list {
-                        font-size: 1.2rem;
+                    & .buttons {
+                        align-items: center;
+                        padding: 0 2rem;
+
+                        & .button,
+                        .label {
+                            font-size: 1.4rem;
+                            padding: .2rem .5rem;
+
+                            &.active {
+                                border-radius: 3px;
+                            }
+                        }
+
+                        & .ui.button {
+                            cursor: pointer;
+                        }
                     }
                 }
+
+                & .task-list {
+                    font-size: 1.2rem;
+                }
+            }
+
+            &-2 {
+                min-height: unset !important;
             }
         }
     }
