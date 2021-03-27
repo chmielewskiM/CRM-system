@@ -20,11 +20,6 @@ namespace API.Controllers
             _mediator = mediator;
         }
 
-        // [HttpGet]
-        // public async Task<ActionResult<OrderDTO>> GetOrder(string id)
-        // {
-        //     return await _mediator.Send(new GetOrder.Query(Id = id));
-        // }
         [HttpGet]
         public async Task<ActionResult<List<OrderDTO>>> ListOrders(string allOrders, string saleOrders, string closedOrders, 
                                                                         string orderBy, string filterInput, int? pageNumber, int? pageSize)
@@ -33,7 +28,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Unit>> Add(Add.Command command)
+        public async Task<ActionResult<Unit>> AddOrder(AddOrder.Command command)
         {
             return await _mediator.Send(command);
         }

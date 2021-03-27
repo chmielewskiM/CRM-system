@@ -7,7 +7,10 @@ import { RootStoreContext } from '../../../app/stores/rootStore';
 import { TaskNotifier } from '../taskNotifier/TaskNotifier';
 import { DelegatedTaskDetails } from '../details/DelegatedTaskDetails';
 import ShareTaskForm from '../form/ShareTaskForm';
-import { filterTasksButtons, filterSharedTasksButtons } from '../../../app/common/options/buttons';
+import {
+  filterTasksButtons,
+  filterSharedTasksButtons,
+} from '../../../app/common/options/buttons';
 
 export const DelegatedTaskDashboard: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
@@ -31,7 +34,7 @@ export const DelegatedTaskDashboard: React.FC = () => {
 
   // if (loadingInitial) return <LoaderComponent content="Loading..." />;
   return (
-    <Grid stackable centered className="main-grid">
+    <Grid stackable centered className="main-grid tasks">
       {showDelegatedTaskForm && (
         <DelegatedTaskForm
           className={'task-form'}
@@ -41,9 +44,18 @@ export const DelegatedTaskDashboard: React.FC = () => {
       )}
       {showShareTaskForm && <ShareTaskForm delegatedTask={selectedTask} />}
       <Grid.Row className="topbar">
-        <Button positive content="Add task" icon="plus" onClick={addDelegatedTaskForm} />
+        <Button
+          positive
+          content="Add task"
+          icon="plus"
+          onClick={addDelegatedTaskForm}
+        />
         {selectedTask && myTasks && (
-          <Button icon="check" content="Mark as done" onClick={() => finishTask(selectedTask)} />
+          <Button
+            icon="check"
+            content="Mark as done"
+            onClick={() => finishTask(selectedTask)}
+          />
         )}
         <Button className="pendingBtn" onClick={displayPendingTaskNotifier}>
           <div>
@@ -60,12 +72,27 @@ export const DelegatedTaskDashboard: React.FC = () => {
           onClick={(event) => rootStore.commonStore.expandMenu(event)}
         />
       </Grid.Row>
-      <Grid.Row className="row-content-1 tasks" stretched={true}>
-        <Grid.Column className="list-col">
-          <Segment attached="top" floated="right" className="filter-buttons">
+      <Grid.Row className="row-content-1">
+        <Segment attached="top" floated="right" className="filter-buttons">
+          <Button.Group floated="left">
+            <Label basic content="Filter tasks:" />
+            {filterTasksButtons.map((button) => (
+              <Button
+                key={button.key}
+                as={button.as}
+                content={button.content}
+                size={button.size}
+                compact={button.compact}
+                className={button.className}
+                onClick={(e) =>
+                  setTaskList(button.functionArg, e.currentTarget)
+                }
+              />
+            ))}
+          </Button.Group>
+          {!myTasks && (
             <Button.Group floated="left">
-              <Label basic content="Filter tasks:" />
-              {filterTasksButtons.map((button) => (
+              {filterSharedTasksButtons.map((button) => (
                 <Button
                   key={button.key}
                   as={button.as}
@@ -73,26 +100,15 @@ export const DelegatedTaskDashboard: React.FC = () => {
                   size={button.size}
                   compact={button.compact}
                   className={button.className}
-                  onClick={(e) => setTaskList(button.functionArg, e.currentTarget)}
+                  onClick={(e) =>
+                    setTaskList(button.functionArg, e.currentTarget)
+                  }
                 />
               ))}
             </Button.Group>
-            {!myTasks && (
-              <Button.Group floated="left">
-                {filterSharedTasksButtons.map((button) => (
-                  <Button
-                    key={button.key}
-                    as={button.as}
-                    content={button.content}
-                    size={button.size}
-                    compact={button.compact}
-                    className={button.className}
-                    onClick={(e) => setTaskList(button.functionArg, e.currentTarget)}
-                  />
-                ))}
-              </Button.Group>
-            )}
-          </Segment>
+          )}
+        </Segment>
+        <Grid.Column className="list-col">
           <DelegatedTaskList user={user} />
         </Grid.Column>
         {pendingTasksNotifier && (
@@ -101,8 +117,7 @@ export const DelegatedTaskDashboard: React.FC = () => {
           </Grid.Column>
         )}
       </Grid.Row>
-
-      <Grid.Row className="row-content-2" stretched={true}>
+      <Grid.Row className="row-content-2">
         <Grid.Column computer={7} tablet={10} className="details-col">
           {selectedTask !== undefined && <DelegatedTaskDetails />}
         </Grid.Column>

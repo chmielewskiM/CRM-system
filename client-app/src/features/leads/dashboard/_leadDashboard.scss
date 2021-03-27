@@ -1,7 +1,7 @@
 #root {
     & .ui.container.wrapper {
         & .main-grid .leads {
-            height: 90%;
+            min-height: 90% !important;
             overflow: hidden;
             display: inline-flex;
             flex-flow: row wrap;

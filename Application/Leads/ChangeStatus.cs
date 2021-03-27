@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -49,19 +50,21 @@ namespace Application.Leads
             {
                 var contact = await _context.Contacts.FindAsync(request.Id);
 
-                
-                // var stat = contact.Status;
                 if (contact == null)
                     throw new RestException(HttpStatusCode.NotFound,
                     new { contact = "Not found" });
+
                 var user = await _context.Users.SingleOrDefaultAsync(x =>
                                 x.UserName == _userAccessor.GetLoggedUsername());
+
                 //get operations which belong to the currently managed sale process
                 IQueryable<SaleProcess> saleProcess = _context.SaleProcess.Where(x => x.ContactId == contact.Id);
-                saleProcess = saleProcess.OrderByDescending(x=>x.Index);
+                saleProcess = saleProcess.OrderByDescending(x => x.Index);
+
                 //select sale process element with highest index (containing the most recent operation in chain)
                 var lastProcess = saleProcess.First();
                 string[] statuses = { "Inactive", "Lead", "Opportunity", "Quote", "Invoice" };
+
                 //get index of the current lead's status
                 int index = Array.FindIndex(statuses, x => x == contact.Status);
 
@@ -69,23 +72,22 @@ namespace Application.Leads
                 if (!request.Upgrade)
                 {
                     index--;
+
                     //make sure whether index is not out of boundary
                     if (index < 0)
                         throw new RestException(HttpStatusCode.BadRequest, "Can't downgrade inactive client");
 
                     //declare previous operation (there is only one, desired process left in saleProcess)
-                    
+
                     await DowngradeLead(lastProcess, user);
 
                     contact.Status = statuses[index];
-                    //check whether upgrade includes conversion
                 }
                 else if (request.Upgrade && index < statuses.Length - 1)
                 {
                     index++;
                     contact.Status = statuses[index];
 
-                    // await newOperation.addOperation(newOperation, _context, user);
                     await UpgradeLead(lastProcess, statuses[index], contact, _context, user);
 
                 }
@@ -103,11 +105,11 @@ namespace Application.Leads
 
                 throw new Exception("Problem saving changes");
             }
-                
+
             private async Task DowngradeLead(SaleProcess lastProcess, User user)
             {
                 Operation previousOperation = lastProcess.Operation;
-                var userOperation = await _context.UserOperations.FindAsync( new Guid(user.Id), previousOperation.Id);
+                var userOperation = await _context.UserOperations.FindAsync(new Guid(user.Id), previousOperation.Id);
                 _context.SaleProcess.Remove(lastProcess);
                 _context.UserOperations.Remove(userOperation);
                 _context.Remove(previousOperation);
@@ -142,24 +144,25 @@ namespace Application.Leads
                 };
 
                 await context.SaleProcess.AddAsync(newProcess);
-                // var userOperation = await context.UserOperations.FindAsync(operation.Id);
 
             }
             private async Task ConvertLead(IQueryable<SaleProcess> saleProcess, Contact contact, DataContext context, User user)
             {
 
                 var newOperation = new Operations.Add();
+
+                Order order = contact.Orders.OrderByDescending(x => x.DateOrderOpened).FirstOrDefault();
+
+                if (!order.Closed)
+                    throw new RestException(HttpStatusCode.Forbidden, "Please close the order before performing the conversion." );
+
                 newOperation.Conversion = 1;
-                newOperation.Revenue = 1100;
+                newOperation.Revenue = order.Price;
 
                 await newOperation.addOperation(newOperation, context, user);
 
                 context.SaleProcess.RemoveRange(saleProcess);
             }
-            // private async Task AbandonLead(IQueryable<SaleProcess> saleProcess, Contact contact, DataContext context, User user)
-            // {
-            //     context.SaleProcess.RemoveRange(saleProcess);
-            // }
         }
     }
 }

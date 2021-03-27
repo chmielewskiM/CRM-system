@@ -50,7 +50,7 @@ export const Navbar: React.FC = () => {
           name="Contacts"
           as={NavLink}
           to="/contacts"
-          onClick={closeMobileNav}
+          onClick={()=>closeMobileNav()}
         />
         <Menu.Item
           icon="street view"

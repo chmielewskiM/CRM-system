@@ -4,10 +4,12 @@ import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import am4themes_microchart from '@amcharts/amcharts4/themes/microchart';
 import { observer } from 'mobx-react-lite';
+import LoaderComponent from '../../../../app/layout/LoaderComponent';
 am4core.useTheme(am4themes_microchart);
 
 interface IProps {
   data: { name: Date; value: number }[] | { name: string; value: number }[];
+  loading: boolean;
 }
 
 const LeadsChart: React.FC<IProps> = (props) => {
@@ -15,15 +17,6 @@ const LeadsChart: React.FC<IProps> = (props) => {
     var chart = am4core.create('leadsChart', am4charts.XYChart);
     chart.data = props.data;
     chart.dateFormatter.dateFormat = "{dateX.formatDate('yyyy-mm')}";
-
-    // let data: { name: Date; value: number }[] = [];
-    // props.data.forEach((x: any) => data.push(x));
-
-    // var dates: { date: Date }[] = [];
-    // data.forEach((x) => {
-    //   let obj: { date: Date } = { date: x.name };
-    //   dates.push(obj);
-    // });
 
     var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
     dateAxis.renderer.labels.template.disabled = true;
@@ -36,7 +29,6 @@ const LeadsChart: React.FC<IProps> = (props) => {
     dateAxis.skipEmptyPeriods = true;
 
     var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-    // valueAxis.tooltip!.disabled = true;
 
     var series = chart.series.push(new am4charts.LineSeries());
 
@@ -59,6 +51,7 @@ const LeadsChart: React.FC<IProps> = (props) => {
 
   return (
     <Fragment>
+      {props.loading && <LoaderComponent content="Loading..." />}
       <div id="leadsChart" style={{ width: '100%', height: '80%' }}></div>
     </Fragment>
   );

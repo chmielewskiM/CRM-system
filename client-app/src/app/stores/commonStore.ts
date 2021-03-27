@@ -48,7 +48,7 @@ export default class CommonStore {
     this.rootStore.contactStore.render();
   };
   @action closeMobileNav = () => {
-    if (window.innerWidth < 768) this.toggleNav();
+    if (window.innerWidth < 769) this.toggleNav();
     this.render();
   };
   @action expandMenu = (event: SyntheticEvent) => {

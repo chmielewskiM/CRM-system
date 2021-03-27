@@ -47,9 +47,7 @@ export const DelegatedTaskForm: React.FC<IProps> = () => {
 
   useEffect(() => {}, [setShowShareTaskForm, rr]);
 
-  const handleFinalFormSubmit = (values: any) => {
-    console.log(values);
-  };
+  const handleFinalFormSubmit = (values: any) => {};
   if (loadingInitial) return <LoaderComponent content="Loading..." />;
   return (
     <Segment clearing>

@@ -1,9 +1,10 @@
-//0-576px Phone
-//576-768px Tablet
+//0-576px (576/16 = 36) Phone
+//576-768px (768/16 = 48) Tablet
 //768-1200px Tablet landscape
 //1200-1800px  Desktop
 //++   Big desktop
 @mixin breakpoint ($breakpoint) {
+    //width
     @if $breakpoint==smartphone {
         @media (max-width:36em) {
             @content
@@ -51,6 +52,14 @@
 
         ;
     }
+    //height
+    @if $breakpoint==min_height {
+        @media (max-height:32em) {
+            @content
+        }
+
+        ;
+    }
 
 }
 
@@ -91,15 +100,6 @@
             font-size: 1.3rem;
             content: "\f0dc";
             color: #fff;
-        }
-    }
-    @include breakpoint(tablet) {
-        
-        & tr {
-            
-            & th {
-                
-            }
         }
     }
 }

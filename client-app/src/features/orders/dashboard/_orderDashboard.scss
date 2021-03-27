@@ -1,15 +1,23 @@
 #root {
-    & .row-content-1.orders {
+    & .main-grid.orders {
+        // max-height: 100vh !important;
+        
+        & .row-content-1.orders {
+            align-content: flex-start;
+            max-height: 40rem !important;
+            overflow: unset;
 
-        & .ui.segment.filter-buttons {
-            & .buttons {
-                padding: 0 1rem;
+            & .ui.segment.filter-buttons {
+                & .buttons {
+                    padding: 0 1rem;
 
-            }
-            & .filter-input{
-                
-                @include breakpoint(tablet) {
-                    min-width: 50% !important;
+                }
+
+                & .filter-input {
+
+                    @include breakpoint(tablet) {
+                        min-width: 50% !important;
+                    }
                 }
             }
         }

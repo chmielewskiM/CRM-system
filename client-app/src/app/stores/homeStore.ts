@@ -1,4 +1,11 @@
-import { observable, action, computed, configure, runInAction, reaction } from 'mobx';
+import {
+  observable,
+  action,
+  computed,
+  configure,
+  runInAction,
+  reaction,
+} from 'mobx';
 import { toast } from 'react-toastify';
 import { IContact, ContactFormValues } from '../models/contact';
 import agent from '../api/agent';
@@ -46,15 +53,15 @@ export default class homeStore {
 
   @observable dataFetched = false;
 
-  @observable pipelineTimeRange = false;
+  @observable pipelineTimeRange = true;
 
   @observable leadsChart = false;
 
-  @observable leadsChartTimeRange = false;
+  @observable leadsChartTimeRange = true;
 
   @observable opportunitiesChart = false;
 
-  @observable opportunitiesChartTimeRange = false;
+  @observable opportunitiesChartTimeRange = true;
 
   @observable composedChartTimeRange = false;
 
@@ -75,19 +82,53 @@ export default class homeStore {
   }
 
   @computed.struct get pipelineData() {
-    let chartProps: Array<{ name: string; value: number }> = [];
+    let chartProps: Array<{
+      name: string;
+      value: number;
+      percentage: string;
+    }> = [];
     let range;
+    let result = '';
+
     if (this.dataFetched) {
       if (this.pipelineTimeRange == false) range = 'sixMonths';
       else range = 'oneMonth';
 
       let operations: ITotals = this.operationsTotalRegistry.get(range);
+
+      function countPercent(value: number) {
+        if (operations.leadsTotal > 0) {
+          result = `${((value / operations.leadsTotal) * 100).toFixed(1)}%`;
+        } else return '0%';
+        return result;
+      }
+
       chartProps.push(
-        { name: 'Leads', value: operations.leadsTotal },
-        { name: 'Opportunities', value: operations.opportunitiesTotal },
-        { name: 'Quotes', value: operations.quotesTotal },
-        { name: 'Invoices', value: operations.invoicesTotal },
-        { name: 'Conversions', value: operations.conversionsTotal }
+        {
+          name: 'Leads',
+          value: operations.leadsTotal,
+          percentage: countPercent(operations.leadsTotal),
+        },
+        {
+          name: 'Opportunities',
+          value: operations.opportunitiesTotal,
+          percentage: countPercent(operations.opportunitiesTotal),
+        },
+        {
+          name: 'Quotes',
+          value: operations.quotesTotal,
+          percentage: countPercent(operations.quotesTotal),
+        },
+        {
+          name: 'Invoices',
+          value: operations.invoicesTotal,
+          percentage: countPercent(operations.invoicesTotal),
+        },
+        {
+          name: 'Conversions',
+          value: operations.conversionsTotal,
+          percentage: countPercent(operations.conversionsTotal),
+        }
       );
     }
     return chartProps;
@@ -100,6 +141,7 @@ export default class homeStore {
       revenue?: number;
       orders?: number;
     } = {};
+
     if (this.dataFetched) {
       let operations: ITotals = this.operationsTotalRegistry.get('thisMonth');
       chartProps = {
@@ -109,11 +151,12 @@ export default class homeStore {
         orders: operations.ordersTotal,
       };
     }
+    
     return chartProps;
   }
 
   @computed.struct get leadsChartData() {
-    if (this.leadsChart && this.dataFetched) {
+    if (!this.leadsChart && this.dataFetched) {
       return this.leadsBySourceData;
     } else if (this.dataFetched) return this.leadsOverallData;
     else return [];
@@ -127,9 +170,10 @@ export default class homeStore {
     else range = 'oneMonth';
 
     if (this.dataFetched) {
-      let { ...data }: ICollectedOperationData[] = Array.from(this.operationsRegistry.get(range));
+      let { ...data }: ICollectedOperationData[] = Array.from(
+        this.operationsRegistry.get(range)
+      );
       let operations = Object.values(data);
-
       operations.forEach((x) => {
         let obj: { name: Date; value: number } = { name: new Date(), value: 0 };
         obj.name = new Date(x.dateStart);
@@ -149,6 +193,7 @@ export default class homeStore {
 
     if (this.dataFetched) {
       let operations: ITotals = this.operationsTotalRegistry.get(range);
+      
       chartProps.push(
         { name: 'Web', value: operations.sourcesTotal.web },
         { name: 'Flyers', value: operations.sourcesTotal.flyers },
@@ -166,25 +211,27 @@ export default class homeStore {
     else return [];
   }
   @computed.struct get opportunitiesOverallData() {
-    let chartProps: Array<{ name: Date; value: number; value2: number }> = [];
+    let chartProps: Array<{ name: Date; leads: number; opportunities: number }> = [];
     let range;
 
     if (this.opportunitiesChartTimeRange == false) range = 'sixMonths';
     else range = 'oneMonth';
 
     if (this.dataFetched) {
-      let { ...data }: ICollectedOperationData[] = Array.from(this.operationsRegistry.get(range));
+      let { ...data }: ICollectedOperationData[] = Array.from(
+        this.operationsRegistry.get(range)
+      );
       let operations = Object.values(data);
 
       operations.forEach((x) => {
-        let obj: { name: Date; value: number; value2: number } = {
+        let obj: { name: Date; leads: number; opportunities: number } = {
           name: new Date(),
-          value: 0,
-          value2: 0,
+          leads: 0,
+          opportunities: 0,
         };
-        obj.name = new Date(x.dateStart);
-        obj.value = x.leads;
-        obj.value2 = x.opportunities;
+        obj.name = x.dateEnd;
+        obj.leads = x.leads;
+        obj.opportunities = x.opportunities;
         chartProps.push(obj);
       });
     }
@@ -192,7 +239,7 @@ export default class homeStore {
   }
 
   @computed.struct get opportunitiesByEmployeeData() {
-    let chartProps: Array<{ name: string; value: number; value2: number }> = [];
+    let chartProps: Array<{ name: string; leads: number; opportunities: number }> = [];
     let range;
 
     if (this.opportunitiesChartTimeRange == false) range = 'sixMonths';
@@ -200,15 +247,15 @@ export default class homeStore {
 
     if (this.dataFetched) {
       let { ...opportunities }: IOpportunitiesByUser[] = Array.from(
-        this.operationsByUserRegistry.get('sixMonths')
+        this.operationsByUserRegistry.get(range)
       );
       let operations = Object.values(opportunities);
 
       operations.forEach((x) => {
         chartProps.push({
           name: x.userDisplayName,
-          value: x.leadsTotal,
-          value2: x.opportunitiesTotal,
+          leads: x.leadsTotal,
+          opportunities: x.opportunitiesTotal,
         });
       });
     }
@@ -234,7 +281,8 @@ export default class homeStore {
   @action setTimeRange = (chart: string, range: boolean) => {
     runInAction('Loading error', () => {
       if (chart == 'leadsChart') this.leadsChartTimeRange = range;
-      else if (chart == 'opportunitiesChart') this.opportunitiesChartTimeRange = range;
+      else if (chart == 'opportunitiesChart')
+        this.opportunitiesChartTimeRange = range;
       else if (chart == 'composedChart') this.composedChartTimeRange = range;
       else if (chart == 'pipeline') this.pipelineTimeRange = range;
 
@@ -251,7 +299,9 @@ export default class homeStore {
       let i = 0;
       const operations = await agent.Operations.list();
       const { ...data } = operations;
-      const operationsByDate: Array<ICompleteStats> = Array.from(Object.values(data));
+      const operationsByDate: Array<ICompleteStats> = Array.from(
+        Object.values(data)
+      );
 
       runInAction('Loading error', () => {
         this.operationsRegistry.clear();

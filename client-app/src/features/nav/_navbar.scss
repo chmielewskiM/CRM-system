@@ -2,32 +2,36 @@
 
 #root {
     & .menu.sidebar {
-        position: relative;
+        position: sticky;
+        height: 100vh !important;
         visibility: visible;
         flex: .15 0;
         border: 0;
         margin: 0;
-        transition: all .5s ease-out;
+        transition: flex .6s ease-out, width .3s ease-out .1s;
         overflow-y: visible !important;
+        height: 100%;
 
         @include breakpoint(tablet) {
             max-width: 0;
             min-width: 0;
+            position: fixed !important;
         }
 
         @include breakpoint(tablet_landscape) {
             flex: 0.25 0;
+            transition: none;
+            
         }
 
         & .container {
             display: flex;
-            height: 100%;
+            min-height: unset !important;
+            height: 100% !important;
             flex: 1 0;
             margin: 0 !important;
             border: 0;
-            background: #000046;
-            background: -webkit-linear-gradient(to top, #1CB5E0, #000046);
-            background: linear-gradient(to top, #1CB5E0, #000046);
+            background-image: linear-gradient(109.6deg, rgba(36, 45, 57, 1) 11.2%, rgba(16, 37, 60, 1) 51.2%, rgba(0, 0, 0, 1) 98.6%);
             font-size: 1.6rem;
             width: unset;
 
@@ -43,7 +47,9 @@
                     width: 0;
                 }
             }
-
+            @include breakpoint(min_height){
+                padding-top: 7rem;
+            }
             & .toggle-sidebar.button {
                 position: fixed;
                 z-index: 1;
@@ -107,6 +113,9 @@
                         max-height: 15rem;
                     }
                 }
+                @include breakpoint(min_height){
+                    display: none;
+                }
 
                 & h3 {
                     margin: 0 auto 2rem 0;
@@ -128,11 +137,13 @@
                 flex-direction: row-reverse;
                 justify-content: flex-start;
                 padding-right: 0;
-                transition: color .05s ease-in, font-size .1s ease-in .4s;
-
+                transition: font-size .1s ease-in .4s;
+                @include breakpoint(min_height){
+                    padding: 1rem !important;
+                }
                 @include breakpoint(tablet) {
                     justify-content: center;
-                    transition: color .05s ease-in;
+                    transition: none;
                 }
 
                 &.admin {
@@ -156,11 +167,10 @@
                 & .icon {
                     flex: 0;
                     padding: 0 1rem;
-                    transition: color .05s linear, font-size .15s ease-in .4s;
+                    transition: font-size .15s ease-in .4s;
 
                     @include breakpoint(tablet) {
-
-                        transition: color .05s linear;
+                        transition: none;
                     }
                 }
 
@@ -168,7 +178,8 @@
                 &.active:hover {
                     color: $color-primary-dark;
                     background-color: #edf6f9;
-                    border-color: #edf6f9;
+                    border: none;
+                    margin-right: 0;
                 }
 
                 &:hover {
@@ -185,7 +196,9 @@
                 padding: 0;
                 border: 0;
                 text-align: center;
-
+                @include breakpoint(min_height){
+                    padding-top: 1rem;
+                }
                 & .ui.dropdown {
 
                     &:hover,
@@ -197,7 +210,8 @@
                     }
 
                     &>* {
-                        color: $color-primary-dark;
+                        color: rgba(255, 255, 255, 0.3);
+                        transition: color .05s linear;
                     }
                 }
 
@@ -250,7 +264,6 @@
         &.off {
             flex: .01 0 !important;
             width: 6rem;
-            transition-duration: .3s;
 
             @include breakpoint(tablet) {
                 max-width: unset;
@@ -270,10 +283,6 @@
                 flex: 0.07 0;
             }
 
-            // @include breakpoint(computer) {
-            //     flex: 0.05 0;
-            // }
-
             & .container {
                 & .toggle-sidebar.button {
                     color: #fff !important;
@@ -288,7 +297,6 @@
                     }
                 }
 
-
                 & .sidebar-header {
                     opacity: 0;
                     transition: opacity .1s ease-in;
@@ -300,8 +308,8 @@
 
                 & a.link.item {
                     color: transparent !important;
-                    transition: color .1s ease-in, font-size .1s ease-in .4s !important;
-
+                    transition: font-size .1s ease-in .4s !important;
+                    
                     @include breakpoint(tablet) {
                         color: #edf6f9 !important;
                         justify-content: center;

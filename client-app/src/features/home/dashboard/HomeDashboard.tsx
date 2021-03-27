@@ -24,6 +24,7 @@ export const HomeDashboard: React.FC = () => {
     showLeadsChart,
     showOpportunitiesChart,
     loadOperations,
+    operationsRegistry,
     predicate,
     setPredicate,
     pipelineData,
@@ -35,91 +36,125 @@ export const HomeDashboard: React.FC = () => {
     opportunitiesChartTimeRange,
     composedChartTimeRange,
     setTimeRange,
-    loadingInitial
+    loadingInitial,
   } = rootStore.homeStore;
 
   useEffect(() => {
     rootStore.delegatedTaskStore.setTaskList('myTasks');
     rootStore.delegatedTaskStore.calendarEvents;
-    loadOperations()
+    if (operationsRegistry.size == 0) loadOperations();
   }, [bool, leadsChart]);
   // const a = rootStore.delegatedTaskStore.calendarEvents;
   // if (loadingInitial)
   //   return <LoaderComponent content="Loading..." />;
   return (
     <Grid relaxed="very" centered className="main-grid home" padded>
-      
+      <Grid.Row className="topbar"></Grid.Row>
       <Grid.Row className="row-content-1 pipeline-calendar">
-        <Grid.Column computer={6} tablet={6} mobile={15} className="pipeline-column">
+        <Grid.Column tablet={16} computer={5} className="pipeline-column">
           <ButtonGroup floated="right">
-            <Button
-              basic
-              content="Last 6 months"
-              active={!pipelineTimeRange}
-              onClick={() => setTimeRange('pipeline', false)}
-            />
             <Button
               basic
               content="Last 30 days"
               active={pipelineTimeRange}
               onClick={() => setTimeRange('pipeline', true)}
             />
-          </ButtonGroup>
-          <Pipeline data={pipelineData}/>
-        </Grid.Column>
-        <Grid.Column computer={9} tablet={9} mobile={15}>
-          <MyCalendar events={rootStore.delegatedTaskStore.calendarEvents} />
-        </Grid.Column>
-      </Grid.Row>
-      <Grid.Row className="row-statistics">
-        <Button content="click" onClick={loadOperations} />
-        <Statistics data={thisMonthStats} />
-      </Grid.Row>
-      <Grid.Row className="row-content-2 charts" columns="equal">
-        <Grid.Column computer={7} tablet={7} mobile={16} className="chart">
-          <ButtonGroup floated="right">
             <Button
               basic
               content="Last 6 months"
-              active={!leadsChartTimeRange}
-              onClick={() => setTimeRange('leadsChart', false)}
+              active={!pipelineTimeRange}
+              onClick={() => setTimeRange('pipeline', false)}
+              style={{ padding: '.5rem 2rem !important' }}
             />
+          </ButtonGroup>
+          <Pipeline data={pipelineData} loading={loadingInitial} />
+        </Grid.Column>
+        <Grid.Column tablet={16} computer={9} className="calendar-column">
+          <MyCalendar
+            events={rootStore.delegatedTaskStore.calendarEvents}
+            loading={loadingInitial}
+          />
+        </Grid.Column>
+      </Grid.Row>
+      <Grid.Row className="row-statistics">
+        <Statistics data={thisMonthStats} loading={loadingInitial} />
+      </Grid.Row>
+      <Grid.Row className="row-content-2 charts" columns="equal">
+        <Grid.Column tablet={16} computer={7} className="chart">
+          <ButtonGroup floated="right">
             <Button
               basic
               content="Last 30 days"
               active={leadsChartTimeRange}
               onClick={() => setTimeRange('leadsChart', true)}
             />
-            {!leadsChart && <Button basic content="By source" onClick={showLeadsChart} />}
-            {leadsChart && <Button basic content="Overall" onClick={showLeadsChart} />}
-          </ButtonGroup>
-          {!leadsChart && <LeadsChart data={leadsChartData} />}
-          {leadsChart && <LeadsBySourceChart data={leadsChartData} />}
-        </Grid.Column>
-
-        <Grid.Column computer={7} tablet={7} mobile={16} className="chart">
-          <ButtonGroup floated="right">
             <Button
               basic
               content="Last 6 months"
-              active={!opportunitiesChartTimeRange}
-              onClick={() => setTimeRange('opportunitiesChart', false)}
+              active={!leadsChartTimeRange}
+              onClick={() => setTimeRange('leadsChart', false)}
             />
+
+            {leadsChart && (
+              <Button basic content="By source" onClick={showLeadsChart} />
+            )}
+            {!leadsChart && (
+              <Button basic content="Overall" onClick={showLeadsChart} />
+            )}
+          </ButtonGroup>
+          {leadsChart && (
+            <LeadsChart data={leadsChartData} loading={loadingInitial} />
+          )}
+          {!leadsChart && (
+            <LeadsBySourceChart
+              data={leadsChartData}
+              loading={loadingInitial}
+            />
+          )}
+        </Grid.Column>
+
+        <Grid.Column tablet={16} computer={7} className="chart">
+          <ButtonGroup floated="right">
             <Button
               basic
               content="Last 30 days"
               active={opportunitiesChartTimeRange}
               onClick={() => setTimeRange('opportunitiesChart', true)}
             />
+            <Button
+              basic
+              content="Last 6 months"
+              active={!opportunitiesChartTimeRange}
+              onClick={() => setTimeRange('opportunitiesChart', false)}
+            />
+
             {!opportunitiesChart && (
-              <Button basic content="Overall" onClick={showOpportunitiesChart} />
+              <Button
+                basic
+                content="Overall"
+                onClick={showOpportunitiesChart}
+              />
             )}
             {opportunitiesChart && (
-              <Button basic content="By employee" onClick={showOpportunitiesChart} />
+              <Button
+                basic
+                content="By employee"
+                onClick={showOpportunitiesChart}
+              />
             )}
           </ButtonGroup>
-          {!opportunitiesChart && <OpportunitiesByEmployeeChart data={opportunitiesChartData} />}
-          {opportunitiesChart && <OpportunitiesChart data={opportunitiesChartData} />}
+          {!opportunitiesChart && (
+            <OpportunitiesByEmployeeChart
+              data={opportunitiesChartData}
+              loading={loadingInitial}
+            />
+          )}
+          {opportunitiesChart && (
+            <OpportunitiesChart
+              data={opportunitiesChartData}
+              loading={loadingInitial}
+            />
+          )}
         </Grid.Column>
 
         {/* <Grid.Column computer={7} tablet={7} mobile={16} className="chart">

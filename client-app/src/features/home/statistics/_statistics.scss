@@ -1,13 +1,13 @@
 #root {
     & .row-statistics {
         width: 100%;
-        min-height: 10%;
+        flex: .4 1;
         overflow: hidden;
-        padding: 1rem 0;
-        margin-bottom: 4rem;
-        border-top: thin solid #fff;
-        border-bottom: thin solid #fff;
-        background-color: #001435;
+        padding: 0 !important;
+        background: #4b6cb7;
+        background: -webkit-linear-gradient(to bottom, #182848, #4b6cb7);
+        background: linear-gradient(to bottom, #182848, #4b6cb7);
+        box-shadow: 0 1px 2px 0 #000;
 
         & * {
             margin: 0;
@@ -15,13 +15,11 @@
         }
 
         & .stat-wrapper {
-            display: flex;
-            flex-direction: column;
             width: 100%;
-            height: 100%;
             background-color: transparent;
             border: 0;
             box-shadow: none;
+
             & * {
 
                 color: #fff;
@@ -32,39 +30,78 @@
                 flex-direction: row;
                 width: 100%;
                 height: 100%;
-                align-items: stretch;
+                align-items: center;
                 justify-content: space-around;
 
                 &:after {
                     display: none;
                 }
 
-                & .stat-container {
-                    display: flex;
-                    flex: .15 1;
-                    padding: 1rem 0;
-                    justify-content: space-between;
+                & .segment {
+                    @include reset-div;
+                    display: block;
+                    background-color: transparent;
+                    flex: 1 0;
 
-                    @include breakpoint(tablet) {
-                        box-shadow: none;
-                    }
+                    & .stat-container {
+                        display: block;
+                        width: 50%;
+                        padding: 0.5rem 10%;
+                        margin: .5rem auto;
+                        justify-content: space-between;
+                        background: #005C97;
+                        background-image: linear-gradient(91.3deg, rgba(135, 174, 220, 1) 1.5%, rgb(187, 210, 236) 100.3%);
+                        box-shadow: 2px 2px 4px 1px #000;
+                        border: 2px ridge #fff;
 
-                    & .value {
-                        font-size: 3rem !important;
-                        margin-bottom: 1rem;
-
-                        @include breakpoint(tablet) {
-                            font-size: 2.5rem !important;
+                        @include breakpoint(tablet_landscape) {
+                            width: 90%;
                         }
-                    }
 
-                    & .label span {
-                        font-size: 1.4rem;
-                        border-top: 3px ridge #fff;
+                        @include breakpoint(smartphone) {
+                            padding: 1.5rem 1.5rem;
+                        }
 
-                        @include breakpoint(tablet) {
-                            font-size: 1.2rem;
-                            border-top: 2px ridge #fff;
+                        & .value {
+                            font-size: 3rem !important;
+                            margin-bottom: .5rem;
+                            color: #fff;
+                            background-color: white;
+                            background: #005C97;
+                            background: -webkit-linear-gradient(to right, #363795, #005C97);
+                            background: linear-gradient(to right, #363795, #005C97);
+                            padding: .5rem 0;
+                            border: thin solid #fff;
+                            box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.664);
+
+                            @include breakpoint(tablet_landscape) {
+                                padding: .7rem 0;
+                            }
+
+                            @include breakpoint(smartphone) {
+                                font-size: 2.5rem !important;
+
+                            }
+                        }
+
+                        & .label {
+                            width: min-content;
+                            opacity: .9;
+                            border-radius: 1rem;
+                            margin: 0 auto;
+
+                            & span {
+                                font-size: 1.4rem;
+                                color: $color-primary-dark;
+
+                                @include breakpoint(tablet) {
+                                    font-size: 1.8rem;
+                                }
+
+                                @include breakpoint(smartphone) {
+                                    font-size: 1.4rem;
+                                }
+                            }
                         }
                     }
                 }
@@ -75,17 +112,18 @@
                     & i {
                         margin: 0 auto;
                         color: $color-detail;
-                        border: thin solid #fff;
+                        border: 2px inset rgb(26, 238, 107);
                         box-shadow: none;
-                        font-size: 2.5rem;
+                        font-size: 6rem;
+                        background-image: radial-gradient(circle farthest-corner at 50% 50%, rgba(0, 52, 89, 1) 50%, #c4c5c2e1 90%);
 
                         @include breakpoint(tablet) {
-                            font-size: 1.8rem;
+                            font-size: 4rem;
                         }
                     }
 
                     & div {
-                        color: #fff;
+                        color: $color-primary-light;
                         font-size: 2rem;
 
                         @include breakpoint(tablet) {

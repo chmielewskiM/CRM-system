@@ -390,8 +390,10 @@ export default class OrderStore {
         this.submitting = false;
       });
       console.log(error);
+      toast.error(error.data.errors);
     }
   };
+
   @action setDisplayHistory = (value: boolean) => {
     this.displayHistory = value;
     this.render();

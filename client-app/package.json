@@ -36,7 +36,7 @@
     "revalidate": "^1.2.0",
     "semantic-ui-react": "^0.88.2",
     "ts-jest": "^26.1.4",
-    "typescript": "^3.7.5",
+    "typescript": "^3.9.9",
     "uuid": "^8.2.0"
   },
   "scripts": {
@@ -67,9 +67,11 @@
     ]
   },
   "devDependencies": {
+    "@typescript-eslint/parser": "^4.19.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "enzyme-to-json": "^3.5.0",
+    "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-airbnb-typescript-prettier": "^3.1.0",
     "prettier": "^2.0.5"
   }

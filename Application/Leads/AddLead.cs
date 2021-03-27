@@ -43,9 +43,9 @@ namespace Application.Leads
             {
                 var guid = Guid.NewGuid();
                 var contact = new Contact();
-                Console.WriteLine(request.Lead.Contact.Status);
                 var user = await _context.Users.SingleOrDefaultAsync(x =>
                             x.UserName == _userAccessor.GetLoggedUsername());
+
                 if (request.Lead.Contact.Status.Equals(""))
                 {
                     contact = new Contact
@@ -80,15 +80,8 @@ namespace Application.Leads
                 else
                 {
                     contact = await _context.Contacts.FindAsync(request.Lead.Contact.Id);
-                    Console.WriteLine(contact);
                     contact.Status = "Lead";
                 }
-
-
-
-
-
-
 
                 var newOperation = new Operations.Add();
 

@@ -4,10 +4,12 @@ import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import am4themes_microchart from '@amcharts/amcharts4/themes/microchart';
 import { observer } from 'mobx-react-lite';
+import LoaderComponent from '../../../../app/layout/LoaderComponent';
 am4core.useTheme(am4themes_animated);
 
 interface IProps {
   data: { name: string; value: number }[] | { name: Date; value: number }[];
+  loading: boolean;
 }
 
 const LeadsBySourceChart: React.FC<IProps> = (props) => {
@@ -40,6 +42,17 @@ const LeadsBySourceChart: React.FC<IProps> = (props) => {
     )!.properties.shiftRadius = 0;
     pieSeries.slices.template.states.getKey('hover')!.properties.scale = 1.1;
 
+    pieSeries.colors.list = [
+      am4core.color('#083d77'),
+      am4core.color('#da4167'),
+      am4core.color('#fdc500'),
+      am4core.color('#06d6a0'),
+      am4core.color('#001427'),
+
+    ];
+    
+    pieSeries.tooltip!.label.fontWeight = '700';
+
     return () => {
       chart.dispose();
     };
@@ -47,6 +60,7 @@ const LeadsBySourceChart: React.FC<IProps> = (props) => {
 
   return (
     <Fragment>
+      {props.loading && <LoaderComponent content="Loading..." />}
       <div
         id="leadsBySourceChart"
         style={{ width: '100%', height: '100%' }}

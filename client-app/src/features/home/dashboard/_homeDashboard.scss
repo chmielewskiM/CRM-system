@@ -2,45 +2,22 @@
     & .ui.container.wrapper {
 
         & .main-grid.home {
-            & .column {
-                padding:0;
-                margin:1rem .5rem;
-                & .buttons {
-                    border: thin solid #fff;
-                    
-                    & .button {
-                        border:none;
-                        background-color: $color-primary-dark !important;
-                        font-weight: 500;
-                        font-size: 1.2rem;
-                        padding:.7rem;
-                        color: #fff !important;
-                        border-radius: 0;
-                        &:hover, &.active {
-                            background-color: #fff !important;
-                            // border-color: #000;
-                            color: #000 !important;
-                        }
-                    }
+            background-color: #fff;
+            background-color: #ffffff;
+            background-image: linear-gradient(180deg, #ffffff 0%, #d7e1ec 74%);
+
+            & .topbar {
+                display: none;
+
+                @include breakpoint(tablet_landscape) {
+                    display: initial;
                 }
             }
 
             & .row-content-1.pipeline-calendar {
-                min-height: 60%;
+                min-height: min-content;
                 justify-content: space-around;
-                @include breakpoint(tablet) {
-                    max-height: min-content;
-
-                    & :last-child {
-                        padding: 0 !important;
-                    }
-                }
-
-                & .pipeline-container {
-                    @include breakpoint(tablet) {
-                        min-height: 30rem;
-                    }
-                }
+                min-height: 50rem !important;
             }
 
             & .row.row-content-2.charts {
@@ -48,16 +25,58 @@
                 justify-content: space-around;
                 flex-direction: row;
                 flex-wrap: wrap;
-                min-height: 40%;
-                margin-bottom: 10rem;
-
-                & .chart {
-                    background-color: rgba(255, 255, 255, 0.116);
-                    height: 100%;
-                    padding-bottom: 1rem;
+                padding-bottom: 3rem;
+                min-height: 40rem !important;
+                @include breakpoint(tablet) {
+                    padding: 2rem .5rem;
+                    margin-bottom: 2rem;
                 }
             }
 
+            & .column.chart, .pipeline-column {
+                padding: 0;
+                margin: 1rem .5rem;
+                position: relative;
+
+                & .buttons {
+                    position: absolute;
+                    width: min-content;
+                    top: 1rem;
+                    right: 1rem;
+                    width: 100%;
+                    justify-content: flex-end;
+                    z-index: 2;
+                    margin-bottom: 2rem;
+
+                    & .button {
+                        border: none;
+                        background-image: linear-gradient(180deg, rgba(204, 228, 247, 1) 11.2%, rgba(237, 246, 250, 1) 100.2%) !important;
+                        font-weight: 700;
+                        font-size: 1.2rem;
+                        padding: .5rem 1.5rem;
+                        color: $color-primary-dark !important;
+                        border-radius: 2rem;
+                        margin-left: .5rem;
+                        border: thin solid transparent;
+                        flex: .1 1;
+                        white-space: nowrap;
+                        opacity: .7;
+
+                        &:hover,
+                        &.active {
+                            border: thin solid #fff;
+                            opacity: 1;
+                            box-shadow: 1px 1px 3px 0 rgb(0, 0, 0);
+                        }
+
+                        @include breakpoint(tablet_landscape) {
+                            padding: .7rem 1.7rem;
+
+
+                        }
+                    }
+                }
+            }
 
 
         }

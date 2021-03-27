@@ -10,7 +10,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210324051827_InitialMigration")]
+    [Migration("20210327015558_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -159,7 +159,7 @@ namespace Persistence.Migrations
                     b.Property<DateTime?>("DateOrderClosed")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DateOrderOpened")
+                    b.Property<DateTime>("DateOrderOpened")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Notes")
@@ -168,7 +168,7 @@ namespace Persistence.Migrations
                     b.Property<int>("OrderNumber")
                         .HasColumnType("int");
 
-                    b.Property<double?>("Price")
+                    b.Property<double>("Price")
                         .HasColumnType("float");
 
                     b.Property<string>("Product")

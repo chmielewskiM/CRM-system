@@ -3,7 +3,11 @@
     & .btn-group-1 {
         display: flex;
         justify-content: flex-start;
-
+        & .label, .field{
+            @include breakpoint(smartphone) {
+                padding-bottom:1rem !important;
+            }
+        }
         & .label {
             width: max-content;
             margin-left: 1rem;

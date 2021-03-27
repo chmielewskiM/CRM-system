@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import {
   IDelegatedTask,
   DelegatedTaskFormValues,
+  ICompleteTaskData,
 } from '../models/delegatedTask';
 import agent from '../api/agent';
 import { RootStore } from './rootStore';
@@ -99,17 +100,23 @@ export default class DelegatedTaskStore {
     let tasks = this.activeTasksByDate;
     let events: {
       start: Date;
-      end: Date;
+      deadline: Date;
       title: string;
       allDay: boolean;
+      createdBy: string;
+      pending: boolean;
+      notes: string;
     }[] = [];
 
-    tasks.forEach((task, index) => {
+    tasks.forEach((task: IDelegatedTask, index) => {
       events[index] = {
         start: new Date(task.dateStarted),
-        end: new Date(task.deadline),
+        deadline: new Date(task.deadline),
         title: task.type,
         allDay: false,
+        createdBy: task.access.createdBy,
+        notes: task.notes,
+        pending: task.pending,
       };
     });
     return events;

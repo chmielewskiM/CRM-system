@@ -21,17 +21,17 @@ axios.interceptors.request.use(
 );
 
 axios.interceptors.response.use(undefined, (error) => {
-  if (error.message === 'Network Error' && !error.response) {
-    toast.error('Connection error');
-  }
-  const { status, data, config } = error.response;
+  // if (error.message === 'Network Error' && !error.response) {
+  //   toast.error('Connection error');
+  // }
+  // const { status, data, config } = error.response;
 
-  if ((status === 400 && config.method === 'post') || (status === 400 && config.method === 'put')) {
-    toast.error('400');
-  }
-  if (status === 500) {
-    toast.error('Server errror');
-  }
+  // if ((status === 400 && config.method === 'post') || (status === 400 && config.method === 'put')) {
+  //   toast.error('400');
+  // }
+  // if (status === 500) {
+  //   toast.error('Server errror');
+  // }
   throw error.response;
 });
 
@@ -62,7 +62,7 @@ const Leads = {
   list: (params: URLSearchParams): Promise<ILead[]> => axios.get(`/lead`, {params: params}).then(responseBody),
   details: (id: string) => requests.get(`/lead/${id}`),
   add: (lead: ILead) => requests.post('/lead', lead),
-  changeStatus: (contactId: string, upgrade:boolean) => requests.put(`/lead/${contactId}%${upgrade}`, {}),
+  changeStatus: (contactId: string, upgrade:boolean) => requests.put(`/lead/${contactId}=${upgrade}`, {}),
   editLead: (contact: IContact) => requests.put(`/lead/edit/${contact.id}`, contact),
   abandonLead: (params: URLSearchParams) => axios.delete(`/lead`, {params: params}).then(responseBody),
 };
@@ -71,7 +71,7 @@ const DelegatedTasks = {
   list: (params: URLSearchParams): Promise<ICompleteTaskData> => axios.get('/delegatedTask', {params: params}).then(responseBody),
   details: (id: string) => requests.get(`/delegatedTask/${id}`),
   add: (task: IDelegatedTaskForm) => requests.post('/delegatedTask', task),
-  update: (task: IDelegatedTaskForm) =>
+  update: (task: IDelegatedTask) =>
     requests.put(`/delegatedTask/${task.id}`, task),
   delete: (id: string) => requests.del(`/delegatedTask/${id}`),
   share: (id: string, user: IUserFormValues) => requests.post(`/delegatedTask/${id}/share/${user.username}`, User),
@@ -81,7 +81,6 @@ const DelegatedTasks = {
 };
 
 const Orders = {
-  getOrder:(id:string): Promise<IOrder> => requests.get(`/order%${id}`),
   list: (params: URLSearchParams): Promise<IOrder[]> => axios.get(`/order`, {params: params}).then(responseBody),
   add: (order: IOrder) => requests.post('/order', order),
   update: (order: IOrder) => requests.put(`/order/${order.id}`, order),

@@ -1,12 +1,26 @@
 #root {
     & .pipeline-calendar {
-        & .pipeline-column{
-            // background-color: rgba(172, 147, 5, 0.445);
-            & #pipeline{
-                margin: 4rem auto 0 auto;
-                padding:0 2rem;
+        & .pipeline-column {
+            background: #005C97;
+            background: -webkit-linear-gradient(to right, #363795, #005C97);
+            background: linear-gradient(to right, #363795, #005C97);
+            border: thin solid $color-secondary-dark;
+            box-shadow: 2px 2px 4px 1px rgb(0, 0, 0);
+            padding: 2rem 1rem !important;
+            min-height: 40rem !important;
+            @include breakpoint(smartphone) {
+                margin-top: 5rem !important;
+            }
+            & #pipeline {
+                margin: 1rem auto;
+                padding: 2rem;
+                height: 100% !important;
+                
+                @include breakpoint(tablet_landscape) {
+                    max-width: 50%;
+                }
             }
         }
-        
+
     }
 }

@@ -13,7 +13,8 @@
 
 html {
     font-size: 62.5%;
-    height: 100vh;
+    min-height: unset !important;
+    height: 100% !important;
 
     @include breakpoint(smartphone) {
         font-size: 44%;
@@ -40,239 +41,39 @@ html {
 body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    min-height: 100%;
+    // min-height: 100%;
+
     //turn off scrollbars
     & * ::-webkit-scrollbar {
         scrollbar-width: none;
         display: none;
     }
-
-    & .ui.page.modals.dimmer.transition {
-        background: hsla(207, 51%, 83%, 1);
-
-        background: radial-gradient(circle, hsla(207, 51%, 83%, 1) 25%, hsla(194, 100%, 12%, 0.5) 100%);
-
-        background: -moz-radial-gradient(circle, hsla(207, 51%, 83%, 1) 25%, hsla(194, 100%, 12%, 0.5) 100%);
-
-        background: -webkit-radial-gradient(circle, hsla(207, 51%, 83%, 1) 25%, hsla(194, 100%, 12%, 0.5) 100%);
-
-        & .modal {
-            width: 40%;
-            padding: .1rem;
-            box-shadow: 1px 1px 3px 1px #000 !important;
-
-            @include breakpoint(smartphone) {
-                width: 90%;
-            }
-
-            @include breakpoint(tablet) {
-                width: 70%;
-            }
-
-            & .content {
-                background-image: linear-gradient(to top, #09203f 0%, #537895 100%);
-
-                & .clearing.segment {
-                    @include reset-div;
-                    background: transparent;
-
-                    & .big.form {
-                        & .field {
-
-                            & input,
-                            & textarea {
-                                background-color: #fff;
-                                font-size: 1.4rem;
-
-                                &::placeholder {
-                                    color: rgba(0, 0, 0, 0.6);
-                                }
-                            }
-
-                            & .selection {
-                                & .visible.menu {
-                                    min-height: min-content;
-                                    overflow-y: unset;
-                                    overflow-x: unset;
-
-                                    & .item {
-                                        background-color: $color9;
-                                        font-size: 1.2rem;
-
-                                        &:hover {
-                                            & .text {
-                                                color: $color4;
-                                            }
-                                        }
-                                    }
-                                }
-
-                                background-color: $color9;
-                                opacity:0.7;
-                                color:#fff;
-
-                                &.active {
-                                    opacity: 1;
-
-                                    & .text {
-                                        color: #fff;
-                                    }
-                                }
-                            }
-
-                            &.error {
-                                position: relative;
-                                opacity: 1;
-
-                                & .label {
-                                    position: absolute;
-                                    right: 5rem;
-                                    margin: 5px 0;
-                                    border: 0;
-                                    white-space: nowrap;
-                                    font-size: 1.3rem;
-                                }
-                            }
-                        }
-
-                        & .button {
-                            opacity: 0.7;
-                            font-size: 1.5rem;
-                            padding: .5rem;
-                            transition: all .1s linear;
-
-                            &:hover {
-                                opacity: 1;
-                            }
-
-                            &.positive {
-                                background-color: #fff;
-                                color: green;
-
-                                border: 0 !important;
-
-                                &:hover {
-                                    color: #fff;
-                                    background-image: linear-gradient(179.1deg, rgba(43, 170, 96, 1) 2.3%, rgba(129, 204, 104, 1) 98.3%);
-                                }
-                            }
-
-                            &.negative {
-                                background-color: #fff;
-                                color: red;
-                                border: 0 !important;
-
-                                &:hover {
-                                    color: #fff;
-                                    background-image: radial-gradient(circle farthest-corner at 81.9% 53.5%, rgba(173, 53, 53, 1) 16.3%, rgba(240, 60, 60, 1) 100.2%);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            //confirmation modal
-            &.confirmation {
-                background-image: linear-gradient(to top, #09203f 0%, #537895 100%);
-                border: 2px ridge #fff;
-
-                @include breakpoint(smartphone) {
-                    width: 98%;
-                }
-
-                & .header,
-                .actions {
-                    border: 0;
-                }
-
-                & .header {
-                    text-align: left;
-                    margin: 1rem 0 0 1rem;
-                }
-
-                & .content {
-                    background-image: none;
-                    font-size: 1.4rem;
-                    border: 0;
-                    border-top: thin $color-primary-light;
-                    border-style: groove;
-                }
-
-                & .form {
-                    display: inline-block;
-                    width: 100%;
-
-                    &>* {
-                        cursor: default;
-                    }
-
-                    & .save,
-                    .keep {
-                        width: 100%;
-                        display: block;
-                        margin: 1rem;
-
-                        // align-content: center;
-                        & .fields {
-                            margin-left: 2rem;
-                        }
-                    }
-
-                    & .radio-label {
-                        float: right;
-                    }
-
-                    & .field.yes,
-                    & .field.no {
-                        & input {
-                            cursor: pointer;
-                        }
-                    }
-
-                    & .label {
-                        background-color: transparent;
-                        color: #fff;
-                        font-size: 1.2rem;
-                        padding: 0;
-                        margin: 1rem;
-                    }
-
-                    & .field {
-                        width: min-content;
-                        float: left;
-                        margin: auto 0;
-                    }
-                }
-
-            }
-        }
-    }
 }
 
 #root {
     display: flex;
-    height: 100vh;
+    min-height: 100% !important;
 
     & .ui.container.wrapper {
         margin: 0 !important;
         width: unset !important;
-        height: inherit;
+        min-height: 100% !important;
         flex: 1 0;
         background: #4b6cb7;
         background: -webkit-linear-gradient(to bottom, #182848, #4b6cb7);
         background: linear-gradient(to bottom, #182848, #4b6cb7);
 
         & .grid.main-grid {
-            height: inherit;
+            min-height: 100% !important;
+            height: min-content !important;
             padding: 0;
             margin: 0;
             overflow-y: scroll;
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             justify-content: flex-start;
             align-content: baseline;
-
+            flex-wrap: nowrap;
             &::-webkit-scrollbar {
                 display: none;
             }
@@ -290,9 +91,9 @@ body {
 
                 @include breakpoint(tablet) {
                     position: fixed;
-                    background: #000046;
-                    background: -webkit-linear-gradient(to right, #000046, #101099, #000046);
-                    background: linear-gradient(to right, #000046, #101099, #000046);
+                    min-height: 5rem !important;
+                    max-height: min-content;
+                    background-image: linear-gradient(109.6deg, rgba(36, 45, 57, 1) 11.2%, rgba(16, 37, 60, 1) 51.2%, rgba(0, 0, 0, 1) 98.6%);
 
                 }
 
@@ -365,19 +166,16 @@ body {
                         color: #ff5a5f;
                     }
                 }
-
             }
 
             & .row-content-1 {
                 width: 100%;
-                min-height: 40%;
-                max-height: 50%;
+                flex: 1 0;
                 margin: 0;
-                overflow: hidden;
                 box-shadow: none;
                 border: 0;
                 padding: 2rem 0;
-
+                align-content: flex-start;
                 @include breakpoint(tablet) {
                     min-height: 30rem;
                     max-height: min-content;
@@ -404,14 +202,13 @@ body {
                     @include breakpoint(tablet) {
                         justify-content: space-between;
                         height: 7rem !important;
+                        // padding:1rem .5rem;
+                        margin-top: 1rem;
                     }
 
                     @include breakpoint(smartphone) {
                         justify-content: center;
                     }
-
-
-
 
                     & .buttons {
                         display: flex;
@@ -484,9 +281,10 @@ body {
                         & .label {
                             font-size: 1.3rem;
                             cursor: default;
+
                             @include breakpoint(tablet) {
-                                padding:0 !important;
-                                margin: auto .2rem auto 0  !important;
+                                padding: 0 !important;
+                                margin: auto .2rem auto 0 !important;
                             }
                         }
 
@@ -520,11 +318,6 @@ body {
 
                         }
 
-                        // @include breakpoint(tablet) {
-                        //     justify-content: center;
-
-                        // }
-
                         & .label {
                             padding: 0;
                             margin-right: .5rem;
@@ -553,14 +346,9 @@ body {
                     }
                 }
 
-                // & .column {
-                //     max-height: 100%;
-                //     position: relative;
-
                 & table.ui.table.table-container {
                     border: thin solid $color-primary-dark;
                     min-width: min-content;
-                    // overflow: scroll;
                     cursor: pointer;
 
                     &>* {
@@ -620,12 +408,10 @@ body {
                     overflow-y: scroll;
                     position: relative;
                 }
-
-                // }
-
             }
 
             & .row-content-2 {
+                flex: 1 0;
                 margin: 2rem 0 0 0;
                 padding: 0;
                 justify-content: space-between;

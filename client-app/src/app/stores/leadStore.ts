@@ -223,6 +223,7 @@ export default class LeadStore {
         this.submitting = false;
       });
       console.log(error);
+      toast.error(error.data.errors);
     }
   };
 

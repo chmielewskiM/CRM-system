@@ -1,15 +1,15 @@
 import { IUser, User } from './user';
 export interface IUserAccess {
   createdByUsername: string;
-  createdBy: IUser;
+  createdBy: string;
   sharedWithUsername: string;
-  sharedWith: IUser;
+  sharedWith: string;
 }
 export class UserAccessValues {
   createdByUsername: string = '';
-  createdBy: IUser = new User();
+  createdBy: string = '';
   sharedWithUsername: string = '';
-  sharedWith: IUser = new User();
+  sharedWith: string = '';
 }
 export interface IDelegatedTask extends IUserAccess {
   id: string;

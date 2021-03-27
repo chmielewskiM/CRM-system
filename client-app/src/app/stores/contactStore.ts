@@ -371,7 +371,7 @@ export default class ContactStore {
       this.render();
     } catch (error) {
       
-      toast.error(error.data.errors.error);
+      toast.error(error.data.errors);
       runInAction('Loading contacts', () => {
         this.submitting = false;
         this.render();

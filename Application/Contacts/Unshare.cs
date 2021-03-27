@@ -68,8 +68,7 @@ namespace Application.Contacts
                     throw new RestException(HttpStatusCode.BadRequest, new { Share = "You cannot unshare this contact" });
 
                 var hasOpenOrder = await orders.SingleOrDefaultAsync(x => x.UserId == user.Id && x.ClientId == contact.Id && x.Closed == false);
-                Console.WriteLine(hasOpenOrder == null);
-                // Console.WriteLine(hasOpenOrder.FirstOrDefault());
+                
                 if (hasOpenOrder != null)
                     throw new RestException(HttpStatusCode.FailedDependency, new
                     {
