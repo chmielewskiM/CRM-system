@@ -2,86 +2,90 @@ import {
   observable,
   action,
   computed,
-  configure,
   runInAction,
   reaction,
+  makeObservable,
 } from 'mobx';
-import { toast } from 'react-toastify';
-import { IContact, ContactFormValues } from '../models/contact';
 import agent from '../api/agent';
 import { RootStore } from './rootStore';
-import { format } from 'date-fns';
 import {
   ICollectedOperationData,
   ITotals,
   CompleteStats,
   ICompleteStats,
-  IOperation,
   IOpportunitiesByUser,
 } from '../models/operation';
-import { destructureDate } from '../common/util/util';
 
 // configure({ enforceActions: 'always' });
 
 export default class homeStore {
   rootStore: RootStore;
   constructor(rootStore: RootStore) {
+    makeObservable(this, {
+      loadingInitial: observable,
+      submitting: observable,
+      operationsRegistry: observable.shallow,
+      operationsTotalRegistry: observable.shallow,
+      operationsByUserRegistry: observable.shallow,
+      body: observable,
+      dataFetched: observable,
+      pipelineTimeRange: observable,
+      leadsChart: observable,
+      leadsChartTimeRange: observable,
+      opportunitiesChart: observable,
+      opportunitiesChartTimeRange: observable,
+      composedChartTimeRange: observable,
+      selectedEvent: observable,
+      stats: observable,
+      pipelineData: computed.struct,
+      thisMonthStats: computed.struct,
+      leadsChartData: computed.struct,
+      leadsOverallData: computed.struct,
+      leadsBySourceData: computed.struct,
+      opportunitiesChartData: computed.struct,
+      opportunitiesOverallData: computed.struct,
+      opportunitiesByEmployeeData: computed.struct,
+      setTimeRange: action,
+      loadOperations: action,
+      showLeadsChart: action,
+      showOpportunitiesChart: action,
+    });
+
     this.rootStore = rootStore;
+
+    // reaction(
+    //   () => this.axiosParams,
+    //   () => {
+    //     this.loadTasks();
+    //   }
+    // );
     // this.loadOperations();
-    reaction(
-      () => this.predicate.keys(),
-      () => {
-        // this.loadOperations();
-      }
-    );
   }
-
-  //Observables
-  @observable loadingInitial = false;
-
-  @observable.shallow operationsRegistry = new Map();
-
-  @observable.shallow operationsTotalRegistry = new Map();
-
-  @observable.shallow operationsByUserRegistry = new Map();
-
-  @observable predicate = new Map();
-
-  @observable body: string = '';
-
-  @observable bool = false;
-
-  @observable dataFetched = false;
-
-  @observable pipelineTimeRange = true;
-
-  @observable leadsChart = false;
-
-  @observable leadsChartTimeRange = true;
-
-  @observable opportunitiesChart = false;
-
-  @observable opportunitiesChartTimeRange = true;
-
-  @observable composedChartTimeRange = false;
-
-  @observable rr = false;
-
-  @observable selectedEvent: Object | undefined;
-
-  @observable stats: ICompleteStats = new CompleteStats();
-  //-Pipeline
-
+  /////////////////////////////////////
+  //collections
+  operationsRegistry = new Map();
+  operationsTotalRegistry = new Map();
+  operationsByUserRegistry = new Map();
+  //instances
+  selectedEvent: Object | undefined;
+  stats: ICompleteStats = new CompleteStats();
+  //controls
+  loadingInitial = false;
+  submitting = false;
+  dataFetched = false;
+  body: string = '';
+  pipelineTimeRange = false;
+  leadsChart = false;
+  leadsChartTimeRange = false;
+  opportunitiesChart = false;
+  opportunitiesChartTimeRange = false;
+  composedChartTimeRange = false;
   //--------------------------------------------
-  //Computed
-  @computed get axiosParams() {
-    const params = new URLSearchParams();
-    params.append('data', String(Boolean));
-    // data.append('')
-    return params;
-  }
 
-  @computed.struct get pipelineData() {
+  ////
+  // *Computeds*
+  //
+  get pipelineData() {
     let chartProps: Array<{
       name: string;
       value: number;
@@ -134,7 +138,7 @@ export default class homeStore {
     return chartProps;
   }
 
-  @computed.struct get thisMonthStats() {
+  get thisMonthStats() {
     let chartProps: {
       leads?: number;
       conversions?: number;
@@ -151,18 +155,18 @@ export default class homeStore {
         orders: operations.ordersTotal,
       };
     }
-    
+
     return chartProps;
   }
 
-  @computed.struct get leadsChartData() {
+  get leadsChartData() {
     if (!this.leadsChart && this.dataFetched) {
       return this.leadsBySourceData;
     } else if (this.dataFetched) return this.leadsOverallData;
     else return [];
   }
 
-  @computed.struct get leadsOverallData() {
+  get leadsOverallData() {
     let chartProps: Array<{ name: Date; value: number }> = [];
     let range;
 
@@ -184,7 +188,7 @@ export default class homeStore {
     return chartProps;
   }
 
-  @computed.struct get leadsBySourceData() {
+  get leadsBySourceData() {
     let chartProps: Array<{ name: string; value: number }> = [];
     let range;
 
@@ -193,7 +197,7 @@ export default class homeStore {
 
     if (this.dataFetched) {
       let operations: ITotals = this.operationsTotalRegistry.get(range);
-      
+
       chartProps.push(
         { name: 'Web', value: operations.sourcesTotal.web },
         { name: 'Flyers', value: operations.sourcesTotal.flyers },
@@ -204,14 +208,20 @@ export default class homeStore {
     }
     return chartProps;
   }
-  @computed.struct get opportunitiesChartData() {
+
+  get opportunitiesChartData() {
     if (!this.opportunitiesChart && this.dataFetched) {
       return this.opportunitiesByEmployeeData;
     } else if (this.dataFetched) return this.opportunitiesOverallData;
     else return [];
   }
-  @computed.struct get opportunitiesOverallData() {
-    let chartProps: Array<{ name: Date; leads: number; opportunities: number }> = [];
+
+  get opportunitiesOverallData() {
+    let chartProps: Array<{
+      name: Date;
+      leads: number;
+      opportunities: number;
+    }> = [];
     let range;
 
     if (this.opportunitiesChartTimeRange == false) range = 'sixMonths';
@@ -238,8 +248,12 @@ export default class homeStore {
     return chartProps;
   }
 
-  @computed.struct get opportunitiesByEmployeeData() {
-    let chartProps: Array<{ name: string; leads: number; opportunities: number }> = [];
+  get opportunitiesByEmployeeData() {
+    let chartProps: Array<{
+      name: string;
+      leads: number;
+      opportunities: number;
+    }> = [];
     let range;
 
     if (this.opportunitiesChartTimeRange == false) range = 'sixMonths';
@@ -261,39 +275,39 @@ export default class homeStore {
     }
     return chartProps;
   }
-  //--------------------------------------------
-  //Actions
+  //----------------------------------------
 
-  @action render() {
-    this.rr = !this.rr;
-  }
-  @action setPredicate = (
-    predicate: ICollectedOperationData,
-    predicate2: ITotals,
-    value1: string,
-    value2: string
-  ) => {
-    this.predicate.clear();
-    this.predicate.set(predicate, value1);
-    this.predicate.set(predicate2, value2);
-    this.predicate.get;
+  ////
+  // *Actions*
+  //
+  // Loading and submitting actions. According to MobX documentation it's recommended to
+  // modify observables only by actions
+  loadingData = (value: boolean) => {
+    runInAction(() => {
+      this.loadingInitial = value;
+    });
   };
-  @action setTimeRange = (chart: string, range: boolean) => {
-    runInAction('Loading error', () => {
+
+  submittingData = (value: boolean) => {
+    runInAction(() => {
+      this.submitting = value;
+    });
+  };
+
+  setTimeRange = (chart: string, range: boolean) => {
+    this.submittingData(true);
+    runInAction(() => {
       if (chart == 'leadsChart') this.leadsChartTimeRange = range;
       else if (chart == 'opportunitiesChart')
         this.opportunitiesChartTimeRange = range;
       else if (chart == 'composedChart') this.composedChartTimeRange = range;
       else if (chart == 'pipeline') this.pipelineTimeRange = range;
-
-      this.loadingInitial = false;
-      this.render();
     });
+    this.submittingData(false);
   };
 
-  @action loadOperations = async () => {
-    this.loadingInitial = true;
-    this.dataFetched = false;
+  loadOperations = async () => {
+    this.loadingData(true);
     try {
       const arr = [0, 1, 2, 3, 4, 5];
       let i = 0;
@@ -303,7 +317,7 @@ export default class homeStore {
         Object.values(data)
       );
 
-      runInAction('Loading error', () => {
+      runInAction(() => {
         this.operationsRegistry.clear();
         this.operationsTotalRegistry.clear();
         this.operationsByUserRegistry.clear();
@@ -320,34 +334,28 @@ export default class homeStore {
         this.operationsByUserRegistry.set('sixMonths', operationsByDate[7]);
 
         this.dataFetched = true;
-        this.loadingInitial = false;
-        this.render();
       });
+      this.loadingData(false);
     } catch (error) {
-      runInAction('Loading error', () => {
-        this.loadingInitial = false;
-      });
+      this.loadingData(false);
       console.log(error);
     }
   };
 
-  @action showLeadsChart = () => {
-    this.leadsChart = !this.leadsChart;
-    this.render();
+  showLeadsChart = () => {
+    this.loadingData(true);
+    runInAction(() => {
+      this.leadsChart = !this.leadsChart;
+    });
+    this.loadingData(false);
   };
 
-  @action showOpportunitiesChart = () => {
-    this.opportunitiesChart = !this.opportunitiesChart;
-    this.render();
-  };
-
-  @action sel = (ev: string, e: React.SyntheticEvent) => {
-    var a = this.sel.bind;
-    this.selectedEvent = ev;
-    var b = ev;
-    this.bool = !this.bool;
-    this.body = ev;
-    this.render();
+  showOpportunitiesChart = () => {
+    this.loadingData(true);
+    runInAction(() => {
+      this.opportunitiesChart = !this.opportunitiesChart;
+    });
+    this.loadingData(false);
   };
 
   //Pipeline

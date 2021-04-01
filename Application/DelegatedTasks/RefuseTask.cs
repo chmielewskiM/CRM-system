@@ -34,6 +34,7 @@ namespace Application.DelegatedTasks
                     new { delegatedTask = "Not found" });
 
                 delegatedTask.Refused = true;
+                delegatedTask.Accepted = false;
                 delegatedTask.Pending = false;
 
                 var success = await _context.SaveChangesAsync() > 0;

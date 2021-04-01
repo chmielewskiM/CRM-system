@@ -14,7 +14,7 @@ namespace Application.Orders
 {
     public class ListOrders
     {
-        public class Query : IRequest<List<OrderDTO>>
+        public class Query : IRequest<CompleteOrderData>
         {
             public string AllOrders { get; set; }
             public string SaleOrders { get; set; }
@@ -34,7 +34,7 @@ namespace Application.Orders
                 OrderBy = orderBy;
             }
         }
-        public class Handler : IRequestHandler<Query, List<OrderDTO>>
+        public class Handler : IRequestHandler<Query, CompleteOrderData>
         {
             private readonly DataContext _context;
             private readonly ILogger<ListOrders> _logger;
@@ -47,7 +47,7 @@ namespace Application.Orders
                 _context = context;
             }
 
-            public async Task<List<OrderDTO>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<CompleteOrderData> Handle(Query request, CancellationToken cancellationToken)
             {
                 var sortedOrders = await _context.Orders.ToListAsync();
 
@@ -110,6 +110,9 @@ namespace Application.Orders
                         else orders = orders.OrderBy(x => x.DateOrderClosed);
                         break;
                 };
+
+                int ordersCount = sortedOrders.Count();
+
                 //convert queryable to list and return the list
                 sortedOrders = orders.ToList();
 
@@ -117,11 +120,12 @@ namespace Application.Orders
                 {
                     var paginatedList = PaginatedList<Order>.Create(orders, request.PageNumber ?? 1, request.PageSize ?? 3);
 
-                    return _mapper.Map<List<Order>, List<OrderDTO>>(paginatedList);
+                    return new CompleteOrderData(_mapper.Map<List<Order>, List<OrderDTO>>(paginatedList), ordersCount);
                 }
 
 
-                return _mapper.Map<List<Order>, List<OrderDTO>>(sortedOrders);
+
+                return new CompleteOrderData(_mapper.Map<List<Order>, List<OrderDTO>>(sortedOrders), ordersCount);
             }
         }
     }

@@ -18,9 +18,14 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<CompleteTaskData>> ListTasks(bool myTasks, bool accepted, bool refused, bool pending, bool done)
+        public async Task<ActionResult<CompleteTaskData>> ListTasks(bool myTasks, bool sharedTasks, bool accepted, bool refused, bool done, int activePage, int pageSize)
         {
-            return await Mediator.Send(new ListTasks.Query(myTasks, accepted, refused, pending, done));
+            return await Mediator.Send(new ListTasks.Query(myTasks, sharedTasks, accepted, refused, done, activePage, pageSize));
+        }
+        [HttpGet("pending/page{pendingActivePage}=size{pendingPageSize}")]
+        public async Task<ActionResult<CompleteTaskData>> ListPendingTasks(int pendingActivePage, int pendingPageSize)
+        {
+            return await Mediator.Send(new ListPendingTasks.Query { PendingActivePage = pendingActivePage, PendingPageSize = pendingPageSize });
         }
 
         [HttpGet("{id}")]

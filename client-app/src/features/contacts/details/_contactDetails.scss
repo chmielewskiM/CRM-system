@@ -16,7 +16,6 @@
                         background: #E0EAFC;
                         background: -webkit-linear-gradient(to right, #CFDEF3, #E0EAFC);
                         background: linear-gradient(to right, #CFDEF3, #E0EAFC);
-
                     }
 
                     & .minor-header {
@@ -49,7 +48,6 @@
                                 box-shadow: 0 1px 3px 0 #000;
                                 border-radius: 5px;
                             }
-
 
                             & .mark-premium button,
                             .unmark-premium button {
@@ -131,11 +129,9 @@
                                         font-size: 1.2rem;
                                     }
 
-
                                     & .icon:not(.outline):before {
                                         color: $color-detail !important;
                                     }
-
                                 }
                             }
                         }

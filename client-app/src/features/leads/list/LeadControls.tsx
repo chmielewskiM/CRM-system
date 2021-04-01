@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { Button } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import {
@@ -7,7 +7,7 @@ import {
   quoteControls,
   invoiceControls,
 } from '../../../app/common/options/buttons';
-import { RootStoreContext } from '../../../app/stores/rootStore';
+import { useStores } from '../../../app/stores/rootStore';
 import { ILead } from '../../../app/models/lead';
 
 interface IProps {
@@ -15,10 +15,8 @@ interface IProps {
 }
 
 export const LeadControls: React.FC<IProps> = (props) => {
-  const rootStore = useContext(RootStoreContext);
-  const { modal, openModal, confirmModal } = rootStore.modalStore;
+  const { leadStore } = useStores();
 
-  const { submitting, handleLead, setTargetLead, rr } = rootStore.leadStore;
   useEffect(() => {}, []);
 
   const status = props.lead.contact.status;
@@ -56,11 +54,13 @@ export const LeadControls: React.FC<IProps> = (props) => {
               compact={button.compact}
               className={button.className}
               onClick={() => {
-                handleLead(button.functionArg, props.lead);
-                setTargetLead(props.lead);
+                leadStore.handleLead(button.functionArg, props.lead);
+                leadStore.setTargetLead(props.lead);
               }}
-              disabled={submitting || (button.className ==  'invoice' && props.lead.order == null) }
-
+              disabled={
+                leadStore.submitting ||
+                (button.className == 'invoice' && props.lead.order == null)
+              }
             />
           </Fragment>
         ))}

@@ -86,12 +86,29 @@ namespace Application.Orders
 
                 await newOperation.addOperation(newOperation, _context, user);
 
+                await handleSaleProcess(client, order.Id);
 
                 var success = await _context.SaveChangesAsync() > 0;
 
                 if (success) return Unit.Value;
 
                 throw new Exception("Problem saving changes");
+            }
+            private async Task handleSaleProcess(Contact client, Guid id)
+            {
+                //get operations which belong to the currently managed sale process
+                IQueryable<SaleProcess> saleProcess = _context.SaleProcess.Where(x => x.ContactId == client.Id);
+
+                if (saleProcess.Count()>0)
+                {
+                    saleProcess = saleProcess.OrderByDescending(x => x.Index);
+                    //select sale process element with highest index (containing the most recent operation in chain)
+                    var lastProcess = await saleProcess.FirstOrDefaultAsync();
+
+                    //check whether there is an order assigned to the current sale process
+                    if (lastProcess.OrderId != null)
+                        lastProcess.OrderId = id.ToString();
+                }
             }
         }
     }

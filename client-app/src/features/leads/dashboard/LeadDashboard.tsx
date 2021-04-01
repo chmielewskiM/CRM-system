@@ -1,41 +1,39 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid, Button, Segment, Label } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
-import { LeadForm } from '../form/LeadForm';
-import { RootStoreContext } from '../../../app/stores/rootStore';
-import { LeadList } from '../list/LeadList';
+import LeadForm from '../form/LeadForm';
+import { useStores } from '../../../app/stores/rootStore';
+import LeadList from '../list/LeadList';
 import { filterLeads } from '../../../app/common/options/buttons';
 
 export const LeadDashboard: React.FC = () => {
-  const rootStore = useContext(RootStoreContext);
-  const { modal } = rootStore.modalStore;
-  const {
-    showLeadForm,
-    selectedLead,
-    addLeadForm,
-    status,
-    setLeadList,
-    rr,
-  } = rootStore.leadStore;
+  const { leadStore, commonStore } = useStores();
 
-  useEffect(() => {}, [rr]);
+  useEffect(() => {}, []);
 
   const [sortBy, setSortBy] = useState('date');
 
   return (
     <Grid className="main-grid">
-      {showLeadForm && (
+      {leadStore.showLeadForm && (
         <LeadForm
-          key={(selectedLead && selectedLead.contact.id) || 0}
-          lead={selectedLead!}
+          key={
+            (leadStore.selectedLead && leadStore.selectedLead.contact.id) || 0
+          }
+          lead={leadStore.selectedLead!}
         />
       )}
       <Grid.Row className="topbar">
-        <Button positive icon="plus" content="Add lead" onClick={addLeadForm} />
+        <Button
+          positive
+          icon="plus"
+          content="Add lead"
+          onClick={leadStore.addLeadForm}
+        />
         <Button
           icon="angle down"
           className="expand-menu"
-          onClick={(event) => rootStore.commonStore.expandMenu(event)}
+          onClick={(event) => commonStore.expandMenu(event)}
         />
       </Grid.Row>
       <Grid.Row className="row-content-1 leads">
@@ -46,13 +44,17 @@ export const LeadDashboard: React.FC = () => {
               <Button
                 key={button.key}
                 as={button.as}
-                active={button.btnActive == status}
+                active={button.btnActive == leadStore.status}
                 content={button.content}
                 size={button.size}
                 compact={button.compact}
                 className={button.className}
                 onClick={(e) =>
-                  setLeadList(button.functionArg, sortBy, e.currentTarget)
+                  leadStore.setLeadList(
+                    button.functionArg,
+                    sortBy,
+                    e.currentTarget
+                  )
                 }
               />
             ))}
@@ -64,14 +66,22 @@ export const LeadDashboard: React.FC = () => {
               content="Date"
               onClick={(e) => {
                 setSortBy('date');
-                setLeadList(status, 'date', e.currentTarget);
+                leadStore.setLeadList(
+                  leadStore.status,
+                  'date',
+                  e.currentTarget
+                );
               }}
             />
             <Button
               content="Name"
               onClick={(e) => {
                 setSortBy('name');
-                setLeadList(status, 'name', e.currentTarget);
+                leadStore.setLeadList(
+                  leadStore.status,
+                  'name',
+                  e.currentTarget
+                );
               }}
             />
           </Button.Group>

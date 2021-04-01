@@ -4,12 +4,11 @@ import parse from 'date-fns/parse';
 import startOfWeek from 'date-fns/startOfWeek';
 import getDay from 'date-fns/getDay';
 import { observer } from 'mobx-react-lite';
-import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { Popup, Segment, Modal, Button } from 'semantic-ui-react';
-import { RootStoreContext } from '../../../app/stores/rootStore';
-import InfoModal from './CalendarModal';
+import React, { Fragment, useEffect, useState } from 'react';
+import { useStores } from '../../../app/stores/rootStore';
+import CalendarModal from './CalendarModal';
 import LoaderComponent from '../../../app/layout/LoaderComponent';
-import { IDelegatedTask } from '../../../app/models/delegatedTask';
+
 
 const locales = {
   'en-US': require('date-fns/locale/en-US'),
@@ -71,23 +70,15 @@ interface IProps {
 }
 
 export const MyCalendar: React.FC<IProps> = (props) => {
-  const rootStore = useContext(RootStoreContext);
-  const { render, rr, sel, bool, body, selectedEvent } = rootStore.homeStore;
-  const { closeModal, confirmModal, modal, openModal } = rootStore.modalStore;
+  const { modalStore, delegatedTaskStore } = useStores();
   useEffect(() => {
     // rootStore.delegatedTaskStore.loadTasks()
-    closeModal();
-    rootStore.delegatedTaskStore.calendarEvents;
-  }, []);
+    modalStore.closeModal();
+    
+  }, [delegatedTaskStore.calendarEvents]);
 
-  // function modalBody(){
-  //   const data = {
-  //     from:props.events.title,
-  //   }
-  // }
   const [event, setEvent] = useState(props.events[0]);
-  // const [modalON, setModal] = useState(false);
-  
+
   return (
     <Fragment>
       {props.loading && <LoaderComponent content="Loading..." />}
@@ -99,13 +90,13 @@ export const MyCalendar: React.FC<IProps> = (props) => {
           endAccessor="deadline"
           allDayAccessor="allDay"
           eventPropGetter={eventPropGetter}
-          onView={() => rootStore.delegatedTaskStore.calendarEvents}
+          onView={() => delegatedTaskStore.calendarEvents}
           views={['month', 'day']}
           onSelectEvent={(data, e) => {
-            openModal(data.title);
+            modalStore.openModal(data.title);
           }}
         />
-        <InfoModal open={false} event={event} />
+        <CalendarModal open={false} event={event} />
       </div>
     </Fragment>
   );

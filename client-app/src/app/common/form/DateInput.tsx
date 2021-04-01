@@ -4,8 +4,10 @@ import { FormFieldProps, Form, Label } from 'semantic-ui-react';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import { observer } from 'mobx-react-lite';
 
-export interface IProps extends FieldRenderProps<Date, HTMLElement>, FormFieldProps {
-  minDate:Date
+export interface IProps
+  extends FieldRenderProps<Date, HTMLElement>,
+    FormFieldProps {
+  minDate: Date;
 }
 
 const DateInput: React.FC<IProps> = ({
@@ -15,7 +17,7 @@ const DateInput: React.FC<IProps> = ({
   meta: { touched, error },
   date = false,
   time = false,
-  minDate
+  minDate,
 }) => {
   return (
     <Form.Field error={touched && !!error} width={width} mindate={minDate}>

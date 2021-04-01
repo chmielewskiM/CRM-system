@@ -6,12 +6,10 @@ namespace Application.Contacts
     {
         public List<ContactDTO> Contacts { get; set; }
         public int ContactsTotal { get; set; }
-
         public CompleteContactsData(List<ContactDTO> contacts, int contactsTotal)
         {
             ContactsTotal = contactsTotal;
             Contacts = contacts;
-
         }
     }
 }

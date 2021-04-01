@@ -1,19 +1,9 @@
-import React, { Fragment, useContext, useEffect, useState } from 'react';
-import {
-  Header,
-  Divider,
-  Label,
-  Segment,
-  Button,
-  Container,
-  Pagination,
-  HeaderProps,
-  Card,
-} from 'semantic-ui-react';
+import React, { Fragment, useEffect } from 'react';
+import { Segment, Card } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import LoaderComponent from '../../../app/layout/LoaderComponent';
-import { RootStoreContext } from '../../../app/stores/rootStore';
-import { TaskNotification } from './TaskNotification';
+import { useStores } from '../../../app/stores/rootStore';
+import  TaskNotification  from './TaskNotification';
 import { MinorHeader } from '../../../app/common/headers/MinorHeader';
 
 interface IProps {
@@ -22,39 +12,30 @@ interface IProps {
 }
 
 export const TaskNotifier: React.FC<IProps> = (props) => {
-  const rootStore = useContext(RootStoreContext);
-  const {
-    loadingInitial,
-    setTaskList,
-    pendingTasksByDate,
-    pendingTasksCount,
-    pendingTasksNotifier,
-    displayPendingTaskNotifier,
-  } = rootStore.delegatedTaskStore;
+  const { delegatedTaskStore } = useStores();
 
-  useEffect(() => {
-    setTaskList('pendingTasks');
-  }, [pendingTasksCount]);
+  useEffect(() => {delegatedTaskStore.loadPendingTasks()}, [delegatedTaskStore.displayPendingTaskNotifier]);
 
-  if (loadingInitial) return <LoaderComponent content="Loading..." />;
+  // if (delegatedTaskStore.loadingInitial)
+  //   return <LoaderComponent content="Loading..." />;
   return (
     <Fragment>
-      {pendingTasksNotifier && (
+      {delegatedTaskStore.pendingTasksNotifier && (
         <Fragment>
           <MinorHeader
             as="h3"
             content="Pending tasks"
             className={props.className}
-            function={displayPendingTaskNotifier}
+            function={delegatedTaskStore.displayPendingTaskNotifier}
           />
           <Segment basic className="task-notifier">
-            {pendingTasksByDate.map((task) => (
+            {delegatedTaskStore.pendingTasksByDate.map((task) => (
               <Fragment key={task.id}>
                 <TaskNotification task={task} />
               </Fragment>
             ))}
             {props.taskCount == 0 && (
-              <Card raised={true} className='empty'>
+              <Card raised={true} className="empty">
                 <Card.Content>
                   <Card.Header>You have no pending tasks. </Card.Header>
                 </Card.Content>

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Segment, Button, Modal } from 'semantic-ui-react';
 import { v4 as uuid } from 'uuid';
 import { observer } from 'mobx-react-lite';
@@ -7,7 +7,7 @@ import { ContactFormValues } from '../../../app/models/contact';
 import TextInput from '../../../app/common/form/TextInput';
 import TextAreaInput from '../../../app/common/form/TextAreaInput';
 import { combineValidators, isRequired } from 'revalidate';
-import { RootStoreContext } from '../../../app/stores/rootStore';
+import { useStores } from '../../../app/stores/rootStore';
 import { sources } from '../../../app/common/options/leadSource';
 import SelectInput from '../../../app/common/form/SelectInput';
 import { ILead, LeadFormValues } from '../../../app/models/lead';
@@ -26,14 +26,7 @@ interface IProps {
 }
 
 export const LeadForm: React.FC<IProps> = () => {
-  const rootStore = useContext(RootStoreContext);
-  const {
-    setShowLeadForm,
-    submitting,
-    addLead,
-    editLead,
-    fillForm,
-  } = rootStore.leadStore;
+  const { leadStore } = useStores();
 
   useEffect(() => {}, []);
 
@@ -51,9 +44,9 @@ export const LeadForm: React.FC<IProps> = () => {
       lead.order!.id = uuid();
       lead.contact.id = newContact.id;
       lead.order!.clientId = lead.contact.id;
-      addLead(lead);
+      leadStore.addLead(lead);
     } else {
-      editLead(lead);
+      leadStore.editLead(lead);
     }
   };
 
@@ -65,7 +58,7 @@ export const LeadForm: React.FC<IProps> = () => {
             <FinalForm
               validate={validation}
               onSubmit={handleFinalFormSubmit}
-              initialValues={fillForm()}
+              initialValues={leadStore.fillForm()}
               render={({ handleSubmit }) => (
                 <Form onSubmit={handleSubmit} size="big">
                   <Field
@@ -112,7 +105,7 @@ export const LeadForm: React.FC<IProps> = () => {
                     type="button"
                     size="big"
                     content="Cancel"
-                    onClick={() => setShowLeadForm(false)}
+                    onClick={() => leadStore.setShowLeadForm(false)}
                   />
                   <Button
                     positive
@@ -120,7 +113,7 @@ export const LeadForm: React.FC<IProps> = () => {
                     type="submit"
                     size="big"
                     content="Confirm"
-                    loading={submitting}
+                    loading={leadStore.submitting}
                   />
                 </Form>
               )}

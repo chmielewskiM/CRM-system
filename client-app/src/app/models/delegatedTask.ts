@@ -54,5 +54,5 @@ export class DelegatedTaskFormValues implements IDelegatedTaskForm {
 
 export interface ICompleteTaskData extends IDelegatedTask {
   tasks: IDelegatedTask[];
-  pendingTasksCount: number;
+  tasksCount: number;
 }

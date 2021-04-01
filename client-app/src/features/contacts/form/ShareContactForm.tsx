@@ -1,9 +1,9 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Form, Segment, Button, Modal, Header } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import { Form as FinalForm } from 'react-final-form';
 import { combineValidators } from 'revalidate';
-import { RootStoreContext } from '../../../app/stores/rootStore';
+import { useStores } from '../../../app/stores/rootStore';
 import LoaderComponent from '../../../app/layout/LoaderComponent';
 
 const validation = combineValidators({
@@ -13,28 +13,15 @@ const validation = combineValidators({
 });
 
 export const ShareContactForm: React.FC = () => {
-  const rootStore = useContext(RootStoreContext);
-  const {
-    loadingInitial,
-    submitting,
-    showShareContactForm,
-    selectedContact,
-    shareContact,
-  } = rootStore.contactStore;
-
-  const {
-    usersByName,
-    getUser,
-    getUserList,
-    selectedUser,
-    rr,
-  } = rootStore.userStore;
+  const { contactStore, userStore } = useStores();
 
   useEffect(() => {}, []);
 
-  const handleFinalFormSubmit = (values: any) => {
-  };
-  if (loadingInitial) return <LoaderComponent content="Loading..." />;
+  const handleFinalFormSubmit = (values: any) => {};
+
+  if (contactStore.loadingInitial)
+    return <LoaderComponent content="Loading..." />;
+
   return (
     <Segment clearing>
       <Modal open>
@@ -51,15 +38,15 @@ export const ShareContactForm: React.FC = () => {
               render={({ handleSubmit }) => (
                 <Form onSubmit={handleSubmit} size="big">
                   <Form.Select
-                    options={usersByName}
+                    options={userStore.usersByName}
                     name="type"
                     placeholder="Select user"
-                    value={selectedUser.username}
+                    value={userStore.selectedUser.username}
                     onClick={() => {
-                      getUserList(true);
+                      userStore.getUserList(true);
                     }}
                     onChange={(e, data) => {
-                      getUser(data.value!.toString());
+                      userStore.getUser(data.value!.toString());
                     }}
                   />
                   <Button
@@ -68,11 +55,11 @@ export const ShareContactForm: React.FC = () => {
                     type="button"
                     size="big"
                     content="Cancel"
-                    onClick={() => showShareContactForm(false)}
-                    loading={submitting}
-                    disabled={submitting}
+                    onClick={() => contactStore.showShareContactForm(false)}
+                    loading={contactStore.submitting}
+                    disabled={contactStore.submitting}
                   />
-                  {selectedUser != undefined && (
+                  {userStore.selectedUser != undefined && (
                     <Button
                       positive
                       floated="right"
@@ -80,13 +67,16 @@ export const ShareContactForm: React.FC = () => {
                       size="big"
                       content="Confirm"
                       onClick={() =>
-                        shareContact(selectedContact!.id, selectedUser)
+                        contactStore.shareContact(
+                          contactStore.selectedContact!.id,
+                          userStore.selectedUser
+                        )
                       }
-                      loading={submitting}
-                      disabled={submitting}
+                      loading={contactStore.submitting}
+                      disabled={contactStore.submitting}
                     />
                   )}
-                  {selectedUser == undefined && (
+                  {userStore.selectedUser == undefined && (
                     <Button
                       positive
                       floated="right"

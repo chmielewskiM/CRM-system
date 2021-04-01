@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, Fragment } from 'react';
+import React, { useEffect, Fragment } from 'react';
 import { Form, Segment, Button, Modal, Label } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import { Form as FinalForm, Field } from 'react-final-form';
@@ -8,7 +8,7 @@ import { combineValidators, isRequired } from 'revalidate';
 import { material, products } from '../../../app/common/options/product';
 import NumberInput from '../../../app/common/form/NumberInput';
 import RadioInput from '../../../app/common/form/RadioInput';
-import { RootStoreContext } from '../../../app/stores/rootStore';
+import { useStores } from '../../../app/stores/rootStore';
 import LoaderComponent from '../../../app/layout/LoaderComponent';
 
 const validation = combineValidators({
@@ -24,94 +24,74 @@ interface IProps {
 }
 
 export const OrderForm: React.FC<IProps> = (props) => {
-  const rootStore = useContext(RootStoreContext);
-  const {
-    loadingInitial,
-    setShowOrderForm,
-    editOrder,
-    addOrder,
-    submitting,
-    fillForm,
-    sale,
-    handleFinalFormSubmit,
-    selectedOrder,
-    toggleSelect,
-  } = rootStore.orderStore;
-  const {
-    uncontractedContacts,
-    selectedContact,
-    loadUncontracted,
-    getContact,
-  } = rootStore.contactStore;
+  const { orderStore, contactStore } = useStores();
 
-  useEffect(() => {
-    loadUncontracted();
-  }, [addOrder, editOrder]);
-  if (loadingInitial || submitting)
-    return <LoaderComponent content="Loading..." />;
+  useEffect(() => {}, [orderStore.sale, contactStore.uncontracted]);
+
   return (
     <Segment clearing>
+      {orderStore.loadingInitial && <LoaderComponent content="Loading..." />}
       <Modal open>
         <Modal.Content>
           <Segment clearing size="big" className={props.className}>
             <FinalForm
               validate={validation}
-              initialValues={fillForm()}
-              onSubmit={handleFinalFormSubmit}
+              initialValues={orderStore.fillForm()}
+              onSubmit={orderStore.handleFinalFormSubmit}
               render={({ handleSubmit }) => (
                 <Form onSubmit={handleSubmit} size="big">
                   <Form.Select
-                    options={uncontractedContacts}
+                    options={contactStore.uncontractedContacts}
                     name="client"
                     placeholder="Select client"
-                    value={selectedContact?.name}
-                    // onClick={loadUncontracted}
+                    value={contactStore.selectedContact?.name}
+                    // onClick={contactStore.loadUncontracted}
                     onChange={(e, data) => {
-                      getContact(data.value!.toString());
-                      // loadUncontracted();
+                      contactStore.getContact(data.value!.toString());
+                      // contactStore.loadUncontracted();
                     }}
                   />
                   <Form.Group inline className="btn-group-1">
                     <Field
-                      name="sale"
+                      name="orderStore.sale"
                       label="Sale"
-                      value={sale}
+                      value={orderStore.sale}
                       type="radio"
                       component={RadioInput}
-                      func={() => toggleSelect(sale)}
+                      func={orderStore.toggleSelect}
                     />
                     {''}
                     <Field
-                      name="sale"
+                      name="orderStore.sale"
                       label="Purchase"
-                      value={!sale}
+                      value={!orderStore.sale}
                       type="radio"
-                      func={() => toggleSelect(sale)}
+                      func={orderStore.toggleSelect}
                       component={RadioInput}
                     />
                     {''}
-                    {sale == false && (
+                    {orderStore.sale == false && (
                       <Field
                         options={material}
                         className="product"
                         name="product"
                         placeholder="Product"
-                        value={selectedOrder?.product}
+                        value={orderStore.selectedOrder?.product}
                         component={SelectInput}
                       />
                     )}
-                    {sale != false && (
+                    {orderStore.sale != false && (
                       <Field
                         options={products}
                         className="product"
                         name="product"
                         placeholder="Product"
-                        value={selectedOrder?.product}
+                        value={orderStore.selectedOrder?.product}
                         component={SelectInput}
                       />
                     )}
                   </Form.Group>
-                  {sale == false && (
+                  {orderStore.sale == false && (
                     <Fragment>
                       <Form.Group className="btn-group-2">
                         <Label content="Amount (lb)" />
@@ -120,7 +100,7 @@ export const OrderForm: React.FC<IProps> = (props) => {
                           name="amount"
                           placeholder="Amount"
                           component={NumberInput}
-                          value={selectedOrder?.amount}
+                          value={orderStore.selectedOrder?.amount}
                         />
                         <Label content="Price" />
                         <Field
@@ -128,12 +108,12 @@ export const OrderForm: React.FC<IProps> = (props) => {
                           name="price"
                           placeholder="Price"
                           component={NumberInput}
-                          value={selectedOrder?.price}
+                          value={orderStore.selectedOrder?.price}
                         />
                       </Form.Group>
                     </Fragment>
                   )}
-                  {sale != false && (
+                  {orderStore.sale != false && (
                     <Fragment>
                       <Form.Group className="btn-group-2">
                         <Label content="Amount (pc)" />
@@ -142,7 +122,7 @@ export const OrderForm: React.FC<IProps> = (props) => {
                           name="amount"
                           placeholder="Amount"
                           component={NumberInput}
-                          value={selectedOrder?.amount}
+                          value={orderStore.selectedOrder?.amount}
                         />
                         <Label content="Price" />
                         <Field
@@ -150,7 +130,7 @@ export const OrderForm: React.FC<IProps> = (props) => {
                           name="price"
                           placeholder="Price"
                           component={NumberInput}
-                          value={selectedOrder?.price}
+                          value={orderStore.selectedOrder?.price}
                         />
                       </Form.Group>
                     </Fragment>
@@ -160,7 +140,7 @@ export const OrderForm: React.FC<IProps> = (props) => {
                     className="notes"
                     name="notes"
                     placeholder="Notes"
-                    value={selectedOrder?.notes}
+                    value={orderStore.selectedOrder?.notes}
                     component={TextAreaInput}
                   />
 
@@ -170,8 +150,8 @@ export const OrderForm: React.FC<IProps> = (props) => {
                     type="button"
                     size="big"
                     content="Cancel"
-                    onClick={() => setShowOrderForm(false)}
-                    // loading={submitting}
+                    onClick={() => orderStore.setShowOrderForm(false)}
+                    // loading={orderStore.submitting}
                     // disabled={loading}
                   />
                   <Button
@@ -180,8 +160,8 @@ export const OrderForm: React.FC<IProps> = (props) => {
                     type="submit"
                     size="big"
                     content="Confirm"
-                    loading={submitting}
-                    // onClick={handleFinalFormSubmit}
+                    loading={orderStore.submitting}
+                    // onClick={orderStore.handleFinalFormSubmit}
                   />
                 </Form>
               )}

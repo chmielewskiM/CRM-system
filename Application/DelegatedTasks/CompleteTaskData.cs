@@ -4,13 +4,13 @@ namespace Application.DelegatedTasks
 {
     public class CompleteTaskData
     {
-        public int PendingTasksCount { get; set; }
         public List<DelegatedTaskDTO> Tasks { get; set; }
+        public int TasksCount { get; set; }
 
-        public CompleteTaskData(List<DelegatedTaskDTO> tasks, int pendingTasksCount)
+        public CompleteTaskData(List<DelegatedTaskDTO> tasks, int tasksCount)
         {
             Tasks = tasks;
-            PendingTasksCount = pendingTasksCount;
+            TasksCount = tasksCount;
         }
     }
 }

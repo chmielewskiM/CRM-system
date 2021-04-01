@@ -4,6 +4,8 @@
         max-height: 6rem;
     }
     & .task-details{
-        
+        & .detail-value{
+            word-break: break-all !important;
+        }
     }
 }

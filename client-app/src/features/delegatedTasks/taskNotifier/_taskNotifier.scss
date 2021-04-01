@@ -1,165 +1,253 @@
 #root {
     & .notifier-col {
-        & .minor-header.notifier {
-            font-size: 1.2rem;
-            height: 14%;
-            min-height: 5rem;
+        overflow: scroll;
+        height: -webkit-fill-available;
+        position: relative;
+        min-height: 15rem;
+
+        @include breakpoint(tablet_landscape) {
+            padding: 0;
         }
 
-        & .segment.task-notifier {
-            @include reset-div;
-            width: 100%;
-            min-height: 10rem;
-            padding: 0 .7rem;
-            overflow-y: scroll;
-            background: #fff;
-            border-bottom-left-radius: 3px;
-            border-bottom-right-radius: 3px;
-            transition: width .3s ease-out;
+        @include breakpoint(tablet) {
+            padding: 0rem !important;
+            position: absolute;
+            top: 20%;
+            left: 0;
+            right: 0;
+            height: 80%;
+            z-index: 9;
+        }
 
-            & .card {
+        @include breakpoint(smartphone) {
+            padding: 0 !important;
+        }
+
+        & .container {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+
+            @include breakpoint(tablet) {
+                margin: 0 !important;
+            }
+
+            & .minor-header.notifier {
+                font-size: 1.2rem;
+                position: sticky;
+            }
+
+            & .segment.task-notifier {
                 @include reset-div;
-                position: relative;
-                display: block;
                 width: 100%;
-                height: 20%;
-                min-height: 6.5rem;
-                margin: .4rem 0;
-                transition: transform .15s ease-out,
-                    box-shadow .2s ease-out;
-                transition-delay: .1s;
+                min-height: 10rem;
+                padding: 0 .7rem;
+                overflow-y: scroll;
+                background: #fff;
+                border-bottom-left-radius: 3px;
+                border-bottom-right-radius: 3px;
+                transition: width .3s ease-out;
+                background-image: linear-gradient(210deg, rgba(223, 234, 247, 1) 11.2%, rgba(244, 248, 252, 1) 91.1%);
+                border: thin solid #000;
+                border-top: none;
+                box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
 
-                &:hover {
-                    transform: scale(1.03);
-                    box-shadow: 0 1px 5px 0 #000;
-
-                    & .meta,
-                    & .header {
-                        padding-left: 3rem;
-                        transform: scale(1.3);
-                        transition: transform .1s ease-in .12s, padding-left .12s ease-in;
-                    }
-                }
-
-                & .header {
-                    font-size: 1.2rem;
-                    font-weight: 700;
-                    transition: transform .1s ease-in, padding-left .12s ease-in;
-                }
-
-                & .meta {
-                    transition: transform .1s ease-in, padding-left .12s ease-in;
-                }
-
-                & .content {
-                    background: #084c61;
-                    background: #000046;
-                    background: -webkit-linear-gradient(to left, #1CB5E0, #000046);
-                    background: linear-gradient(to left, #1CB5E0, #000046);
-
-                    font-size: 1.2rem;
+                @include breakpoint(tablet) {
+                    padding: 2rem !important;
                     height: 100%;
-
-                    &>* {
-                        color: $color7;
-                    }
                 }
 
-                & .buttons {
-                    position: absolute;
-                    right: 0;
-                    top: 0;
-                    border-bottom-left-radius: 1.7rem;
-                    border-top-right-radius: 3px;
+                @include breakpoint(smartphone) {
+                    padding: .5rem !important;
+                }
 
+                & .card {
+                    @include reset-div;
+                    position: relative;
+                    display: block;
+                    width: 90%;
+                    height: 20%;
+                    min-height: 6.5rem;
+                    margin: .6rem auto;
+                    transition: transform .15s ease-out,
+                        box-shadow .2s ease-out;
+                    transition-delay: .1s;
+                    box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.7);
+                    border: 1px solid $color-primary-light;
+                    border-radius: 6px;
 
+                    @include breakpoint(tablet) {
+                        margin: 1rem auto !important;
+                    }
 
-                    & .button {
+                    @include breakpoint(smartphone) {
+                        margin: 1rem auto !important;
+                        width: 80%;
+                    }
 
-                        &:hover {
-                            background-color: transparent !important;
+                    &:hover {
+                        transform: scale(1.03);
+                        box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.7);
 
-                            & .check::before {
-                                color: rgb(0, 255, 0) !important;
+                        @include breakpoint(tablet) {
+                            transform: scale(1.01);
+
+                            & .meta,
+                            .header {
+                                padding: 0 !important;
                             }
-
-                            & .cancel::before {
-                                color: red !important;
-                            }
-
                         }
 
-                        &:active,
-                        &:focus {
-                            background-color: transparent !important;
+                        & .meta,
+                        & .header {
+                            padding-left: 3rem;
+                            transform: scale(1.3);
+                            transition: transform .1s ease-in .12s, padding-left .12s ease-in;
+
                         }
                     }
 
-                    &>* {
-                        & i:before {
-                            color: $color6 !important;
-                            font-size: 1.2rem;
-                            transition: color .15s ease-in;
+                    & .header {
+                        font-size: 1.2rem;
+                        font-weight: 700;
+                        transition: transform .1s ease-in, padding-left .12s ease-in;
+                    }
+
+                    & .meta {
+                        transition: transform .1s ease-in, padding-left .12s ease-in;
+                    }
+
+                    & .header,
+                    .meta {
+                        @include breakpoint(tablet) {
+                            text-align: center;
+                            font-size: 1.5rem;
                         }
-                    }
-
-                }
-
-                & .info-btn {
-                    position: absolute;
-                    bottom: 1rem;
-                    right: .5rem;
-                    color: #fff;
-                    background-color: $color3;
-                    border-radius: 100%;
-                    width: 2rem;
-                    height: 2rem;
-                    font-size: .8rem;
-                    transition: background-color .12s ease-out;
-
-                    &:hover,
-                    &:active,
-                    &:focus {
-                        background-color: $color-primary-dark;
-
-                        & ::before {
-                            color: #fff;
-                        }
-
-                    }
-
-                    & ::before {
-                        position: absolute;
-                        right: .9rem;
-                        bottom: .6rem;
-                        color: #FFFDE4 !important;
-                    }
-                }
-
-                &.empty {
-                    text-align: center;
-                    box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.6);
-
-                    &:hover,
-                    &:hover .header {
-                        transform: none;
-                        padding-left: 0;
                     }
 
                     & .content {
-                        background: #c3cbdc;
-                        background-image: linear-gradient(147deg, #c3cbdc 0%, #dddfe0 74%);
-                        display: flex;
-                        align-items: center;
+                        background: #084c61;
+                        background: #000046;
+                        background: -webkit-linear-gradient(to left, #1CB5E0, #000046);
+                        background: linear-gradient(to left, #1CB5E0, #000046);
+                        font-size: 1.2rem;
+                        height: 100%;
 
-                        & .header {
-                            font-size: 1.4rem;
-                            font-style: italic;
-                            color: rgba(0, 0, 0, 0.3);
-                            margin: auto;
+                        @include breakpoint(tablet) {
+                            margin: 0 auto !important;
 
-                            @include breakpoint(tablet) {
-                                font-size: 2rem;
+                        }
+
+                        @include breakpoint(tablet_landscape) {
+                            padding: 2.5rem 0 .5rem .5rem !important;
+                        }
+
+                        &>* {
+                            color: $color7;
+                        }
+                    }
+
+                    & .buttons {
+                        position: absolute;
+                        right: 0;
+                        top: 0;
+                        border-bottom-left-radius: 1.7rem;
+                        border-top-right-radius: 3px;
+
+
+
+                        & .button {
+
+                            &:hover {
+                                background-color: transparent !important;
+
+                                & .check::before {
+                                    color: rgb(0, 255, 0) !important;
+                                }
+
+                                & .cancel::before {
+                                    color: red !important;
+                                }
+                            }
+
+                            &:active,
+                            &:focus {
+                                background-color: transparent !important;
+                            }
+                        }
+
+                        &>* {
+                            & i:before {
+                                color: $color6 !important;
+                                font-size: 1.2rem;
+                                transition: color .15s ease-in;
+
+                                @include breakpoint(smartphone) {
+                                    font-size: 1.5rem;
+                                }
+                            }
+                        }
+                    }
+
+                    & .info-btn {
+                        position: absolute;
+                        bottom: 1rem;
+                        right: .5rem;
+                        color: #fff;
+                        background-color: $color3;
+                        border-radius: 100%;
+                        width: 2rem;
+                        height: 2rem;
+                        font-size: .8rem;
+                        transition: background-color .12s ease-out;
+
+                        &:hover,
+                        &:active,
+                        &:focus {
+                            background-color: $color-primary-dark;
+
+                            & ::before {
+                                color: #fff;
+                            }
+                        }
+
+                        & ::before {
+                            position: absolute;
+                            right: .9rem;
+                            bottom: .6rem;
+                            color: #FFFDE4 !important;
+                        }
+                    }
+
+                    &.empty {
+                        text-align: center;
+                        box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.6);
+                        min-height: unset;
+
+                        &:hover,
+                        &:hover .header {
+                            transform: none;
+                            padding-left: 0;
+                        }
+
+                        & .content {
+                            background: #c3cbdc !important;
+                            background-image: linear-gradient(147deg, #c3cbdc 0%, #dddfe0 74%) !important;
+
+                            display: flex;
+                            align-items: center;
+
+                            & .header {
+                                font-size: 1.4rem;
+                                font-style: italic;
+                                color: rgba(0, 0, 0, 0.3);
+                                margin: auto;
+
+                                @include breakpoint(tablet) {
+                                    font-size: 2rem;
+                                }
                             }
                         }
                     }

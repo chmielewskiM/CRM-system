@@ -1,25 +1,19 @@
-import React, { useContext, useEffect } from 'react';
-import { Table, Segment, Grid, Icon } from 'semantic-ui-react';
+import React, { useEffect } from 'react';
+import { Table, Icon } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import LoaderComponent from '../../../app/layout/LoaderComponent';
-import { RootStoreContext } from '../../../app/stores/rootStore';
-import { ContactControls } from './ContactControls';
+import { useStores } from '../../../app/stores/rootStore';
+import  ContactControls  from './ContactControls';
 
 export const ContactList: React.FC = () => {
-  const rootStore = useContext(RootStoreContext);
-  const {
-    contactsList,
-    loadContacts,
-    orderBy,
-    setOrderBy,
-    selectContact,
-    selectedContact,
-    loadingInitial,
-  } = rootStore.contactStore;
+  const { contactStore } = useStores();
+
   useEffect(() => {
-    loadContacts();
-  }, [orderBy]);
-  if (loadingInitial) return <LoaderComponent content="Loading..." />;
+    contactStore.loadContacts();
+  }, []);
+
+  if (contactStore.loadingInitial)
+    return <LoaderComponent content="Loading..." />;
 
   return (
     <>
@@ -34,57 +28,90 @@ export const ContactList: React.FC = () => {
       >
         <Table.Header className="head">
           <Table.Row>
-            <Table.HeaderCell onClick={() => setOrderBy('name')} className='cell-name'>
+            <Table.HeaderCell
+              onClick={() => contactStore.setOrderBy('name')}
+              className="cell-name"
+            >
               Name
-              {orderBy == 'name_desc' && <Icon name="sort descending" />}
-              {orderBy == 'name_asc' && <Icon name="sort ascending" />}
-              {orderBy !== 'name_asc' &&
-                orderBy !== 'name_desc' && (
+              {contactStore.orderBy == 'name_desc' && (
+                <Icon name="sort descending" />
+              )}
+              {contactStore.orderBy == 'name_asc' && (
+                <Icon name="sort ascending" />
+              )}
+              {contactStore.orderBy !== 'name_asc' &&
+                contactStore.orderBy !== 'name_desc' && (
                   <Icon name="sort descending" className="unset-icon" />
                 )}
             </Table.HeaderCell>
-            <Table.HeaderCell onClick={() => setOrderBy('company')} className='cell-company'>
+            <Table.HeaderCell
+              onClick={() => contactStore.setOrderBy('company')}
+              className="cell-company"
+            >
               Company
-              {orderBy == 'company_desc' && <Icon name="sort descending" />}
-              {orderBy == 'company_asc' && <Icon name="sort ascending" />}
-              {orderBy !== 'company_asc' &&
-                orderBy !== 'company_desc' && (
+              {contactStore.orderBy == 'company_desc' && (
+                <Icon name="sort descending" />
+              )}
+              {contactStore.orderBy == 'company_asc' && (
+                <Icon name="sort ascending" />
+              )}
+              {contactStore.orderBy !== 'company_asc' &&
+                contactStore.orderBy !== 'company_desc' && (
                   <Icon name="sort descending" className="unset-icon" />
                 )}
             </Table.HeaderCell>
-            <Table.HeaderCell onClick={() => setOrderBy('type')} className='cell-type'>
+            <Table.HeaderCell
+              onClick={() => contactStore.setOrderBy('type')}
+              className="cell-type"
+            >
               Type
-              {orderBy == 'type_desc' && <Icon name="sort descending" />}
-              {orderBy == 'type_asc' && <Icon name="sort ascending" />}
-              {orderBy !== 'type_asc' &&
-                orderBy !== 'type_desc' && (
+              {contactStore.orderBy == 'type_desc' && (
+                <Icon name="sort descending" />
+              )}
+              {contactStore.orderBy == 'type_asc' && (
+                <Icon name="sort ascending" />
+              )}
+              {contactStore.orderBy !== 'type_asc' &&
+                contactStore.orderBy !== 'type_desc' && (
                   <Icon name="sort descending" className="unset-icon" />
                 )}
             </Table.HeaderCell>
-            <Table.HeaderCell onClick={() => setOrderBy('status')} className='cell-status'>
+            <Table.HeaderCell
+              onClick={() => contactStore.setOrderBy('status')}
+              className="cell-status"
+            >
               Status
-              {orderBy == 'status_desc' && <Icon name="sort descending" />}
-              {orderBy == 'status_asc' && <Icon name="sort ascending" />}
-              {orderBy !== 'status_asc' &&
-                orderBy !== 'status_desc' && (
+              {contactStore.orderBy == 'status_desc' && (
+                <Icon name="sort descending" />
+              )}
+              {contactStore.orderBy == 'status_asc' && (
+                <Icon name="sort ascending" />
+              )}
+              {contactStore.orderBy !== 'status_asc' &&
+                contactStore.orderBy !== 'status_desc' && (
                   <Icon name="sort descending" className="unset-icon" />
                 )}
             </Table.HeaderCell>
-            <Table.HeaderCell className='control-icons desktop'></Table.HeaderCell>
+            <Table.HeaderCell className="control-icons desktop"></Table.HeaderCell>
           </Table.Row>
         </Table.Header>
-        {contactsList.map((contact) => (
+
+        {contactStore.contactsList.map((contact) => (
           <Table.Body key={contact.id}>
             <Table.Row
-              onClick={() => selectContact(contact.id)}
+              onClick={() => contactStore.selectContact(contact.id)}
               active={
-                selectedContact !== undefined &&
-                selectedContact.id == contact.id
+                contactStore.selectedContact !== undefined &&
+                contactStore.selectedContact.id == contact.id
               }
             >
               <Table.Cell>
-                {contact.premium == 'True' && <Icon name='star' style={{color:'gold'}}/>}
-                {contact.name}</Table.Cell>
+                {contact.premium == 'True' && (
+                  <Icon name="star" style={{ color: 'gold' }} />
+                )}
+
+                {contact.name}
+              </Table.Cell>
               <Table.Cell>{contact.company}</Table.Cell>
               <Table.Cell>{contact.type}</Table.Cell>
               <Table.Cell>{contact.status}</Table.Cell>

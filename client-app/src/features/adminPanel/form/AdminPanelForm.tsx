@@ -1,10 +1,10 @@
-import React, { useState, useContext, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { Form, Button } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import { Form as FinalForm, Field } from 'react-final-form';
 import TextInput from '../../../app/common/form/TextInput';
 import { combineValidators, isRequired } from 'revalidate';
-import { RootStoreContext } from '../../../app/stores/rootStore';
+import { useStores } from '../../../app/stores/rootStore';
 import { UserFormValues } from '../../../app/models/user';
 
 const validation = combineValidators({
@@ -18,23 +18,21 @@ const validation = combineValidators({
 
 interface IProps {
   form: boolean;
-  value: string;
+  value?: string;
 }
 
 export const AdminPanelForm: React.FC<IProps> = (props) => {
-  const rootStore = useContext(RootStoreContext);
-  const { getUser, getUserList, usersByName, selectedUser, rr } = rootStore.userStore;
-  const { handleFinalFormSubmit } = rootStore.adminStore;
+  const { adminStore, userStore } = useStores();
 
   useEffect(() => {
-    setUser(selectedUser);
-  }, [rr]);
+    setUser(userStore.selectedUser);
+  }, []);
 
   const [user2, setUser] = useState(new UserFormValues());
 
   const fillForm = () => {
-    if (selectedUser) {
-      return selectedUser;
+    if (userStore.selectedUser) {
+      return userStore.selectedUser;
     } else {
       setUser(new UserFormValues());
       return new UserFormValues();
@@ -44,21 +42,21 @@ export const AdminPanelForm: React.FC<IProps> = (props) => {
     <Fragment>
       <FinalForm
         validate={validation}
-        onSubmit={handleFinalFormSubmit}
+        onSubmit={adminStore.handleFinalFormSubmit}
         initialValues={fillForm()}
         render={({ handleSubmit }) => (
           <Form onSubmit={handleSubmit} size="big" id="form">
             {!props.form && (
               <Form.Select
-                options={usersByName}
+                options={userStore.usersByName}
                 name="type"
                 placeholder="Select user"
                 value={user2?.username}
                 onClick={() => {
-                  getUserList();
+                  userStore.getUserList();
                 }}
                 onChange={(e, data) => {
-                  getUser(data.value!.toString());
+                  userStore.getUser(data.value!.toString());
                 }}
               />
             )}
@@ -89,8 +87,20 @@ export const AdminPanelForm: React.FC<IProps> = (props) => {
             />
 
             <Button.Group>
-              <Button negative floated="right" type="button" size="big" content="Cancel" />
-              <Button positive floated="right" type="submit" size="big" content="Confirm" />
+              <Button
+                negative
+                floated="right"
+                type="button"
+                size="big"
+                content="Cancel"
+              />
+              <Button
+                positive
+                floated="right"
+                type="submit"
+                size="big"
+                content="Confirm"
+              />
             </Button.Group>
           </Form>
         )}

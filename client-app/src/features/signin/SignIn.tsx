@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
-import { Button, Form, Grid, Header, Image, Segment, Label } from 'semantic-ui-react';
+import React from 'react';
+import { Button, Form, Grid, Header, Image, Segment } from 'semantic-ui-react';
 import { Form as FinalForm, Field } from 'react-final-form';
 import TextInput from '../../app/common/form/TextInput';
 import { observer } from 'mobx-react-lite';
-import { RootStoreContext } from '../../app/stores/rootStore';
+import { useStores } from '../../app/stores/rootStore';
 import { IUserFormValues } from '../../app/models/user';
 import { FORM_ERROR } from 'final-form';
 
@@ -13,8 +13,7 @@ import { FORM_ERROR } from 'final-form';
 // });
 
 export const SignIn = () => {
-  const rootStore = useContext(RootStoreContext);
-  const { login } = rootStore.userStore;
+  const { userStore } = useStores();
 
   return (
     <Grid
@@ -24,6 +23,7 @@ export const SignIn = () => {
         width: '100%',
       }}
       verticalAlign="middle"
+      className = 'grid-login'
     >
       <Grid.Column
         style={{
@@ -36,12 +36,17 @@ export const SignIn = () => {
         </Header>
         <FinalForm
           onSubmit={(values: IUserFormValues) =>
-            login(values).catch((error) => ({
+            userStore.login(values).catch((error) => ({
               [FORM_ERROR]: error,
             }))
           }
           // validate={validate}
-          render={({ handleSubmit, invalid, pristine, dirtySinceLastSubmit }) => (
+          render={({
+            handleSubmit,
+            invalid,
+            pristine,
+            dirtySinceLastSubmit,
+          }) => (
             <Form onSubmit={handleSubmit}>
               <Segment raised>
                 <Field

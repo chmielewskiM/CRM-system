@@ -1,8 +1,8 @@
-import React, { Fragment, useContext, useEffect } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { Header, Label, Segment, Button, Grid, Icon } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import LoaderComponent from '../../../app/layout/LoaderComponent';
-import { RootStoreContext } from '../../../app/stores/rootStore';
+import { useStores } from '../../../app/stores/rootStore';
 import { MinorHeader } from '../../../app/common/headers/MinorHeader';
 import { destructureDate } from '../../../app/common/util/util';
 import { IContact } from '../../../app/models/contact';
@@ -12,21 +12,10 @@ interface IProps {
 }
 
 export const ContactDetails: React.FC<IProps> = (props) => {
-  const rootStore = useContext(RootStoreContext);
-  const {
-    loadingInitial,
-    submitting,
-    selectContact,
-    selectedContact,
-    showContactForm,
-    premiumUpgrade,
-    convertPremiumValue,
-    rr,
-  } = rootStore.contactStore;
+  const { contactStore } = useStores();
 
-  useEffect(() => {}, [convertPremiumValue]);
+  useEffect(() => {}, [contactStore.contactsTotal]);
 
-  if (loadingInitial) return <LoaderComponent content="Loading..." />;
   return (
     <Fragment>
       <MinorHeader
@@ -34,9 +23,12 @@ export const ContactDetails: React.FC<IProps> = (props) => {
         content={props.contact.name}
         controls={true}
         contact={props.contact}
-        function={() => selectContact('')}
+        function={() => contactStore.selectContact('')}
       />
       <Segment className="contact-details">
+        {contactStore.loadingInitial && (
+          <LoaderComponent content="Loading..." />
+        )}
         <Grid>
           <Grid.Column width={8}>
             <div className="date">
@@ -53,18 +45,22 @@ export const ContactDetails: React.FC<IProps> = (props) => {
           </Grid.Column>
           <Grid.Column width={7} className="right">
             <div className="mark-premium">
-              {convertPremiumValue == false && (
+              {contactStore.convertPremiumValue == false && (
                 <Button
                   className="not premium"
                   icon="star outline"
                   content="Promote to premium"
-                  onClick={() => premiumUpgrade(selectedContact!)}
+                  onClick={() =>
+                    contactStore.premiumUpgrade(contactStore.selectedContact!)
+                  }
                 />
               )}
-              {convertPremiumValue == true && (
+              {contactStore.convertPremiumValue == true && (
                 <Button
                   className="premium"
-                  onClick={() => premiumUpgrade(selectedContact!)}
+                  onClick={() =>
+                    contactStore.premiumUpgrade(contactStore.selectedContact!)
+                  }
                 >
                   <Icon name="star" /> Premium{' '}
                   <Icon

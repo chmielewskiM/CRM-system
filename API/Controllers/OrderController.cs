@@ -21,7 +21,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<OrderDTO>>> ListOrders(string allOrders, string saleOrders, string closedOrders, 
+        public async Task<ActionResult<CompleteOrderData>> ListOrders(string allOrders, string saleOrders, string closedOrders, 
                                                                         string orderBy, string filterInput, int? pageNumber, int? pageSize)
         {
             return await _mediator.Send(new ListOrders.Query(allOrders, saleOrders, closedOrders, orderBy, filterInput, pageNumber, pageSize));

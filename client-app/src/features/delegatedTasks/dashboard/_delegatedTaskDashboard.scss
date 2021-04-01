@@ -42,26 +42,25 @@
         & .row-content {
             &-1 {
                 justify-content: flex-start;
-                overflow: unset;
-                max-height: 40rem;
+                overflow: hidden;
+                max-height: 55rem;
+                align-items: stretch;
+                position: relative;
 
-                // @include breakpoint(tablet) {
-                //     min-height: 50% !important;
-
-                // }
                 @include breakpoint(tablet) {
-                    min-height: min-content !important;
+                    margin-bottom: 0 !important;
                 }
 
                 & .ui.segment.filter-buttons {
                     flex-grow: 0;
                     justify-content: flex-start;
-
                     @include breakpoint(tablet) {
                         flex-wrap: wrap;
-                        justify-content: center;
+                        justify-content: flex-start;
 
                         & .buttons {
+                            padding: 0 !important;
+                            justify-content: flex-start !important;
 
                             & .button,
                             .label {
@@ -89,6 +88,33 @@
                             cursor: pointer;
                         }
                     }
+
+                    & .pagination {
+                        width: min-content;
+                        align-items: center;
+
+                        & .button {
+                            background-color: transparent;
+                            font-size: 1rem;
+                            color: #000;
+                            padding: 0;
+
+                            &:focus,
+                            &:active,
+                            & .chevron:active,
+                            & .chevron:before {
+                                background-color: transparent !important;
+                            }
+
+                            & .chevron {
+                                font-size: 1.2rem;
+                            }
+                        }
+
+                        & span {
+                            font-size: 1.2rem;
+                        }
+                    }
                 }
 
                 & .task-list {
@@ -98,6 +124,9 @@
 
             &-2 {
                 min-height: unset !important;
+                align-items: stretch;
+                flex: .5 0 10rem !important;
+                padding-bottom: 1rem !important;
             }
         }
     }

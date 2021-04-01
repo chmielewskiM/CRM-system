@@ -9,6 +9,7 @@ import UserStore from './userStore';
 import { createContext } from 'react';
 import { configure } from 'mobx';
 import ModalStore from './modalStore';
+import React from 'react';
 
 configure({ enforceActions: 'always' });
 
@@ -36,4 +37,6 @@ export class RootStore {
   }
 }
 
-export const RootStoreContext = createContext(new RootStore());
+const RootStoreContext = createContext(new RootStore());
+
+export const useStores = () => React.useContext(RootStoreContext);

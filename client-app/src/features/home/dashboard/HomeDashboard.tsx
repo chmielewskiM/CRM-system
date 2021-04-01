@@ -1,52 +1,24 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Grid, Button, ButtonGroup } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
-import { RootStoreContext } from '../../../app/stores/rootStore';
+import { useStores } from '../../../app/stores/rootStore';
 import Pipeline from '../pipeline/Pipeline';
 import MyCalendar from '../calendar/Calendar';
 import Statistics from '../statistics/Statistics';
 import LeadsChart from '../chart/lead/LeadsChart';
 import OpportunitiesChart from '../chart/opportunity/OpportunitiesChart';
 import OpportunitiesByEmployeeChart from '../chart/opportunity/OpportunitiesByEmployeeChart';
-// import RevenueChart from '../chart/revenue/RevenueChart';
-import { createInstanceofPredicate } from 'mobx/lib/internal';
 import LeadsBySourceChart from '../chart/lead/LeadsBySourceChart';
 import LoaderComponent from '../../../app/layout/LoaderComponent';
 
 export const HomeDashboard: React.FC = () => {
-  const rootStore = useContext(RootStoreContext);
-
-  const {
-    rr,
-    bool,
-    leadsChart,
-    opportunitiesChart,
-    showLeadsChart,
-    showOpportunitiesChart,
-    loadOperations,
-    operationsRegistry,
-    predicate,
-    setPredicate,
-    pipelineData,
-    pipelineTimeRange,
-    thisMonthStats,
-    leadsChartData,
-    opportunitiesChartData,
-    leadsChartTimeRange,
-    opportunitiesChartTimeRange,
-    composedChartTimeRange,
-    setTimeRange,
-    loadingInitial,
-  } = rootStore.homeStore;
+  const { homeStore, delegatedTaskStore } = useStores();
 
   useEffect(() => {
-    rootStore.delegatedTaskStore.setTaskList('myTasks');
-    rootStore.delegatedTaskStore.calendarEvents;
-    if (operationsRegistry.size == 0) loadOperations();
-  }, [bool, leadsChart]);
-  // const a = rootStore.delegatedTaskStore.calendarEvents;
-  // if (loadingInitial)
-  //   return <LoaderComponent content="Loading..." />;
+    delegatedTaskStore.loadTasks();
+    if (homeStore.operationsRegistry.size == 0) homeStore.loadOperations();
+  }, []);
+
   return (
     <Grid relaxed="very" centered className="main-grid home" padded>
       <Grid.Row className="topbar"></Grid.Row>
@@ -56,28 +28,36 @@ export const HomeDashboard: React.FC = () => {
             <Button
               basic
               content="Last 30 days"
-              active={pipelineTimeRange}
-              onClick={() => setTimeRange('pipeline', true)}
+              active={homeStore.pipelineTimeRange}
+              onClick={() => homeStore.setTimeRange('pipeline', true)}
+              disabled={homeStore.submitting}
             />
             <Button
               basic
               content="Last 6 months"
-              active={!pipelineTimeRange}
-              onClick={() => setTimeRange('pipeline', false)}
+              active={!homeStore.pipelineTimeRange}
+              onClick={() => homeStore.setTimeRange('pipeline', false)}
+              disabled={homeStore.submitting}
               style={{ padding: '.5rem 2rem !important' }}
             />
           </ButtonGroup>
-          <Pipeline data={pipelineData} loading={loadingInitial} />
+          <Pipeline
+            data={homeStore.pipelineData}
+            loading={homeStore.loadingInitial}
+          />
         </Grid.Column>
         <Grid.Column tablet={16} computer={9} className="calendar-column">
           <MyCalendar
-            events={rootStore.delegatedTaskStore.calendarEvents}
-            loading={loadingInitial}
+            events={delegatedTaskStore.calendarEvents}
+            loading={homeStore.loadingInitial}
           />
         </Grid.Column>
       </Grid.Row>
       <Grid.Row className="row-statistics">
-        <Statistics data={thisMonthStats} loading={loadingInitial} />
+        <Statistics
+          data={homeStore.thisMonthStats}
+          loading={homeStore.loadingInitial}
+        />
       </Grid.Row>
       <Grid.Row className="row-content-2 charts" columns="equal">
         <Grid.Column tablet={16} computer={7} className="chart">
@@ -85,30 +65,45 @@ export const HomeDashboard: React.FC = () => {
             <Button
               basic
               content="Last 30 days"
-              active={leadsChartTimeRange}
-              onClick={() => setTimeRange('leadsChart', true)}
+              active={homeStore.leadsChartTimeRange}
+              onClick={() => homeStore.setTimeRange('leadsChart', true)}
+              disabled={homeStore.submitting}
             />
             <Button
               basic
               content="Last 6 months"
-              active={!leadsChartTimeRange}
-              onClick={() => setTimeRange('leadsChart', false)}
+              active={!homeStore.leadsChartTimeRange}
+              onClick={() => homeStore.setTimeRange('leadsChart', false)}
+              disabled={homeStore.submitting}
             />
 
-            {leadsChart && (
-              <Button basic content="By source" onClick={showLeadsChart} />
+            {homeStore.leadsChart && (
+              <Button
+                basic
+                content="By source"
+                onClick={homeStore.showLeadsChart}
+                disabled={homeStore.submitting}
+              />
             )}
-            {!leadsChart && (
-              <Button basic content="Overall" onClick={showLeadsChart} />
+            {!homeStore.leadsChart && (
+              <Button
+                basic
+                content="Overall"
+                onClick={homeStore.showLeadsChart}
+                disabled={homeStore.submitting}
+              />
             )}
           </ButtonGroup>
-          {leadsChart && (
-            <LeadsChart data={leadsChartData} loading={loadingInitial} />
+          {homeStore.leadsChart && (
+            <LeadsChart
+              data={homeStore.leadsChartData}
+              loading={homeStore.loadingInitial}
+            />
           )}
-          {!leadsChart && (
+          {!homeStore.leadsChart && (
             <LeadsBySourceChart
-              data={leadsChartData}
-              loading={loadingInitial}
+              data={homeStore.leadsChartData}
+              loading={homeStore.loadingInitial}
             />
           )}
         </Grid.Column>
@@ -118,52 +113,50 @@ export const HomeDashboard: React.FC = () => {
             <Button
               basic
               content="Last 30 days"
-              active={opportunitiesChartTimeRange}
-              onClick={() => setTimeRange('opportunitiesChart', true)}
+              active={homeStore.opportunitiesChartTimeRange}
+              onClick={() => homeStore.setTimeRange('opportunitiesChart', true)}
+              disabled={homeStore.submitting}
             />
             <Button
               basic
               content="Last 6 months"
-              active={!opportunitiesChartTimeRange}
-              onClick={() => setTimeRange('opportunitiesChart', false)}
+              active={!homeStore.opportunitiesChartTimeRange}
+              onClick={() =>
+                homeStore.setTimeRange('opportunitiesChart', false)
+              }
+              disabled={homeStore.submitting}
             />
 
-            {!opportunitiesChart && (
+            {!homeStore.opportunitiesChart && (
               <Button
                 basic
                 content="Overall"
-                onClick={showOpportunitiesChart}
+                onClick={homeStore.showOpportunitiesChart}
+                disabled={homeStore.submitting}
               />
             )}
-            {opportunitiesChart && (
+            {homeStore.opportunitiesChart && (
               <Button
                 basic
                 content="By employee"
-                onClick={showOpportunitiesChart}
+                onClick={homeStore.showOpportunitiesChart}
+                disabled={homeStore.submitting}
               />
             )}
           </ButtonGroup>
-          {!opportunitiesChart && (
+          {!homeStore.opportunitiesChart && (
             <OpportunitiesByEmployeeChart
-              data={opportunitiesChartData}
-              loading={loadingInitial}
+              data={homeStore.opportunitiesChartData}
+              loading={homeStore.loadingInitial}
             />
           )}
-          {opportunitiesChart && (
+          {homeStore.opportunitiesChart && (
             <OpportunitiesChart
-              data={opportunitiesChartData}
-              loading={loadingInitial}
+              data={homeStore.opportunitiesChartData}
+              loading={homeStore.loadingInitial}
             />
           )}
         </Grid.Column>
-
-        {/* <Grid.Column computer={7} tablet={7} mobile={16} className="chart">
-          <ButtonGroup floated="right">
-            <Button basic content="Last 6 months" active={!composedChartTimeRange} onClick={()=>setTimeRange('composedChart', false)}/>
-            <Button basic content="Last 30 days" active={composedChartTimeRange} onClick={()=>setTimeRange('composedChart', true)}/>
-          </ButtonGroup>
-          <RevenueChart />
-        </Grid.Column> */}
       </Grid.Row>
     </Grid>
   );

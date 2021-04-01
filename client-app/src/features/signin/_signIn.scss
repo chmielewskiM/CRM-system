@@ -1,6 +1,16 @@
-.ui.center.grid {
-    background: linear-gradient(140deg, $color-secondary 0%, $color-primary-dark 20%, $color-primary 100%);
+.ui.center.grid.grid-login {
+    background: #005C97;
+    background: -webkit-linear-gradient(to right, #363795, #005C97);
+    background: linear-gradient(to right, #363795, #005C97);
     width: 100%;
     margin: 0;
-
+    & .segment{
+        box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.7);
+        background-image: radial-gradient( circle 993px at 50% 50%,  rgba(137,171,245,0.37) 0%, rgba(245,247,252,1) 100.2% );
+        border: thin solid rgba(0, 0, 0, 0.5);
+    }
+    & .field{
+        border: thin solid rgba(0, 0, 0, 0.247);
+        border-radius: 4px;
+    }
 }

@@ -1,16 +1,17 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Segment, Button, Modal, Label } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import { Form as FinalForm, Field } from 'react-final-form';
-import { IDelegatedTaskForm, DelegatedTaskFormValues } from '../../../app/models/delegatedTask';
+import {
+  IDelegatedTaskForm,
+  DelegatedTaskFormValues,
+} from '../../../app/models/delegatedTask';
 import TextAreaInput from '../../../app/common/form/TextAreaInput';
 import SelectInput from '../../../app/common/form/SelectInput';
 import { options } from '../../../app/common/options/delegatedTaskType';
 import DateInput from '../../../app/common/form/DateInput';
-import { combineDateAndTime } from '../../../app/common/util/util';
-import { combineValidators, isRequired, composeValidators } from 'revalidate';
-import { RootStoreContext } from '../../../app/stores/rootStore';
-import { isAfter } from 'date-fns';
+import { combineValidators, isRequired } from 'revalidate';
+import { useStores } from '../../../app/stores/rootStore';
 import LoaderComponent from '../../../app/layout/LoaderComponent';
 
 const validation = combineValidators({
@@ -25,24 +26,17 @@ interface IProps {
 }
 
 export const DelegatedTaskForm: React.FC<IProps> = (props) => {
-  const rootStore = useContext(RootStoreContext);
-  const {
-    loadingInitial,
-    setShowDelegatedTaskForm,
-    editTask,
-    addDelegatedTask,
-    submitting,
-    fillForm,
-    handleFinalFormSubmit,
-    formDateValidation,
-  } = rootStore.delegatedTaskStore;
+  const { delegatedTaskStore } = useStores();
 
-  useEffect(() => {}, [setShowDelegatedTaskForm]);
+  useEffect(() => {}, []);
 
-  const [delegatedTask, setDelegatedTask] = useState(new DelegatedTaskFormValues());
+  const [delegatedTask, setDelegatedTask] = useState(
+    new DelegatedTaskFormValues()
+  );
 
-  const [loading, setLoading] = useState(false);
-  if (loadingInitial) return <LoaderComponent content="Loading..." />;
+  if (delegatedTaskStore.loadingInitial)
+    return <LoaderComponent content="Loading..." />;
+
   return (
     <Segment clearing>
       <Modal open>
@@ -50,8 +44,8 @@ export const DelegatedTaskForm: React.FC<IProps> = (props) => {
           <Segment clearing size="big" className={props.className}>
             <FinalForm
               validate={validation}
-              initialValues={fillForm()}
-              onSubmit={handleFinalFormSubmit}
+              initialValues={delegatedTaskStore.fillForm()}
+              onSubmit={delegatedTaskStore.handleFinalFormSubmit}
               render={({ handleSubmit, invalid, pristine }) => (
                 <Form onSubmit={handleSubmit} size="big">
                   <Form.Group>
@@ -95,9 +89,11 @@ export const DelegatedTaskForm: React.FC<IProps> = (props) => {
                     type="button"
                     size="big"
                     content="Cancel"
-                    onClick={() => setShowDelegatedTaskForm(false)}
-                    // loading={submitting}
-                    // disabled={loading}
+                    onClick={() =>
+                      delegatedTaskStore.setShowTaskForm(false)
+                    }
+                    loading={delegatedTaskStore.submitting}
+                    disabled={delegatedTaskStore.loadingInitial}
                   />
                   <Button
                     positive
@@ -105,8 +101,8 @@ export const DelegatedTaskForm: React.FC<IProps> = (props) => {
                     type="submit"
                     size="big"
                     content="Confirm"
-                    loading={submitting}
-                    // disabled={loading}
+                    loading={delegatedTaskStore.submitting}
+                    disabled={delegatedTaskStore.loadingInitial}
                   />
                 </Form>
               )}

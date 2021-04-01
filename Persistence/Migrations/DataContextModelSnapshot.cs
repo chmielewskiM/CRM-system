@@ -196,6 +196,9 @@ namespace Persistence.Migrations
                     b.Property<int>("Index")
                         .HasColumnType("int");
 
+                    b.Property<string>("OrderId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ContactId", "OperationId");
 
                     b.HasIndex("OperationId")

@@ -31,7 +31,7 @@ namespace Application.Contacts
                 InProcess = inProcess;
                 Premium = premium;
                 OrderBy = orderBy;
-                ActivePage = activePage+1;
+                ActivePage = activePage + 1;
                 PageSize = pageSize;
                 FilterInput = filterInput;
             }
@@ -66,7 +66,7 @@ namespace Application.Contacts
                     userContacts = userContacts.Where(x => x.Contact.Status != "Inactive");
                 else if (request.Premium)
                     userContacts = userContacts.Where(x => x.Contact.Premium == true);
-                
+
                 //select orders which contain given input
                 if (!request.FilterInput.Equals("unfiltered"))
                 {
@@ -112,7 +112,7 @@ namespace Application.Contacts
                         userContacts = userContacts.OrderBy(x => x.Contact.DateAdded);
                         break;
                 };
-                
+
                 var total = await userContacts.CountAsync();
 
                 if (userContacts.Count() > 0 && !request.Uncontracted)

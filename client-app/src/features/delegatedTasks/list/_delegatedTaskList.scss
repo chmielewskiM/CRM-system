@@ -3,82 +3,81 @@
         & .main-grid.tasks {
             & .list-col {
                 flex: 1 0;
-                max-height: 30rem !important;
+                height: -webkit-fill-available;
                 overflow: scroll !important;
                 padding: 0;
-                & table.ui.table.table-container.task-list {
+
+                @include breakpoint(tablet) {
+                    margin: 1.5rem .5rem !important;
+                }
+
+                & table.ui.table.table-container.small.selectable.striped.task-list {
                     @include breakpoint(tablet) {
-                        display: flex;
-                        flex-wrap: wrap;
                         background-color: transparent;
                         border: 0 !important;
-                        padding: .2rem;
+                        max-height: 55rem;
+                        margin-bottom: 1rem;
 
                         & .head,
                         & tbody {
-                            flex: 1 0;
                             padding: 0 !important;
                             margin: .4rem !important;
                             @include reset-div;
-                            display: flex;
-                            align-items: stretch;
-                            max-width: 15rem;
-                            min-height: 15rem !important;
-                            justify-items: stretch;
                             box-shadow: 0 0 1px 0 #fff !important;
+                            background: none;
 
                             & tr {
-                                flex: 1 0;
-                                display: flex !important;
-                                min-width: 12rem !important;
-                                height: 100% !important;
-                                padding: 0 !important;
-                                flex-direction: column;
-                                justify-content: space-evenly !important;
-                                background-image: radial-gradient(circle farthest-corner at 85.4% 50.8%, rgba(14, 72, 222, 1) 0%, rgba(3, 22, 65, 1) 74.2%) !important;
+                                display: inline-flex !important;
+                                width: 100% !important;
+                                margin: .2rem 0;
+                                padding: .5rem;
                                 cursor: default;
-                                box-shadow: 1px 1px 3px 1px #000 !important;
+                                box-shadow: 1px 1px 2px 0 #000 !important;
 
                                 & th,
                                 & td {
                                     flex: 1 0;
-                                    max-width: 100% !important;
                                     background: transparent !important;
                                     vertical-align: middle;
-                                    justify-items: center;
-                                    text-align: center;
+                                    text-align: left;
                                     cursor: default;
                                     color: #fff;
-                                    font-size: 1.6rem !important;
+                                    font-size: 1.6rem;
+                                    min-width: 25% !important;
                                 }
 
+                                & :last-child {
+                                    text-align: center;
+                                }
 
+                                & .control-icons {
+                                    display: none !important;
+                                }
                             }
+                        }
+
+                        & .head tr th {
+                            margin: 0;
+                            padding: 0 !important;
 
                         }
 
                         & tbody {
+                            box-shadow: none !important;
 
                             & tr {
-                                background: #8e9eab !important;
-                                background: -webkit-linear-gradient(to right, #eef2f3, #8e9eab) !important;
-                                background: linear-gradient(to right, #eef2f3, #8e9eab) !important;
+                                background: #fff !important;
                                 cursor: pointer !important;
 
                                 &.active {
-                                    transform: scale(1.02);
-                                    transition: transform .1s ease-out, box-shadow .3s ease-out, padding .1s ease-out;
-                                    background-color: #485461;
-                                    background-image: linear-gradient(315deg, #485461 0%, #28313b 74%) !important;
-                                    box-shadow: 1px 1px 3px 1px $color4 !important;
                                     border: 0;
+                                    background: #4b6cb7;
+                                    background: -webkit-linear-gradient(to bottom, #455c8a, #4b6cb7) !important;
+                                    background: linear-gradient(to bottom, #455c8a, #4b6cb7) !important;
 
                                     & td {
                                         color: #fff;
                                     }
-
-
-
                                 }
 
                                 & td {
@@ -88,8 +87,23 @@
                                     padding: .5rem 0 !important;
                                     align-self: center !important;
                                     cursor: pointer;
-
+                                    text-align: left !important;
                                 }
+
+                                & .notes-cell {
+                                    display: none !important;
+                                }
+
+                                & .shared-with-cell{
+                                    justify-content: flex-start;
+                                    display: inline-flex !important;
+                                    & i {
+                                        display: block;
+                                        margin: 0 auto !important;
+                                        float:none !important;
+                                    }
+                                }
+                                
                             }
                         }
                     }
@@ -104,7 +118,7 @@
                         & .refresh,
                         .check,
                         .ban {
-                            float: right;
+                            float: left;
                             max-width: min-content;
 
                         }
@@ -122,8 +136,6 @@
                         }
                     }
 
-
-
                     & .control-icons {
 
                         height: 100%;
@@ -139,7 +151,7 @@
                             transition: transform .1s ease-in;
 
                             &.status {
-                                float: left !important;
+                                float: left;
                             }
 
                             &:hover.share,
@@ -156,8 +168,6 @@
                                     left: 0;
                                     right: 0;
                                     position: absolute;
-
-
                                 }
                             }
 

@@ -1,19 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid, Button } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
-import { RootStoreContext } from '../../../app/stores/rootStore';
-import { AdminPanelForm } from '../form/AdminPanelForm';
+import { useStores } from '../../../app/stores/rootStore';
+import  AdminPanelForm  from '../form/AdminPanelForm';
 
 export const AdminPanelDashboard: React.FC = () => {
-  const rootStore = useContext(RootStoreContext);
-  const { rr, inputValue } = rootStore.userStore;
+  const { userStore } = useStores();
 
-  useEffect(() => {
-  }, [rr]);
+  useEffect(() => {}, []);
 
   const [form, setForm] = useState(true);
-  // if (contactStore.loadingInitial)
-  //   return <LoaderComponent content="Loading..." />;
 
   return (
     <Grid className="main-grid">
@@ -37,7 +33,7 @@ export const AdminPanelDashboard: React.FC = () => {
         </Grid.Column>
 
         <Grid.Column mobile={16} tablet={12} computer={10} className="form">
-          <AdminPanelForm form={form} value={inputValue} />
+          <AdminPanelForm form={form} />
         </Grid.Column>
       </Grid.Row>
     </Grid>

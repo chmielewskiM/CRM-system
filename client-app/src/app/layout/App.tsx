@@ -1,44 +1,36 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect } from 'react';
 import { Container } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import { Route, withRouter, RouteComponentProps } from 'react-router-dom';
 import { ToastContainer, Zoom } from 'react-toastify';
-import { Navbar } from '../../features/nav/Navbar';
-import { ContactDashboard } from '../../features/contacts/dashboard/ContactDashboard';
-import LoaderComponent from './LoaderComponent';
-import { SignIn } from '../../features/signin/SignIn';
-import { OrderDashboard } from '../../features/orders/dashboard/OrderDashboard';
-import { DelegatedTaskDashboard } from '../../features/delegatedTasks/dashboard/DelegatedTaskDashboard';
-import { RootStoreContext } from '../stores/rootStore';
-import { HomeDashboard } from '../../features/home/dashboard/HomeDashboard';
-import { LeadDashboard } from '../../features/leads/dashboard/LeadDashboard';
+import Navbar from '../../features/nav/Navbar';
+import ContactDashboard from '../../features/contacts/dashboard/ContactDashboard';
+import SignIn from '../../features/signin/SignIn';
+import OrderDashboard from '../../features/orders/dashboard/OrderDashboard';
+import DelegatedTaskDashboard from '../../features/delegatedTasks/dashboard/DelegatedTaskDashboard';
+import { useStores } from '../stores/rootStore';
+import HomeDashboard from '../../features/home/dashboard/HomeDashboard';
+import LeadDashboard from '../../features/leads/dashboard/LeadDashboard';
 import AdminPanelDashboard from '../../features/adminPanel/dashboard/AdminPanelDashboard';
-// import 'mobx-react-lite/batchingForReactDom'
 
 const App: React.FC<RouteComponentProps> = ({ history }) => {
-  const rootStore = useContext(RootStoreContext);
-  const { appLoaded, setAppLoaded, token } = rootStore.commonStore;
-  const { getUser, getLoggedUser } = rootStore.userStore;
+  const { commonStore, userStore, homeStore } = useStores();
 
   useEffect(() => {
-    if (token) {
-      getLoggedUser().finally(() => setAppLoaded());
+    if (commonStore.token) {
+      userStore.getLoggedUser().finally(() => commonStore.setAppLoaded());
     } else {
-      setAppLoaded();
+      commonStore.setAppLoaded();
     }
   }, [
     history,
-    getUser,
-    setAppLoaded,
-    token,
-    rootStore.homeStore.rr,
-    rootStore.contactStore.rr,
-    rootStore.leadStore.rr,
-    rootStore.delegatedTaskStore.rr,
-    rootStore.orderStore.rr,
-    rootStore.modalStore.rr,
+    userStore.getUser,
+    commonStore.setAppLoaded,
+    commonStore.token,
+    userStore,
+    commonStore,
+    homeStore,
   ]);
-  // if (!appLoaded) return <LoaderComponent />;
 
   return (
     <>

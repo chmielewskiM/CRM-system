@@ -1,11 +1,18 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Grid, Button, Segment, Label, Icon } from 'semantic-ui-react';
+import React, { useEffect } from 'react';
+import {
+  Grid,
+  Button,
+  Segment,
+  Label,
+  Icon,
+  Container,
+} from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
-import { DelegatedTaskList } from '../list/DelegatedTaskList';
-import { DelegatedTaskForm } from '../form/DelegatedTaskForm';
-import { RootStoreContext } from '../../../app/stores/rootStore';
-import { TaskNotifier } from '../taskNotifier/TaskNotifier';
-import { DelegatedTaskDetails } from '../details/DelegatedTaskDetails';
+import DelegatedTaskList from '../list/DelegatedTaskList';
+import DelegatedTaskForm from '../form/DelegatedTaskForm';
+import { useStores } from '../../../app/stores/rootStore';
+import TaskNotifier from '../taskNotifier/TaskNotifier';
+import DelegatedTaskDetails from '../details/DelegatedTaskDetails';
 import ShareTaskForm from '../form/ShareTaskForm';
 import {
   filterTasksButtons,
@@ -13,63 +20,62 @@ import {
 } from '../../../app/common/options/buttons';
 
 export const DelegatedTaskDashboard: React.FC = () => {
-  const rootStore = useContext(RootStoreContext);
+  const { delegatedTaskStore, userStore, commonStore } = useStores();
 
-  const {
-    loadingInitial,
-    showDelegatedTaskForm,
-    selectedTask,
-    addDelegatedTaskForm,
-    setTaskList,
-    showShareTaskForm,
-    pendingTasksCount,
-    pendingTasksNotifier,
-    displayPendingTaskNotifier,
-    myTasks,
-    finishTask,
-    rr,
-  } = rootStore.delegatedTaskStore;
-  const { user } = rootStore.userStore;
-  useEffect(() => {}, [rr]);
+  useEffect(() => {}, [delegatedTaskStore.tasksCount]);
 
-  // if (loadingInitial) return <LoaderComponent content="Loading..." />;
   return (
     <Grid stackable centered className="main-grid tasks">
-      {showDelegatedTaskForm && (
+      {delegatedTaskStore.showTaskForm && (
         <DelegatedTaskForm
           className={'task-form'}
-          key={(selectedTask && selectedTask.id) || 0}
-          delegatedTask={selectedTask!}
+          key={
+            (delegatedTaskStore.selectedTask &&
+              delegatedTaskStore.selectedTask.id) ||
+            0
+          }
+          delegatedTask={delegatedTaskStore.selectedTask!}
         />
       )}
-      {showShareTaskForm && <ShareTaskForm delegatedTask={selectedTask} />}
+      {delegatedTaskStore.showShareTaskForm && (
+        <ShareTaskForm delegatedTask={delegatedTaskStore.selectedTask} />
+      )}
       <Grid.Row className="topbar">
         <Button
           positive
           content="Add task"
           icon="plus"
-          onClick={addDelegatedTaskForm}
+          onClick={delegatedTaskStore.addTaskForm}
         />
-        {selectedTask && myTasks && (
-          <Button
-            icon="check"
-            content="Mark as done"
-            onClick={() => finishTask(selectedTask)}
-          />
-        )}
-        <Button className="pendingBtn" onClick={displayPendingTaskNotifier}>
+        {(delegatedTaskStore.selectedTask?.access.sharedWithUsername ==
+          userStore.user?.username ||
+          delegatedTaskStore.selectedTask?.access.createdByUsername ==
+            userStore.user?.username) &&
+          delegatedTaskStore.selectedTask?.accepted && (
+            <Button
+              icon="check"
+              content="Mark as done"
+              onClick={() =>
+                delegatedTaskStore.finishTask(delegatedTaskStore.selectedTask!)
+              }
+            />
+          )}
+        <Button
+          className="pendingBtn"
+          onClick={delegatedTaskStore.displayPendingTaskNotifier}
+        >
           <div>
             <Icon name="wait" />
             Pending
             <div className="count">
-              <span>{pendingTasksCount}</span>
+              <span>{delegatedTaskStore.pendingTasksCount}</span>
             </div>
           </div>
         </Button>
         <Button
           icon="angle down"
           className="expand-menu"
-          onClick={(event) => rootStore.commonStore.expandMenu(event)}
+          onClick={(event) => commonStore.expandMenu(event)}
         />
       </Grid.Row>
       <Grid.Row className="row-content-1">
@@ -85,12 +91,15 @@ export const DelegatedTaskDashboard: React.FC = () => {
                 compact={button.compact}
                 className={button.className}
                 onClick={(e) =>
-                  setTaskList(button.functionArg, e.currentTarget)
+                  delegatedTaskStore.setTaskList(
+                    button.functionArg,
+                    e.currentTarget
+                  )
                 }
               />
             ))}
           </Button.Group>
-          {!myTasks && (
+          {delegatedTaskStore.sharedTasks && (
             <Button.Group floated="left">
               {filterSharedTasksButtons.map((button) => (
                 <Button
@@ -101,25 +110,62 @@ export const DelegatedTaskDashboard: React.FC = () => {
                   compact={button.compact}
                   className={button.className}
                   onClick={(e) =>
-                    setTaskList(button.functionArg, e.currentTarget)
+                    delegatedTaskStore.setTaskList(
+                      button.functionArg,
+                      e.currentTarget
+                    )
                   }
                 />
               ))}
             </Button.Group>
           )}
+          <Button.Group className="pagination">
+            <Button
+              icon="chevron left"
+              onClick={() => delegatedTaskStore.setPagination(-1)}
+              disabled={delegatedTaskStore.activePage <= 0}
+            />
+            <span className="contacts-from">
+              {delegatedTaskStore.activePage < 1 && '1'}
+              {delegatedTaskStore.activePage >= 1 &&
+                delegatedTaskStore.activePage.toString().concat('1')}
+            </span>
+            <span className="contacts-to">
+              -{delegatedTaskStore.activePage + 1}0&nbsp;
+            </span>
+            <span className="contacts-all">
+              {' '}
+              /&nbsp;{delegatedTaskStore.tasksCount}
+            </span>
+            <Button
+              icon="chevron right"
+              onClick={() => delegatedTaskStore.setPagination(1)}
+              disabled={
+                delegatedTaskStore.activePage + 1 >=
+                delegatedTaskStore.tasksCount / 10
+              }
+            />
+          </Button.Group>
         </Segment>
         <Grid.Column className="list-col">
-          <DelegatedTaskList user={user} />
+          <DelegatedTaskList user={userStore.user} />
         </Grid.Column>
-        {pendingTasksNotifier && (
+        {delegatedTaskStore.pendingTasksNotifier && (
           <Grid.Column width={4} className="notifier-col">
-            <TaskNotifier className="notifier" taskCount={pendingTasksCount} />
+            <Container>
+              <TaskNotifier
+                className="notifier"
+                taskCount={delegatedTaskStore.pendingTasksCount}
+              />
+            </Container>
           </Grid.Column>
         )}
       </Grid.Row>
       <Grid.Row className="row-content-2">
         <Grid.Column computer={7} tablet={10} className="details-col">
-          {selectedTask !== undefined && <DelegatedTaskDetails />}
+          {delegatedTaskStore.selectedTask !== undefined && (
+            <DelegatedTaskDetails />
+          )}
         </Grid.Column>
       </Grid.Row>
     </Grid>
