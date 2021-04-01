@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
 import { IContact, ContactFormValues, ICompleteContactsData } from '../models/contact';
-import { IOrder } from '../models/order';
+import { ICompleteOrdersData, IOrder } from '../models/order';
 import { IDelegatedTaskForm, ICompleteTaskData, IDelegatedTask } from '../models/delegatedTask';
 import { IUser, IUserFormValues, User } from '../models/user';
 import { IOperation, CompleteStats, ICompleteStats } from '../models/operation';
@@ -37,9 +37,6 @@ axios.interceptors.response.use(undefined, (error) => {
 
 const responseBody = (response: AxiosResponse) => response.data;
 
-const delay = (ms: number) => (response: AxiosResponse) =>
-  new Promise<AxiosResponse>((resolve) => setTimeout(() => resolve(response), ms));
-
 const requests = {
   get: (url: string) => axios.get(url).then(responseBody),
   post: (url: string, body: {}) => axios.post(url, body).then(responseBody),
@@ -68,20 +65,22 @@ const Leads = {
 };
 
 const DelegatedTasks = {
-  list: (params: URLSearchParams): Promise<ICompleteTaskData> => axios.get('/delegatedTask', {params: params}).then(responseBody),
+  listTasks: (params: URLSearchParams): Promise<ICompleteTaskData> => axios.get('/delegatedTask', {params: params}).then(responseBody),
+  listPendingTasks: (activePage:number, pageSize: number): Promise<ICompleteTaskData> => requests.get(`/delegatedTask/pending/page${activePage}=size${pageSize}`),
   details: (id: string) => requests.get(`/delegatedTask/${id}`),
   add: (task: IDelegatedTaskForm) => requests.post('/delegatedTask', task),
   update: (task: IDelegatedTask) =>
     requests.put(`/delegatedTask/${task.id}`, task),
   delete: (id: string) => requests.del(`/delegatedTask/${id}`),
   share: (id: string, user: IUserFormValues) => requests.post(`/delegatedTask/${id}/share/${user.username}`, User),
+  unshare: (id: string) => requests.post(`/delegatedTask/unshare/${id}/`, {}),
   accept: (task: IDelegatedTask) => requests.post(`/delegatedTask/accept/${task.id}/`, task),
   refuse: (task: IDelegatedTask) => requests.post(`/delegatedTask/refuse/${task.id}/`, task),
   finish: (task: IDelegatedTask) => requests.post(`/delegatedTask/finish/${task.id}/`, task),
 };
 
 const Orders = {
-  list: (params: URLSearchParams): Promise<IOrder[]> => axios.get(`/order`, {params: params}).then(responseBody),
+  list: (params: URLSearchParams): Promise<ICompleteOrdersData> => axios.get(`/order`, {params: params}).then(responseBody),
   add: (order: IOrder) => requests.post('/order', order),
   update: (order: IOrder) => requests.put(`/order/${order.id}`, order),
   delete: (id: string) => requests.del(`/order/${id}`),

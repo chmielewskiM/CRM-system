@@ -1,34 +1,21 @@
-import React, { useContext, useEffect, Fragment } from 'react';
+import React, { useEffect, Fragment } from 'react';
 import { Table, Icon } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
-import { RootStoreContext } from '../../../app/stores/rootStore';
+import { useStores } from '../../../app/stores/rootStore';
 import { destructureDate } from '../../../app/common/util/util';
 import LoaderComponent from '../../../app/layout/LoaderComponent';
 import { IOrder } from '../../../app/models/order';
 
 export const OrderList: React.FC = () => {
-  const rootStore = useContext(RootStoreContext);
-  const { modal } = rootStore.modalStore;
+  const { orderStore } = useStores();
 
-  const {
-    loadingInitial,
-    openOrdersByDate,
-    selectOrder,
-    selectedOrder,
-    typeOfOrder,
-    setOrderList,
-    setOrderBy,
-    sortOrdersBy,
-  } = rootStore.orderStore;
-
-  useEffect(() => {
-    setOrderList('allOrders', false);
-  }, []);
-
-  if (loadingInitial) return <LoaderComponent content="Loading..." />;
+  useEffect(() => {}, []);
 
   return (
     <Fragment>
+      {orderStore.loadingInitial && !orderStore.closedOrders && (
+        <LoaderComponent content="Loading..." />
+      )}
       <Table
         unstackable
         striped
@@ -41,55 +28,74 @@ export const OrderList: React.FC = () => {
       >
         <Table.Header className="head">
           <Table.Row>
-            <Table.HeaderCell onClick={() => setOrderBy('name')}>
+            <Table.HeaderCell onClick={() => orderStore.setOrderBy('name')}>
               Client
-              {sortOrdersBy == 'name_desc' && <Icon name="sort descending" />}
-              {sortOrdersBy == 'name_asc' && <Icon name="sort ascending" />}
-              {sortOrdersBy !== 'name_asc' && sortOrdersBy !== 'name_desc' && (
-                <Icon name="sort descending" className="unset-icon" />
+              {orderStore.sortOrdersBy == 'name_desc' && (
+                <Icon name="sort descending" />
               )}
+              {orderStore.sortOrdersBy == 'name_asc' && (
+                <Icon name="sort ascending" />
+              )}
+              {orderStore.sortOrdersBy !== 'name_asc' &&
+                orderStore.sortOrdersBy !== 'name_desc' && (
+                  <Icon name="sort descending" className="unset-icon" />
+                )}
             </Table.HeaderCell>
             <Table.HeaderCell>Type</Table.HeaderCell>
             <Table.HeaderCell>Product</Table.HeaderCell>
-            <Table.HeaderCell onClick={() => setOrderBy('amount')}>
+            <Table.HeaderCell onClick={() => orderStore.setOrderBy('amount')}>
               Amount
-              {sortOrdersBy == 'amount_desc' && <Icon name="sort descending" />}
-              {sortOrdersBy == 'amount_asc' && <Icon name="sort ascending" />}
-              {sortOrdersBy !== 'amount_asc' &&
-                sortOrdersBy !== 'amount_desc' && (
-                  <Icon name="sort descending" className="unset-icon" />
-                )}
-            </Table.HeaderCell>
-            <Table.HeaderCell onClick={() => setOrderBy('price')}>
-              Price
-              {sortOrdersBy == 'price_desc' && <Icon name="sort descending" />}
-              {sortOrdersBy == 'price_asc' && <Icon name="sort ascending" />}
-              {sortOrdersBy !== 'price_asc' &&
-                sortOrdersBy !== 'price_desc' && (
-                  <Icon name="sort descending" className="unset-icon" />
-                )}
-            </Table.HeaderCell>
-            <Table.HeaderCell onClick={() => setOrderBy('date')}>
-              Date opened
-              {sortOrdersBy == 'date_desc' && <Icon name="sort descending" />}
-              {sortOrdersBy == 'date_asc' && <Icon name="sort ascending" />}
-              {sortOrdersBy !== 'date_asc' && sortOrdersBy !== 'date_desc' && (
-                <Icon name="sort descending" className="unset-icon" />
+              {orderStore.sortOrdersBy == 'amount_desc' && (
+                <Icon name="sort descending" />
               )}
+              {orderStore.sortOrdersBy == 'amount_asc' && (
+                <Icon name="sort ascending" />
+              )}
+              {orderStore.sortOrdersBy !== 'amount_asc' &&
+                orderStore.sortOrdersBy !== 'amount_desc' && (
+                  <Icon name="sort descending" className="unset-icon" />
+                )}
+            </Table.HeaderCell>
+            <Table.HeaderCell onClick={() => orderStore.setOrderBy('price')}>
+              Price
+              {orderStore.sortOrdersBy == 'price_desc' && (
+                <Icon name="sort descending" />
+              )}
+              {orderStore.sortOrdersBy == 'price_asc' && (
+                <Icon name="sort ascending" />
+              )}
+              {orderStore.sortOrdersBy !== 'price_asc' &&
+                orderStore.sortOrdersBy !== 'price_desc' && (
+                  <Icon name="sort descending" className="unset-icon" />
+                )}
+            </Table.HeaderCell>
+            <Table.HeaderCell onClick={() => orderStore.setOrderBy('date')}>
+              Date opened
+              {orderStore.sortOrdersBy == 'date_desc' && (
+                <Icon name="sort descending" />
+              )}
+              {orderStore.sortOrdersBy == 'date_asc' && (
+                <Icon name="sort ascending" />
+              )}
+              {orderStore.sortOrdersBy !== 'date_asc' &&
+                orderStore.sortOrdersBy !== 'date_desc' && (
+                  <Icon name="sort descending" className="unset-icon" />
+                )}
             </Table.HeaderCell>
             <Table.HeaderCell>Notes</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
-        {openOrdersByDate.map((order:IOrder) => (
+        {orderStore.openOrdersByDate.map((order: IOrder) => (
           <Table.Body key={order.id}>
             <Table.Row
-              onClick={() => selectOrder(order.id, false, order)}
+              onClick={() => orderStore.selectOrder(order.id, false, order)}
               active={
-                selectedOrder !== undefined && selectedOrder.id == order.id
+                orderStore.selectedOrder !== undefined &&
+                orderStore.selectedOrder.id == order.id
               }
             >
               <Table.Cell>{order.clientName}</Table.Cell>
-              <Table.Cell>{typeOfOrder(order)}</Table.Cell>
+              <Table.Cell>{orderStore.typeOfOrder(order)}</Table.Cell>
               <Table.Cell>{order.product}</Table.Cell>
               <Table.Cell>{order.amount}</Table.Cell>
               <Table.Cell>{order.price}</Table.Cell>

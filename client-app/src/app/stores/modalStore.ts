@@ -1,50 +1,68 @@
 import { RootStore } from './rootStore';
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 import { IContact, ContactFormValues } from '../models/contact';
 
 export default class ModalStore {
   rootStore: RootStore;
   constructor(rootStore: RootStore) {
+    makeObservable(this, {
+      triggeredFunction: observable,
+      contact: observable,
+      rr: observable,
+      returned: observable,
+      final: observable,
+      doubleCheckContent: observable,
+      firstCheck: observable,
+      accept: observable,
+      refusal: observable,
+      abandonModal: observable,
+      render: action,
+      modal: observable.shallow,
+      openModal: action,
+      closeModal: action,
+      confirmModal: action
+    });
+
     this.rootStore = rootStore;
   }
 
-  @observable triggeredFunction: string = '';
+  triggeredFunction: string = '';
 
-  @observable contact = new ContactFormValues();
+  contact = new ContactFormValues();
 
-  @observable rr = false;
+  rr = false;
 
-  @observable returned: any;
+  returned: any;
 
-  @observable final = false;
+  final = false;
 
-  @observable doubleCheckContent = '';
+  doubleCheckContent = '';
 
-  @observable firstCheck = false;
+  firstCheck = false;
 
-  @observable accept: boolean = false;
+  accept: boolean = false;
 
-  @observable refusal: boolean = false;
+  refusal: boolean = false;
 
-  @observable abandonModal:boolean = false;
+  abandonModal:boolean = false;
 
-  @action render() {
+  render() {
     this.rr = !this.rr;
   }
 
-  @observable.shallow modal = {
+  modal = {
     open: false,
     body: null,
   };
 
-  @action openModal = (content: any, type?: string) => {
+  openModal = (content: any, type?: string) => {
     this.modal.open = true;
     type == 'abandon' ? this.abandonModal = true : this.abandonModal = false;
     this.modal.body = content;
     this.rr = !this.rr;
   };
 
-  @action closeModal = async () => {
+  closeModal = async () => {
     this.modal.open = false;
     this.modal.body = null;
     // if (this.firstCheck) this.refuse();
@@ -53,7 +71,7 @@ export default class ModalStore {
     this.rr = !this.rr;
   };
 
-  @action confirmModal = (contact: IContact) => {
+  confirmModal = (contact: IContact) => {
     this.contact = contact;
     // this.firstCheck = true;
     // this.handleDoubleCheck();

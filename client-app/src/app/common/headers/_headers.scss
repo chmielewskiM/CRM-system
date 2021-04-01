@@ -1,6 +1,6 @@
 #root {
     & .minor-header {
-        background-image: linear-gradient( 270deg,  rgba(5,111,146,1) 5%, rgba(6,57,84,1) 95% );
+        background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(0,52,89,1) 0%, rgba(0,168,232,1) 90% );
         @include reset-div;
         padding: 1rem 2rem;
         width: 100%;

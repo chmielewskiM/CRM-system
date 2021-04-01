@@ -104,6 +104,7 @@ namespace Application.Leads
                     ContactId = contact.Id,
                     Operation = newOperation,
                     OperationId = newOperation.Id,
+                    OrderId = null,
                     Index = 0
                 };
 

@@ -1,12 +1,8 @@
-import React, { Fragment, useContext, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Button, Form, Header, Icon, Label, Modal } from 'semantic-ui-react';
-import { RootStoreContext } from '../../stores/rootStore';
+import { useStores } from '../../stores/rootStore';
 import { observer } from 'mobx-react-lite';
 import { IContact } from '../../models/contact';
-import {
-  DelegatedTaskFormValues,
-  IDelegatedTask,
-} from '../../models/delegatedTask';
 import RadioInput from '../form/RadioInput';
 import { Form as FinalForm, Field } from 'react-final-form';
 
@@ -16,49 +12,43 @@ interface IProps {
   header?: string;
 }
 export const ConfirmationModal: React.FC<IProps> = (props) => {
-  const rootStore = useContext(RootStoreContext);
-  const {
-    modal: { open, body },
-    closeModal,
-    confirmModal,
-    modal,
-    abandonModal,
-    rr,
-  } = rootStore.modalStore;
-  const { saveContact, save, keep, keepRecords } = rootStore.leadStore;
-  useEffect(() => {}, [rr]);
+  const { modalStore, leadStore } = useStores();
 
-  // const [save, setSave] =useState(saveContact);
-  // const [keepRecords, setKeepRecords] =useState(false);
+  useEffect(() => {}, [leadStore.keepRecords, leadStore.saveContact]);
 
   return (
-    <Modal basic open={open} size="small" className="confirmation">
+    <Modal
+      basic
+      open={modalStore.modal.open}
+      size="small"
+      className="confirmation"
+    >
       <Header icon>{props.header}</Header>
 
-      {abandonModal && (
+      {modalStore.abandonModal && (
         <FinalForm
           onSubmit={() => undefined}
           render={({ handleSubmit }) => (
             <Form onSubmit={handleSubmit} size="big">
-              <div className="save">
+              <div className="leadStore.save">
                 <Label>Save the lead in your contacts</Label>
                 <div className="fields">
                   <Field
                     name="save"
-                    value={saveContact}
+                    value={leadStore.saveContact}
                     label="Yes"
                     type="radio"
                     component={RadioInput}
-                    func={() => save(saveContact)}
+                    func={leadStore.save}
                     className="yes"
                   />
                   <Field
                     name="save"
-                    value={!saveContact}
+                    value={!leadStore.saveContact}
                     label="No"
                     type="radio"
                     component={RadioInput}
-                    func={() => save(saveContact)}
+                    func={leadStore.save}
                     className="no"
                   />
                 </div>
@@ -68,19 +58,19 @@ export const ConfirmationModal: React.FC<IProps> = (props) => {
                 <div className="fields">
                   <Field
                     name="keep"
-                    value={keepRecords}
+                    value={leadStore.keepRecords}
                     type="radio"
                     label="Yes"
-                    func={() => keep(keepRecords)}
+                    func={leadStore.keep}
                     component={RadioInput}
                     className="yes"
                   />
                   <Field
                     name="keep"
-                    value={!keepRecords}
+                    value={!leadStore.keepRecords}
                     type="radio"
                     label="No"
-                    func={() => keep(keepRecords)}
+                    func={leadStore.keep}
                     component={RadioInput}
                     className="no"
                   />
@@ -91,12 +81,19 @@ export const ConfirmationModal: React.FC<IProps> = (props) => {
         />
       )}
 
-      <Modal.Content content={modal.body}></Modal.Content>
+      <Modal.Content content={modalStore.modal.body}></Modal.Content>
       <Modal.Actions>
-        <Button basic color="red" inverted onClick={closeModal}>
+        <Button basic color="red" inverted onClick={modalStore.closeModal}>
           <Icon name="remove" /> Cancel
         </Button>
-        <Button color="green" inverted onClick={() => {props.function(); closeModal()}}>
+        <Button
+          color="green"
+          inverted
+          onClick={() => {
+            props.function();
+            modalStore.closeModal();
+          }}
+        >
           <Icon name="checkmark" /> Confirm
         </Button>
       </Modal.Actions>

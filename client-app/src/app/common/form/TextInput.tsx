@@ -3,7 +3,9 @@ import { FieldRenderProps } from 'react-final-form';
 import { FormFieldProps, Form, Label } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 
-export interface IProps extends FieldRenderProps<string, HTMLElement>, FormFieldProps {}
+export interface IProps
+  extends FieldRenderProps<string, HTMLElement>,
+    FormFieldProps {}
 
 const TextInput: React.FC<IProps> = ({
   input,
@@ -12,12 +14,16 @@ const TextInput: React.FC<IProps> = ({
   placeholder,
   label,
   className,
-  onChange,
   meta: { touched, error },
 }) => {
   return (
-    <Form.Field error={touched && !!error} type={type} width={width} label={label}>
-      <input {...input} placeholder={placeholder} className={className}/>
+    <Form.Field
+      error={touched && !!error}
+      type={type}
+      width={width}
+      label={label}
+    >
+      <input {...input} placeholder={placeholder} className={className} />
       {touched && error && (
         <Label basic color="red">
           {error}

@@ -5,6 +5,7 @@ import {
   configure,
   runInAction,
   reaction,
+  makeObservable,
 } from 'mobx';
 import { toast } from 'react-toastify';
 import { IOrder, OrderFormValues } from '../models/order';
@@ -14,78 +15,106 @@ import { v4 as uuid } from 'uuid';
 import { IContact } from '../models/contact';
 import { SyntheticEvent } from 'react';
 import { InputOnChangeData } from 'semantic-ui-react';
-import { number } from '@amcharts/amcharts4/core';
 
 configure({ enforceActions: 'always' });
+
+export const PAGE_SIZE = 5;
 
 export default class OrderStore {
   rootStore: RootStore;
   constructor(rootStore: RootStore) {
+    makeObservable(this, {
+      orders: observable,
+      selectedOrder: observable,
+      selectedClient: observable,
+      temporaryContact: observable,
+      allOrders: observable,
+      saleOrders: observable,
+      closedOrders: observable,
+      sortOrdersBy: observable,
+      sortDescending: observable,
+      filterInput: observable,
+      pageSize: observable,
+      activePage: observable,
+      ordersCount: observable,
+      loadingInitial: observable,
+      showOrderForm: observable,
+      displayHistory: observable,
+      submitting: observable,
+      sale: observable,
+      openOrderRegistry: observable,
+      closedOrderRegistry: observable,
+      axiosParams: computed,
+      openOrdersByDate: computed,
+      closedOrdersByDate: computed,
+      toggleSelect: action,
+      setOrderList: action,
+      setOrderBy: action,
+      setPagination: action,
+      handleSearch: action,
+      loadOrders: action,
+      selectOrder: action,
+      addTemporaryContact: action,
+      removeTemporaryContact: action,
+      closeOrder: action,
+      addOrderForm: action,
+      editOrderForm: action,
+      setShowOrderForm: action,
+      fillForm: action,
+      addOrder: action,
+      editOrder: action,
+      deleteOrder: action,
+      setDisplayHistory: action,
+    });
+
     this.rootStore = rootStore;
     reaction(
       () => this.axiosParams,
       () => {
-        if (!this.closedOrders) this.loadOrders(false);
-        else this.loadOrders(true);
+        if (!this.closedOrders) this.loadOrders();
+        else this.loadHistory();
+      }
+    );
+    reaction(
+      () => this.showOrderForm,
+      () => {
+        this.rootStore.contactStore.loadUncontracted();
       }
     );
   }
 
-  ////
-  //Observables
-  ////
-  @observable orders: IOrder[] = [];
-
-  @observable selectedOrder: IOrder | undefined;
-
-  @observable selectedClient: IContact | undefined;
-
-  @observable temporaryContact: IContact | undefined;
-
-  //URLparams
-  @observable allOrders = true;
-
-  @observable saleOrders = false;
-
-  @observable closedOrders = false;
-
-  @observable sortOrdersBy = 'date';
-
-  @observable sortDescending = true;
-
-  @observable filterInput: string = 'unfiltered';
-  //""""""""""""""
-
-  //pagination
-  @observable pageSize = 5;
-
-  @observable activePage = 1;
-  //""""""""""""""
-
-  //controls
-  @observable loadingInitial = false;
-
-  @observable showOrderForm = false;
-
-  @observable displayHistory = false;
-
-  @observable submitting = false;
-
-  @observable sale: boolean = true;
-
-  @observable rr = false;
-  //""""""""""""""
-
+  /////////////////////////////////////
   //collections
-  @observable openOrderRegistry = new Map();
-
-  @observable closedOrderRegistry = new Map();
-  //----------------------------------------------------
+  openOrderRegistry = new Map();
+  closedOrderRegistry = new Map();
+  orders: IOrder[] = [];
+  //instances
+  selectedOrder: IOrder | undefined;
+  selectedClient: IContact | undefined;
+  temporaryContact: IContact | undefined;
+  //controls
+  loadingInitial = false;
+  submitting = false;
+  displayHistory = false;
+  sale: boolean = true;
+  showOrderForm = false;
+  //URLparams
+  allOrders = true;
+  saleOrders = false;
+  closedOrders = false;
+  sortOrdersBy = 'date';
+  sortDescending = true;
+  filterInput: string = 'unfiltered';
+  //pagination
+  pageSize = 5;
+  activePage = 0;
+  ordersCount = 0;
+  //----------------------------------------------
 
   ////
   //Computeds
-  ////
-  @computed get axiosParams() {
+  //
+  get axiosParams() {
     const params = new URLSearchParams();
     params.append('allOrders', `${this.allOrders}`);
     params.append('saleOrders', `${this.saleOrders}`);
@@ -93,38 +122,108 @@ export default class OrderStore {
     params.append('orderBy', `${this.sortOrdersBy}`);
     params.append('filterInput', `${this.filterInput}`);
     params.append('pageNumber', `${this.activePage}`);
-    params.append('pageSize', `${this.pageSize}`);
+    params.append('pageSize', `${PAGE_SIZE}`);
     return params;
   }
 
-  @action render() {
-    this.rr = !this.rr;
-  }
-
-  @computed get openOrdersByDate() {
+  get openOrdersByDate() {
     return Array.from(this.openOrderRegistry.values());
   }
 
-  @computed get closedOrdersByDate() {
+  get closedOrdersByDate() {
     return Array.from(this.closedOrderRegistry.values());
   }
   //-------------------------------
 
   ////
-  //Actions
-  ////
-  @action toggleSelect = (value: any) => {
-    this.sale = !value;
-    this.render();
+  //*Actions*
+  //
+  // Loading and submitting actions. According to MobX documentation it's
+  // observables should be modified only by actions
+  loadingData = (value: boolean) => {
+    runInAction(() => {
+      this.loadingInitial = value;
+    });
   };
 
-  @action setOrderList = (value: string, closed: boolean, ev?: HTMLElement) => {
+  submittingData = (value: boolean) => {
+    runInAction(() => {
+      this.submitting = value;
+    });
+  };
+
+  selectOrder = async (
+    id: string,
+    closed?: boolean,
+    selectedOrder?: IOrder
+  ) => {
+    runInAction(() => {
+      if (id !== '') {
+        var order = new OrderFormValues(selectedOrder);
+        if (!closed) this.selectedOrder = this.openOrderRegistry.get(id);
+        else this.selectedOrder = this.closedOrderRegistry.get(id);
+        this.sale = this.selectedOrder!.type;
+      } else {
+        this.selectedOrder = undefined;
+      }
+    });
+  };
+
+  toggleSelect = () => {
+    runInAction(() => {
+      this.sale = !this.sale;
+    });
+  };
+
+  handleSearch = (ev: SyntheticEvent, input: InputOnChangeData) => {
+    runInAction(() => {
+      this.filterInput = 'unfiltered';
+      if (input.value.length > 1) {
+        this.closedOrders = false;
+        this.filterInput = input.value;
+        this.loadOrders();
+      }
+    });
+  };
+
+  addTemporaryContact = (contact: IContact) => {
+    runInAction(() => {
+      this.rootStore.contactStore.contactRegistry.set(contact.id, contact);
+      this.temporaryContact = contact;
+      this.selectedClient = contact;
+    });
+  };
+
+  removeTemporaryContact = () => {
+    runInAction(() => {
+      this.rootStore.contactStore.contactRegistry.delete(
+        this.temporaryContact?.id
+      );
+      this.temporaryContact = undefined;
+      this.selectedClient = undefined;
+    });
+  };
+
+  setDisplayHistory = (value: boolean) => {
+    runInAction(() => {
+      this.displayHistory = value;
+    });
+  };
+
+  typeOfOrder = (order: IOrder) => {
+    var type = '';
+    order.type ? (type = 'Sale') : (type = 'Purchase');
+    return type;
+  };
+
+  // sorting and filtering
+  setOrderList = (value: string, closed: boolean, ev?: HTMLElement) => {
     if (ev?.parentElement) {
       for (var child of ev?.parentElement!.children)
         child.classList.remove('active');
       ev?.classList.add('active');
     }
-    runInAction('Sorting orders', () => {
+    runInAction(() => {
       switch (value) {
         case 'allOrders':
           this.allOrders = true;
@@ -141,13 +240,13 @@ export default class OrderStore {
           this.closedOrders = closed;
           break;
       }
-
-      this.loadOrders(closed);
+      if (!this.closedOrders) this.loadOrders();
+      else this.loadHistory;
     });
   };
 
-  @action setOrderBy = (value: string) => {
-    runInAction('Sorting orders', () => {
+  setOrderBy = (value: string) => {
+    runInAction(() => {
       this.closedOrders = false;
       this.sortDescending = !this.sortDescending;
       let orderBy;
@@ -160,121 +259,29 @@ export default class OrderStore {
     });
   };
 
-  @action setPagination = (pageSize: number, activePage: number) => {
-    this.pageSize = pageSize;
-    this.activePage = activePage;
-  };
-
-  @action handleSearch = (ev: SyntheticEvent, input: InputOnChangeData) => {
-    runInAction('Sorting orders', () => {
-      this.filterInput = 'unfiltered';
-      if (input.value.length > 1) {
-        this.closedOrders = false;
-        this.filterInput = input.value;
-        this.loadOrders(false);
-      }
+  setPagination = (activePage: number) => {
+    runInAction(() => {
+      this.closedOrders = true;
+      if (activePage >= 1) this.activePage = activePage;
     });
   };
+  //----------------------------------------
 
-  @action loadOrders = async (closed: boolean) => {
-    this.loadingInitial = true;
-    try {
-      const orders = await agent.Orders.list(this.axiosParams);
-      runInAction('Loading orders', () => {
-        if (!closed) {
-          this.openOrderRegistry.clear();
-          orders.forEach((order) => {
-            this.openOrderRegistry.set(order.id, order);
-          });
-        } else {
-          this.closedOrderRegistry.clear();
-          orders.forEach((order) => {
-            this.closedOrderRegistry.set(order.id, order);
-          });
-        }
-        this.loadingInitial = false;
-        this.render();
-      });
-    } catch (error) {
-      runInAction('Loading error', () => {
-        this.loadingInitial = false;
-      });
-      console.log(error);
-    }
-  };
-
-  typeOfOrder = (order: IOrder) => {
-    var type = '';
-    order.type ? (type = 'Sale') : (type = 'Purchase');
-
-    return type;
-  };
-  @action selectOrder = async (
-    id: string,
-    closed?: boolean,
-    selectedOrder?: IOrder
-  ) => {
-    if (id !== '') {
-      var order = new OrderFormValues(selectedOrder);
-      runInAction('Selecting order', () => {
-        if (!closed) this.selectedOrder = this.openOrderRegistry.get(id);
-        else this.selectedOrder = this.closedOrderRegistry.get(id);
-        this.sale = this.selectedOrder!.type;
-      });
-      this.render();
-    } else {
+  // *Forms*
+  addOrderForm = () => {
+    this.loadingData(true);
+    runInAction(() => {
       this.selectedOrder = undefined;
-      this.render();
-    }
-  };
-
-  @action addTemporaryContact = (contact: IContact) => {
-    runInAction('Removing temporary contact', () => {
-      this.rootStore.contactStore.contactRegistry.set(contact.id, contact);
-      this.temporaryContact = contact;
-      this.selectedClient = contact;
+      this.showOrderForm = true;
     });
-  };
-  @action removeTemporaryContact = () => {
-    runInAction('Removing temporary contact', () => {
-      this.rootStore.contactStore.contactRegistry.delete(
-        this.temporaryContact?.id
-      );
-      this.temporaryContact = undefined;
-      this.selectedClient = undefined;
-    });
+    this.loadingData(false);
   };
 
-  @action closeOrder = async (order: IOrder) => {
-    this.submitting = true;
-    try {
-      // let order = this.openOrderRegistry.get(id)
-      await agent.Orders.closeOrder(order);
-      runInAction('Loading orders', () => {
-        this.closedOrderRegistry.set(order.id, order);
-        this.submitting = false;
-        this.loadOrders(true);
-      });
-    } catch (error) {
-      runInAction('Loading orders', () => {});
-      toast.error('Problem occured');
-      console.log(error);
-    }
-    this.rootStore.modalStore.closeModal();
-    toast.success('Order closed');
-  };
-  @action addOrderForm = () => {
-    this.selectedOrder = undefined;
-    this.showOrderForm = true;
-    this.submitting = false;
-    this.render();
-  };
-
-  @action editOrderForm = async (id: string) => {
-    this.submitting = true;
+  editOrderForm = async (id: string) => {
+    this.submittingData(true);
     const order = new OrderFormValues(this.selectedOrder);
     var contact = await agent.Contacts.get(encodeURI(order.clientName!));
-    runInAction('Loading orders', () => {
+    runInAction(() => {
       if (
         !this.rootStore.contactStore.contactRegistry.has(contact.id) &&
         contact.id
@@ -284,24 +291,23 @@ export default class OrderStore {
       this.rootStore.contactStore.selectedContact = contact;
       this.selectedOrder = this.openOrderRegistry.get(id);
       this.showOrderForm = true;
-      this.submitting = false;
     });
-
-    this.render();
+    this.submittingData(false);
   };
 
-  @action setShowOrderForm = (show: boolean) => {
-    this.showOrderForm = show;
+  setShowOrderForm = (show: boolean) => {
+    runInAction(() => {
+      this.showOrderForm = show;
+    });
     if (!show) this.rootStore.contactStore.selectContact('');
-
     if (this.temporaryContact && show == false) this.removeTemporaryContact();
-
-    this.render();
   };
 
-  @action fillForm = () => {
+  fillForm = () => {
     if (this.selectedOrder) {
-      this.sale = this.selectedOrder.type;
+      runInAction(() => {
+        this.sale = this.selectedOrder!.type;
+      });
       return this.selectedOrder;
     } else {
       return new OrderFormValues();
@@ -320,9 +326,50 @@ export default class OrderStore {
       this.editOrder(order);
     }
   };
+  //----------------------------------------
 
-  @action addOrder = async (order: IOrder) => {
-    this.submitting = true;
+  // *CRUD order*
+  loadOrders = async () => {
+    this.loadingData(true);
+    try {
+      const data = await agent.Orders.list(this.axiosParams);
+      const [...orders] = data.orders;
+      const count = data.ordersCount;
+      runInAction(() => {
+        this.openOrderRegistry.clear();
+        orders.forEach((order) => {
+          this.openOrderRegistry.set(order.id, order);
+        });
+      });
+      this.loadingData(false);
+    } catch (error) {
+      this.loadingData(false);
+      console.log(error);
+    }
+  };
+
+  loadHistory = async () => {
+    this.loadingData(true);
+    try {
+      const data = await agent.Orders.list(this.axiosParams);
+      const [...orders] = data.orders;
+      const count = data.ordersCount;
+      runInAction(() => {
+        this.closedOrderRegistry.clear();
+        orders.forEach((order) => {
+          this.closedOrderRegistry.set(order.id, order);
+        });
+        this.ordersCount = count;
+      });
+      this.loadingData(false);
+    } catch (error) {
+      this.loadingData(false);
+      console.log(error);
+    }
+  };
+
+  addOrder = async (order: IOrder) => {
+    this.submittingData(true);
     try {
       order.client = this.rootStore.contactStore.selectedContact!;
       var date = new Date(Date.now());
@@ -330,72 +377,76 @@ export default class OrderStore {
       order.type = this.sale;
       order.clientId = this.rootStore.contactStore.selectedContact?.id!;
       await agent.Orders.add(order);
-      runInAction('Loading orders', () => {
+      runInAction(() => {
         this.openOrderRegistry.set(order.id, order);
         toast.success('Order added');
         this.setShowOrderForm(false);
-        this.submitting = false;
       });
-      this.loadOrders(false);
-      this.render();
+      this.submittingData(false);
+      this.loadOrders();
     } catch (error) {
-      runInAction('Loading orders', () => {
-        this.submitting = false;
-      });
+      this.submittingData(false);
       toast.error('Problem occured');
       console.log(error.response);
     }
   };
 
-  @action editOrder = async (order: IOrder) => {
-    this.submitting = true;
+  editOrder = async (order: IOrder) => {
+    this.submittingData(true);
     if (this.selectedOrder !== order) {
       try {
         order.clientId = this.rootStore.contactStore.selectedContact?.id!;
         await agent.Orders.update(order);
-        runInAction('Editing order', () => {
+        runInAction(() => {
           this.openOrderRegistry.set(order.id, order);
           this.showOrderForm = false;
-          this.submitting = false;
         });
         if (this.temporaryContact) this.removeTemporaryContact();
-        this.loadOrders(false);
-        this.render();
+        this.submittingData(false);
+        this.loadOrders();
       } catch (error) {
-        runInAction('Loading orders', () => {
-          this.submitting = false;
-        });
+        this.submittingData(false);
         toast.error('Problem occured');
         console.log(error);
       }
     } else {
       this.showOrderForm = false;
-      this.submitting = false;
-      this.render();
+      this.submittingData(false);
     }
   };
 
-  @action deleteOrder = async (id: string) => {
-    this.submitting = true;
+  deleteOrder = async (id: string) => {
+    this.submittingData(true);
     try {
       await agent.Orders.delete(id);
-      runInAction('Deleting order', () => {
+      runInAction(() => {
         this.openOrderRegistry.delete(this.selectedOrder!.id);
         this.selectedOrder = undefined;
-        this.submitting = false;
       });
-      this.render();
+      this.submittingData(false);
     } catch (error) {
-      runInAction('Deleting order', () => {
-        this.submitting = false;
-      });
+      this.submittingData(false);
       console.log(error);
       toast.error(error.data.errors);
     }
   };
 
-  @action setDisplayHistory = (value: boolean) => {
-    this.displayHistory = value;
-    this.render();
+  closeOrder = async (order: IOrder) => {
+    this.submittingData(true);
+    try {
+      // let order = this.openOrderRegistry.get(id)
+      await agent.Orders.closeOrder(order);
+      runInAction(() => {
+        this.closedOrderRegistry.set(order.id, order);
+        this.loadHistory();
+      });
+      this.submittingData(false);
+    } catch (error) {
+      this.submittingData(false);
+      toast.error('Problem occured');
+      console.log(error);
+    }
+    this.rootStore.modalStore.closeModal();
+    toast.success('Order closed');
   };
 }

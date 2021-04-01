@@ -1,55 +1,44 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Grid, Button, Label, Segment, Input } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
-import { ContactList } from '../list/ContactList';
-import { ContactDetails } from '../details/ContactDetails';
-import { ContactForm } from '../form/ContactForm';
-import { RootStoreContext } from '../../../app/stores/rootStore';
+import ContactList from '../list/ContactList';
+import ContactDetails from '../details/ContactDetails';
+import ContactForm from '../form/ContactForm';
+import { useStores } from '../../../app/stores/rootStore';
 import { contactButtons } from '../../../app/common/options/buttons';
 import ShareContactForm from '../form/ShareContactForm';
-import { Lead, LeadFormValues } from '../../../app/models/lead';
+import homeStore from '../../../app/stores/homeStore';
 
 export const ContactDashboard: React.FC = () => {
-  const rootStore = useContext(RootStoreContext);
-  const {
-    showContactForm,
-    selectedContact,
-    setContactList,
-    addContactForm,
-    startSaleProcess,
-    shareContactForm,
-    handleSearch,
-    setPagination,
-    activePage,
-    contactsTotal,
-    submitting,
-    rr,
-  } = rootStore.contactStore;
-  const { expandMenu } = rootStore.commonStore;
+  const { contactStore, commonStore } = useStores();
 
   useEffect(() => {
-  }, [rr]);
+    contactStore.selectContact('');
+  }, []);
 
   return (
     <Grid stackable centered className="main-grid contacts">
-      {showContactForm && (
+      {contactStore.showContactForm && (
         <ContactForm
-          key={(selectedContact && selectedContact.id) || 0}
-          contact={selectedContact!}
+          key={
+            (contactStore.selectedContact && contactStore.selectedContact.id) ||
+            0
+          }
+          contact={contactStore.selectedContact!}
         />
       )}
-      {shareContactForm && <ShareContactForm />}
+      {contactStore.shareContactForm && <ShareContactForm />}
       <Grid.Row className="topbar">
         <Button
           positive
           icon="plus"
           content="Add contact"
-          onClick={addContactForm}
+          onClick={contactStore.addContactForm}
         />
-        {selectedContact?.status == 'Inactive' && (
+        {contactStore.selectedContact?.status == 'Inactive' && (
           <Button
-            onClick={startSaleProcess}
-            loading={submitting}
+            onClick={contactStore.startSaleProcess}
+            loading={contactStore.submitting}
             icon="target"
             primary
             content="Start sale process"
@@ -58,7 +47,7 @@ export const ContactDashboard: React.FC = () => {
         <Button
           icon="angle down"
           className="expand-menu"
-          onClick={(event) => expandMenu(event)}
+          onClick={(event) => commonStore.expandMenu(event)}
         />
       </Grid.Row>
 
@@ -76,7 +65,10 @@ export const ContactDashboard: React.FC = () => {
                 compact={button.compact}
                 className={button.className}
                 onClick={(e) =>
-                  setContactList(button.functionArg, e.currentTarget)
+                  contactStore.setContactList(
+                    button.functionArg,
+                    e.currentTarget
+                  )
                 }
               />
             ))}
@@ -84,25 +76,30 @@ export const ContactDashboard: React.FC = () => {
           <Button.Group className="pagination">
             <Button
               icon="chevron left"
-              onClick={() => setPagination(-1)}
-              disabled={activePage <= 0}
+              onClick={() => contactStore.setPagination(-1)}
+              disabled={contactStore.activePage <= 0}
             />
             <span className="contacts-from">
-              {activePage < 1 && '1'}
-              {activePage >= 1 && activePage.toString().concat('1')}
+              {contactStore.activePage < 1 && '1'}
+              {contactStore.activePage >= 1 &&
+                contactStore.activePage.toString().concat('1')}
             </span>
-            <span>-</span>
-            <span className="contacts-to">10&nbsp;</span>
-            <span className="contacts-all"> /&nbsp;{contactsTotal}</span>
+            <span className="contacts-to">-10&nbsp;</span>
+            <span className="contacts-all">
+              {' '}
+              /&nbsp;{contactStore.contactsTotal}
+            </span>
             <Button
               icon="chevron right"
-              onClick={() => setPagination(1)}
-              disabled={activePage+1 > contactsTotal / 10}
+              onClick={() => contactStore.setPagination(1)}
+              disabled={
+                contactStore.activePage + 1 > contactStore.contactsTotal / 10
+              }
             />
           </Button.Group>
           <Input
             className="filter-input"
-            onChange={handleSearch}
+            onChange={contactStore.handleSearch}
             icon="search"
             label="Search"
           />
@@ -113,8 +110,8 @@ export const ContactDashboard: React.FC = () => {
       </Grid.Row>
       <Grid.Row className="row-content-2">
         <Grid.Column mobile={16} computer={9} largeScreen={7}>
-          {selectedContact !== undefined && (
-            <ContactDetails contact={selectedContact} />
+          {contactStore.selectedContact !== undefined && (
+            <ContactDetails contact={contactStore.selectedContact} />
           )}
         </Grid.Column>
       </Grid.Row>

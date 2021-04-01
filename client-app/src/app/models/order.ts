@@ -42,3 +42,8 @@ export class OrderFormValues implements Partial<IOrder> {
     Object.assign(this, init);
   }
 }
+
+export interface ICompleteOrdersData extends IOrder {
+  orders: IOrder[];
+  ordersCount: number;
+}

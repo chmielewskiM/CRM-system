@@ -1,4 +1,11 @@
-import { observable, action, computed, runInAction, reaction } from 'mobx';
+import {
+  observable,
+  action,
+  computed,
+  runInAction,
+  reaction,
+  makeObservable,
+} from 'mobx';
 import { toast } from 'react-toastify';
 import { IContact, ContactFormValues } from '../models/contact';
 import agent from '../api/agent';
@@ -16,64 +23,88 @@ const PAGE_SIZE = 10;
 export default class ContactStore {
   rootStore: RootStore;
   constructor(rootStore: RootStore) {
+    makeObservable(this, {
+      contact: observable,
+      selectedContact: observable,
+      selectedValue: observable,
+      contacts: observable,
+      contactRegistry: observable,
+      uncontractedRegistry: observable,
+      loadingInitial: observable,
+      showContactForm: observable,
+      shareContactForm: observable,
+      submitting: observable,
+      contactsTotal: observable,
+      premium: observable,
+      inProcess: observable,
+      filterInput: observable,
+      orderBy: observable,
+      sortDescending: observable,
+      activePage: observable,
+      uncontracted: observable,
+      axiosParams: computed,
+      contactsList: computed,
+      uncontractedContacts: computed,
+      convertPremiumValue: computed,
+      setPagination: action,
+      setOrderBy: action,
+      handleSearch: action,
+      setContactList: action,
+      selectContact: action,
+      addContactForm: action,
+      editContactForm: action,
+      setShowContactForm: action,
+      showShareContactForm: action,
+      fillForm: action,
+      loadContacts: action,
+      loadUncontracted: action,
+      addContact: action,
+      editContact: action,
+      removeContact: action,
+      premiumUpgrade: action,
+      shareContact: action,
+      startSaleProcess: action,
+      getContact: action,
+    });
+
     this.rootStore = rootStore;
     reaction(
-      () => this.contactsParams,
+      () => this.axiosParams,
       () => {
         this.loadContacts();
       }
     );
   }
 
+  /////////////////////////////////////
+  //collections
+  contacts: IContact[] = [];
+  contactRegistry = new Map();
+  uncontractedRegistry = new Map();
+  //instances
+  contact: IContact | undefined;
+  selectedContact: IContact | undefined;
+  //controls
+  loadingInitial = false;
+  submitting = false;
+  showContactForm = false;
+  shareContactForm = false;
+  selectedValue = '';
+  //URLparams
+  premium: boolean = false;
+  inProcess: boolean = false;
+  filterInput: string = 'unfiltered';
+  orderBy = 'date';
+  sortDescending = true;
+  uncontracted = false;
+  //pagination
+  contactsTotal = 0;
+  activePage = 0;
+  //----------------------------------------------------
+
   ////
-  //***Observables***
-  ////
-
-  @observable contact: IContact | undefined;
-
-  @observable selectedContact: IContact | undefined;
-
-  @observable selectedValue = '';
-
-  @observable rr = false;
-  //----------------------------------------------------
-
-  //-collections
-  @observable contacts: IContact[] = [];
-
-  @observable contactRegistry = new Map();
-
-  @observable uncontractedRegistry = new Map();
-  //----------------------------------------------------
-
-  //-controls
-  @observable loadingInitial = false;
-
-  @observable showContactForm = false;
-
-  @observable shareContactForm = false;
-
-  @observable submitting = false;
-
-  @observable contactsTotal = 0;
-  //----------------------------------------------------
-
-  //-filtering&sorting, URLparams
-  @observable premium: boolean = false;
-
-  @observable inProcess: boolean = false;
-
-  @observable filterInput: string = 'unfiltered';
-
-  @observable orderBy = 'date';
-
-  @observable sortDescending = true;
-
-  @observable activePage = 0;
-
-  @observable uncontracted = false;
-  //----------------------------------------------------
-
+  // *Functions*
+  //
   handleContact = (arg: string, contact: IContact) => {
     switch (arg) {
       case 'share':
@@ -90,8 +121,8 @@ export default class ContactStore {
 
   ////
   // *Computeds*
-  ////
-  @computed get contactsParams() {
+  //
+  get axiosParams() {
     const params = new URLSearchParams();
     params.append('premium', `${this.premium}`);
     params.append('inProcess', `${this.inProcess}`);
@@ -103,13 +134,13 @@ export default class ContactStore {
     return params;
   }
 
-  @computed get contactsList() {
+  get contactsList() {
     return Array.from(this.contactRegistry.values());
   }
 
   //Uncontracted contacts are those, whom we are ready to create a new order with.
   //It means that they don't have any open order assigned.
-  @computed get uncontractedContacts() {
+  get uncontractedContacts() {
     let contact;
     let contacts: Array<Object> = [];
     let list = Array.from(this.uncontractedRegistry.values());
@@ -126,36 +157,53 @@ export default class ContactStore {
     return contacts;
   }
 
-  @computed get convertPremiumValue() {
-    let value;
+  get convertPremiumValue() {
     if (
       String(this.selectedContact?.premium) == 'True' ||
       this.selectedContact?.premium == true
     )
-      value = true;
-    else value = false;
-
-    return value;
+      return true;
+    else return false;
   }
 
   ////
   // *Actions*
-  ////
-
-  @action render() {
-    this.rr = !this.rr;
-  }
-
-  ////
-  //-Filters and pagination
-
-  @action setPagination = (modifier: number) => {
-    this.activePage += modifier;
-    this.loadContacts();
+  //
+  // Loading and submitting actions. According to MobX documentation it's recommended to
+  // modify observables only by actions
+  loadingData = (value: boolean) => {
+    runInAction(() => {
+      this.loadingInitial = value;
+    });
   };
 
-  @action setOrderBy = (value: string) => {
-    runInAction('Sorting orders', () => {
+  submittingData = (value: boolean) => {
+    runInAction(() => {
+      this.submitting = value;
+    });
+  };
+
+  selectContact = (id: string) => {
+    runInAction(() => {
+      if (id !== '') {
+        var a = this.contactRegistry.get(id);
+        this.selectedContact = this.contactRegistry.get(id);
+        this.contact = this.selectedContact;
+      } else {
+        this.selectedContact = undefined;
+      }
+    });
+  };
+
+  //filters and pagination
+  setPagination = (modifier: number) => {
+    runInAction(() => {
+      this.activePage += modifier;
+    });
+  };
+
+  setOrderBy = (value: string) => {
+    runInAction(() => {
       this.sortDescending = !this.sortDescending;
       let orderBy;
       if (!this.sortDescending) {
@@ -167,25 +215,21 @@ export default class ContactStore {
     });
   };
 
-  @action handleSearch = (ev: SyntheticEvent, input: InputOnChangeData) => {
-    runInAction('Filtering orders', () => {
+  handleSearch = (ev: SyntheticEvent, input: InputOnChangeData) => {
+    runInAction(() => {
       if (input.value.length > 1) {
         this.filterInput = input.value;
       } else this.filterInput = 'unfiltered';
-      this.loadContacts();
     });
   };
 
-  @action setContactList = (
-    arg: string,
-    ev?: EventTarget & HTMLButtonElement
-  ) => {
+  setContactList = (arg: string, ev?: EventTarget & HTMLButtonElement) => {
     if (ev != undefined) {
       for (var child of ev?.parentElement!.children)
         child.classList.remove('active');
       ev.classList.add('active');
     }
-    runInAction('Setting list', () => {
+    runInAction(() => {
       switch (arg) {
         case 'all':
           this.inProcess = false;
@@ -201,50 +245,41 @@ export default class ContactStore {
           break;
       }
     });
-    this.loadContacts();
   };
-  //////////////////////////////////////////////
+  //----------------------------------------
 
-  @action selectContact = (id: string) => {
-    if (id !== '') {
-      var a = this.contactRegistry.get(id);
-      this.selectedContact = this.contactRegistry.get(id);
-      this.contact = this.selectedContact;
-    } else {
+  // *Forms*
+  addContactForm = () => {
+    this.loadingData(true);
+    runInAction(() => {
       this.selectedContact = undefined;
-    }
-    this.render();
+      this.selectedValue = '';
+      this.showContactForm = true;
+    });
+    this.loadingData(false);
   };
 
-  ////
-  //-Forms
-
-  @action addContactForm = () => {
-    this.selectedContact = undefined;
-    this.selectedValue = '';
-    this.showContactForm = true;
-    this.submitting = false;
-    this.render();
+  editContactForm = (id: string) => {
+    runInAction(() => {
+      this.selectedContact = this.contactRegistry.get(id);
+      this.showContactForm = true;
+    });
   };
 
-  @action editContactForm = (id: string) => {
-    this.selectedContact = this.contactRegistry.get(id);
-    this.showContactForm = true;
-    this.render();
+  setShowContactForm = (show: boolean) => {
+    runInAction(() => {
+      this.showContactForm = show;
+    });
   };
 
-  @action setShowContactForm = (show: boolean) => {
-    this.showContactForm = show;
-    this.render();
+  showShareContactForm = (show: boolean, contact?: IContact) => {
+    runInAction(() => {
+      this.selectedContact = contact;
+      this.shareContactForm = show;
+    });
   };
 
-  @action showShareContactForm = (show: boolean, contact?: IContact) => {
-    this.selectedContact = contact;
-    this.shareContactForm = show;
-    this.render();
-  };
-
-  @action fillForm = () => {
+  fillForm = () => {
     if (this.selectedContact) {
       return this.selectedContact;
     }
@@ -263,179 +298,161 @@ export default class ContactStore {
       this.editContact(contact);
     }
   };
-  /////////////////////////////////////////
+  //----------------------------------------
 
-  //////
-  //-CRUD
-
-  @action loadContacts = async () => {
-    this.loadingInitial = true;
+  // *CRUD contact*
+  loadContacts = async () => {
+    this.loadingData(true);
     try {
-      const contacts = await agent.Contacts.listContacts(this.contactsParams);
+      const contacts = await agent.Contacts.listContacts(this.axiosParams);
       const { ...data } = contacts;
-      this.contactRegistry.clear();
-      runInAction('Loading contacts', () => {
+      runInAction(() => {
+        this.contactRegistry.clear();
         data.contacts.forEach((contact: IContact) => {
           this.contactRegistry.set(contact.id, contact);
         });
         this.contactsTotal = data.contactsTotal;
-        this.loadingInitial = false;
       });
-      this.render();
+      this.loadingData(false);
     } catch (error) {
-      runInAction('Loading error', () => {
-        this.loadingInitial = false;
-      });
+      this.loadingData(false);
       console.log(error);
     }
   };
 
-  @action loadUncontracted = async () => {
-    this.uncontracted = true;
-    this.orderBy = 'name_asc';
+  loadUncontracted = async () => {
+    runInAction(() => {
+      this.uncontracted = true;
+      this.orderBy = 'name_asc';
+    });
     try {
-      const contacts = await agent.Contacts.listContacts(this.contactsParams);
+      const contacts = await agent.Contacts.listContacts(this.axiosParams);
       const { ...data } = contacts;
-      this.uncontractedRegistry.clear();
-      runInAction('Loading contacts', () => {
+      runInAction(() => {
+        this.uncontractedRegistry.clear();
         data.contacts.forEach((contact: IContact) => {
           this.uncontractedRegistry.set(contact.id, contact);
         });
         this.uncontracted = false;
-        this.render();
       });
     } catch (error) {
-      runInAction('Loading error', () => {
+      runInAction(() => {
         this.uncontracted = false;
       });
       console.log(error);
     }
   };
 
-  @action addContact = async (contact: IContact) => {
-    this.submitting = true;
+  addContact = async (contact: IContact) => {
+    this.submittingData(true);
     var date = new Date(Date.now());
     contact.dateAdded = date;
     try {
       await agent.Contacts.add(contact);
-      runInAction('Loading contacts', () => {
+      runInAction(() => {
         this.contactRegistry.set(contact.id, contact);
         toast.success('Contact added');
         this.showContactForm = false;
-        this.submitting = false;
       });
+      this.submittingData(false);
       this.loadContacts();
     } catch (error) {
-      runInAction('Loading contacts', () => {
-        this.submitting = false;
-      });
+      this.submittingData(false);
       console.log(error);
     }
   };
 
-  @action editContact = async (contact: ContactFormValues) => {
-    this.submitting = true;
-
+  editContact = async (contact: ContactFormValues) => {
+    this.submittingData(true);
     if (this.contact == this.selectedContact) {
       try {
         await agent.Contacts.update(contact);
-        runInAction('Loading contacts', () => {
+        runInAction(() => {
           this.contactRegistry.set(contact.id, contact);
-          this.showContactForm = false;
-          this.submitting = false;
         });
-        this.render();
+        this.setShowContactForm(false);
+        this.submittingData(false);
       } catch (error) {
-        runInAction('Loading contacts', () => {
-          this.submitting = false;
-        });
+        this.submittingData(false);
         toast.error('Problem occured');
       }
     } else {
       toast.info('No changes');
       this.showContactForm = false;
-      this.submitting = false;
-      this.render();
+      this.submittingData(false);
     }
   };
 
-  @action removeContact = async (id: string) => {
-    this.submitting = true;
+  removeContact = async (id: string) => {
+    this.submittingData(true);
     try {
       await agent.Contacts.unshare(id);
-      runInAction('Removing contact', () => {
+      runInAction(() => {
         this.contactRegistry.delete(this.selectedContact!.id);
         this.selectedContact = undefined;
-        this.submitting = false;
       });
-      this.render();
+      this.submittingData(false);
     } catch (error) {
-      
-      toast.error(error.data.errors);
-      runInAction('Loading contacts', () => {
-        this.submitting = false;
-        this.render();
-      });
+      toast.error(error.data.errors.error);
+      this.submittingData(false);
       console.log(error);
     }
   };
 
-  @action premiumUpgrade = async (contact: IContact) => {
-    this.submitting = true;
+  premiumUpgrade = async (contact: IContact) => {
+    this.submittingData(true);
     try {
       await agent.Contacts.upgradeToPremium(contact);
-
-      runInAction('Upgrading contact to premium', () => {
+      runInAction(() => {
         contact.premium =
-          String(contact.premium) == 'True' || contact.premium ? false : true;
-
-        this.selectedContact!.premium = contact.premium;
-        this.contactRegistry.set(contact.id, contact);
-        this.submitting = false;
+          String(contact.premium) == 'True' || contact.premium == true;
+        this.selectedContact!.premium = !contact.premium;
       });
+      this.submittingData(false);
+      await this.loadContacts();
+
       if (contact.premium)
         toast.success(`${contact.name} is now premium member.`);
       else toast.info(`${contact.name} is not premium member anymore.`);
-
-      this.loadContacts();
     } catch (error) {
-      runInAction('Loading contacts', () => {
-        this.submitting = false;
-      });
+      this.submittingData(false);
       console.log(error);
       toast.error('The upgrade failed');
     }
   };
 
-  @action shareContact = async (contactId: string, user: IUserFormValues) => {
-    this.submitting = true;
+  shareContact = async (contactId: string, user: IUserFormValues) => {
+    this.submittingData(true);
     // await agent.Contacts.share(taskId, user);
     toast.success(
       'Shared ' + this.selectedContact?.type + ' with ' + user.username
     );
     try {
-      runInAction('Loading delegatedContacts', () => {
+      runInAction(() => {
         this.selectedContact = undefined;
         this.shareContactForm = false;
-        this.submitting = false;
       });
+      this.submittingData(false);
     } catch (error) {
+      this.submittingData(false);
       console.log(error);
     }
     this.setContactList('myContacts');
   };
 
-  @action startSaleProcess = async () => {
+  startSaleProcess = async () => {
+    this.submittingData(true);
     let lead = new LeadFormValues();
     lead.contact = this.selectedContact!;
     lead.contact.source = 'Former Client';
     lead.order!.clientId = lead.contact.id;
     lead.order!.id = uuid();
     await this.rootStore.leadStore.addLead(lead);
+    this.submittingData(false);
     this.loadContacts();
   };
 
-  @action getContact = async (name: string) => {
+  getContact = async (name: string) => {
     if (name) {
       try {
         let contact = new ContactFormValues();
@@ -444,11 +461,11 @@ export default class ContactStore {
           this.selectedContact = new ContactFormValues(contact);
           // this.rootStore.orderStore.selectedClient = contact.name;
         });
-        // this.render();
+        //
       } catch (error) {
         console.log(error);
       }
     }
   };
-  //////////////////////////////////////////////////
+  //----------------------------------------
 }

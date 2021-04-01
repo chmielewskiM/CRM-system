@@ -1,21 +1,13 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Menu, Container, Image, Dropdown, Button } from 'semantic-ui-react';
 import { NavLink } from 'react-router-dom';
-import { RootStoreContext } from '../../app/stores/rootStore';
+import { useStores } from '../../app/stores/rootStore';
 import { observer } from 'mobx-react-lite';
 
 export const Navbar: React.FC = () => {
-  const rootStore = useContext(RootStoreContext);
-  const { user, logout, topAccess } = rootStore.userStore;
-  const {
-    toggledNav,
-    toggleIcon,
-    toggleNav,
-    closeMobileNav,
-  } = rootStore.commonStore;
-  const { addLeadForm, rr } = rootStore.leadStore;
+  const { commonStore, userStore } = useStores();
 
-  useEffect(() => {}, [user]);
+  useEffect(() => {}, [userStore.user]);
 
   return (
     <Menu
@@ -23,14 +15,14 @@ export const Navbar: React.FC = () => {
       pointing
       secondary
       vertical
-      className={`${toggleIcon} sidebar`}
+      className={`${commonStore.toggleIcon} sidebar`}
     >
       <Container>
         <Button
-          onClick={toggleNav}
-          toggle={toggledNav}
-          icon={toggleIcon.split(' ')[0]}
-          className={`${toggleIcon.split(' ')[1]} toggle-sidebar`}
+          onClick={commonStore.toggleNav}
+          toggle={commonStore.toggledNav}
+          icon={commonStore.toggleIcon.split(' ')[0]}
+          className={`${commonStore.toggleIcon.split(' ')[1]} toggle-sidebar`}
         />
         <Menu.Item header className="sidebar-header">
           <Image fluid centered src="/assets/logo.png" alt="logo" />
@@ -42,7 +34,7 @@ export const Navbar: React.FC = () => {
           name="Dashboard"
           as={NavLink}
           to="/dashboard"
-          onClick={closeMobileNav}
+          onClick={commonStore.closeMobileNav}
         />
         <Menu.Item
           icon="address book"
@@ -50,13 +42,13 @@ export const Navbar: React.FC = () => {
           name="Contacts"
           as={NavLink}
           to="/contacts"
-          onClick={()=>closeMobileNav()}
+          onClick={() => commonStore.closeMobileNav()}
         />
         <Menu.Item
           icon="street view"
           className="link"
           name="Leads"
-          onClick={closeMobileNav}
+          onClick={commonStore.closeMobileNav}
           as={NavLink}
           to="/leads"
         />
@@ -64,7 +56,7 @@ export const Navbar: React.FC = () => {
           icon="tasks"
           className="link"
           name="Tasks"
-          onClick={closeMobileNav}
+          onClick={commonStore.closeMobileNav}
           as={NavLink}
           to="/tasks"
         />
@@ -72,29 +64,32 @@ export const Navbar: React.FC = () => {
           icon="paste"
           className="link"
           name="Orders"
-          onClick={closeMobileNav}
+          onClick={commonStore.closeMobileNav}
           as={NavLink}
           to="/orders"
         />
-        {topAccess && (
+        {userStore.topAccess && (
           <Menu.Item
             icon="cog"
             className="link admin"
             name="Admin Panel"
-            onClick={closeMobileNav}
+            onClick={commonStore.closeMobileNav}
             as={NavLink}
             to="/panel"
           />
         )}
         <Menu.Item>
-          <Dropdown size="big" text={`Logged as ${user?.displayName}`}>
+          <Dropdown
+            size="big"
+            text={`Logged as ${userStore.user?.displayName}`}
+          >
             <Dropdown.Menu>
               <Dropdown.Item
                 className="logout"
                 icon="power"
                 label="Log out"
                 size="big"
-                onClick={logout}
+                onClick={userStore.logout}
               />
             </Dropdown.Menu>
           </Dropdown>

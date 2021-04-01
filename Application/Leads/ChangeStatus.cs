@@ -67,7 +67,6 @@ namespace Application.Leads
 
                 //get index of the current lead's status
                 int index = Array.FindIndex(statuses, x => x == contact.Status);
-
                 //downgrade lead's status
                 if (!request.Upgrade)
                 {
@@ -140,6 +139,7 @@ namespace Application.Leads
                     OperationId = newOperation.Id,
                     Contact = contact,
                     ContactId = contact.Id,
+                    OrderId = lastProcess.OrderId ?? null,
                     Index = lastProcess.Index + 1
                 };
 
@@ -154,7 +154,7 @@ namespace Application.Leads
                 Order order = contact.Orders.OrderByDescending(x => x.DateOrderOpened).FirstOrDefault();
 
                 if (!order.Closed)
-                    throw new RestException(HttpStatusCode.Forbidden, "Please close the order before performing the conversion." );
+                    throw new RestException(HttpStatusCode.Forbidden, "Please close the order before performing the conversion.");
 
                 newOperation.Conversion = 1;
                 newOperation.Revenue = order.Price;

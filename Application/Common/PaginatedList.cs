@@ -39,6 +39,7 @@ namespace Application.Common
         {
             var count = source.Count();
             var items = source.Skip((pageIndex - 1) * pageSize).Take(pageSize);
+
             return new PaginatedList<T>(items, count, pageIndex, pageSize);
         }
     }

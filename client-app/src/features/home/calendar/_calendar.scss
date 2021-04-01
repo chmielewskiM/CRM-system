@@ -5,6 +5,7 @@
 
         & .calendar-column {
             min-height: 40rem;
+            max-height: 60rem;
 
             @include breakpoint(tablet_landscape) {
                 max-height: 50rem;
@@ -120,6 +121,12 @@
                                 }
 
                             }
+                        }
+                    }
+
+                    & .rbc-time-view{
+                        & .rbc-timeslot-group{
+                            color:#fff;
                         }
                     }
 

@@ -309,6 +309,7 @@ namespace Persistence.Migrations
                 {
                     ContactId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OperationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OrderId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Index = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

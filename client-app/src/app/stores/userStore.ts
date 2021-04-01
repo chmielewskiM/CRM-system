@@ -1,4 +1,12 @@
-import { observable, computed, action, runInAction, reaction } from 'mobx';
+import {
+  observable,
+  computed,
+  action,
+  runInAction,
+  reaction,
+  makeObservable,
+  autorun,
+} from 'mobx';
 import { IUser, IUserFormValues, UserFormValues, User } from '../models/user';
 import agent from '../api/agent';
 import { RootStore } from './rootStore';
@@ -12,6 +20,24 @@ export default class UserStore {
   rootStore: RootStore;
 
   constructor(rootStore: RootStore) {
+    makeObservable(this, {
+      user: observable,
+      topAccess: observable,
+      midAccess: observable,
+      lowAccess: observable,
+      checked: observable,
+      userList: observable,
+      selectedUser: observable,
+      isLoggedIn: computed,
+      usersByName: computed,
+      getUserList: action,
+      login: action,
+      register: action,
+      getUser: action,
+      getLoggedUser: action,
+      logout: action,
+    });
+
     this.rootStore = rootStore;
     reaction(
       () => this.isLoggedIn,
@@ -24,42 +50,31 @@ export default class UserStore {
           else if (user.level == 'mid') this.midAccess = true;
           else this.lowAccess = true;
         });
-        this.render();
       }
     );
+    autorun(() => this.getLoggedUser());
   }
 
-  //Observables
-  @observable fieldContent = '';
+  /////////////////////////////////////
+  //collections
+  userList = new Map();
+  //instances
+  selectedUser: IUserFormValues = new UserFormValues();
+  user: IUser | null = null;
+  //controls
+  topAccess: boolean = false;
+  midAccess: boolean = false;
+  lowAccess: boolean = false;
+  checked: boolean = false;
+  //----------------------------------------------------
 
-  @observable fields = document.getElementsByClassName('field');
-
-  @observable user: IUser | null = null;
-
-  @observable topAccess: boolean = false;
-  @observable midAccess: boolean = false;
-  @observable lowAccess: boolean = false;
-
-  @observable checked: boolean = false;
-
-  @observable userList = new Map();
-
-  @observable selectedUser: IUserFormValues = new UserFormValues();
-
-  @observable e: any = [];
-
-  @observable rr = false;
-
-  @observable c = document.getElementById('form');
-
-  @observable inputValue = '';
-
-  //Computeds
-  @computed get isLoggedIn() {
+  ////
+  // *Computeds*
+  get isLoggedIn() {
     return !!this.user;
   }
 
-  @computed get usersByName() {
+  get usersByName() {
     let User;
     let Users: Array<Object> = [];
     let list = Array.from(this.userList.values());
@@ -74,13 +89,11 @@ export default class UserStore {
 
     return Users;
   }
+  //----------------------------------------------------
 
-  //Actions
-  @action render() {
-    this.rr = !this.rr;
-  }
-
-  @action getUserList = async (removeLoggedUser?: boolean) => {
+  ////
+  // *Actions*
+  getUserList = async (removeLoggedUser?: boolean) => {
     try {
       const us = await agent.Users.list();
       runInAction(() => {
@@ -91,14 +104,13 @@ export default class UserStore {
           )
             this.userList.set(element.id, element);
         });
-        this.render();
       });
     } catch (error) {
       console.log(error);
     }
   };
 
-  @action login = async (values: IUserFormValues) => {
+  login = async (values: IUserFormValues) => {
     try {
       const user = await agent.Users.login(values);
       runInAction(() => {
@@ -108,11 +120,10 @@ export default class UserStore {
       history.push('/dashboard');
     } catch (error) {
       toast.error('Invalid username or password. Try again.');
-      this.rootStore.contactStore.render();
     }
   };
 
-  @action register = async (values: IUserFormValues) => {
+  register = async (values: IUserFormValues) => {
     try {
       const user = await agent.Users.register(values);
       this.rootStore.commonStore.setToken(user.token);
@@ -122,8 +133,8 @@ export default class UserStore {
     }
   };
 
-  @action getUser = async (username: string) => {
-    if (username) {
+  getUser = async (username: string) => {
+    if (username !== 'none') {
       try {
         const users = await agent.Users.get(username);
         const users2 = new UserFormValues(users);
@@ -131,14 +142,16 @@ export default class UserStore {
           this.selectedUser = users2;
           this.checked = true;
         });
-        this.render();
       } catch (error) {
         console.log(error);
       }
-    }
+    } else
+      runInAction(() => {
+        this.selectedUser = new UserFormValues();
+      });
   };
 
-  @action getLoggedUser = async () => {
+  getLoggedUser = async () => {
     try {
       const users = await agent.Users.logged();
       if (users) {
@@ -148,15 +161,17 @@ export default class UserStore {
           this.checked = true;
         });
       }
-      this.render();
     } catch (error) {
       console.log(error);
     }
   };
 
-  @action logout = () => {
+  logout = () => {
     this.rootStore.commonStore.setToken(null);
-    this.user = null;
+    runInAction(() => {
+      this.user = null;
+    });
     history.push('/');
   };
+  //----------------------------------------------------
 }

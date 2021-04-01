@@ -1,6 +1,11 @@
-import React, { useContext } from 'react';
-import { RouteProps, RouteComponentProps, Redirect, Route } from 'react-router-dom';
-import { RootStoreContext } from '../stores/rootStore';
+import React from 'react';
+import {
+  RouteProps,
+  RouteComponentProps,
+  Redirect,
+  Route,
+} from 'react-router-dom';
+import { useStores } from '../stores/rootStore';
 import { observer } from 'mobx-react-lite';
 
 interface IProps extends RouteProps {
@@ -8,12 +13,14 @@ interface IProps extends RouteProps {
 }
 
 const PrivateRoute: React.FC<IProps> = ({ component: Component, ...rest }) => {
-  const rootStore = useContext(RootStoreContext);
-  const { user } = rootStore.userStore;
+  const { userStore } = useStores();
+
   return (
     <Route
       {...rest}
-      render={(props) => (user ? <Component {...props} /> : <Redirect to={'/'} />)}
+      render={(props) =>
+        userStore.user ? <Component {...props} /> : <Redirect to={'/'} />
+      }
     />
   );
 };

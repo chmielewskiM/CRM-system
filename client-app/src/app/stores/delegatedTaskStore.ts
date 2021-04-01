@@ -5,99 +5,129 @@ import {
   configure,
   runInAction,
   reaction,
+  makeObservable,
+  autorun,
 } from 'mobx';
 import { toast } from 'react-toastify';
 import {
   IDelegatedTask,
   DelegatedTaskFormValues,
-  ICompleteTaskData,
 } from '../models/delegatedTask';
 import agent from '../api/agent';
 import { RootStore } from './rootStore';
-import { IUser, User, IUserFormValues } from '../models/user';
+import { IUser, IUserFormValues } from '../models/user';
 import { combineDateAndTime } from '../common/util/util';
 import { v4 as uuid } from 'uuid';
 
 configure({ enforceActions: 'always' });
 
+const PAGE_SIZE = 10;
+const PENDING_PAGE_SIZE = 5;
+
 export default class DelegatedTaskStore {
   rootStore: RootStore;
 
   constructor(rootStore: RootStore) {
+    makeObservable(this, {
+      activePage: observable,
+      users: observable,
+      selectedTask: observable,
+      loadingInitial: observable,
+      showTaskForm: observable,
+      showShareTaskForm: observable,
+      submitting: observable,
+      activeTaskRegistry: observable,
+      pendingTaskRegistry: observable,
+      myTasks: observable,
+      sharedTasks: observable,
+      acceptedTasks: observable,
+      refusedTasks: observable,
+      doneTasks: observable,
+      tasksCount: observable,
+      pendingTasksCount: observable,
+      pendingTasksNotifier: observable,
+      formDateValidation: observable,
+      axiosParams: computed,
+      activeTasksByDate: computed,
+      pendingTasksByDate: computed,
+      calendarEvents: computed,
+      loadingData: action,
+      displayPendingTaskNotifier: action,
+      setShowTaskForm: action,
+      setShowShareTaskForm: action,
+      setPagination: action,
+    });
     this.rootStore = rootStore;
+
     reaction(
-      () => this.showDelegatedTaskForm,
+      () => this.axiosParams,
       () => {
-        this.setTaskList('myTasks');
+        this.loadTasks();
       }
     );
+    autorun(() => this.loadTasks());
+    autorun(() => this.loadPendingTasks());
   }
 
-  @observable delegatedTasks: IDelegatedTask[] = [];
-
-  @observable users: IUser[] = [];
-
-  @observable selectedTask: IDelegatedTask | undefined;
-
-  @observable loadingInitial = false;
-
-  @observable showDelegatedTaskForm = false;
-
-  @observable showShareTaskForm = false;
-
-  @observable width = window.outerWidth;
-
-  @observable submitting = false;
-
-  @observable activeTaskRegistry = new Map();
-  @observable pendingTaskRegistry = new Map();
-  @observable.struct windowDimensions = {
-    width: window.innerWidth,
-  };
-  @observable selectedValue = '';
-
-  @observable usersRegistry = new Map();
-
-  @observable rr = false;
-
-  @observable displayDimmer: boolean = false;
-
+  /////////////////////////////////////
+  // collections
+  delegatedTasks: IDelegatedTask[] = [];
+  users: IUser[] = [];
+  activeTaskRegistry = new Map();
+  pendingTaskRegistry = new Map();
+  usersRegistry = new Map();
+  // forms and modals
+  formDateValidation = new Date();
+  selectedValue = '';
+  showTaskForm = false;
+  showShareTaskForm = false;
   // controls
-  @observable myTasks: boolean = true;
-  @observable acceptedTasks: boolean = false;
-  @observable refusedTasks: boolean = false;
-  @observable pendingTasks: boolean = false;
-  @observable doneTasks: boolean = false;
-  @observable pendingTasksCount: number = 0;
-  @observable pendingTasksNotifier: boolean = false;
-  @observable formDateValidation = new Date();
+  loadingInitial = false;
+  submitting = false;
+  selectedTask: IDelegatedTask | undefined;
+  displayDimmer: boolean = false;
+  pendingTasksCount: number = 0;
+  pendingTasksNotifier: boolean = false;
+  // pagination
+  activePage = 0;
+  pendingActivePage = 0;
+  tasksCount = 0;
+  // list parameters
+  myTasks: boolean = true;
+  sharedTasks: boolean = false;
+  acceptedTasks: boolean = false;
+  refusedTasks: boolean = false;
+  pendingTasks: boolean = false;
+  doneTasks: boolean = false;
+  /////////////////////////////////////
 
-  @action render() {
-    this.rr = !this.rr;
-  }
   ////
-  //Computeds
-  ////
-  @computed get axiosParams() {
+  // *Computeds*
+  //
+  get axiosParams() {
     const params = new URLSearchParams();
     params.append('myTasks', `${this.myTasks}`);
+    params.append('sharedTasks', `${this.sharedTasks}`);
     params.append('accepted', `${this.acceptedTasks}`);
     params.append('refused', `${this.refusedTasks}`);
-    params.append('pending', `${this.pendingTasks}`);
     params.append('done', `${this.doneTasks}`);
+    params.append('activePage', `${this.activePage}`);
+    params.append('pageSize', `${PAGE_SIZE}`);
     return params;
   }
-  @computed get activeTasksByDate() {
+
+  get activeTasksByDate() {
     let list = Array.from(this.activeTaskRegistry.values());
     return list;
   }
-  @computed get pendingTasksByDate() {
+
+  get pendingTasksByDate() {
     let list: IDelegatedTask[] = Array.from(this.pendingTaskRegistry.values());
     return list;
   }
 
-  @computed get calendarEvents() {
-    let tasks = this.activeTasksByDate;
+  get calendarEvents() {
+    let tasks = Array.from(this.activeTaskRegistry.values());
     let events: {
       start: Date;
       deadline: Date;
@@ -121,163 +151,155 @@ export default class DelegatedTaskStore {
     });
     return events;
   }
+  //----------------------------------------
 
-  @action displayPendingTaskNotifier = () => {
-    this.pendingTasksNotifier = !this.pendingTasksNotifier;
-    this.render();
+  ////
+  // *Actions*
+  //
+  displayPendingTaskNotifier = () => {
+    runInAction(() => {
+      this.pendingTasksNotifier = !this.pendingTasksNotifier;
+    });
   };
 
-  @action setTaskList = async (value: string, ev?: HTMLElement) => {
-    if (ev?.parentElement) {
-      for (var child of ev?.parentElement!.children)
-        child.classList.remove('active');
-      ev?.classList.add('active');
-    }
-    switch (value) {
-      case 'myTasks':
-        this.myTasks = true;
-        this.acceptedTasks = false;
-        this.refusedTasks = false;
-        this.pendingTasks = false;
-        this.doneTasks = false;
-        break;
-      case 'allSharedTasks':
-        this.myTasks = false;
-        this.acceptedTasks = false;
-        this.refusedTasks = false;
-        this.pendingTasks = false;
-        this.doneTasks = false;
-        break;
-      case 'acceptedTasks':
-        this.myTasks = false;
-        this.acceptedTasks = true;
-        this.refusedTasks = false;
-        this.pendingTasks = false;
-        this.doneTasks = false;
-        break;
-      case 'refusedTasks':
-        this.myTasks = false;
-        this.acceptedTasks = false;
-        this.refusedTasks = true;
-        this.pendingTasks = false;
-        this.doneTasks = false;
-        break;
-      case 'pendingTasks':
-        this.acceptedTasks = false;
-        this.refusedTasks = false;
-        this.pendingTasks = true;
-        this.doneTasks = false;
-        break;
-      case 'doneTasks':
-        this.myTasks = false;
-        this.acceptedTasks = false;
-        this.refusedTasks = false;
-        this.pendingTasks = false;
-        this.doneTasks = true;
-        break;
-    }
-    this.loadTasks();
-  };
+  setTaskList = async (value: string, ev?: HTMLElement) => {
+    this.selectTask('');
+    runInAction(() => {
+      if (ev?.parentElement) {
+        for (var child of ev?.parentElement!.children)
+          child.classList.remove('active');
+        ev?.classList.add('active');
+      }
 
-  @action loadTasks = async () => {
-    this.loadingInitial = true;
-    try {
-      const completeData = await agent.DelegatedTasks.list(this.axiosParams);
-      runInAction('Loading Tasks', () => {
-        this.width = window.innerWidth;
-        this.pendingTasksCount = completeData.pendingTasksCount;
-        if (this.pendingTasks) {
-          let i = 0;
-          this.pendingTaskRegistry.clear();
-          completeData.tasks.forEach((task) => {
-            this.pendingTaskRegistry.set(task.id, task);
-            if (task.pending) i++;
-          });
-          this.pendingTasksCount = i;
-        } else {
-          this.activeTaskRegistry.clear();
-          completeData.tasks.forEach((task) => {
-            this.activeTaskRegistry.set(task.id, task);
-          });
+      if (
+        value === 'myTasks' ||
+        value === 'sharedByUser' ||
+        value === 'sharedWithUser' ||
+        value === 'all'
+      ) {
+        //reset sub categories when main category changes
+        let allBtn = document.getElementsByClassName('all-btn').item(0);
+
+        if (allBtn) {
+          for (var child of allBtn.parentElement!.children)
+            child.classList.remove('active');
+          allBtn?.classList.add('active');
         }
-        this.loadingInitial = false;
-        this.render();
-      });
-    } catch (error) {
-      runInAction('Loading error', () => {
-        this.loadingInitial = false;
-      });
-      console.log(error);
-    }
+      }
+
+      this.acceptedTasks = false;
+      this.refusedTasks = false;
+      this.doneTasks = false;
+      if (value != 'pendingTasks') this.activePage = 0;
+
+      switch (value) {
+        case 'myTasks':
+          this.myTasks = true;
+          this.sharedTasks = false;
+          break;
+        case 'sharedByUser':
+          this.myTasks = true;
+          this.sharedTasks = true;
+          break;
+        case 'sharedWithUser':
+          this.myTasks = false;
+          this.sharedTasks = true;
+          break;
+        case 'acceptedTasks':
+          this.acceptedTasks = true;
+          break;
+        case 'refusedTasks':
+          this.refusedTasks = true;
+          break;
+        case 'pendingTasks':
+          break;
+        case 'doneTasks':
+          this.doneTasks = true;
+          break;
+      }
+    });
   };
 
-  @action loadUsers = async () => {
-    this.loadingInitial = true;
+  setPagination = async (modifier: number) => {
+    runInAction(() => {
+      this.activePage += modifier;
+    });
+  };
+
+  // Loading and submitting actions. According to MobX documentation it's recommended to
+  // modify observables only by actions
+  loadingData = (value: boolean) => {
+    runInAction(() => {
+      this.loadingInitial = value;
+    });
+  };
+  submittingData = (value: boolean) => {
+    runInAction(() => {
+      this.submitting = value;
+    });
+  };
+
+  loadUsers = async () => {
+    this.loadingData(true);
     try {
       const users = await agent.Users.list();
-      runInAction('Loading Tasks', () => {
+      runInAction(() => {
         users.forEach((user) => {
           this.usersRegistry.set(user.id, user);
         });
-        this.loadingInitial = false;
-        this.render();
       });
+      this.loadingData(false);
     } catch (error) {
-      runInAction('Loading error', () => {
-        this.loadingInitial = false;
-      });
+      this.loadingData(false);
       console.log(error);
     }
   };
 
-  @action selectTask = (id: string) => {
+  selectTask = (id: string) => {
     if (id !== '' && this.activeTaskRegistry.has(id))
       this.selectedTask = this.activeTaskRegistry.get(id);
     else if (id !== '' && this.pendingTaskRegistry.has(id))
       this.selectedTask = this.pendingTaskRegistry.get(id);
     else this.selectedTask = undefined;
-    this.render();
   };
+  //----------------------------------------
 
-  @action addDelegatedTaskForm = () => {
-    this.loadingInitial = true;
+  // *Forms*
+  addTaskForm = () => {
+    this.loadingData(true);
     this.selectedTask = undefined;
     this.selectedValue = '';
-    this.showDelegatedTaskForm = true;
-    this.loadingInitial = false;
-    this.submitting = false;
-    this.render();
+    this.showTaskForm = true;
+    this.loadingData(false);
+    this.submittingData(false);
   };
 
-  @action editTaskForm = (id: string) => {
-    this.loadingInitial = true;
+  editTaskForm = (id: string) => {
+    this.loadingData(true);
     this.selectedTask = this.activeTaskRegistry.get(id);
-    this.showDelegatedTaskForm = true;
-    this.loadingInitial = false;
-    this.render();
+    this.showTaskForm = true;
+    this.loadingData(false);
   };
 
-  @action setShowDelegatedTaskForm = (show: boolean) => {
-    this.showDelegatedTaskForm = show;
-    this.render();
+  setShowTaskForm = (show: boolean) => {
+    this.showTaskForm = show;
   };
-  @action setShowShareTaskForm = (show: boolean, task?: IDelegatedTask) => {
+  setShowShareTaskForm = (show: boolean, task?: IDelegatedTask) => {
     this.selectedTask = task;
     this.showShareTaskForm = show;
-    this.render();
   };
 
-  @action fillForm = () => {
-    this.loadingInitial = true;
+  fillForm = () => {
+    this.loadingData(true);
     if (this.selectedTask) {
       var selected = this.selectedTask;
       var task = new DelegatedTaskFormValues(selected);
       task.date = new Date(selected.deadline);
       task.time = new Date(selected.deadline);
-      this.loadingInitial = false;
+      this.loadingData(false);
       return task;
     }
-    this.loadingInitial = false;
+    this.loadingData(false);
     return new DelegatedTaskFormValues();
   };
 
@@ -285,7 +307,7 @@ export default class DelegatedTaskStore {
     const deadline = combineDateAndTime(values.date, values.time);
     const { date, time, ...delegatedTask } = values;
     delegatedTask.deadline = deadline;
-    runInAction('Loading delegatedTasks', () => {
+    runInAction(() => {
       this.formDateValidation = deadline;
     });
     if (!delegatedTask.id) {
@@ -293,129 +315,169 @@ export default class DelegatedTaskStore {
         ...delegatedTask,
         id: uuid(),
       };
-      this.addDelegatedTask(newTask);
+      this.addTask(newTask);
     } else {
       this.editTask(delegatedTask);
     }
   };
+  //----------------------------------------
 
-  @action addDelegatedTask = async (delegatedTask: IDelegatedTask) => {
-    this.submitting = true;
+  // *CRUD task actions*
+  loadTasks = async () => {
+    this.loadingData(true);
+    try {
+      const completeData = await agent.DelegatedTasks.listTasks(
+        this.axiosParams
+      );
+      runInAction(() => {
+        this.tasksCount = completeData.tasksCount;
+        this.activeTaskRegistry.clear();
+        completeData.tasks.forEach((task) => {
+          this.activeTaskRegistry.set(task.id, task);
+        });
+      });
+      this.loadingData(false);
+    } catch (error) {
+      this.loadingData(false);
+      console.log(error);
+    }
+  };
+
+  loadPendingTasks = async () => {
+    this.loadingData(true);
+    try {
+      const completeData = await agent.DelegatedTasks.listPendingTasks(
+        this.pendingActivePage,
+        PENDING_PAGE_SIZE
+      );
+      runInAction(() => {
+        this.pendingTasksCount = completeData.tasksCount;
+        this.pendingTaskRegistry.clear();
+        completeData.tasks.forEach((task) => {
+          this.pendingTaskRegistry.set(task.id, task);
+        });
+      });
+      this.loadingData(false);
+    } catch (error) {
+      this.loadingData(false);
+      console.log(error);
+    }
+  };
+
+  addTask = async (delegatedTask: IDelegatedTask) => {
+    this.submittingData(true);
     delegatedTask.finishedBy = this.rootStore.userStore.user!.displayName;
     try {
       await agent.DelegatedTasks.add(delegatedTask);
-      runInAction('Loading delegatedTasks', () => {
+      runInAction(() => {
         this.activeTaskRegistry.set(delegatedTask.id, delegatedTask);
         toast.success('DelegatedTask added');
-        this.showDelegatedTaskForm = false;
-        this.submitting = false;
+        this.showTaskForm = false;
       });
-      this.render();
+      this.submittingData(false);
+      await this.loadTasks();
     } catch (error) {
-      runInAction('Loading delegatedTasks', () => {
-        this.submitting = false;
-      });
+      this.submittingData(false);
       toast.error('Problem occured');
       console.log(error.response);
     }
   };
 
-  @action editTask = async (delegatedTask: IDelegatedTask) => {
-    this.submitting = true;
+  editTask = async (delegatedTask: IDelegatedTask) => {
+    this.submittingData(true);
     if (this.selectedTask) {
       try {
         await agent.DelegatedTasks.update(delegatedTask);
-        runInAction('Loading delegatedTasks', () => {
+        runInAction(() => {
           this.activeTaskRegistry.set(delegatedTask.id, delegatedTask);
-          this.showDelegatedTaskForm = false;
-          this.submitting = false;
+          this.showTaskForm = false;
+
           this.selectedTask = undefined;
         });
+        this.submittingData(false);
       } catch (error) {
         toast.error('Problem occured');
         console.log(error);
       }
-
-      this.render();
     } else {
-      this.showDelegatedTaskForm = false;
-      this.submitting = false;
+      this.showTaskForm = false;
+      this.submittingData(false);
     }
   };
 
-  @action deleteTask = async (id: string) => {
-    this.submitting = true;
+  deleteTask = async (id: string) => {
+    this.submittingData(true);
     try {
       await agent.DelegatedTasks.delete(id);
-      runInAction('Loading delegatedTasks', () => {
+      runInAction(() => {
         this.activeTaskRegistry.delete(this.selectedTask!.id);
         this.selectedTask = undefined;
-        this.submitting = false;
-        this.render();
       });
+      this.submittingData(false);
     } catch (error) {
-      runInAction('Loading delegatedTasks', () => {
-        this.submitting = false;
-      });
+      this.submittingData(false);
       console.log(error);
     }
   };
 
-  @action shareTask = async (taskId: string, user: IUserFormValues) => {
-    this.submitting = true;
+  acceptTask = async (task: IDelegatedTask) => {
+    this.submittingData(true);
+    try {
+      await agent.DelegatedTasks.accept(task);
+      this.submittingData(false);
+    } catch (error) {
+      this.submittingData(false);
+      console.log(error);
+    }
+    toast.success(`Accepted task from ${task.access.createdBy}`);
+    await this.loadPendingTasks();
+    await this.loadTasks();
+  };
+
+  refuseTask = async (task: IDelegatedTask) => {
+    this.submittingData(true);
+    try {
+      await agent.DelegatedTasks.refuse(task);
+      this.submittingData(false);
+    } catch (error) {
+      this.submittingData(false);
+      console.log(error);
+    }
+    toast.success(`Refused task from ${task.access.createdBy}`);
+    await this.loadPendingTasks().then(this.loadTasks);
+  };
+
+  finishTask = async (task: IDelegatedTask) => {
+    this.submittingData(true);
+    try {
+      await agent.DelegatedTasks.finish(task);
+      this.submittingData(false);
+      this.selectTask('');
+    } catch (error) {
+      this.submittingData(false);
+      console.log(error);
+    }
+    toast.success(`Finished task`);
+    await this.loadTasks();
+  };
+
+  shareTask = async (taskId: string, user: IUserFormValues) => {
+    this.submittingData(true);
     await agent.DelegatedTasks.share(taskId, user);
     toast.success(
       'Shared ' + this.selectedTask?.type + ' with ' + user.username
     );
     try {
-      runInAction('Loading delegatedTasks', () => {
+      runInAction(() => {
         this.selectedTask = undefined;
         this.showShareTaskForm = false;
-        this.submitting = false;
       });
+      this.submittingData(false);
     } catch (error) {
+      this.submittingData(false);
       console.log(error);
     }
-    this.setTaskList('myTasks');
+    await this.loadTasks();
   };
-
-  @action acceptTask = async (task: IDelegatedTask) => {
-    this.submitting = true;
-    try {
-      await agent.DelegatedTasks.accept(task);
-      runInAction('Accepting task', () => {
-        this.submitting = false;
-      });
-    } catch (error) {
-      console.log(error);
-    }
-    toast.success(`Accepted task from ${task.access.createdBy}`);
-    this.setTaskList('myTasks');
-  };
-  @action refuseTask = async (task: IDelegatedTask) => {
-    this.submitting = true;
-    try {
-      await agent.DelegatedTasks.refuse(task);
-      runInAction('Refusing task', () => {
-        this.submitting = false;
-      });
-    } catch (error) {
-      console.log(error);
-    }
-    toast.success(`Refused task from ${task.access.createdBy}`);
-    this.setTaskList('myTasks');
-  };
-  @action finishTask = async (task: IDelegatedTask) => {
-    this.submitting = true;
-    try {
-      await agent.DelegatedTasks.finish(task);
-      runInAction('Closing task', () => {
-        this.submitting = false;
-      });
-    } catch (error) {
-      console.log(error);
-    }
-    toast.success(`Finished task`);
-    this.setTaskList('myTasks');
-  };
+  //----------------------------------------
 }

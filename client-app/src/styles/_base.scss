@@ -48,6 +48,10 @@ body {
         scrollbar-width: none;
         display: none;
     }
+    & *  {
+        scrollbar-width: none;
+        // display: none;
+    }
 }
 
 #root {

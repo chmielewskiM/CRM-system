@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Segment, Button, Modal } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import { Form as FinalForm, Field } from 'react-final-form';
@@ -8,7 +8,8 @@ import TextAreaInput from '../../../app/common/form/TextAreaInput';
 import SelectInput from '../../../app/common/form/SelectInput';
 import { options } from '../../../app/common/options/contactType';
 import { combineValidators, isRequired } from 'revalidate';
-import { RootStoreContext } from '../../../app/stores/rootStore';
+import { useStores } from '../../../app/stores/rootStore';
+import LoaderComponent from '../../../app/layout/LoaderComponent';
 
 const validation = combineValidators({
   name: isRequired({ message: 'The name is required.' }),
@@ -24,15 +25,7 @@ interface IProps {
 }
 
 export const ContactForm: React.FC<IProps> = () => {
-  const rootStore = useContext(RootStoreContext);
-  const {
-    setShowContactForm,
-    submitting,
-    addContact,
-    editContact,
-    fillForm,
-    handleFinalFormSubmit,
-  } = rootStore.contactStore;
+  const { contactStore } = useStores();
 
   useEffect(() => {}, []);
 
@@ -40,13 +33,14 @@ export const ContactForm: React.FC<IProps> = () => {
 
   return (
     <Segment clearing>
+      {contactStore.loadingInitial && <LoaderComponent content="Loading..." />}
       <Modal open>
         <Modal.Content>
           <Segment clearing size="big">
             <FinalForm
               validate={validation}
-              onSubmit={handleFinalFormSubmit}
-              initialValues={fillForm()}
+              onSubmit={contactStore.handleFinalFormSubmit}
+              initialValues={contactStore.fillForm()}
               render={({ handleSubmit }) => (
                 <Form onSubmit={handleSubmit} size="big">
                   <Field
@@ -93,7 +87,7 @@ export const ContactForm: React.FC<IProps> = () => {
                     type="button"
                     size="big"
                     content="Cancel"
-                    onClick={() => setShowContactForm(false)}
+                    onClick={() => contactStore.setShowContactForm(false)}
                   />
                   <Button
                     positive
@@ -101,7 +95,7 @@ export const ContactForm: React.FC<IProps> = () => {
                     type="submit"
                     size="big"
                     content="Confirm"
-                    loading={submitting}
+                    loading={contactStore.submitting}
                   />
                 </Form>
               )}

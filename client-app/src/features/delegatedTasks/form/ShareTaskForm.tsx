@@ -1,19 +1,10 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Form, Segment, Button, Modal, Header } from 'semantic-ui-react';
-import { v4 as uuid } from 'uuid';
 import { observer } from 'mobx-react-lite';
-import { Form as FinalForm, Field } from 'react-final-form';
-import {
-  IDelegatedTaskForm,
-  DelegatedTaskFormValues,
-} from '../../../app/models/delegatedTask';
-import TextAreaInput from '../../../app/common/form/TextAreaInput';
-import SelectInput from '../../../app/common/form/SelectInput';
-import { options } from '../../../app/common/options/delegatedTaskType';
-import DateInput from '../../../app/common/form/DateInput';
-import { combineDateAndTime } from '../../../app/common/util/util';
+import { Form as FinalForm } from 'react-final-form';
+import { IDelegatedTaskForm } from '../../../app/models/delegatedTask';
 import { combineValidators, isRequired } from 'revalidate';
-import { RootStoreContext } from '../../../app/stores/rootStore';
+import { useStores } from '../../../app/stores/rootStore';
 import LoaderComponent from '../../../app/layout/LoaderComponent';
 
 const validation = combineValidators({
@@ -27,28 +18,15 @@ interface IProps {
 }
 
 export const DelegatedTaskForm: React.FC<IProps> = () => {
-  const rootStore = useContext(RootStoreContext);
-  const {
-    loadingInitial,
-    submitting,
-    setShowShareTaskForm,
-    selectedTask,
-    shareTask,
-  } = rootStore.delegatedTaskStore;
+  const { delegatedTaskStore, userStore } = useStores();
 
-  const {
-    usersByName,
-    getUser,
-    user,
-    getUserList,
-    selectedUser,
-    rr,
-  } = rootStore.userStore;
+  useEffect(() => {}, [userStore.usersByName, userStore.selectedUser]);
 
-  useEffect(() => {}, [setShowShareTaskForm, rr]);
+  const handleFinalFormSubmit = (values: any) => {userStore.getUser('none')};
 
-  const handleFinalFormSubmit = (values: any) => {};
-  if (loadingInitial) return <LoaderComponent content="Loading..." />;
+  if (delegatedTaskStore.loadingInitial)
+    return <LoaderComponent content="Loading..." />;
+
   return (
     <Segment clearing>
       <Modal open>
@@ -65,29 +43,26 @@ export const DelegatedTaskForm: React.FC<IProps> = () => {
               render={({ handleSubmit }) => (
                 <Form onSubmit={handleSubmit} size="big">
                   <Form.Select
-                    options={usersByName}
+                    options={userStore.usersByName}
                     name="type"
                     placeholder="Select user"
-                    value={selectedUser.username}
+                    value={userStore.selectedUser.username}
                     onClick={() => {
-                      getUserList(true);
+                      userStore.getUserList(true);
                     }}
                     onChange={(e, data) => {
-                      getUser(data.value!.toString());
+                      userStore.getUser(data.value!.toString());
                     }}
                   />
-                </Form>
-              )}
-            />
-            <Button
+                  <Button
               negative
               floated="right"
               type="button"
               size="big"
               content="Cancel"
-              onClick={() => setShowShareTaskForm(false)}
-              loading={submitting}
-              disabled={submitting}
+              onClick={() => delegatedTaskStore.setShowShareTaskForm(false)}
+              loading={delegatedTaskStore.submitting}
+              disabled={delegatedTaskStore.submitting}
             />
             <Button
               positive
@@ -95,10 +70,19 @@ export const DelegatedTaskForm: React.FC<IProps> = () => {
               type="submit"
               size="big"
               content="Confirm"
-              onClick={() => shareTask(selectedTask!.id, selectedUser)}
-              loading={submitting}
-              disabled={submitting}
+              onClick={() =>
+                delegatedTaskStore.shareTask(
+                  delegatedTaskStore.selectedTask!.id,
+                  userStore.selectedUser
+                )
+              }
+              loading={delegatedTaskStore.submitting}
+              disabled={delegatedTaskStore.submitting}
             />
+                </Form>
+              )}
+            />
+            
           </Segment>
         </Modal.Content>
       </Modal>
