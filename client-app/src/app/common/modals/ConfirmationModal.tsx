@@ -30,7 +30,7 @@ export const ConfirmationModal: React.FC<IProps> = (props) => {
           onSubmit={() => undefined}
           render={({ handleSubmit }) => (
             <Form onSubmit={handleSubmit} size="big">
-              <div className="leadStore.save">
+              <div className="save">
                 <Label>Save the lead in your contacts</Label>
                 <div className="fields">
                   <Field

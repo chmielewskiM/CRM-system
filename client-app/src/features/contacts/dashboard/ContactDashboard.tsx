@@ -111,7 +111,7 @@ export const ContactDashboard: React.FC = () => {
       <Grid.Row className="row-content-2">
         <Grid.Column mobile={16} computer={9} largeScreen={7}>
           {contactStore.selectedContact !== undefined && (
-            <ContactDetails contact={contactStore.selectedContact} />
+            <ContactDetails/>
           )}
         </Grid.Column>
       </Grid.Row>

@@ -3,15 +3,11 @@ import { Header, Label, Segment, Button, Grid, Icon } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import LoaderComponent from '../../../app/layout/LoaderComponent';
 import { useStores } from '../../../app/stores/rootStore';
-import { MinorHeader } from '../../../app/common/headers/MinorHeader';
+import MinorHeader from '../../../app/common/headers/MinorHeader';
 import { destructureDate } from '../../../app/common/util/util';
 import { IContact } from '../../../app/models/contact';
 
-interface IProps {
-  contact: IContact;
-}
-
-export const ContactDetails: React.FC<IProps> = (props) => {
+export const ContactDetails: React.FC = () => {
   const { contactStore } = useStores();
 
   useEffect(() => {}, [contactStore.contactsTotal]);
@@ -20,9 +16,9 @@ export const ContactDetails: React.FC<IProps> = (props) => {
     <Fragment>
       <MinorHeader
         as="h1"
-        content={props.contact.name}
-        controls={true}
-        contact={props.contact}
+        content={contactStore.selectedContact!.name}
+        contactControls={true}
+        contact={contactStore.selectedContact!}
         function={() => contactStore.selectContact('')}
       />
       <Segment className="contact-details">
@@ -34,14 +30,16 @@ export const ContactDetails: React.FC<IProps> = (props) => {
             <div className="date">
               <Label as="a" ribbon>
                 Date added{' '}
-                {destructureDate(new Date(props.contact!.dateAdded!))}
+                {destructureDate(
+                  new Date(contactStore.selectedContact?.dateAdded!)
+                )}
               </Label>
             </div>
             <div className="phone">
-              {`Tel.No.: ${props.contact.phoneNumber}`}
+              {`Tel.No.: ${contactStore.selectedContact?.phoneNumber}`}
             </div>
 
-            <div className="email">{`E-mail: ${props.contact.email}`}</div>
+            <div className="email">{`E-mail: ${contactStore.selectedContact?.email}`}</div>
           </Grid.Column>
           <Grid.Column width={7} className="right">
             <div className="mark-premium">
@@ -70,14 +68,18 @@ export const ContactDetails: React.FC<IProps> = (props) => {
                 </Button>
               )}
             </div>
-            <div className="status">{`Status: ${props.contact.status}`}</div>
-            <div className="deals">{`Deals: ${props.contact.successfulDeals}`}</div>
+            <div className="status">{`Status: ${
+              contactStore.selectedContact!.status
+            }`}</div>
+            <div className="deals">{`Deals: ${
+              contactStore.selectedContact!.successfulDeals
+            }`}</div>
           </Grid.Column>
           <Grid.Row>
-            {props.contact!.notes != '' && (
+            {contactStore.selectedContact!.notes != '' && (
               <div className="notes">
                 <Header as="h3">Notes</Header>
-                <p>{props.contact!.notes}</p>
+                <p>{contactStore.selectedContact!.notes}</p>
               </div>
             )}
           </Grid.Row>

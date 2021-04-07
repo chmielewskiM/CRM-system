@@ -3,8 +3,10 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
+using Application.Interfaces;
 using Domain;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.Orders
@@ -21,10 +23,12 @@ namespace Application.Orders
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
+            private readonly IUserAccessor _userAccessor;
 
-            public Handler(DataContext context)
+            public Handler(DataContext context, IUserAccessor userAccessor)
             {
                 _context = context;
+                _userAccessor = userAccessor;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
@@ -39,6 +43,27 @@ namespace Application.Orders
                 order.Closed = true;
 
                 order.DateOrderClosed = DateTime.Now;
+
+
+
+                //add revenue (only sale orders)
+                if (order.Type)
+                {
+                    var newOperation = new Operations.Add();
+                    var user = await _context
+                    .Users
+                    .SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetLoggedUsername());
+
+                    if (user == null)
+                        throw new RestException(HttpStatusCode.NotFound, new
+                        {
+                            error = "Could not access user. Make sure you are logged in properly."
+                        });
+
+                    newOperation.Revenue = order.Price;
+
+                    await newOperation.addOperation(newOperation, _context, user);
+                }
 
                 var success = await _context.SaveChangesAsync() > 0;
 

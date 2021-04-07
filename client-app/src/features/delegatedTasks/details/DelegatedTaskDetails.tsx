@@ -5,6 +5,8 @@ import LoaderComponent from '../../../app/layout/LoaderComponent';
 import { useStores } from '../../../app/stores/rootStore';
 import MinorHeader from '../../../app/common/headers/MinorHeader';
 import { destructureDate } from '../../../app/common/util/util';
+import { IDelegatedTask } from '../../../app/models/delegatedTask';
+
 
 export const DelegatedTaskDetails: React.FC = () => {
   const { delegatedTaskStore } = useStores();
@@ -16,9 +18,10 @@ export const DelegatedTaskDetails: React.FC = () => {
       <MinorHeader
         as="h1"
         content={'Task details'}
-        // controls={true}
+        taskControls={true}
         function={() => delegatedTaskStore.selectTask('')}
         className="task-details-header"
+        task={delegatedTaskStore.selectedTask}
       />
       <Segment basic className="task-details">
         {delegatedTaskStore.loadingInitial && (

@@ -15,7 +15,6 @@ export const HomeDashboard: React.FC = () => {
   const { homeStore, delegatedTaskStore } = useStores();
 
   useEffect(() => {
-    delegatedTaskStore.loadTasks();
     if (homeStore.operationsRegistry.size == 0) homeStore.loadOperations();
   }, []);
 

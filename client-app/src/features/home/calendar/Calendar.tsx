@@ -9,7 +9,6 @@ import { useStores } from '../../../app/stores/rootStore';
 import CalendarModal from './CalendarModal';
 import LoaderComponent from '../../../app/layout/LoaderComponent';
 
-
 const locales = {
   'en-US': require('date-fns/locale/en-US'),
 };
@@ -72,13 +71,13 @@ interface IProps {
 export const MyCalendar: React.FC<IProps> = (props) => {
   const { modalStore, delegatedTaskStore } = useStores();
   useEffect(() => {
-    // rootStore.delegatedTaskStore.loadTasks()
+    delegatedTaskStore.loadTasks();
     modalStore.closeModal();
-    
-  }, [delegatedTaskStore.calendarEvents]);
+  }, []);
 
   const [event, setEvent] = useState(props.events[0]);
-
+  
+  console.log(props.events[0]);
   return (
     <Fragment>
       {props.loading && <LoaderComponent content="Loading..." />}
@@ -94,6 +93,7 @@ export const MyCalendar: React.FC<IProps> = (props) => {
           views={['month', 'day']}
           onSelectEvent={(data, e) => {
             modalStore.openModal(data.title);
+            setEvent(data);
           }}
         />
         <CalendarModal open={false} event={event} />

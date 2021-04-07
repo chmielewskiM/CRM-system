@@ -54,7 +54,7 @@ namespace Application.DelegatedTasks
 
                 if (success) return Unit.Value;
 
-                throw new Exception("Problem saving changes");
+                throw new RestException(HttpStatusCode.NotModified, "No changes detected.");
             }
         }
     }

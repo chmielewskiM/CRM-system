@@ -396,6 +396,7 @@ export default class DelegatedTaskStore {
         });
         this.submittingData(false);
       } catch (error) {
+        this.submittingData(false);
         toast.error('Problem occured');
         console.log(error);
       }

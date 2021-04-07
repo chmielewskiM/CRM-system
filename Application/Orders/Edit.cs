@@ -1,6 +1,8 @@
 using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Errors;
 using Domain;
 using MediatR;
 using Persistence;
@@ -37,28 +39,21 @@ namespace Application.Orders
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var order = await _context.Orders.FindAsync(request.Id);
-                var client =  await _context.Contacts.FindAsync(request.ClientId);
+                var client = await _context.Contacts.FindAsync(request.ClientId);
 
                 if (order == null)
-                    throw new Exception("Could not find order");
+                    throw new RestException(HttpStatusCode.Conflict, "Could not find order");
 
-                order.OrderNumber = request.OrderNumber;
-                order.ClientId = request.ClientId;
-                order.Client = client;
-                order.Type = request.Type;
-                order.Closed = request.Closed;
-                order.Product = request.Product ?? order.Product;
                 order.Amount = request.Amount;
+                order.Notes = request.Notes;
                 order.Price = request.Price;
-                order.DateOrderOpened = request.DateOrderOpened;
-                order.DateOrderClosed = request.DateOrderClosed;
-                order.Notes = request.Notes ?? order.Notes;
+                order.Product = request.Product;
 
                 var success = await _context.SaveChangesAsync() > 0;
 
                 if (success) return Unit.Value;
-
-                throw new Exception("Problem saving changes");
+                
+                throw new RestException(HttpStatusCode.NotModified, "No changes detected.");
             }
         }
     }

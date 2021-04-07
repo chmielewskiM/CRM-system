@@ -56,8 +56,6 @@ export const ShareContactForm: React.FC = () => {
                     size="big"
                     content="Cancel"
                     onClick={() => contactStore.showShareContactForm(false)}
-                    loading={contactStore.submitting}
-                    disabled={contactStore.submitting}
                   />
                   {userStore.selectedUser != undefined && (
                     <Button
@@ -73,7 +71,6 @@ export const ShareContactForm: React.FC = () => {
                         )
                       }
                       loading={contactStore.submitting}
-                      disabled={contactStore.submitting}
                     />
                   )}
                   {userStore.selectedUser == undefined && (

@@ -121,12 +121,15 @@ namespace API
             app.UseAuthentication();
             app.UseCors("CorsPolicy");
             app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
+
                 endpoints.MapControllerRoute(
                     name: "spa-homepage",
                     pattern: "{controller=Homepage}/{action=Index}"
                 );
+                endpoints.MapFallbackToController("Index", "Homepage");
             });
             // app.UseMvc();
         }

@@ -1,13 +1,23 @@
 #root {
     & .minor-header {
         background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(0,52,89,1) 0%, rgba(0,168,232,1) 90% );
+        background-image: linear-gradient(to top, #0c3483 0%, #a2b6df 100%, #6b8cce 100%, #a2b6df 100%);
+        // background-image: radial-gradient( circle farthest-corner at -4% -12.9%,  rgba(74,98,110,1) 0.3%, rgba(30,33,48,1) 90.2% );
+        // background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(90,92,106,1) 0%, rgba(32,45,58,1) 81.3% );
+        background-image: linear-gradient( 112.1deg,  rgba(32,38,57,1) 11.4%, rgba(63,76,119,1) 70.2% );
+        background-image: linear-gradient( 181deg,  rgba(2,0,97,1) 15%, rgba(97,149,219,1) 158.5% );
+        // background-image: linear-gradient( 91.3deg,  rgba(135,174,220,1) 1.5%, rgba(255,255,255,1) 100.3% );
+        // background-image: linear-gradient( 178.1deg,  rgba(60,55,106,1) 8.5%, rgba(23,20,69,1) 82.4% );
+        // background-image: linear-gradient( 115.7deg,  rgba(132,222,255,1) 7.6%, rgba(8,30,64,1) 99.8% );
+        // background-image: radial-gradient( circle 759px at 14% 22.3%,  rgba(10,64,88,1) 0%, rgba(15,164,102,1) 90% );
+        // background-image: linear-gradient( 178.6deg,  rgba(2,0,97,1) 11.8%, #6b8cce 83.8% );
         @include reset-div;
         padding: 1rem 2rem;
         width: 100%;
         border-bottom:none;
         height: max-content;
         max-height: 6rem;
-        box-shadow: 0 1px 3px 0 #000;
+        box-shadow: 0 1px 3px 1px #000;
         z-index: 1;
         & .header {
             font-size: 1.8rem;

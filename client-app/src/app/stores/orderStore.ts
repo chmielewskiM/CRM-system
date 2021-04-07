@@ -75,12 +75,12 @@ export default class OrderStore {
         else this.loadHistory();
       }
     );
-    reaction(
-      () => this.showOrderForm,
-      () => {
-        this.rootStore.contactStore.loadUncontracted();
-      }
-    );
+    // reaction(
+    //   () => this.showOrderForm,
+    //   () => {
+    //     this.rootStore.contactStore.loadUncontracted();
+    //   }
+    // );
   }
 
   /////////////////////////////////////
@@ -172,6 +172,7 @@ export default class OrderStore {
   toggleSelect = () => {
     runInAction(() => {
       this.sale = !this.sale;
+      console.log(this.sale)
     });
   };
 
@@ -278,9 +279,11 @@ export default class OrderStore {
   };
 
   editOrderForm = async (id: string) => {
-    this.submittingData(true);
+    this.loadingData(true);
     const order = new OrderFormValues(this.selectedOrder);
-    var contact = await agent.Contacts.get(encodeURI(order.clientName!));
+    this.rootStore.contactStore.getContact(encodeURI(order.clientName!));
+    const contact = await agent.Contacts.get(encodeURI(order.clientName!));
+    console.log(contact)
     runInAction(() => {
       if (
         !this.rootStore.contactStore.contactRegistry.has(contact.id) &&
@@ -292,7 +295,7 @@ export default class OrderStore {
       this.selectedOrder = this.openOrderRegistry.get(id);
       this.showOrderForm = true;
     });
-    this.submittingData(false);
+    this.loadingData(false);
   };
 
   setShowOrderForm = (show: boolean) => {
@@ -305,6 +308,8 @@ export default class OrderStore {
 
   fillForm = () => {
     if (this.selectedOrder) {
+      this.rootStore.contactStore.getContact(this.selectedOrder?.clientName!)
+      this.rootStore.contactStore.selectContact(this.selectedClient?.id!)
       runInAction(() => {
         this.sale = this.selectedOrder!.type;
       });
@@ -331,6 +336,9 @@ export default class OrderStore {
   // *CRUD order*
   loadOrders = async () => {
     this.loadingData(true);
+    runInAction(() => {
+    this.closedOrders = false;
+    })
     try {
       const data = await agent.Orders.list(this.axiosParams);
       const [...orders] = data.orders;
@@ -350,6 +358,9 @@ export default class OrderStore {
 
   loadHistory = async () => {
     this.loadingData(true);
+    runInAction(() => {
+      this.closedOrders = true;
+      })
     try {
       const data = await agent.Orders.list(this.axiosParams);
       const [...orders] = data.orders;
@@ -379,9 +390,10 @@ export default class OrderStore {
       await agent.Orders.add(order);
       runInAction(() => {
         this.openOrderRegistry.set(order.id, order);
-        toast.success('Order added');
-        this.setShowOrderForm(false);
+        this.closedOrders = false;
       });
+      toast.success('Order added');
+      this.setShowOrderForm(false);
       this.submittingData(false);
       this.loadOrders();
     } catch (error) {
@@ -406,7 +418,7 @@ export default class OrderStore {
         this.loadOrders();
       } catch (error) {
         this.submittingData(false);
-        toast.error('Problem occured');
+        toast.error(error.data.errors);
         console.log(error);
       }
     } else {
@@ -424,6 +436,8 @@ export default class OrderStore {
         this.selectedOrder = undefined;
       });
       this.submittingData(false);
+      await this.setOrderList('allOrders', false);
+      await this.setOrderList('allOrders', true);
     } catch (error) {
       this.submittingData(false);
       console.log(error);
@@ -438,9 +452,10 @@ export default class OrderStore {
       await agent.Orders.closeOrder(order);
       runInAction(() => {
         this.closedOrderRegistry.set(order.id, order);
-        this.loadHistory();
       });
       this.submittingData(false);
+      this.loadOrders();
+      this.loadHistory();
     } catch (error) {
       this.submittingData(false);
       toast.error('Problem occured');
