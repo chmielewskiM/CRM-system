@@ -103,15 +103,22 @@ export const LeadList: React.FC<IProps> = (props) => {
                   content={`Company: ${lead.contact.company}`}
                 />
                 <Container className="order" text>
-                  Order: {lead.order?.orderNumber}
-                  {lead.order?.id == null && (
-                    <Icon
-                      name="question circle outline"
-                      style={{ color: 'red' }}
-                    />
+                  {lead.order?.id != null &&
+                    `Order: #${lead.order?.orderNumber}`}
+                  {lead.order?.id == null && lead.contact.status != 'Quote' && (
+                    <Fragment>
+                      Order:
+                      <Icon
+                        name="question circle outline"
+                        style={{ color: 'red' }}
+                      />
+                    </Fragment>
                   )}
                   {lead.order?.id == null && lead.contact.status == 'Quote' && (
-                    <p style={{ color: 'red' }}>Add an order to proceed.</p>
+                    <Fragment>
+                      Order:
+                      <p style={{ color: 'red' }}>Add an order to proceed.</p>
+                    </Fragment>
                   )}
                 </Container>
               </Grid.Row>

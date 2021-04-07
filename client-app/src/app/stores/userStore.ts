@@ -25,7 +25,7 @@ export default class UserStore {
       topAccess: observable,
       midAccess: observable,
       lowAccess: observable,
-      checked: observable,
+      logged: observable,
       userList: observable,
       selectedUser: observable,
       isLoggedIn: computed,
@@ -65,13 +65,13 @@ export default class UserStore {
   topAccess: boolean = false;
   midAccess: boolean = false;
   lowAccess: boolean = false;
-  checked: boolean = false;
+  logged: boolean = false;
   //----------------------------------------------------
 
   ////
   // *Computeds*
   get isLoggedIn() {
-    return !!this.user;
+    return !!this.logged;
   }
 
   get usersByName() {
@@ -140,7 +140,7 @@ export default class UserStore {
         const users2 = new UserFormValues(users);
         runInAction(() => {
           this.selectedUser = users2;
-          this.checked = true;
+          this.logged = true;
         });
       } catch (error) {
         console.log(error);
@@ -158,7 +158,7 @@ export default class UserStore {
         const users2 = new User(users);
         runInAction(() => {
           this.user = users2;
-          this.checked = true;
+          this.logged = true;
         });
       }
     } catch (error) {

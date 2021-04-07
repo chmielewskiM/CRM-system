@@ -7,7 +7,6 @@ import { IUser } from '../../../app/models/user';
 
 interface IProps {
   task: IDelegatedTask;
-  user: IUser;
 }
 
 export const TaskControls: React.FC<IProps> = (props) => {
@@ -17,32 +16,31 @@ export const TaskControls: React.FC<IProps> = (props) => {
 
   return (
     <Fragment>
-      <Button
-        as="i"
-        icon="eraser"
-        onClick={() => delegatedTaskStore.deleteTask(props.task.id)}
-      />
-      <Button
-        as="i"
-        icon="pencil"
-        onClick={() => delegatedTaskStore.editTaskForm(props.task.id!)}
-      />
-      {(props.task.refused ||
-        (!props.task.access.sharedWithUsername &&
-          userStore.user?.level != 'low')) && (
-        <Button
-          as="i"
-          icon="share square"
-          onClick={() =>
-            delegatedTaskStore.setShowShareTaskForm(true, props.task)
-          }
-        />
-      )}
-      {props.task.access.sharedWithUsername &&
-        !props.task.refused &&
-        userStore.user?.level != 'low' && (
-          <Button as="i" icon="share square" disabled />
+      <Button.Group>
+        {(props.task.refused ||
+          (!props.task.access.sharedWithUsername &&
+            userStore.user?.level != 'low')) && (
+          <Button
+            icon="share square"
+            onClick={() =>
+              delegatedTaskStore.setShowShareTaskForm(true, props.task)
+            }
+          />
         )}
+        {props.task.access.sharedWithUsername &&
+          !props.task.refused &&
+          userStore.user?.level != 'low' && (
+            <Button as="i" icon="share square" disabled />
+          )}
+        <Button
+          icon="pencil"
+          onClick={() => delegatedTaskStore.editTaskForm(props.task.id!)}
+        />
+        <Button
+          icon="eraser"
+          onClick={() => delegatedTaskStore.deleteTask(props.task.id)}
+        />
+      </Button.Group>
     </Fragment>
   );
 };

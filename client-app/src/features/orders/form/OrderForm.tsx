@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from 'react';
+import React, { useEffect, Fragment, useState } from 'react';
 import { Form, Segment, Button, Modal, Label } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import { Form as FinalForm, Field } from 'react-final-form';
@@ -14,9 +14,9 @@ import LoaderComponent from '../../../app/layout/LoaderComponent';
 const validation = combineValidators({
   // client: isRequired({ message: 'Choose who should perform the task.' }),
   // type: isRequired({ message: 'Choose who should perform the task.' }),
-  // product: isRequired({ message: 'Select type of the task.' }),
-  // amount: isRequired({ message: 'Select type of the task.' }),
-  // price: isRequired({ message: 'Select type of the task.' }),
+  // product: isRequired({ message: 'Select product.' }),
+  // amount: isRequired({ message: 'Specify the amount.' }),
+  // price: isRequired({ message: 'Specify the price.' }),
 });
 
 interface IProps {
@@ -26,7 +26,12 @@ interface IProps {
 export const OrderForm: React.FC<IProps> = (props) => {
   const { orderStore, contactStore } = useStores();
 
-  useEffect(() => {}, [orderStore.sale, contactStore.uncontracted]);
+  useEffect(() => {}, [
+    orderStore.submitting,
+    // orderStore.sale,
+    // contactStore.uncontracted,
+    // contactStore.selectedContact
+  ]);
 
   return (
     <Segment clearing>
@@ -40,36 +45,42 @@ export const OrderForm: React.FC<IProps> = (props) => {
               onSubmit={orderStore.handleFinalFormSubmit}
               render={({ handleSubmit }) => (
                 <Form onSubmit={handleSubmit} size="big">
-                  <Form.Select
-                    options={contactStore.uncontractedContacts}
-                    name="client"
-                    placeholder="Select client"
-                    value={contactStore.selectedContact?.name}
-                    // onClick={contactStore.loadUncontracted}
-                    onChange={(e, data) => {
-                      contactStore.getContact(data.value!.toString());
-                      // contactStore.loadUncontracted();
-                    }}
-                  />
+                  {!orderStore.selectedOrder && (
+                    <Form.Select
+                      options={contactStore.uncontractedContacts}
+                      name="client"
+                      placeholder="Select client"
+                      value={contactStore.selectedContact?.name}
+                      // onClick={contactStore.loadUncontracted}
+                      onChange={(e, data) => {
+                        contactStore.getContact(data.value!.toString());
+                        
+                        // contactStore.loadUncontracted();
+                      }}
+                    />
+                  )}
                   <Form.Group inline className="btn-group-1">
-                    <Field
-                      name="orderStore.sale"
-                      label="Sale"
-                      value={orderStore.sale}
-                      type="radio"
-                      component={RadioInput}
-                      func={orderStore.toggleSelect}
-                    />
-                    {''}
-                    <Field
-                      name="orderStore.sale"
-                      label="Purchase"
-                      value={!orderStore.sale}
-                      type="radio"
-                      func={orderStore.toggleSelect}
-                      component={RadioInput}
-                    />
-                    {''}
+                    {!orderStore.selectedOrder && (
+                      <Field
+                        name="sale"
+                        label="Sale"
+                        value={orderStore.sale}
+                        type="radio"
+                        component={RadioInput}
+                        func={orderStore.toggleSelect}
+                      />
+                    )}
+
+                    {!orderStore.selectedOrder && (
+                      <Field
+                        name="sale"
+                        label="Purchase"
+                        value={!orderStore.sale}
+                        type="radio"
+                        func={orderStore.toggleSelect}
+                        component={RadioInput}
+                      />
+                    )}
                     {orderStore.sale == false && (
                       <Field
                         options={material}
@@ -151,8 +162,6 @@ export const OrderForm: React.FC<IProps> = (props) => {
                     size="big"
                     content="Cancel"
                     onClick={() => orderStore.setShowOrderForm(false)}
-                    // loading={orderStore.submitting}
-                    // disabled={loading}
                   />
                   <Button
                     positive
@@ -161,7 +170,6 @@ export const OrderForm: React.FC<IProps> = (props) => {
                     size="big"
                     content="Confirm"
                     loading={orderStore.submitting}
-                    // onClick={orderStore.handleFinalFormSubmit}
                   />
                 </Form>
               )}

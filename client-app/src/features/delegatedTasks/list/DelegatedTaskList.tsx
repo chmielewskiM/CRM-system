@@ -15,8 +15,7 @@ interface IProps {
 export const DelegatedTaskList: React.FC<IProps> = (props) => {
   const { delegatedTaskStore } = useStores();
 
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
 
   if (delegatedTaskStore.submitting)
     return <LoaderComponent content="Loading..." />;
@@ -48,7 +47,7 @@ export const DelegatedTaskList: React.FC<IProps> = (props) => {
               <Table.HeaderCell>Status</Table.HeaderCell>
             )}
             {delegatedTaskStore.myTasks && (
-              <Table.HeaderCell className='control-icons'></Table.HeaderCell>
+              <Table.HeaderCell className="control-icons"></Table.HeaderCell>
             )}
           </Table.Row>
         </Table.Header>
@@ -92,7 +91,7 @@ export const DelegatedTaskList: React.FC<IProps> = (props) => {
                 )}
                 {delegatedTaskStore.myTasks && (
                   <Table.Cell className="control-icons">
-                    <TaskControls task={task} user={props.user!} />
+                    <TaskControls task={task} />
                   </Table.Cell>
                 )}
               </Table.Row>

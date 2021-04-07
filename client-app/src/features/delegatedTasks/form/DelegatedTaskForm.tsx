@@ -92,8 +92,6 @@ export const DelegatedTaskForm: React.FC<IProps> = (props) => {
                     onClick={() =>
                       delegatedTaskStore.setShowTaskForm(false)
                     }
-                    loading={delegatedTaskStore.submitting}
-                    disabled={delegatedTaskStore.loadingInitial}
                   />
                   <Button
                     positive
@@ -102,7 +100,6 @@ export const DelegatedTaskForm: React.FC<IProps> = (props) => {
                     size="big"
                     content="Confirm"
                     loading={delegatedTaskStore.submitting}
-                    disabled={delegatedTaskStore.loadingInitial}
                   />
                 </Form>
               )}

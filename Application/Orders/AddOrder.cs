@@ -44,7 +44,6 @@ namespace Application.Orders
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var client = await _context.Contacts.FindAsync(request.ClientId);
-                var orderCount = _context.Orders.Count() + 1;
 
                 var user = await _context
                     .Users
@@ -56,10 +55,12 @@ namespace Application.Orders
                         error = "Could not access user. Make sure you are logged in properly."
                     });
 
+                int orderNumber = setOrderNumber();
+
                 var order = new Order
                 {
                     Id = Guid.NewGuid(),
-                    OrderNumber = orderCount,
+                    OrderNumber = orderNumber,
                     UserId = user.Id,
                     ClientId = request.ClientId,
                     Client = client,
@@ -86,7 +87,11 @@ namespace Application.Orders
 
                 await newOperation.addOperation(newOperation, _context, user);
 
-                await handleSaleProcess(client, order.Id);
+                //get operations which belong to the currently managed sale process
+                IQueryable<SaleProcess> saleProcess = _context.SaleProcess.Where(x => x.ContactId == client.Id);
+                //handle the order in case there is a sale process open already
+                if (saleProcess.Count() > 0)
+                    await handleSaleProcess(client, order.Id, saleProcess);
 
                 var success = await _context.SaveChangesAsync() > 0;
 
@@ -94,21 +99,44 @@ namespace Application.Orders
 
                 throw new Exception("Problem saving changes");
             }
-            private async Task handleSaleProcess(Contact client, Guid id)
+            private async Task handleSaleProcess(Contact client, Guid id, IQueryable<SaleProcess> saleProcess)
             {
-                //get operations which belong to the currently managed sale process
-                IQueryable<SaleProcess> saleProcess = _context.SaleProcess.Where(x => x.ContactId == client.Id);
+                Console.WriteLine("handleProcess");
+                saleProcess = saleProcess.OrderByDescending(x => x.Index);
+                //select sale process element with highest index (containing the most recent operation in chain)
+                var lastProcess = await saleProcess.FirstOrDefaultAsync();
 
-                if (saleProcess.Count()>0)
-                {
-                    saleProcess = saleProcess.OrderByDescending(x => x.Index);
-                    //select sale process element with highest index (containing the most recent operation in chain)
-                    var lastProcess = await saleProcess.FirstOrDefaultAsync();
+                //check whether there is an order assigned to the current sale process
+                if (lastProcess.OrderId == null)
+                    foreach (SaleProcess process in saleProcess)
+                        process.OrderId = id.ToString();
 
-                    //check whether there is an order assigned to the current sale process
-                    if (lastProcess.OrderId != null)
-                        lastProcess.OrderId = id.ToString();
-                }
+            }
+
+            //setOrderNumber() finds the correct number for a new order.
+            //It solves the issue which happens in case of deleting some order after 
+            //an other order was added. For instance we have 5 orders, #1-5 and user deletes #3.
+            //setOrderNumber() finds the correct allocation for the new order which would be #3 in that case.
+            private int setOrderNumber()
+            {
+                IQueryable<Order> orders = _context.Orders.OrderBy(x => x.OrderNumber);
+                int orderNumber = orders.Count() + 1;
+                int lastUnavailable = 0;
+                Console.WriteLine(orderNumber);
+
+                if (orders.Count() > 0)
+                    foreach (Order o in orders)
+                    {
+                        if (o.OrderNumber - lastUnavailable > 1)
+                        {
+                            orderNumber = lastUnavailable + 1;
+                            return orderNumber;
+                        }
+                        else lastUnavailable++;
+                        Console.WriteLine(lastUnavailable);
+                    }
+
+                return orderNumber;
             }
         }
     }

@@ -27,7 +27,7 @@ interface IProps {
 export const ContactForm: React.FC<IProps> = () => {
   const { contactStore } = useStores();
 
-  useEffect(() => {}, []);
+  useEffect(() => {}, [contactStore.submitting]);
 
   const [contact, setContact] = useState(new ContactFormValues());
 

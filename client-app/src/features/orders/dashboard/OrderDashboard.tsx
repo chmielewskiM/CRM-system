@@ -18,7 +18,7 @@ import HistoryPagination from '../../../app/common/pagination/HistoryPagination'
 import { PAGE_SIZE } from '../../../app/stores/orderStore';
 
 export const OrderDashboard: React.FC = () => {
-  const { orderStore, commonStore } = useStores();
+  const { orderStore, commonStore, contactStore } = useStores();
 
   useEffect(() => {
     orderStore.setOrderList('allOrders', false);
@@ -26,6 +26,7 @@ export const OrderDashboard: React.FC = () => {
       .loadOrders()
       .then(() => orderStore.setOrderList('allOrders', true))
       .then(() => orderStore.loadHistory());
+    contactStore.loadUncontracted();
   }, []);
 
   return (

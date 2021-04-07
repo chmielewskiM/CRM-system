@@ -49,10 +49,6 @@
                                 & :last-child {
                                     text-align: center;
                                 }
-
-                                & .control-icons {
-                                    display: none !important;
-                                }
                             }
                         }
 
@@ -94,16 +90,16 @@
                                     display: none !important;
                                 }
 
-                                & .shared-with-cell{
+                                & .shared-with-cell {
                                     justify-content: flex-start;
                                     display: inline-flex !important;
+
                                     & i {
                                         display: block;
                                         margin: 0 auto !important;
-                                        float:none !important;
+                                        float: none !important;
                                     }
                                 }
-                                
                             }
                         }
                     }
@@ -136,73 +132,132 @@
                         }
                     }
 
-                    & .control-icons {
-
-                        height: 100%;
-                        align-items: center;
-                        max-width: 8rem;
-
-                        & .icon {
-                            font-size: 1.6rem;
-                            float: right;
-                            background-color: transparent;
-                            padding: 0;
-                            margin-right: 1rem;
-                            transition: transform .1s ease-in;
-
-                            &.status {
-                                float: left;
-                            }
-
-                            &:hover.share,
-                            &:hover.pencil,
-                            &:hover.eraser {
-                                transform: scale(1.2);
-                                text-shadow: 0 0 2px $color-detail2, 0 0 4px #fff;
-
-                                &:after {
-
-                                    content: '';
-                                    top: 0;
-                                    bottom: 0;
-                                    left: 0;
-                                    right: 0;
-                                    position: absolute;
-                                }
-                            }
-
-                            &.share {
-                                color: rgb(0, 150, 0);
-
-                                &.disabled {
-                                    color: gray;
-                                }
-                            }
-
-                            &.pencil {
-                                color: rgb(230, 142, 61);
-                            }
-
-                            &.eraser {
-                                color: red;
-                            }
-
-                            &.disabled>* {
-                                color: gray;
-                            }
-
-                            &.ban {
-                                color: red;
-                            }
-
-                        }
-                    }
-
                     & .notes-cell,
                     .notes-cell-header,
                     .icon.button {
                         @include breakpoint(tablet) {
                             display: none !important;
+                        }
+                    }
+                }
+            }
+
+            & .row-content-1,
+            .row-content-2 {
+                & .control-icons {
+
+                    height: 100%;
+                    align-items: center;
+                    max-width: 8rem;
+
+                    @include breakpoint(tablet) {
+                        display: none;
+                    }
+
+                    &.mobile {
+                        @include reset-div;
+                        width: min-content;
+                        margin-left: auto;
+                        padding: 0;
+                        display: none;
+                        flex: 1 0;
+                        min-width: 100%;
+                        height: 4rem;
+                        position: absolute;
+                        top: 0;
+                        bottom: 0;
+                        left: 0;
+
+                        @include breakpoint(tablet) {
+                            display: flex;
+                        }
+
+                        & .buttons {
+                            padding-right: 4rem;
+                            align-content: center;
+                            justify-content: flex-end;
+                            height: 100%;
+
+                            & .button,
+                            a, i {
+                                max-width: 5rem !important;
+                                position: relative !important;
+                                justify-content: flex-end;
+                                margin: 0 !important;
+                                height: 3rem;
+                                display: flex;
+
+                                &.share,
+                                &.mail,
+                                &.pencil,
+                                &.eraser {
+
+                                    &.icon {
+                                        padding: 0;
+                                        vertical-align: middle !important;
+                                        min-height: 100%;
+                                        margin-right: 2rem !important;
+                                    }
+
+                                    &.icon:before {
+                                        vertical-align: middle !important;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    & .icon {
+                        font-size: 1.6rem;
+                        float: right;
+                        background-color: transparent;
+                        padding: 0;
+                        margin-right: 1rem;
+                        transition: transform .1s ease-in;
+
+                        &.status {
+                            float: left;
+                        }
+
+                        &:hover.share,
+                        &:hover.pencil,
+                        &:hover.eraser {
+                            transform: scale(1.2);
+                            text-shadow: 0 0 2px $color-detail2, 0 0 4px #fff;
+
+                            &:after {
+
+                                content: '';
+                                top: 0;
+                                bottom: 0;
+                                left: 0;
+                                right: 0;
+                                position: absolute;
+                            }
+                        }
+
+                        &.share {
+                            color: rgb(0, 150, 0);
+
+                            &.disabled {
+                                color: gray;
+                            }
+                        }
+
+                        &.pencil {
+                            color: rgb(230, 142, 61);
+                        }
+
+                        &.eraser {
+                            color: red;
+                        }
+
+                        &.disabled>* {
+                            color: gray;
+                        }
+
+                        &.ban {
+                            color: red;
                         }
                     }
                 }

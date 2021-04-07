@@ -3,7 +3,7 @@ import { Table, Icon } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import LoaderComponent from '../../../app/layout/LoaderComponent';
 import { useStores } from '../../../app/stores/rootStore';
-import  ContactControls  from './ContactControls';
+import ContactControls from './ContactControls';
 
 export const ContactList: React.FC = () => {
   const { contactStore } = useStores();
@@ -106,11 +106,10 @@ export const ContactList: React.FC = () => {
               }
             >
               <Table.Cell>
-                {contact.premium == 'True' && (
-                  <Icon name="star" style={{ color: 'gold' }} />
-                )}
-
                 {contact.name}
+                {contact.premium == 'True' && (
+                  <Icon name="star" style={{ color: 'gold'}} />
+                )}
               </Table.Cell>
               <Table.Cell>{contact.company}</Table.Cell>
               <Table.Cell>{contact.type}</Table.Cell>

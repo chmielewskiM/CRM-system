@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [AllowAnonymous]
     public class HomepageController : Controller
     {
-        [AllowAnonymous]
         public IActionResult Index()
         {
             return PhysicalFile(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot",

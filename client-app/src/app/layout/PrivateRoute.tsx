@@ -13,13 +13,13 @@ interface IProps extends RouteProps {
 }
 
 const PrivateRoute: React.FC<IProps> = ({ component: Component, ...rest }) => {
-  const { userStore } = useStores();
+  const { userStore, commonStore } = useStores();
 
   return (
     <Route
       {...rest}
       render={(props) =>
-        userStore.user ? <Component {...props} /> : <Redirect to={'/'} />
+        commonStore.token ? <Component {...props} /> : <Redirect to={'/'} />
       }
     />
   );

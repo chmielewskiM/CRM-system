@@ -298,102 +298,102 @@ namespace Persistence
         //         context.SaveChanges();
         //     }
 
-            //OPERATIONS
-            if (!context.Operations.Any())
-            {
-                int randomProperty = 0;
-                int randomRevenue = 0;
-                int randomDay = 0;
-                int randomSource = 0;
-                var sources = new List<String>{
-                    "Web", "Flyers", "Commercial", "Social Media", "Former Client"
-                };
-                var operation = new Operation();
+            // //OPERATIONS
+            // if (!context.Operations.Any())
+            // {
+            //     int randomProperty = 0;
+            //     int randomRevenue = 0;
+            //     int randomDay = 0;
+            //     int randomSource = 0;
+            //     var sources = new List<String>{
+            //         "Web", "Flyers", "Commercial", "Social Media", "Former Client"
+            //     };
+            //     var operation = new Operation();
 
-                for (int i = 0; i < 200; i++)
-                {
-                    randomProperty = random.Next(106);
-                    randomRevenue = random.Next(15000);
-                    randomDay = random.Next(160);
-                    randomSource = random.Next(5);
+            //     for (int i = 0; i < 200; i++)
+            //     {
+            //         randomProperty = random.Next(106);
+            //         randomRevenue = random.Next(15000);
+            //         randomDay = random.Next(160);
+            //         randomSource = random.Next(5);
 
-                    operation = new Operation
-                    {
-                        Id = Guid.NewGuid(),
-                        Lead = 0,
-                        Opportunity = 0,
-                        Quote = 0,
-                        Invoice = 0,
-                        Conversion = 0,
-                        Order = 0,
-                        Revenue = 0,
-                        Source = "",
-                        Date = DateTime
-                          .Now
-                          .AddDays(-randomDay),
-                    };
+            //         operation = new Operation
+            //         {
+            //             Id = Guid.NewGuid(),
+            //             Lead = 0,
+            //             Opportunity = 0,
+            //             Quote = 0,
+            //             Invoice = 0,
+            //             Conversion = 0,
+            //             Order = 0,
+            //             Revenue = 0,
+            //             Source = "",
+            //             Date = DateTime
+            //               .Now
+            //               .AddDays(-randomDay),
+            //         };
 
-                    if (randomProperty < 40)
-                    {
-                        operation.Lead = 1;
-                        operation.Source = sources[randomSource];
-                    }
-                    else if (randomProperty >= 40 && randomProperty < 68)
-                    {
-                        operation.Opportunity = 1;
-                    }
-                    else if (randomProperty >= 68 && randomProperty < 87)
-                    {
-                        operation.Quote = 1;
-                    }
-                    else if (randomProperty >= 87 && randomProperty < 95)
-                    {
-                        operation.Invoice = 1;
-                    }
-                    else if (randomProperty >= 95 && randomProperty < 101)
-                    {
-                        operation.Conversion = 1;
-                        operation.Revenue = randomRevenue;
-                    }
-                    else
-                    {
-                        operation.Order = 1;
-                    }
+            //         if (randomProperty < 40)
+            //         {
+            //             operation.Lead = 1;
+            //             operation.Source = sources[randomSource];
+            //         }
+            //         else if (randomProperty >= 40 && randomProperty < 68)
+            //         {
+            //             operation.Opportunity = 1;
+            //         }
+            //         else if (randomProperty >= 68 && randomProperty < 87)
+            //         {
+            //             operation.Quote = 1;
+            //         }
+            //         else if (randomProperty >= 87 && randomProperty < 95)
+            //         {
+            //             operation.Invoice = 1;
+            //         }
+            //         else if (randomProperty >= 95 && randomProperty < 101)
+            //         {
+            //             operation.Conversion = 1;
+            //             operation.Revenue = randomRevenue;
+            //         }
+            //         else
+            //         {
+            //             operation.Order = 1;
+            //         }
 
-                    operations.Add(operation);
-                };
+            //         operations.Add(operation);
+            //     };
 
-                context
-                    .Operations
-                    .AddRange(operations);
-                context.SaveChanges();
-            }
+            //     context
+            //         .Operations
+            //         .AddRange(operations);
+            //     context.SaveChanges();
+            // }
 
-            //UserOperations
-            if (!context.UserOperations.Any())
-            {
-                int randomUser = 0;
-                var userOperations = new List<UserOperation> { };
+            // //UserOperations
+            // if (!context.UserOperations.Any())
+            // {
+            //     int randomUser = 0;
+            //     var userOperations = new List<UserOperation> { };
 
-                for (int i = 0; i < 200; i++)
-                {
-                    randomUser = random.Next(1, 5);
+            //     for (int i = 0; i < 200; i++)
+            //     {
+            //         randomUser = random.Next(1, 5);
 
-                    var userOperation = new UserOperation
-                    {
-                        User = users[randomUser],
-                        Operation = operations[i],
-                        DateAdded = operations[i].Date
-                    };
+            //         var userOperation = new UserOperation
+            //         {
+            //             User = users[randomUser],
+            //             Operation = operations[i],
+            //             DateAdded = operations[i].Date
+            //         };
 
-                    userOperations.Add(userOperation);
-                };
+            //         userOperations.Add(userOperation);
+            //     };
 
-                context
-                    .UserOperations
-                    .AddRange(userOperations);
-                context.SaveChanges();
-            }
+            //     context
+            //         .UserOperations
+            //         .AddRange(userOperations);
+            //     context.SaveChanges();
+            // }
 
         //     //UserContacts
         //     if (!context.UserContacts.Any())

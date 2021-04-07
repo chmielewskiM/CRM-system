@@ -11,6 +11,7 @@
                     box-shadow: 0 0 2px 0 #fff;
                     @include component-border;
                     padding-bottom: 1.5rem;
+                    border:unset !important;
                     
                     &:before {
                         background: #E0EAFC;
@@ -41,7 +42,6 @@
                                 left: -2rem;
                                 font-size: 1.4rem;
                                 color: #000;
-                                border-color: $color5;
                                 background-image: radial-gradient( circle farthest-corner at 10% 20%, rgba(252,251,121,1) 0%, rgba(255,200,124,1) 90% );
                                 cursor: default;
                                 border: 2px inset rgba(0, 0, 0, 0.7);

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,7 +31,7 @@ namespace Application.Orders
                 var order = await _context.Orders.FindAsync(request.Id);
 
                 if (order == null)
-                    throw new RestException(HttpStatusCode.NotFound, "Couldn't find the order." );
+                    throw new RestException(HttpStatusCode.NotFound, "Couldn't find the order.");
 
                 Contact client = await _context.Contacts.FindAsync(order.ClientId);
 
@@ -39,6 +40,13 @@ namespace Application.Orders
 
                 if (client.Status == "Invoice")
                     throw new RestException(HttpStatusCode.Forbidden, "You can't delete an order which is waiting for finalization. Downgrade client's status first.");
+
+                //check whether the order is assigned to any sale process
+                IQueryable<SaleProcess> saleProcess = _context.SaleProcess.Where(x => x.OrderId.Equals(order.Id.ToString()));
+                //erase the order from the whole sale process
+                if (saleProcess.Count() > 0)
+                    foreach (SaleProcess process in saleProcess)
+                        process.OrderId = null;
 
                 await Operations.DeleteOperation.deleteOperation(order.DateOrderOpened, _context, new Guid(order.UserId));
 
@@ -49,7 +57,7 @@ namespace Application.Orders
                 if (success) return Unit.Value;
 
                 throw new Exception("Problem saving changes");
-}
+            }
         }
     }
 }

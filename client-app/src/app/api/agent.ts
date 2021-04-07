@@ -20,6 +20,7 @@ axios.interceptors.request.use(
   }
 );
 
+
 axios.interceptors.response.use(undefined, (error) => {
   // if (error.message === 'Network Error' && !error.response) {
   //   toast.error('Connection error');

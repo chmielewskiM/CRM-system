@@ -332,6 +332,7 @@ export default class LeadStore {
     } catch (error) {
       this.submittingData(false);
       console.log(error);
+      toast.error(error.data.errors);
     }
   };
   //----------------------------------------

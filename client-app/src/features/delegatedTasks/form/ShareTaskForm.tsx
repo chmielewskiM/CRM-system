@@ -61,8 +61,6 @@ export const DelegatedTaskForm: React.FC<IProps> = () => {
               size="big"
               content="Cancel"
               onClick={() => delegatedTaskStore.setShowShareTaskForm(false)}
-              loading={delegatedTaskStore.submitting}
-              disabled={delegatedTaskStore.submitting}
             />
             <Button
               positive
@@ -77,7 +75,6 @@ export const DelegatedTaskForm: React.FC<IProps> = () => {
                 )
               }
               loading={delegatedTaskStore.submitting}
-              disabled={delegatedTaskStore.submitting}
             />
                 </Form>
               )}
