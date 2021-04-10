@@ -12,6 +12,7 @@ namespace API.Controllers
 {
     public class LeadController : BaseController
     {
+        
         [HttpGet]
         public async Task<ActionResult<List<LeadDTO>>> ListLeads(bool allLeads, string status, string sortBy, CancellationToken ct)
         {

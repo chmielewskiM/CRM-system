@@ -1,57 +1,70 @@
 #root {
-    & .ui.container.wrapper {
+    & .main-grid.admin-panel {
+        justify-content: flex-start;
 
-        & .wrapper.admin-panel {
-            display: inline;
-            padding: 5rem;
-        }
+        & .wrapper {
+            padding: 5rem 5rem;
+            flex-direction: column;
 
-        & .control,
-        & .form {
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-
-        }
-
-        & .control {
             @include breakpoint(tablet) {
-                padding-top: 5rem;
-                margin: 0 auto !important;
+                align-items: center;
+                padding: 7rem 0;
             }
 
-            & .buttons {
-                display: inline-flex;
-                margin-top: 2rem;
-                flex: 2 0;
-                align-content: space-evenly;
+            & .buttons-container,
+            & .form-container {
+                width: 40%;
+                @include reset-div;
+                padding: 2rem;
+                border: 2px ridge #fff;
+                box-shadow: 2px 2px 4px 2px rgba(0, 0, 0, 0.5);
 
-                & .button {
-                    margin-bottom: .5rem;
-                    background-color: $color-primary-dark;
-                    font-size: 1.2rem;
-                    color: #fff;
-                    border: thin solid #fff;
-                    opacity: 0.8;
-                    border-radius: .5rem;
 
-                    @include breakpoint(tablet) {
-                        font-size: 1.5rem;
+                @include breakpoint(tablet_landscape) {
+                    width: 75%;
+                }
+
+                @include breakpoint(smartphone) {
+                    width: 90%;
+                }
+            }
+
+            & .buttons-container {
+                justify-content: flex-end;
+                background-image: radial-gradient(circle farthest-corner at 10% 20%, rgba(253, 193, 104, 1) 0%, rgba(251, 128, 128, 1) 90%);
+                border-bottom: none;
+                justify-items: center;
+                box-shadow: 2px 2px 4px 2px rgba(0, 0, 0, 0.5);
+
+                & .buttons {
+                    display: inline-flex;
+                    flex: 1 0;
+                    align-content: space-evenly;
+
+
+                    & .button {
+                        margin-bottom: .5rem;
+                        padding: .6rem 1.5rem;
+                        background-color: $color-primary-dark;
+                        font-size: 1.2rem;
+                        color: #fff;
+                        border: thin solid #fff;
+                        opacity: 0.8;
+                        border-radius: .5rem;
+
+                        &:last-child {
+                            margin-left: .5rem;
+                        }
+
+                        &:hover,
+                        &.active {
+                            opacity: 1;
+                        }
+
+                        @include breakpoint(tablet) {}
                     }
-
-                    &:last-child {
-                        margin-left: .5rem;
-                    }
-
-                    &:hover {
-                        opacity: 1;
-                    }
-
-                    @include breakpoint(tablet) {}
                 }
             }
         }
-
-
     }
 }

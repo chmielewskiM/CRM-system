@@ -22,7 +22,11 @@ import {
 export const DelegatedTaskDashboard: React.FC = () => {
   const { delegatedTaskStore, userStore, commonStore } = useStores();
 
-  useEffect(() => {}, [delegatedTaskStore.tasksCount]);
+  useEffect(() => {
+    delegatedTaskStore.loadTasks().then(async () => {
+      await delegatedTaskStore.loadPendingTasks();
+    });
+  }, []);
 
   return (
     <Grid stackable centered className="main-grid tasks">
@@ -147,11 +151,11 @@ export const DelegatedTaskDashboard: React.FC = () => {
             />
           </Button.Group>
         </Segment>
-        <Grid.Column className="list-col">
+        <Grid.Column tablet={10} computer={12} className="list-col">
           <DelegatedTaskList user={userStore.user} />
         </Grid.Column>
         {delegatedTaskStore.pendingTasksNotifier && (
-          <Grid.Column width={4} className="notifier-col">
+          <Grid.Column tablet={6} computer={4} className="notifier-col">
             <Container>
               <TaskNotifier
                 className="notifier"

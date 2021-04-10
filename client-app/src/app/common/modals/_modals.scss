@@ -1,11 +1,8 @@
 body {
     & .ui.page.modals.dimmer.transition {
         background: hsla(207, 51%, 83%, 1);
-
         background: radial-gradient(circle, hsla(207, 51%, 83%, 1) 25%, hsla(194, 100%, 12%, 0.5) 100%);
-
         background: -moz-radial-gradient(circle, hsla(207, 51%, 83%, 1) 25%, hsla(194, 100%, 12%, 0.5) 100%);
-
         background: -webkit-radial-gradient(circle, hsla(207, 51%, 83%, 1) 25%, hsla(194, 100%, 12%, 0.5) 100%);
 
         & .modal {

@@ -1,13 +1,15 @@
 export interface IUser {
-  id?:string;
+  id: string;
   username: string;
   displayName: string;
   token: string;
+  password: string;
   level: string;
   email?: string;
 }
 
 export interface IUserFormValues {
+  id: string;
   email?: string;
   password: string;
   displayName?: string;
@@ -16,6 +18,7 @@ export interface IUserFormValues {
 }
 
 export class UserFormValues implements IUserFormValues {
+  id: string = '';
   email?: string;
   password: string = '';
   displayName?: string;
@@ -26,11 +29,12 @@ export class UserFormValues implements IUserFormValues {
   }
 }
 export class User implements IUser {
-  id?:string;
-  username: string ='';
-  displayName: string ='';
-  token: string ='';
-  level: string ='';
+  id: string = '';
+  username: string = '';
+  displayName: string = '';
+  token: string = '';
+  password: string = '';
+  level: string = '';
   email?: string;
   constructor(init?: IUser) {
     Object.assign(this, init);

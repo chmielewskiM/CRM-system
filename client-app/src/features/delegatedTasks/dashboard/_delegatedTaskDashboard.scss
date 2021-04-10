@@ -43,6 +43,7 @@
             &-1 {
                 justify-content: flex-start;
                 overflow: hidden;
+                min-height: 25rem;
                 max-height: 55rem;
                 align-items: stretch;
                 position: relative;
@@ -54,6 +55,7 @@
                 & .ui.segment.filter-buttons {
                     flex-grow: 0;
                     justify-content: flex-start;
+
                     @include breakpoint(tablet) {
                         flex-wrap: wrap;
                         justify-content: flex-start;

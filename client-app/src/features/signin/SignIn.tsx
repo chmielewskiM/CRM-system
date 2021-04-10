@@ -1,5 +1,13 @@
 import React from 'react';
-import { Button, Form, Grid, Header, Image, Segment } from 'semantic-ui-react';
+import {
+  Button,
+  Form,
+  Grid,
+  Header,
+  Icon,
+  Image,
+  Segment,
+} from 'semantic-ui-react';
 import { Form as FinalForm, Field } from 'react-final-form';
 import TextInput from '../../app/common/form/TextInput';
 import { observer } from 'mobx-react-lite';
@@ -23,7 +31,7 @@ export const SignIn = () => {
         width: '100%',
       }}
       verticalAlign="middle"
-      className = 'grid-login'
+      className="grid-login"
     >
       <Grid.Column
         style={{
@@ -75,6 +83,7 @@ export const SignIn = () => {
                   disabled={(invalid && !dirtySinceLastSubmit) || pristine}
                   type="submit"
                 >
+                  <Icon name="key" />
                   Log In
                 </Button>
               </Segment>

@@ -76,8 +76,7 @@ export const MyCalendar: React.FC<IProps> = (props) => {
   }, []);
 
   const [event, setEvent] = useState(props.events[0]);
-  
-  console.log(props.events[0]);
+
   return (
     <Fragment>
       {props.loading && <LoaderComponent content="Loading..." />}

@@ -10,7 +10,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210406062649_InitialMigration")]
+    [Migration("20210410092445_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -555,13 +555,13 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.User", "CreatedBy")
                         .WithMany("UserTasks")
                         .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.DelegatedTask", "DelegatedTask")
                         .WithOne("UserTask")
                         .HasForeignKey("Domain.UserTask", "DelegatedTaskId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.User", "SharedWith")

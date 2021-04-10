@@ -15,7 +15,7 @@ using Persistence;
 
 namespace Application.AppUser
 {
-    public class Register
+    public class RegisterUser
     {
         public class Command : IRequest<AppUser>
         {
@@ -23,6 +23,7 @@ namespace Application.AppUser
             public string Username { get; set; }
             public string Email { get; set; }
             public string Password { get; set; }
+            public string Level { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -30,9 +31,9 @@ namespace Application.AppUser
             public CommandValidator()
             {
                 RuleFor(x => x.DisplayName).NotEmpty();
-                RuleFor(x => x.Username).NotEmpty();
-                RuleFor(x => x.Email).NotEmpty().EmailAddress();
-                RuleFor(x => x.Password).Password();
+                // RuleFor(x => x.Username).NotEmpty();
+                // RuleFor(x => x.Email).NotEmpty().EmailAddress();
+                // RuleFor(x => x.Password).Password();
             }
         }
 
@@ -51,16 +52,17 @@ namespace Application.AppUser
             public async Task<AppUser> Handle(Command request, CancellationToken cancellationToken)
             {
                 if (await _context.Users.Where(x => x.Email == request.Email).AnyAsync())
-                    throw new RestException(HttpStatusCode.BadRequest, new { Email = "Email already exists" });
+                    throw new RestException(HttpStatusCode.BadRequest, new { msg = "This email already exists" });
 
                 if (await _context.Users.Where(x => x.UserName == request.Username).AnyAsync())
-                    throw new RestException(HttpStatusCode.BadRequest, new { Username = "Username already exists" });
+                    throw new RestException(HttpStatusCode.BadRequest, new { msg = "This username already exists" });
 
                 var user = new User
                 {
                     DisplayName = request.DisplayName,
                     Email = request.Email,
-                    UserName = request.Username
+                    UserName = request.Username,
+                    Level = request.Level
                 };
 
                 var result = await _userManager.CreateAsync(user, request.Password);

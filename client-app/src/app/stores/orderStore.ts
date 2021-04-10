@@ -172,7 +172,6 @@ export default class OrderStore {
   toggleSelect = () => {
     runInAction(() => {
       this.sale = !this.sale;
-      console.log(this.sale)
     });
   };
 
@@ -283,7 +282,6 @@ export default class OrderStore {
     const order = new OrderFormValues(this.selectedOrder);
     this.rootStore.contactStore.getContact(encodeURI(order.clientName!));
     const contact = await agent.Contacts.get(encodeURI(order.clientName!));
-    console.log(contact)
     runInAction(() => {
       if (
         !this.rootStore.contactStore.contactRegistry.has(contact.id) &&
@@ -308,8 +306,8 @@ export default class OrderStore {
 
   fillForm = () => {
     if (this.selectedOrder) {
-      this.rootStore.contactStore.getContact(this.selectedOrder?.clientName!)
-      this.rootStore.contactStore.selectContact(this.selectedClient?.id!)
+      this.rootStore.contactStore.getContact(this.selectedOrder?.clientName!);
+      this.rootStore.contactStore.selectContact(this.selectedClient?.id!);
       runInAction(() => {
         this.sale = this.selectedOrder!.type;
       });
@@ -337,8 +335,8 @@ export default class OrderStore {
   loadOrders = async () => {
     this.loadingData(true);
     runInAction(() => {
-    this.closedOrders = false;
-    })
+      this.closedOrders = false;
+    });
     try {
       const data = await agent.Orders.list(this.axiosParams);
       const [...orders] = data.orders;
@@ -360,7 +358,7 @@ export default class OrderStore {
     this.loadingData(true);
     runInAction(() => {
       this.closedOrders = true;
-      })
+    });
     try {
       const data = await agent.Orders.list(this.axiosParams);
       const [...orders] = data.orders;
@@ -396,6 +394,7 @@ export default class OrderStore {
       this.setShowOrderForm(false);
       this.submittingData(false);
       this.loadOrders();
+      this.rootStore.contactStore.loadUncontracted();
     } catch (error) {
       this.submittingData(false);
       toast.error('Problem occured');
@@ -438,6 +437,7 @@ export default class OrderStore {
       this.submittingData(false);
       await this.setOrderList('allOrders', false);
       await this.setOrderList('allOrders', true);
+      this.rootStore.contactStore.loadUncontracted();
     } catch (error) {
       this.submittingData(false);
       console.log(error);

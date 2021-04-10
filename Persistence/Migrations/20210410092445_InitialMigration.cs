@@ -288,7 +288,7 @@ namespace Persistence.Migrations
                         column: x => x.CreatedById,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_UserTasks_AspNetUsers_SharedWithId",
                         column: x => x.SharedWithId,
@@ -300,7 +300,7 @@ namespace Persistence.Migrations
                         column: x => x.DelegatedTaskId,
                         principalTable: "DelegatedTasks",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

@@ -79,7 +79,16 @@ namespace API
                 .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.TryAddSingleton<ISystemClock, SystemClock>();
 
-            var builder = services.AddIdentityCore<User>();
+            var builder = services.AddIdentityCore<User>(
+                opt =>
+                {
+                    opt.Password.RequireNonAlphanumeric = false;
+                    opt.Password.RequiredUniqueChars = 0;
+                    opt.Password.RequireDigit = false;
+                    opt.Password.RequireUppercase = false;
+                })
+                .AddDefaultTokenProviders();
+
             var identityBuilder = new IdentityBuilder(builder.UserType, builder.Services);
 
             identityBuilder.AddEntityFrameworkStores<DataContext>();

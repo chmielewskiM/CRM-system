@@ -59,11 +59,11 @@ namespace Persistence
                 x.HasOne(ut => ut.CreatedBy)
                     .WithMany(u => u.UserTasks)
                     .HasForeignKey(ut => ut.CreatedById)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 x.HasOne(ut => ut.DelegatedTask)
                     .WithOne(t => t.UserTask)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             builder.Entity<UserOperation>(x =>

@@ -101,7 +101,6 @@ namespace Application.Orders
             }
             private async Task handleSaleProcess(Contact client, Guid id, IQueryable<SaleProcess> saleProcess)
             {
-                Console.WriteLine("handleProcess");
                 saleProcess = saleProcess.OrderByDescending(x => x.Index);
                 //select sale process element with highest index (containing the most recent operation in chain)
                 var lastProcess = await saleProcess.FirstOrDefaultAsync();
@@ -122,7 +121,6 @@ namespace Application.Orders
                 IQueryable<Order> orders = _context.Orders.OrderBy(x => x.OrderNumber);
                 int orderNumber = orders.Count() + 1;
                 int lastUnavailable = 0;
-                Console.WriteLine(orderNumber);
 
                 if (orders.Count() > 0)
                     foreach (Order o in orders)
@@ -133,7 +131,6 @@ namespace Application.Orders
                             return orderNumber;
                         }
                         else lastUnavailable++;
-                        Console.WriteLine(lastUnavailable);
                     }
 
                 return orderNumber;

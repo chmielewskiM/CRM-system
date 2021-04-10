@@ -12,15 +12,13 @@ import agent from '../api/agent';
 import { RootStore } from './rootStore';
 import { history } from '../..';
 import { toast } from 'react-toastify';
-import { toJS } from 'mobx';
-import { Input } from 'semantic-ui-react';
-import { isThisSecond } from 'date-fns';
 
 export default class UserStore {
   rootStore: RootStore;
 
   constructor(rootStore: RootStore) {
     makeObservable(this, {
+      submitting: observable,
       user: observable,
       topAccess: observable,
       midAccess: observable,
@@ -30,6 +28,7 @@ export default class UserStore {
       selectedUser: observable,
       isLoggedIn: computed,
       usersByName: computed,
+      submittingData: action,
       getUserList: action,
       login: action,
       register: action,
@@ -40,19 +39,25 @@ export default class UserStore {
 
     this.rootStore = rootStore;
     reaction(
-      () => this.isLoggedIn,
-      async () => {
-        const user = await agent.Users.logged();
+      () => this.user,
+      () => {
         runInAction(() => {
           this.topAccess = this.midAccess = this.lowAccess = false;
-          this.user = user;
-          if (user.level == 'top') this.topAccess = true;
-          else if (user.level == 'mid') this.midAccess = true;
+          // this.user = user;
+          if (this.user?.level == 'top') this.topAccess = true;
+          else if (this.user?.level == 'mid') this.midAccess = true;
           else this.lowAccess = true;
         });
       }
     );
-    autorun(() => this.getLoggedUser());
+
+    autorun(async () => {
+      try {
+        await this.getLoggedUser().then(async () => {
+          await agent.Users.logged();
+        });
+      } catch {}
+    });
   }
 
   /////////////////////////////////////
@@ -62,6 +67,7 @@ export default class UserStore {
   selectedUser: IUserFormValues = new UserFormValues();
   user: IUser | null = null;
   //controls
+  submitting: boolean = false;
   topAccess: boolean = false;
   midAccess: boolean = false;
   lowAccess: boolean = false;
@@ -93,16 +99,23 @@ export default class UserStore {
 
   ////
   // *Actions*
+  submittingData = (value: boolean) => {
+    runInAction(() => {
+      this.submitting = value;
+    });
+  };
+
   getUserList = async (removeLoggedUser?: boolean) => {
     try {
       const us = await agent.Users.list();
+      this.userList.clear();
       runInAction(() => {
-        us.forEach((element) => {
+        us.forEach((user) => {
           if (
-            (!removeLoggedUser || element.id != this.user?.id) &&
-            element.level != 'top'
+            (!removeLoggedUser || user.id != this.user?.id) &&
+            user.level != 'top'
           )
-            this.userList.set(element.id, element);
+            this.userList.set(user.id, user);
         });
       });
     } catch (error) {
@@ -124,11 +137,54 @@ export default class UserStore {
   };
 
   register = async (values: IUserFormValues) => {
+    this.submittingData(true);
     try {
       const user = await agent.Users.register(values);
-      this.rootStore.commonStore.setToken(user.token);
-      this.rootStore.modalStore.closeModal();
+      this.submittingData(false);
+      this.getUserList();
+      toast.success('User added successfully');
     } catch (error) {
+      this.submittingData(false);
+      toast.error(error.data.errors.msg);
+      console.log(error);
+    }
+  };
+
+  editUser = async (user: IUser) => {
+    this.submittingData(true);
+    if (this.selectedUser) {
+      try {
+        await agent.Users.update(user);
+        runInAction(() => {
+          this.userList.set(user.id, user);
+        });
+        this.getUserList();
+        this.submittingData(false);
+        toast.success('Changes saved successfully.');
+      } catch (error) {
+        runInAction(() => {
+          this.submitting = false;
+        });
+        // this.submittingData(false);
+        toast.error(error.data.errors);
+        console.log(error);
+      }
+    } else {
+      toast.info('No changes');
+      this.submittingData(false);
+    }
+  };
+
+  deleteUser = async () => {
+    this.submittingData(true);
+    try {
+      await agent.Users.delete(this.selectedUser.username);
+      this.getUserList();
+      this.submittingData(false);
+      toast.success('User deleted successfully');
+    } catch (error) {
+      this.submittingData(false);
+      toast.error(error.data.errors.msg);
       console.log(error);
     }
   };
@@ -140,7 +196,6 @@ export default class UserStore {
         const users2 = new UserFormValues(users);
         runInAction(() => {
           this.selectedUser = users2;
-          this.logged = true;
         });
       } catch (error) {
         console.log(error);

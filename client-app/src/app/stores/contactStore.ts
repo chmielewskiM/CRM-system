@@ -375,7 +375,7 @@ export default class ContactStore {
       } catch (error) {
         this.submittingData(false);
         toast.error('Problem occured');
-        console.log(error)
+        console.log(error);
       }
     } else {
       toast.info('No changes');

@@ -11,11 +11,11 @@ namespace API.Controllers
 {
     public class DelegatedTaskController : BaseController
     {
-        private readonly IMediator _mediator;
-        public DelegatedTaskController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+        // private readonly IMediator _mediator;
+        // public DelegatedTaskController(IMediator mediator)
+        // {
+        //     _mediator = mediator;
+        // }
 
         [HttpGet]
         public async Task<ActionResult<CompleteTaskData>> ListTasks(bool myTasks, bool sharedTasks, bool accepted, bool refused, bool done, int activePage, int pageSize)
