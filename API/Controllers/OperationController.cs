@@ -11,6 +11,7 @@ namespace API.Controllers
 {
     public class OperationController : BaseController
     {
+        
         [HttpGet]
         public async Task<ActionResult<CompleteStats>> List( CancellationToken ct)
         {

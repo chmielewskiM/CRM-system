@@ -21,7 +21,7 @@
         @include breakpoint(tablet_landscape) {
             flex: 0.25 0;
             transition: none;
-            
+
         }
 
         & .container {
@@ -47,9 +47,11 @@
                     width: 0;
                 }
             }
-            @include breakpoint(min_height){
+
+            @include breakpoint(min_height) {
                 padding-top: 7rem;
             }
+
             & .toggle-sidebar.button {
                 position: fixed;
                 z-index: 1;
@@ -113,7 +115,8 @@
                         max-height: 15rem;
                     }
                 }
-                @include breakpoint(min_height){
+
+                @include breakpoint(min_height) {
                     display: none;
                 }
 
@@ -138,9 +141,11 @@
                 justify-content: flex-start;
                 padding-right: 0;
                 transition: font-size .1s ease-in .4s;
-                @include breakpoint(min_height){
+
+                @include breakpoint(min_height) {
                     padding: 1rem !important;
                 }
+
                 @include breakpoint(tablet) {
                     justify-content: center;
                     transition: none;
@@ -149,6 +154,7 @@
                 &.admin {
                     white-space: nowrap;
                     color: red;
+                    font-weight: $bold;
 
                     &.active,
                     &.active:hover {
@@ -190,15 +196,18 @@
             }
 
             & :last-child {
-                align-self: flex-start;
-                margin: auto 0 5rem 0;
+                align-self: center;
+                margin: auto 0;
+
                 width: 100%;
                 padding: 0;
                 border: 0;
                 text-align: center;
-                @include breakpoint(min_height){
+
+                @include breakpoint(min_height) {
                     padding-top: 1rem;
                 }
+
                 & .ui.dropdown {
 
                     &:hover,
@@ -227,12 +236,12 @@
 
                 & .menu {
                     background-color: transparent;
-                    margin: 1rem 0;
                     top: 0;
                     bottom: 0;
+                    box-shadow: none;
 
                     & .item.logout {
-                        margin: .5rem !important;
+                        margin-top: 2.5rem !important;
                         padding: 0;
 
                         &:hover {
@@ -309,7 +318,7 @@
                 & a.link.item {
                     color: transparent !important;
                     transition: font-size .1s ease-in .4s !important;
-                    
+
                     @include breakpoint(tablet) {
                         color: #edf6f9 !important;
                         justify-content: center;
@@ -402,7 +411,7 @@
 
                         & .menu .item.logout {
                             font-size: 3rem;
-                            margin: 4rem 0 !important;
+                            margin: 4.5rem 0 !important;
                             padding: 0 !important;
                         }
                     }

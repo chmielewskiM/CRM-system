@@ -3,7 +3,7 @@
         overflow: scroll;
         height: -webkit-fill-available;
         position: relative;
-        min-height: 15rem;
+        min-height: 100%;
 
         @include breakpoint(tablet_landscape) {
             padding: 0;
@@ -43,7 +43,7 @@
                 @include reset-div;
                 width: 100%;
                 min-height: 10rem;
-                padding: 0 .7rem;
+                padding: 0 .3rem 3rem .3rem;
                 overflow-y: scroll;
                 background: #fff;
                 border-bottom-left-radius: 3px;
@@ -102,9 +102,9 @@
 
                         & .meta,
                         & .header {
-                            padding-left: 3rem;
-                            transform: scale(1.3);
-                            transition: transform .1s ease-in .12s, padding-left .12s ease-in;
+                            padding-left: 1rem;
+                            transform: scale(1.1);
+                            transition: transform .1s ease-in .1s, padding-left .1s ease-in;
 
                         }
                     }
@@ -112,7 +112,7 @@
                     & .header {
                         font-size: 1.2rem;
                         font-weight: 700;
-                        transition: transform .1s ease-in, padding-left .12s ease-in;
+                        transition: transform .1s ease-in, padding-left .1s ease-in;
                     }
 
                     & .meta {

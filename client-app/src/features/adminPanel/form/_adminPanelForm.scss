@@ -1,74 +1,132 @@
 #root {
-    & .ui.container.wrapper {
 
-        & .wrapper.admin-panel {
-            @include breakpoint(tablet) {
-                padding: 0;
+    & .main-grid.admin-panel {
 
-                & .column.form,
-                & .column.control {
-                    margin: 0;
-                }
-            }
+        & .form-container {
+            background-image: radial-gradient(circle farthest-corner at -4% -12.9%, rgba(74, 98, 110, 1) 0.3%, rgba(30, 33, 48, 1) 90.2%);
+            border-top: none !important;
 
-            & .form {
-                width: 50%;
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-start;
-                border-radius: .7rem;
-
-                @include breakpoint(tablet) {
-                    width: 90%;
-                    align-items: center;
+            & .big.form {
+                & .label {
+                    background-color: transparent;
+                    color: #fff;
+                    font-size: 1.2rem;
+                    padding: 1rem 0 .5rem 0;
+                    // font-weight: $light;
                 }
 
-                & .big.form {
-                    background-color: rgba(255, 255, 255, 0.2);
-                    border: .3rem inset #fff;
-                    padding: 2rem 2rem 0 2rem;
+                & .field {
+                    display: inline-flex;
+                    flex-direction: column;
+                    width: 100%;
+                    align-self: center;
+                    border: thin solid rgba(252, 174, 7, 0.9);
+                    border-radius: 5px;
+                    font-size: 1rem;
+
+                    &.reset {
+                        content: ''
+                    }
+
+                    & input {
+                        color: #000;
+                        opacity: 1;
+                        border: none;
+                        border-radius: 3px;
+                    }
+
+                    & .visible.selection,
+                    & .selection {
+                        background-color: $color-primary-dark;
+                        color: #fff;
+
+                        & .item:hover {
+                            background-color: #fff;
+
+                            & .text {
+                                color: $color-primary-dark;
+                            }
+                        }
+
+                        & .text {
+                            color: #fff;
+                        }
+
+                        & .menu.transition {
+                            min-height: auto;
+                            background-color: $color-primary-dark;
+
+                            &::-webkit-scrollbar,
+                            &::-webkit-scrollbar-track {
+                                display: initial !important;
+                                width: 5px;
+                                background: $color-primary;
+                            }
+
+                            &::-webkit-scrollbar-thumb {
+                                background: #fff;
+                            }
+
+                        }
+                    }
+                }
+
+                & .radio-btns {
+                    @include reset-div;
                     display: flex;
-                    align-items: stretch;
+                    justify-content: center;
+                    align-items: center;
+                    padding-top: 1rem;
+                    background-color: transparent;
+
+                    & .radio-label,
+                    .field {
+                        width: min-content;
+                    }
+
+                    & .radio-label {
+                        // flex:1 0;
+                        color: $color5;
+                        padding: 0;
+
+                    }
 
                     & .field {
-                        display: inline-flex;
-                        flex-direction: column;
-                        width: 100%;
-                        align-self: center;
+                        // flex:.5 0;
+                        // align-items: center;
+                        margin: 0 2rem 0 0;
+                        border: 0;
 
-                        &.reset {
-                            content: ''
+                        & input {
+                            margin-left: .5rem;
                         }
                     }
 
-                    & .buttons {
-                        align-self: flex-end;
-                        padding: 1rem;
+                }
 
-                        & .button {
-                            padding: .5rem;
-                            margin-left: 1rem;
-                            background-color: transparent;
-                            border-radius: .5rem;
-                            background-color: rgba(255, 255, 255, 1);
+                & .button {
+                    font-size: 1.3rem;
+                    margin: 1.5rem;
+                    padding: .5rem 1rem;
+                    border-radius: 3px;
+                    border: thin solid #fff;
+                    color: rgba(255, 255, 255, 0.8);
+                    background-image: linear-gradient(to top, #09203fbe 0%, #537895af 100%);
+                    transition: none !important;
+                    letter-spacing: .1rem;
+
+                    &.positive {
+                        &:hover {
+                            color: #fff;
+                            background-image: radial-gradient(circle farthest-corner at 50% 50%, rgba(19, 170, 82, 1) 0%, rgba(0, 102, 43, 1) 90%);
+
                         }
+                    }
 
-                        & .positive {
-                            border: .3rem solid rgba(0, 128, 0, 1);
-                            background-color: rgba(0, 128, 0, .5);
-
-                            &:hover {
-                                background-color: green;
-                            }
-                        }
-
-                        & .negative {
-                            border: .3rem solid rgba(255, 0, 0, 1);
-                            background-color: rgba(255, 0, 0, .5);
-
-                            &:hover {
-                                background-color: red;
-                            }
+                    &.negative {
+                        &:hover {
+                            color: #fff;
+                            background-image: linear-gradient(178.2deg, rgba(118, 8, 23, 1) 10.9%, rgba(158, 12, 33, 1) 62.6%);
                         }
                     }
                 }

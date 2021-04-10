@@ -18,7 +18,6 @@ namespace Application.DelegatedTasks
         {
             public Guid Id { get; set; }
         }
-
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
@@ -31,7 +30,6 @@ namespace Application.DelegatedTasks
                 _userAccessor = userAccessor;
                 _context = context;
             }
-
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var task = await _context

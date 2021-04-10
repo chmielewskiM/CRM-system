@@ -13,12 +13,13 @@ namespace Application.AppUser
 {
     public class GetUser
     {
-        public class Query : IRequest<AppUser> { 
+        public class Query : IRequest<AppUser>
+        {
 
             public String Username { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query,  AppUser>
+        public class Handler : IRequestHandler<Query, AppUser>
         {
             private readonly DataContext _context;
             private readonly ILogger<List> _logger;
@@ -33,10 +34,12 @@ namespace Application.AppUser
 
             public async Task<AppUser> Handle(Query request, CancellationToken cancellationToken)
             {
-                var user =  await _userManager.FindByNameAsync(request.Username);
+                var user = await _userManager.FindByNameAsync(request.Username);
+                var users = _userManager.Users;
 
                 return new AppUser
-                {   
+                {
+                    Id = user.Id,
                     DisplayName = user.DisplayName,
                     Username = user.UserName,
                     Level = user.Level,

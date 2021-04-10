@@ -1,40 +1,51 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Button } from 'semantic-ui-react';
+import { Grid, Button, Container, Segment } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import { useStores } from '../../../app/stores/rootStore';
-import  AdminPanelForm  from '../form/AdminPanelForm';
+import AdminPanelForm from '../form/AdminPanelForm';
 
 export const AdminPanelDashboard: React.FC = () => {
   const { userStore } = useStores();
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    userStore.getUserList();
+  }, []);
 
   const [form, setForm] = useState(true);
 
+  const activateBtn = (ev: HTMLElement) => {
+    if (ev.parentElement) {
+      for (var child of ev.parentElement!.children)
+        child.classList.remove('active');
+      ev.classList.add('active');
+    }
+  };
+
   return (
-    <Grid className="main-grid">
-      <Grid.Row columns={16} className="wrapper admin-panel">
-        <Grid.Column mobile={15} tablet={8} computer={3} className="control">
-          <Button.Group className="cbuttons">
+    <Grid className="main-grid  admin-panel">
+      <Grid.Row columns={16} className="wrapper">
+        <Segment className="buttons-container" attached="top">
+          <Button.Group>
             <Button
               content="Add user"
-              type="reset"
-              onClick={() => {
+              className="active"
+              onClick={(ev) => {
                 setForm(true);
+                activateBtn(ev.currentTarget);
               }}
             />
             <Button
               content="Edit user"
-              onClick={() => {
+              onClick={(ev) => {
                 setForm(false);
+                activateBtn(ev.currentTarget);
               }}
             />
           </Button.Group>
-        </Grid.Column>
-
-        <Grid.Column mobile={16} tablet={12} computer={10} className="form">
+        </Segment>
+        <Segment className="form-container" attached="bottom">
           <AdminPanelForm form={form} />
-        </Grid.Column>
+        </Segment>
       </Grid.Row>
     </Grid>
   );

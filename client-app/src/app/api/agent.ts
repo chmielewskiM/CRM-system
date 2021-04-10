@@ -89,12 +89,15 @@ const Orders = {
 };
 
 const Users = {
-  get: (username: String): Promise<IUserFormValues> => requests.get(`/user/${username}`),
+  get: (username: string): Promise<IUserFormValues> => requests.get(`/user/${username}`),
   list: (): Promise<IUser[]> => requests.get('/user/list'),
   logged: (): Promise<IUser> => requests.get('/user'),
   login: (user: IUserFormValues): Promise<IUser> => requests.post('/user/login', user),
   register: (user: IUserFormValues): Promise<IUser> => requests.post('/user/register', user),
+  update: (user: IUser) => requests.put(`/user/${user.id}`, user),
+  delete:(username: string) =>requests.del(`/user/${username}`),
 };
+
 const Operations = {
   list: (): Promise<ICompleteStats> => 
   axios.get(`/operation/`).then(responseBody),

@@ -17,6 +17,8 @@ const RadioInput: React.FC<IProps> = ({
   func,
   label,
   className,
+  onChange,
+  onClick,
 }) => {
   return (
     <Fragment>
@@ -30,11 +32,8 @@ const RadioInput: React.FC<IProps> = ({
         <input
           type="radio"
           checked={input.value}
-          onChange={
-            (input.onChange = (e) => {
-              func(input.value);
-            })
-          }
+          onChange={onChange}
+          onClick={onClick}
         />
         {touched && error && (
           <Label basic color="red">

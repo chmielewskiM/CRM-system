@@ -30,7 +30,7 @@ namespace Application.AppUser
 
                 return new AppUser
                 {
-                    Id = new Guid(user.Id),
+                    Id = user.Id,
                     DisplayName = user.DisplayName,
                     Username = user.UserName,
                     Token = _jwtGenerator.CreateToken(user),

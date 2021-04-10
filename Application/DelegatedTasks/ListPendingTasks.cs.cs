@@ -42,10 +42,10 @@ namespace Application.DelegatedTasks
                                     .Users
                                     .SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetLoggedUsername());
 
-                var userTasks = await _context.UserTasks.Where(x=>
-                                                            x.SharedWith == user && 
+                var userTasks = await _context.UserTasks.Where(x =>
+                                                            x.SharedWith == user &&
                                                             x.DelegatedTask.Pending.Equals(true))
-                                                            .OrderBy(x=>x.DelegatedTask.Deadline)
+                                                            .OrderBy(x => x.DelegatedTask.Deadline)
                                                             .ToListAsync();
 
                 //get count of pending tasks shared with logged user
@@ -54,14 +54,14 @@ namespace Application.DelegatedTasks
 
                 if (tasksCount > 0)
                 {
-                    var paginatedTasks = PaginatedList<UserTask>.Create(userTasks, request.PendingActivePage, request.PendingPageSize);
+                    // var paginatedTasks = PaginatedList<UserTask>.Create(userTasks, request.PendingActivePage, request.PendingPageSize);
 
-                    foreach (UserTask userTask  in paginatedTasks)
+                    foreach (UserTask userTask in userTasks)
                         tasks.Add(userTask.DelegatedTask);
-                } 
-                        
+                }
+
                 var pendingTasks = _mapper.Map<List<DelegatedTask>, List<DelegatedTaskDTO>>(tasks);
-                
+
                 return new CompleteTaskData(pendingTasks, tasksCount);
             }
         }

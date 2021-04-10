@@ -4,12 +4,24 @@
     background: linear-gradient(to right, #363795, #005C97);
     width: 100%;
     margin: 0;
-    & .segment{
-        box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.7);
-        background-image: radial-gradient( circle 993px at 50% 50%,  rgba(137,171,245,0.37) 0%, rgba(245,247,252,1) 100.2% );
-        border: thin solid rgba(0, 0, 0, 0.5);
+
+    & .segment {
+        box-shadow: 1px 1px 3px 0 #000;
+        background-image: radial-gradient(circle 993px at 50% 50%, rgba(137, 171, 245, 0.37) 0%, rgba(245, 247, 252, 1) 100.2%);
+
+        & .button {
+            margin: 0 auto;
+            opacity: .85;
+            background-image: radial-gradient(circle farthest-corner at 50% 50%, rgba(19, 170, 82, 1) 0%, rgba(0, 102, 43, 1) 90%);
+            width: 50%;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
     }
-    & .field{
+
+    & .field {
         border: thin solid rgba(0, 0, 0, 0.247);
         border-radius: 4px;
     }

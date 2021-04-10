@@ -65,8 +65,15 @@ export default class DelegatedTaskStore {
         this.loadTasks();
       }
     );
-    autorun(() => this.loadTasks());
-    autorun(() => this.loadPendingTasks());
+    // reaction(
+    //   () => this.pendingTasksByDate,
+    //   () => {
+    //     this.loadTasks();
+    //   }
+    // );
+    // autorun(
+
+    // );
   }
 
   /////////////////////////////////////

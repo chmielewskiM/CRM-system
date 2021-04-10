@@ -28,7 +28,7 @@ export const OrderForm: React.FC<IProps> = (props) => {
 
   useEffect(() => {}, [
     orderStore.submitting,
-    // orderStore.sale,
+    orderStore.sale,
     // contactStore.uncontracted,
     // contactStore.selectedContact
   ]);
@@ -54,7 +54,7 @@ export const OrderForm: React.FC<IProps> = (props) => {
                       // onClick={contactStore.loadUncontracted}
                       onChange={(e, data) => {
                         contactStore.getContact(data.value!.toString());
-                        
+
                         // contactStore.loadUncontracted();
                       }}
                     />
@@ -66,8 +66,8 @@ export const OrderForm: React.FC<IProps> = (props) => {
                         label="Sale"
                         value={orderStore.sale}
                         type="radio"
+                        onChange={orderStore.toggleSelect}
                         component={RadioInput}
-                        func={orderStore.toggleSelect}
                       />
                     )}
 
@@ -77,7 +77,7 @@ export const OrderForm: React.FC<IProps> = (props) => {
                         label="Purchase"
                         value={!orderStore.sale}
                         type="radio"
-                        func={orderStore.toggleSelect}
+                        onChange={orderStore.toggleSelect}
                         component={RadioInput}
                       />
                     )}
