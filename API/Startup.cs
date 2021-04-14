@@ -20,8 +20,17 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using AutoMapper;
-using Application.Contacts;
+using Application;
 using System;
+using Microsoft.OpenApi.Models;
+using Application.Orders;
+using Application.Contacts;
+using Application.Leads;
+using Application.DelegatedTasks;
+using Application.AppUser;
+using System.Collections.Generic;
+using System.Reflection;
+using System.IO;
 
 namespace API
 {
@@ -72,12 +81,45 @@ namespace API
                 opt
                     .Filters
                     .Add(new AuthorizeFilter(policy));
-            }).AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Add>());
+            }).AddFluentValidation(cfg =>
+            {
+                cfg.RegisterValidatorsFromAssemblyContaining<AddContact>();
+                cfg.RegisterValidatorsFromAssemblyContaining<AddLead>();
+                cfg.RegisterValidatorsFromAssemblyContaining<AddTask>();
+                cfg.RegisterValidatorsFromAssemblyContaining<AddOrder>();
+                cfg.RegisterValidatorsFromAssemblyContaining<RegisterUser>();
+                cfg.LocalizationEnabled = false;
+            });
 
             services
                 .AddControllers()
                 .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.TryAddSingleton<ISystemClock, SystemClock>();
+
+            services.AddSwaggerGen(cfg =>
+                {
+                    cfg.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+                    cfg.CustomSchemaIds(x => x.FullName);
+                    cfg.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                    {
+                        Description = "JWT Authorization header using the bearer scheme",
+                        Name = "Authorization",
+                        In = ParameterLocation.Header,
+                        Type = SecuritySchemeType.ApiKey
+                    });
+                    cfg.AddSecurityRequirement(new OpenApiSecurityRequirement
+                    {
+                        {new OpenApiSecurityScheme{Reference = new OpenApiReference
+                        {
+                            Id = "Bearer",
+                            Type = ReferenceType.SecurityScheme
+                        }}, new List<string>()}
+                    });
+
+                    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                    cfg.IncludeXmlComments(xmlPath);
+                });
 
             var builder = services.AddIdentityCore<User>(
                 opt =>
@@ -130,7 +172,14 @@ namespace API
             app.UseAuthentication();
             app.UseCors("CorsPolicy");
             app.UseAuthorization();
-
+            app.UseSwagger(c =>
+            {
+                c.SerializeAsV2 = true;
+            });
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
             app.UseEndpoints(endpoints =>
             {
 

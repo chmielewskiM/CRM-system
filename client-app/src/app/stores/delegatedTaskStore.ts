@@ -249,7 +249,7 @@ export default class DelegatedTaskStore {
   loadUsers = async () => {
     this.loadingData(true);
     try {
-      const users = await agent.Users.list();
+      const users = await agent.Users.listUsers();
       runInAction(() => {
         users.forEach((user) => {
           this.usersRegistry.set(user.id, user);
@@ -375,7 +375,7 @@ export default class DelegatedTaskStore {
     this.submittingData(true);
     delegatedTask.finishedBy = this.rootStore.userStore.user!.displayName;
     try {
-      await agent.DelegatedTasks.add(delegatedTask);
+      await agent.DelegatedTasks.addTask(delegatedTask);
       runInAction(() => {
         this.activeTaskRegistry.set(delegatedTask.id, delegatedTask);
         toast.success('DelegatedTask added');
@@ -394,7 +394,7 @@ export default class DelegatedTaskStore {
     this.submittingData(true);
     if (this.selectedTask) {
       try {
-        await agent.DelegatedTasks.update(delegatedTask);
+        await agent.DelegatedTasks.updateTask(delegatedTask);
         runInAction(() => {
           this.activeTaskRegistry.set(delegatedTask.id, delegatedTask);
           this.showTaskForm = false;
@@ -416,7 +416,7 @@ export default class DelegatedTaskStore {
   deleteTask = async (id: string) => {
     this.submittingData(true);
     try {
-      await agent.DelegatedTasks.delete(id);
+      await agent.DelegatedTasks.deleteTask(id);
       runInAction(() => {
         this.activeTaskRegistry.delete(this.selectedTask!.id);
         this.selectedTask = undefined;
@@ -431,7 +431,7 @@ export default class DelegatedTaskStore {
   acceptTask = async (task: IDelegatedTask) => {
     this.submittingData(true);
     try {
-      await agent.DelegatedTasks.accept(task);
+      await agent.DelegatedTasks.acceptTask(task);
       this.submittingData(false);
     } catch (error) {
       this.submittingData(false);
@@ -445,7 +445,7 @@ export default class DelegatedTaskStore {
   refuseTask = async (task: IDelegatedTask) => {
     this.submittingData(true);
     try {
-      await agent.DelegatedTasks.refuse(task);
+      await agent.DelegatedTasks.refuseTask(task);
       this.submittingData(false);
     } catch (error) {
       this.submittingData(false);
@@ -458,7 +458,7 @@ export default class DelegatedTaskStore {
   finishTask = async (task: IDelegatedTask) => {
     this.submittingData(true);
     try {
-      await agent.DelegatedTasks.finish(task);
+      await agent.DelegatedTasks.finishTask(task);
       this.submittingData(false);
       this.selectTask('');
     } catch (error) {
@@ -471,7 +471,7 @@ export default class DelegatedTaskStore {
 
   shareTask = async (taskId: string, user: IUserFormValues) => {
     this.submittingData(true);
-    await agent.DelegatedTasks.share(taskId, user);
+    await agent.DelegatedTasks.shareTask(taskId, user);
     toast.success(
       'Shared ' + this.selectedTask?.type + ' with ' + user.username
     );

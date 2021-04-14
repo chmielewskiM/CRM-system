@@ -13,11 +13,11 @@ import { UserFormValues } from '../../../app/models/user';
 import RadioInput from '../../../app/common/form/RadioInput';
 
 const validation = combineValidators({
-  username: isRequired({ message: 'The username is required.' }),
-  displayName: isRequired({ message: 'Enter name to display.' }),
-  password: hasLengthGreaterThan(8)({
-    message: 'Password must be at least 8 characters long.',
-  }),
+  // username: isRequired({ message: 'The username is required.' }),
+  // displayName: isRequired({ message: 'Enter name to display.' }),
+  // password: hasLengthGreaterThan(8)({
+  //   message: 'Password must be at least 8 characters long.',
+  // }),
   // company: isRequired({ message: 'Select type of the task.' }),
   // phoneNumber: isRequired({ message: 'The date is required.' }),
   // email: isRequired({ message: 'The time is required.' }),

@@ -297,7 +297,7 @@ namespace Persistence
             //             .AddRange(delegatedTasks);
             //         context.SaveChanges();
             //     }
-
+            int operationsCount = 0;
             //OPERATIONS
             if (!context.Operations.Any())
             {
@@ -310,7 +310,7 @@ namespace Persistence
                 };
                 var operation = new Operation();
 
-                for (int i = 0; i < 200; i++)
+                for (int i = 0; i < 400; i++)
                 {
                     randomProperty = random.Next(106);
                     randomRevenue = random.Next(15000);
@@ -338,19 +338,19 @@ namespace Persistence
                         operation.Lead = 1;
                         operation.Source = sources[randomSource];
                     }
-                    else if (randomProperty >= 40 && randomProperty < 68)
+                    else if (randomProperty >= 40 && randomProperty < 65 && operations.Where(x => x.Lead == 1).Count() > operations.Where(x => x.Opportunity == 1).Count())
                     {
                         operation.Opportunity = 1;
                     }
-                    else if (randomProperty >= 68 && randomProperty < 87)
+                    else if (randomProperty >= 65 && randomProperty < 82 && operations.Where(x => x.Opportunity == 1).Count() > operations.Where(x => x.Quote == 1).Count())
                     {
                         operation.Quote = 1;
                     }
-                    else if (randomProperty >= 87 && randomProperty < 95)
+                    else if (randomProperty >= 82 && randomProperty < 92 && operations.Where(x => x.Quote == 1).Count() > operations.Where(x => x.Invoice == 1).Count())
                     {
                         operation.Invoice = 1;
                     }
-                    else if (randomProperty >= 95 && randomProperty < 101)
+                    else if (randomProperty >= 92 && randomProperty < 101 && operations.Where(x => x.Invoice == 1).Count() > operations.Where(x => x.Conversion == 1).Count())
                     {
                         operation.Conversion = 1;
                         operation.Revenue = randomRevenue;
@@ -362,7 +362,7 @@ namespace Persistence
 
                     operations.Add(operation);
                 };
-
+                operationsCount = operations.Count();
                 context
                     .Operations
                     .AddRange(operations);
@@ -375,7 +375,7 @@ namespace Persistence
                 int randomUser = 0;
                 var userOperations = new List<UserOperation> { };
 
-                for (int i = 0; i < 200; i++)
+                for (int i = 0; i < operationsCount; i++)
                 {
                     randomUser = random.Next(1, 5);
 

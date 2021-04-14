@@ -45,7 +45,7 @@ export const OrderDashboard: React.FC = () => {
             content="Add order"
             onClick={orderStore.addOrderForm}
           />
-          {orderStore.selectedOrder && (
+          {orderStore.selectedOrder && !orderStore.selectedOrder.closed && (
             <Button
               icon="pencil alternate"
               content="Edit order"

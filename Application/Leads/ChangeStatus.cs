@@ -115,7 +115,7 @@ namespace Application.Leads
             }
             private async Task UpgradeLead(SaleProcess lastProcess, string upgradeTo, Contact contact, DataContext context, User user)
             {
-                var newOperation = new Operations.Add();
+                var newOperation = new Operations.AddOperation();
 
                 switch (upgradeTo)
                 {
@@ -149,7 +149,7 @@ namespace Application.Leads
             private async Task ConvertLead(IQueryable<SaleProcess> saleProcess, Contact contact, DataContext context, User user)
             {
 
-                var newOperation = new Operations.Add();
+                var newOperation = new Operations.AddOperation();
 
                 Order order = contact.Orders.OrderByDescending(x => x.DateOrderOpened).FirstOrDefault();
 

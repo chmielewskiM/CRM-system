@@ -11,14 +11,32 @@ using MediatR;
 namespace API.Controllers
 {
 
-    public class UserController : BaseController
+    public class UsersController : BaseController
     {
 
         private readonly IMediator _mediator;
 
-        public UserController(IMediator mediator)
+        public UsersController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<User>>> ListUsers(CancellationToken ct)
+        {
+            return await Mediator.Send(new ListUsers.Query(), ct);
+        }
+
+        [HttpGet("logged")]
+        public async Task<ActionResult<AppUser>> LoggedUser()
+        {
+            return await Mediator.Send(new LoggedUser.Query());
+        }
+
+        [HttpGet("{username}")]
+        public async Task<ActionResult<AppUser>> GetUser(String username)
+        {
+            return await Mediator.Send(new GetUser.Query { Username = username });
         }
 
         [AllowAnonymous]
@@ -35,26 +53,8 @@ namespace API.Controllers
             return await Mediator.Send(command);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<AppUser>> LoggedUser()
-        {
-            return await Mediator.Send(new LoggedUser.Query());
-        }
-
-        [HttpGet("{username}")]
-        public async Task<ActionResult<AppUser>> GetUser(String username)
-        {
-            return await Mediator.Send(new GetUser.Query { Username = username });
-        }
-
-        [HttpGet("list")]
-        public async Task<ActionResult<List<User>>> List(CancellationToken ct)
-        {
-            return await Mediator.Send(new List.Query(), ct);
-        }
-
         [HttpPut("{id}")]
-        public async Task<ActionResult<Unit>> Edit(string id, EditUser.Command command)
+        public async Task<ActionResult<Unit>> EditUser(string id, EditUser.Command command)
         {
             command.Id = id;
             return await _mediator.Send(command);

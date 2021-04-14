@@ -15,7 +15,7 @@ using Persistence;
 ////////////////////////////////////////////
 namespace Application.Contacts
 {
-    public class Share
+    public class ShareContact
     {
         public class Command : IRequest
         {            

@@ -35,6 +35,12 @@ export const ContactDashboard: React.FC = () => {
           content="Add contact"
           onClick={contactStore.addContactForm}
         />
+        {/* <Button
+          positive
+          icon="plus"
+          content="Fake contacts"
+          onClick={contactStore.fakeContacts}
+        /> */}
         {contactStore.selectedContact?.status == 'Inactive' && (
           <Button
             onClick={contactStore.startSaleProcess}
@@ -84,7 +90,7 @@ export const ContactDashboard: React.FC = () => {
               {contactStore.activePage >= 1 &&
                 contactStore.activePage.toString().concat('1')}
             </span>
-            <span className="contacts-to">-10&nbsp;</span>
+            <span className="contacts-to">-{contactStore.activePage + 1}0&nbsp;</span>
             <span className="contacts-all">
               {' '}
               /&nbsp;{contactStore.contactsTotal}
@@ -93,7 +99,8 @@ export const ContactDashboard: React.FC = () => {
               icon="chevron right"
               onClick={() => contactStore.setPagination(1)}
               disabled={
-                contactStore.activePage + 1 > contactStore.contactsTotal / 10
+                contactStore.activePage + 1 >=
+                contactStore.contactsTotal / 10
               }
             />
           </Button.Group>

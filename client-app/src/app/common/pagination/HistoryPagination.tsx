@@ -12,7 +12,6 @@ const countTotalPages = (pageSize: number, itemsCount: number) => {
   let verifier = Math.floor(itemsCount / pageSize - 0.001);
 
   if (verifier < floor) addPage = 0;
-
   if (floor + addPage == 0) return 1;
 
   return floor + addPage;

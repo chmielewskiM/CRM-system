@@ -20,7 +20,7 @@ namespace Application.Contacts
         public Int16 SuccessfulDeals { get; set; }
         public string Source { get; set; }
         public string Premium { get; set; }
-        public Int16 UnsuccessfulDeals { get; set; }
+        
         [JsonProperty("users")]
         public ICollection<UserAccessDTO> UserContacts { get; set; }
         [JsonProperty("orders")]

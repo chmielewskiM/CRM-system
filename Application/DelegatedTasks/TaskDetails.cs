@@ -9,7 +9,7 @@ using System.Net;
 
 namespace Application.DelegatedTasks
 {
-    public class Details
+    public class TaskDetails
     {
         public class Query : IRequest<DelegatedTask>
         {

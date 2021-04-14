@@ -10,7 +10,7 @@ using Domain;
 
 namespace API.Controllers
 {
-    public class LeadController : BaseController
+    public class LeadsController : BaseController
     {
         
         [HttpGet]
@@ -20,9 +20,9 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<LeadDTO>> Details(Guid id)
+        public async Task<ActionResult<LeadDTO>> LeadDetails(Guid id)
         {
-            return await Mediator.Send(new Details.Query { Id = id });
+            return await Mediator.Send(new LeadDetails.Query { Id = id });
         }
 
         [HttpPost]
@@ -31,12 +31,12 @@ namespace API.Controllers
             return await Mediator.Send(new AddLead.Command { Lead = lead });
         }
 
-        [HttpPut("/edit/{id}")]
-        public async Task<ActionResult<Unit>> Edit(Guid id, Application.Contacts.Edit.Command command)
-        {
-            command.Id = id;
-            return await Mediator.Send(command);
-        }
+        // [HttpPut("/edit/{id}")]
+        // public async Task<ActionResult<Unit>> Edit(Guid id, Application.Contacts.Edit.Command command)
+        // {
+        //     command.Id = id;
+        //     return await Mediator.Send(command);
+        // }
 
         [HttpPut("{id}={upgrade}")]
         public async Task<ActionResult<Unit>> ChangeStatus(Guid id, bool upgrade)
@@ -44,7 +44,7 @@ namespace API.Controllers
             return await Mediator.Send(new ChangeStatus.Command { Id = id, Upgrade = upgrade });
         }
 
-        [HttpDelete]
+        [HttpDelete("abandon")]
         public async Task<ActionResult<Unit>> AbandonLead(Guid id, bool saveContact, bool keepRecords)
         {
             return await Mediator.Send(new AbandonLead.Command(id, saveContact, keepRecords));

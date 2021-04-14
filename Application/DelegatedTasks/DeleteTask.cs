@@ -10,7 +10,7 @@ using Persistence;
 
 namespace Application.DelegatedTasks
 {
-    public class Delete
+    public class DeleteTask
     {
         public class Command : IRequest
         {

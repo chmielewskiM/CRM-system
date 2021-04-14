@@ -9,7 +9,7 @@ using Persistence;
 
 namespace Application.Orders
 {
-    public class Edit
+    public class EditOrder
     {
         public class Command : IRequest
         {

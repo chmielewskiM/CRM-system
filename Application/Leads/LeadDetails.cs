@@ -9,16 +9,15 @@ using Application.Errors;
 using System.Net;
 using AutoMapper;
 
-namespace Application.Contacts
+namespace Application.Leads
 {
-    public class Details
+    public class LeadDetails
     {
-        public class Query : IRequest<ContactDTO>
+        public class Query : IRequest<LeadDTO>
         {
             public Guid Id { get; set; }
         }
-
-        public class Handler : IRequestHandler<Query, ContactDTO>
+        public class Handler : IRequestHandler<Query, LeadDTO>
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
@@ -29,7 +28,7 @@ namespace Application.Contacts
                 _context = context;
             }
 
-            public async Task<ContactDTO> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<LeadDTO> Handle(Query request, CancellationToken cancellationToken)
             {
                 var contact = await _context.Contacts
                 .FindAsync(request.Id);
@@ -38,7 +37,7 @@ namespace Application.Contacts
                     throw new RestException(HttpStatusCode.NotFound,
                     new { contact = "Not found" });
 
-                var contactToReturn = _mapper.Map<Contact, ContactDTO>(contact);
+                var contactToReturn = _mapper.Map<Contact, LeadDTO>(contact);
 
                 return contactToReturn;
             }

@@ -21,11 +21,11 @@ namespace Application.Leads
         {
             public CommandValidator()
             {
-                // RuleFor(x => x.Name).NotEmpty();
-                // RuleFor(x => x.Type).NotEmpty();
-                // RuleFor(x => x.Company).NotEmpty();
-                // RuleFor(x => x.PhoneNumber).NotEmpty();
-                // RuleFor(x => x.Email).NotEmpty();
+                RuleFor(x => x.Lead.Contact.Name).NotEmpty();
+                RuleFor(x => x.Lead.Contact.Type).NotEmpty();
+                RuleFor(x => x.Lead.Contact.Company).NotEmpty();
+                RuleFor(x => x.Lead.Contact.PhoneNumber).NotEmpty();
+                // RuleFor(x => x.Lead.Contact.Email).NotEmpty();
             }
         }
         public class Handler : IRequestHandler<Command>
@@ -83,7 +83,7 @@ namespace Application.Leads
                     contact.Status = "Lead";
                 }
 
-                var newOperation = new Operations.Add();
+                var newOperation = new Operations.AddOperation();
 
                 //***GUID check in case someone being afraid of drawing 1/2^128 scenario ;)
                 // Operation checkGuid = null;
@@ -109,6 +109,8 @@ namespace Application.Leads
                 };
 
                 _context.SaleProcess.Add(saleProcess);
+
+                contact.CurrentSale.Add(saleProcess);
 
                 var success = await _context.SaveChangesAsync() > 0;
 
