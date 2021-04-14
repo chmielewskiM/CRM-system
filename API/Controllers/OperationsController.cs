@@ -5,24 +5,24 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using System.Threading;
 using Application.Operations;
-using static Application.Operations.List;
+using static Application.Operations.ListOperations;
 
 namespace API.Controllers
 {
-    public class OperationController : BaseController
+    public class OperationsController : BaseController
     {
         
         [HttpGet]
-        public async Task<ActionResult<CompleteStats>> List( CancellationToken ct)
+        public async Task<ActionResult<CompleteStats>> ListOperations( CancellationToken ct)
         {
-            return await Mediator.Send(new List.Query(), ct);
+            return await Mediator.Send(new ListOperations.Query(), ct);
         }
 
-        // [HttpPost]
-        // public async Task<ActionResult<Unit>> Add(Add.Command command)
-        // {
-        //     return await Mediator.Send(command);
-        // }
+        [HttpGet("count")]
+        public async Task<ActionResult<Int32>> CountOperations()
+        {
+            return await Mediator.Send(new CountOperations.Query());
+        }
 
         // [HttpDelete("{id}")]
         // public async Task<ActionResult<Unit>> DeleteOperation(Guid id)

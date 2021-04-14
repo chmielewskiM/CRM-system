@@ -11,7 +11,7 @@ using Persistence;
 
 namespace Application.Orders
 {
-    public class Delete
+    public class DeleteOrder
     {
         public class Command : IRequest
         {

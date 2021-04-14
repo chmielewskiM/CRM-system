@@ -5,9 +5,9 @@ using Domain;
 
 namespace Application.Operations
 {
-    public class Add : Operation
+    public class AddOperation : Operation
     {
-        public Add()
+        public AddOperation()
         {
             Id = Guid.NewGuid();
             Lead = 0;

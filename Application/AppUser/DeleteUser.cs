@@ -24,10 +24,10 @@ namespace Application.AppUser
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
-            private readonly ILogger<List> _logger;
+            private readonly ILogger<ListUsers> _logger;
             private readonly UserManager<User> _userManager;
 
-            public Handler(DataContext context, ILogger<List> logger, UserManager<User> userManager)
+            public Handler(DataContext context, ILogger<ListUsers> logger, UserManager<User> userManager)
             {
                 _userManager = userManager;
                 _logger = logger;

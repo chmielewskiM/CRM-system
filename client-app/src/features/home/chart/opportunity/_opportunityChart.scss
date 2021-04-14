@@ -9,9 +9,7 @@ padding: 3rem 0 1rem 0;
 
         & .chart {
             background-color: rgba(255, 255, 255, 0.116);
-            min-height: 40rem;
-            padding-bottom: 1rem;
-            padding-top: 1.5rem !important;
+
             border:thin solid #fff;
             @include breakpoint(tablet) {
                 height: 50%;

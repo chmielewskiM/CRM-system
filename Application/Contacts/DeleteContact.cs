@@ -8,7 +8,7 @@ using Persistence;
 
 namespace Application.Contacts
 {
-    public class Delete
+    public class DeleteContact
     {
         public class Command : IRequest
         {

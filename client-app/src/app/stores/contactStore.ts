@@ -65,6 +65,7 @@ export default class ContactStore {
       shareContact: action,
       startSaleProcess: action,
       getContact: action,
+      addFake: action,
     });
 
     this.rootStore = rootStore;
@@ -186,7 +187,6 @@ export default class ContactStore {
   selectContact = (id: string) => {
     runInAction(() => {
       if (id !== '') {
-        var a = this.contactRegistry.get(id);
         this.selectedContact = this.contactRegistry.get(id);
         this.contact = this.selectedContact;
       } else {
@@ -229,7 +229,9 @@ export default class ContactStore {
         child.classList.remove('active');
       ev.classList.add('active');
     }
+
     runInAction(() => {
+      this.activePage = 0;
       switch (arg) {
         case 'all':
           this.inProcess = false;
@@ -345,10 +347,8 @@ export default class ContactStore {
 
   addContact = async (contact: IContact) => {
     this.submittingData(true);
-    var date = new Date(Date.now());
-    contact.dateAdded = date;
     try {
-      await agent.Contacts.add(contact);
+      await agent.Contacts.addContact(contact);
       runInAction(() => {
         this.contactRegistry.set(contact.id, contact);
         toast.success('Contact added');
@@ -358,6 +358,8 @@ export default class ContactStore {
       this.loadContacts();
     } catch (error) {
       this.submittingData(false);
+      toast.error(error.data.errors.msg);
+      toast.error(error.data.errors);
       console.log(error);
     }
   };
@@ -366,7 +368,7 @@ export default class ContactStore {
     this.submittingData(true);
     if (this.contact == this.selectedContact) {
       try {
-        await agent.Contacts.update(contact);
+        await agent.Contacts.updateContact(contact);
         runInAction(() => {
           this.contactRegistry.set(contact.id, contact);
         });
@@ -387,12 +389,13 @@ export default class ContactStore {
   removeContact = async (id: string) => {
     this.submittingData(true);
     try {
-      await agent.Contacts.unshare(id);
+      await agent.Contacts.unshareContact(id);
       runInAction(() => {
         this.contactRegistry.delete(this.selectedContact!.id);
         this.selectedContact = undefined;
       });
       this.submittingData(false);
+      toast.success('Contact deleted successfully.');
     } catch (error) {
       toast.error(error.data.errors.error);
       this.submittingData(false);
@@ -414,7 +417,7 @@ export default class ContactStore {
 
       if (contact.premium)
         toast.success(`${contact.name} is now premium member.`);
-      else toast.info(`${contact.name} is not premium member anymore.`);
+      else toast.info(`${contact.name} is no longer premium member.`);
     } catch (error) {
       this.submittingData(false);
       console.log(error);
@@ -457,7 +460,7 @@ export default class ContactStore {
     if (name) {
       try {
         let contact = new ContactFormValues();
-        contact = await agent.Contacts.get(encodeURI(name));
+        contact = await agent.Contacts.getContact(encodeURI(name));
         runInAction(() => {
           this.selectedContact = new ContactFormValues(contact);
           // this.rootStore.orderStore.selectedClient = contact.name;
@@ -469,4 +472,67 @@ export default class ContactStore {
     }
   };
   //----------------------------------------
+
+  //FAKER
+  addFake = async (contact: IContact) => {
+    this.submittingData(true);
+    var date = new Date(Date.now());
+    contact.dateAdded = date;
+    try {
+      await agent.Contacts.addContact(contact);
+      runInAction(() => {
+        this.contactRegistry.set(contact.id, contact);
+        toast.success('Contact added');
+        this.showContactForm = false;
+      });
+      this.submittingData(false);
+      this.loadContacts();
+    } catch (error) {
+      this.submittingData(false);
+      console.log(error);
+    }
+  };
+  ////
+  //Faker
+  // fakeContacts = async () => {
+  //   var faker = require('faker');
+  //   const types = [
+  //     'Client',
+  //     'Team',
+  //     'Supplier',
+  //     'Inactive',
+  //     'Shipment',
+  //     'Other',
+  //   ];
+  //   const sources = [
+  //     'Web',
+  //     'Social Media',
+  //     'Flyers',
+  //     'Commercial',
+  //     'Former Client',
+  //   ];
+
+  //   var randomName = faker.name.findName(); // Rowan Nikolaus
+  //   var randomEmail = faker.internet.email(); // Kassandra.Haley@erich.biz
+  //   var randomCard = faker.helpers.createCard(); // random contact card containing many properties
+
+  //   for (let i = 0; i < 30; i++) {
+  //     let randType = Math.floor(Math.random() * 6);
+  //     let randSource = Math.floor(Math.random() * 5);
+  //     let contact = new ContactFormValues();
+  //     contact.id = uuid();
+  //     contact.name = `${faker.name.firstName()} ${faker.name.lastName()}`;
+  //     contact.type = types[randType];
+  //     contact.source = types[randSource];
+  //     if (i % 5 == 0) contact.premium = true;
+  //     contact.notes = faker.lorem.sentences();
+  //     contact.phoneNumber = faker.phone.phoneNumber('+28 ### ### ###');
+  //     contact.status = 'Inactive';
+  //     contact.successfulDeals = randType;
+  //     contact.company = faker.company.companyName();
+  //     contact.dateAdded = faker.date.past();
+  //     contact.email = faker.internet.email();
+  //     await this.addContact(contact);
+  //   }
+  // };
 }

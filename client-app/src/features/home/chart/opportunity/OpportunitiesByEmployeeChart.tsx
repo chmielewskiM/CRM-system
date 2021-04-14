@@ -10,14 +10,17 @@ am4core.useTheme(am4themes_microchart);
 interface IProps {
   data:
     | { name: string; leads: number; opportunities: number }[]
-    | { name: Date; leads: number; opportunities: number }[];
+    | {
+        dateStart: Date;
+        dateEnd: Date;
+        leads: number;
+        opportunities: number;
+      }[];
   loading: boolean;
 }
 
 const OpportunityByEmployeeChart: React.FC<IProps> = (props) => {
-  
   useLayoutEffect(() => {
-    
     var chart = am4core.create(
       'opportunitiesByEmployeeChart',
       am4charts.XYChart
@@ -27,10 +30,22 @@ const OpportunityByEmployeeChart: React.FC<IProps> = (props) => {
     var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
     categoryAxis.dataFields.category = 'name';
     categoryAxis.renderer.grid.template.location = 0;
-    categoryAxis.renderer.minGridDistance = 20;
+    chart.paddingBottom = 50;
+    chart.paddingLeft = 50;
+    chart.maskBullets = false;
+
+    categoryAxis.renderer.inside = true;
+    categoryAxis.renderer.labels.template.valign = 'bottom';
+    categoryAxis.renderer.labels.template.location = -0.5;
+    categoryAxis.renderer.labels.template.fontSize = 30;
 
     var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-    valueAxis.title.text = 'Count';
+    // valueAxis.syncWithAxis;
+    // valueAxis.showOnInit = true;
+    valueAxis.numberFormatter.numberFormat = '#';
+    // valueAxis.min = 0;
+    // valueAxis.max = 6;
+    valueAxis.cursorTooltipEnabled = true;
 
     // Create series
     var series = chart.series.push(new am4charts.ColumnSeries());
@@ -39,6 +54,13 @@ const OpportunityByEmployeeChart: React.FC<IProps> = (props) => {
     series.name = 'Leads';
     series.tooltipText = '{name} leads: [bold]{valueY}[/]';
     series.stacked = true;
+
+    let bullet = series.bullets.push(new am4charts.LabelBullet());
+    bullet.label.text = '{name}';
+    bullet.locationY = 1;
+    bullet.dy = 15;
+    bullet.label.fill = am4core.color('#fff');
+    bullet.label.fontSize = '1.4rem';
 
     var series2 = chart.series.push(new am4charts.ColumnSeries());
     series2.dataFields.valueY = 'opportunities';

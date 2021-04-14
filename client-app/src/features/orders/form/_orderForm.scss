@@ -1,5 +1,10 @@
 .order-form{
-
+    & .big.form{
+        & .field .selection.dropdown .menu{
+            max-height: 30rem;
+            overflow: scroll !important;
+        }
+    }
     & .btn-group-1 {
         display: flex;
         justify-content: flex-start;

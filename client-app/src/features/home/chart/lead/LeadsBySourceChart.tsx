@@ -8,7 +8,7 @@ import LoaderComponent from '../../../../app/layout/LoaderComponent';
 am4core.useTheme(am4themes_animated);
 
 interface IProps {
-  data: { name: string; value: number }[] | { name: Date; value: number }[];
+  data: { name: string; value: number }[] | { startDate: Date; endDate:Date; value: number }[];
   loading: boolean;
 }
 

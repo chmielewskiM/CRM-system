@@ -39,7 +39,7 @@ export const ConfirmationModal: React.FC<IProps> = (props) => {
                     label="Yes"
                     type="radio"
                     component={RadioInput}
-                    func={leadStore.save}
+                    onChange={leadStore.save}
                     className="yes"
                   />
                   <Field
@@ -48,7 +48,7 @@ export const ConfirmationModal: React.FC<IProps> = (props) => {
                     label="No"
                     type="radio"
                     component={RadioInput}
-                    func={leadStore.save}
+                    onChange={leadStore.save}
                     className="no"
                   />
                 </div>
@@ -61,7 +61,7 @@ export const ConfirmationModal: React.FC<IProps> = (props) => {
                     value={leadStore.keepRecords}
                     type="radio"
                     label="Yes"
-                    func={leadStore.keep}
+                    onChange={leadStore.keep}
                     component={RadioInput}
                     className="yes"
                   />
@@ -70,7 +70,7 @@ export const ConfirmationModal: React.FC<IProps> = (props) => {
                     value={!leadStore.keepRecords}
                     type="radio"
                     label="No"
-                    func={leadStore.keep}
+                    onChange={leadStore.keep}
                     component={RadioInput}
                     className="no"
                   />

@@ -19,18 +19,15 @@ namespace Application.Orders
             public Boolean Closed { get; set; }
             public DateTime DateOrderClosed { get; set; }
         }
-
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
             private readonly IUserAccessor _userAccessor;
-
             public Handler(DataContext context, IUserAccessor userAccessor)
             {
                 _context = context;
                 _userAccessor = userAccessor;
             }
-
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var order = await _context.Orders.FindAsync(request.Id);
@@ -39,17 +36,14 @@ namespace Application.Orders
                     throw new RestException(HttpStatusCode.NotFound,
                     new { delegatedTask = "Not found" });
 
-
                 order.Closed = true;
 
                 order.DateOrderClosed = DateTime.Now;
 
-
-
                 //add revenue (only sale orders)
                 if (order.Type)
                 {
-                    var newOperation = new Operations.Add();
+                    var newOperation = new Operations.AddOperation();
                     var user = await _context
                     .Users
                     .SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetLoggedUsername());

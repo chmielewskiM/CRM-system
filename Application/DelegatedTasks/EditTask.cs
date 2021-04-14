@@ -9,7 +9,7 @@ using Persistence;
 
 namespace Application.DelegatedTasks
 {
-    public class Edit
+    public class EditTask
     {
         public class Command : IRequest
         {

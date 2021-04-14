@@ -80,7 +80,7 @@ namespace Application.Orders
                 client.Orders.Append(order);
 
                 //register this operation
-                var newOperation = new Operations.Add();
+                var newOperation = new Operations.AddOperation();
 
                 newOperation.Order++;
                 newOperation.Date = order.DateOrderOpened;

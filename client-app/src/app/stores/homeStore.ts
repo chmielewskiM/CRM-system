@@ -3,8 +3,8 @@ import {
   action,
   computed,
   runInAction,
-  reaction,
   makeObservable,
+  reaction,
 } from 'mobx';
 import agent from '../api/agent';
 import { RootStore } from './rootStore';
@@ -37,6 +37,7 @@ export default class homeStore {
       composedChartTimeRange: observable,
       selectedEvent: observable,
       stats: observable,
+      operationsCount: observable,
       pipelineData: computed.struct,
       thisMonthStats: computed.struct,
       leadsChartData: computed.struct,
@@ -49,17 +50,17 @@ export default class homeStore {
       loadOperations: action,
       showLeadsChart: action,
       showOpportunitiesChart: action,
+      countOperations: action,
     });
 
     this.rootStore = rootStore;
 
-    // reaction(
-    //   () => this.axiosParams,
-    //   () => {
-    //     this.loadTasks();
-    //   }
-    // );
-    // this.loadOperations();
+    reaction(
+      () => this.operationsCount,
+      () => {
+        this.loadOperations();
+      }
+    );
   }
   /////////////////////////////////////
   //collections
@@ -80,6 +81,7 @@ export default class homeStore {
   opportunitiesChart = false;
   opportunitiesChartTimeRange = false;
   composedChartTimeRange = false;
+  operationsCount = 0;
   //--------------------------------------------
 
   ////
@@ -167,7 +169,11 @@ export default class homeStore {
   }
 
   get leadsOverallData() {
-    let chartProps: Array<{ name: Date; value: number }> = [];
+    let chartProps: Array<{
+      startDate: Date;
+      endDate: Date;
+      value: number;
+    }> = [];
     let range;
 
     if (this.leadsChartTimeRange == false) range = 'sixMonths';
@@ -179,8 +185,13 @@ export default class homeStore {
       );
       let operations = Object.values(data);
       operations.forEach((x) => {
-        let obj: { name: Date; value: number } = { name: new Date(), value: 0 };
-        obj.name = new Date(x.dateStart);
+        let obj: { startDate: Date; endDate: Date; value: number } = {
+          startDate: new Date(),
+          endDate: new Date(),
+          value: 0,
+        };
+        obj.startDate = new Date(x.dateStart);
+        obj.endDate = new Date(x.dateEnd);
         obj.value = x.leads;
         chartProps.push(obj);
       });
@@ -218,7 +229,8 @@ export default class homeStore {
 
   get opportunitiesOverallData() {
     let chartProps: Array<{
-      name: Date;
+      dateStart: Date;
+      dateEnd: Date;
       leads: number;
       opportunities: number;
     }> = [];
@@ -226,7 +238,6 @@ export default class homeStore {
 
     if (this.opportunitiesChartTimeRange == false) range = 'sixMonths';
     else range = 'oneMonth';
-
     if (this.dataFetched) {
       let { ...data }: ICollectedOperationData[] = Array.from(
         this.operationsRegistry.get(range)
@@ -234,12 +245,19 @@ export default class homeStore {
       let operations = Object.values(data);
 
       operations.forEach((x) => {
-        let obj: { name: Date; leads: number; opportunities: number } = {
-          name: new Date(),
+        let obj: {
+          dateStart: Date;
+          dateEnd: Date;
+          leads: number;
+          opportunities: number;
+        } = {
+          dateStart: new Date(),
+          dateEnd: new Date(),
           leads: 0,
           opportunities: 0,
         };
-        obj.name = x.dateEnd;
+        obj.dateStart = x.dateStart;
+        obj.dateEnd = x.dateEnd;
         obj.leads = x.leads;
         obj.opportunities = x.opportunities;
         chartProps.push(obj);
@@ -306,12 +324,26 @@ export default class homeStore {
     this.submittingData(false);
   };
 
+  countOperations = async () => {
+    this.loadingData(true);
+    try {
+      const count = await agent.Operations.countOperations();
+      runInAction(() => {
+        this.operationsCount = count;
+      });
+      this.loadingData(false);
+    } catch (error) {
+      this.loadingData(false);
+      console.log(error);
+    }
+  };
+
   loadOperations = async () => {
     this.loadingData(true);
     try {
       const arr = [0, 1, 2, 3, 4, 5];
       let i = 0;
-      const operations = await agent.Operations.list();
+      const operations = await agent.Operations.listOperations();
       const { ...data } = operations;
       const operationsByDate: Array<ICompleteStats> = Array.from(
         Object.values(data)
@@ -357,6 +389,4 @@ export default class homeStore {
     });
     this.loadingData(false);
   };
-
-  //Pipeline
 }

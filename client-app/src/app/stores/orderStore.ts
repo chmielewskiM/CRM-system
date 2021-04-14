@@ -281,7 +281,7 @@ export default class OrderStore {
     this.loadingData(true);
     const order = new OrderFormValues(this.selectedOrder);
     this.rootStore.contactStore.getContact(encodeURI(order.clientName!));
-    const contact = await agent.Contacts.get(encodeURI(order.clientName!));
+    const contact = await agent.Contacts.getContact(encodeURI(order.clientName!));
     runInAction(() => {
       if (
         !this.rootStore.contactStore.contactRegistry.has(contact.id) &&
@@ -338,7 +338,7 @@ export default class OrderStore {
       this.closedOrders = false;
     });
     try {
-      const data = await agent.Orders.list(this.axiosParams);
+      const data = await agent.Orders.listOrders(this.axiosParams);
       const [...orders] = data.orders;
       const count = data.ordersCount;
       runInAction(() => {
@@ -360,7 +360,7 @@ export default class OrderStore {
       this.closedOrders = true;
     });
     try {
-      const data = await agent.Orders.list(this.axiosParams);
+      const data = await agent.Orders.listOrders(this.axiosParams);
       const [...orders] = data.orders;
       const count = data.ordersCount;
       runInAction(() => {
@@ -385,7 +385,7 @@ export default class OrderStore {
       order.dateOrderOpened = date;
       order.type = this.sale;
       order.clientId = this.rootStore.contactStore.selectedContact?.id!;
-      await agent.Orders.add(order);
+      await agent.Orders.addOrder(order);
       runInAction(() => {
         this.openOrderRegistry.set(order.id, order);
         this.closedOrders = false;
@@ -407,7 +407,7 @@ export default class OrderStore {
     if (this.selectedOrder !== order) {
       try {
         order.clientId = this.rootStore.contactStore.selectedContact?.id!;
-        await agent.Orders.update(order);
+        await agent.Orders.updateOrder(order);
         runInAction(() => {
           this.openOrderRegistry.set(order.id, order);
           this.showOrderForm = false;
@@ -429,7 +429,7 @@ export default class OrderStore {
   deleteOrder = async (id: string) => {
     this.submittingData(true);
     try {
-      await agent.Orders.delete(id);
+      await agent.Orders.deleteOrder(id);
       runInAction(() => {
         this.openOrderRegistry.delete(this.selectedOrder!.id);
         this.selectedOrder = undefined;
@@ -454,6 +454,7 @@ export default class OrderStore {
         this.closedOrderRegistry.set(order.id, order);
       });
       this.submittingData(false);
+      this.selectOrder('');
       this.loadOrders();
       this.loadHistory();
     } catch (error) {

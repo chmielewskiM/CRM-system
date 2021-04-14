@@ -54,7 +54,7 @@ export default class UserStore {
     autorun(async () => {
       try {
         await this.getLoggedUser().then(async () => {
-          await agent.Users.logged();
+          await agent.Users.loggedUser();
         });
       } catch {}
     });
@@ -107,7 +107,7 @@ export default class UserStore {
 
   getUserList = async (removeLoggedUser?: boolean) => {
     try {
-      const us = await agent.Users.list();
+      const us = await agent.Users.listUsers();
       this.userList.clear();
       runInAction(() => {
         us.forEach((user) => {
@@ -139,7 +139,7 @@ export default class UserStore {
   register = async (values: IUserFormValues) => {
     this.submittingData(true);
     try {
-      const user = await agent.Users.register(values);
+      const user = await agent.Users.registerUser(values);
       this.submittingData(false);
       this.getUserList();
       toast.success('User added successfully');
@@ -154,7 +154,7 @@ export default class UserStore {
     this.submittingData(true);
     if (this.selectedUser) {
       try {
-        await agent.Users.update(user);
+        await agent.Users.updateUser(user);
         runInAction(() => {
           this.userList.set(user.id, user);
         });
@@ -178,10 +178,10 @@ export default class UserStore {
   deleteUser = async () => {
     this.submittingData(true);
     try {
-      await agent.Users.delete(this.selectedUser.username);
+      await agent.Users.deleteUser(this.selectedUser.username);
       this.getUserList();
       this.submittingData(false);
-      toast.success('User deleted successfully');
+      toast.success('User deleted successfully.');
     } catch (error) {
       this.submittingData(false);
       toast.error(error.data.errors.msg);
@@ -192,7 +192,7 @@ export default class UserStore {
   getUser = async (username: string) => {
     if (username !== 'none') {
       try {
-        const users = await agent.Users.get(username);
+        const users = await agent.Users.getUser(username);
         const users2 = new UserFormValues(users);
         runInAction(() => {
           this.selectedUser = users2;
@@ -208,7 +208,7 @@ export default class UserStore {
 
   getLoggedUser = async () => {
     try {
-      const users = await agent.Users.logged();
+      const users = await agent.Users.loggedUser();
       if (users) {
         const users2 = new User(users);
         runInAction(() => {

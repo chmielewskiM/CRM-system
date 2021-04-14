@@ -9,7 +9,7 @@ using Persistence;
 
 namespace Application.Contacts
 {
-    public class Edit
+    public class EditContact
     {
         public class Command : IRequest
         {

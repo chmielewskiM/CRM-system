@@ -69,25 +69,43 @@ namespace Application.Leads
                 {
                     userContacts = filterLeads(userContacts, user, request.Status);
                 }
-                foreach (UserContact userContact in userContacts)
-                {   
 
-                    data.Add(new Lead
+                foreach (UserContact userContact in userContacts)
+                {
+
+                    if (userContact.Contact.CurrentSale.Count() > 0)
+                    {
+                        Order order = null;
+
+                        if (userContact.Contact.CurrentSale.Last().OrderId != null)
+                        {
+                            order = await _context.Orders.FindAsync(new Guid(userContact.Contact.CurrentSale.Last().OrderId));
+                        }
+
+                        data.Add(new Lead
+                        {
+                            Contact = userContact.Contact,
+                            Order = order,
+                            LastOperation = userContact.Contact.CurrentSale.Last().Operation.Date
+                        });
+                    }
+                    else data.Add(new Lead
                     {
                         Contact = userContact.Contact,
                         Order = null,
-                        LastOperation = userContact.Contact.CurrentSale.Last().Operation.Date
                     });
+
+
                 }
 
                 //add an active order
-                if (request.Status == "Invoice" || request.AllLeads == true)
-                    foreach (Order order in orders)
-                    {
-                        var lead = data.Find(x => x.Contact.Id == order.ClientId);
-                        if (lead != null)
-                            lead.Order = order;
-                    }
+                // if (request.Status == "Invoice" || request.AllLeads == true)
+                //     foreach (Order order in orders)
+                //     {
+                //         var lead = data.Find(x => x.Contact.Id == order.ClientId);
+                //         if (lead != null)
+                //             lead.Order = order;
+                //     }
 
                 data = sortLeads(data, request.SortBy);
 

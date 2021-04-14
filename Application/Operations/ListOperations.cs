@@ -13,17 +13,17 @@ using Persistence;
 
 namespace Application.Operations
 {
-    public class List
+    public class ListOperations
     {
         public class Query : IRequest<CompleteStats> { }
         public class Handler : IRequestHandler<Query, CompleteStats>
         {
             private readonly DataContext _context;
-            private readonly ILogger<List> _logger;
+            private readonly ILogger<ListOperations> _logger;
             private readonly IMapper _mapper;
             private readonly IUserAccessor _userAccessor;
 
-            public Handler(DataContext context, ILogger<List> logger, IMapper mapper, IUserAccessor userAccessor)
+            public Handler(DataContext context, ILogger<ListOperations> logger, IMapper mapper, IUserAccessor userAccessor)
             {
                 _userAccessor = userAccessor;
                 _mapper = mapper;
@@ -100,9 +100,9 @@ namespace Application.Operations
                 {
                     //last 30 days
                     rangeDays = -30.0;
-                    for (int i = -1; i < 4; i++)
+                    for (int i = 0; i < 4; i++)
                     {
-                        intervalDays[i + 1] = -rangeDays * (((double)i + 1) / 4);
+                        intervalDays[i] = -rangeDays * (((double)i) / 4);
                     }
 
 
@@ -144,6 +144,7 @@ namespace Application.Operations
                 int p = rangeDays != 0 ? 4 : 6;
                 DateTime[] startDates = new DateTime[p];
                 DateTime[] endDates = new DateTime[p];
+
                 for (int i = 0; i < p; i++)
                 {
                     var sortedData = queriedOperations.Where(x =>
@@ -152,9 +153,13 @@ namespace Application.Operations
                     startDates.SetValue(dateStart.AddMonths(intervalMonths[i]).AddDays((int)intervalDays[i]), i);
                     endDates.SetValue(dateEnd.AddMonths(intervalMonths[i + 1]).AddDays((int)intervalDays[i + 1]), i);
 
+                    //correcting last day (whis is today) for last 30 days period
                     if (rangeDays == -30 && i == p - 1)
                     {
-                        endDates[i] = endDates[i].AddDays(1);
+                        endDates[i] = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddDays(1).AddTicks(-1);
+                        sortedData = queriedOperations.Where(x =>
+                                 x.Date >= dateStart.AddMonths(intervalMonths[i]).AddDays((int)intervalDays[i])
+                                && x.Date <= endDates[i]).ToList();
                     }
 
                     sortedOperations.Add(sortedData);

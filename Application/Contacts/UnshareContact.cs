@@ -20,7 +20,7 @@ using Persistence;
 ////////////////////////////////////////////
 namespace Application.Contacts
 {
-    public class Unshare
+    public class UnshareContact
     {
         public class Command : IRequest
         {

@@ -7,7 +7,7 @@ using Persistence;
 
 namespace Application.Orders
 {
-    public class Details
+    public class OrderDetails
     {
         public class Query : IRequest<Order>
         {

@@ -23,7 +23,7 @@ export const LeadList: React.FC<IProps> = (props) => {
   const { leadStore, modalStore } = useStores();
 
   useEffect(() => {
-    leadStore.loadLeads();
+    // leadStore.loadLeads();
   }, []);
 
   const progress = (status: string) => {

@@ -70,7 +70,7 @@ export const OrderList: React.FC = () => {
                 )}
             </Table.HeaderCell>
             <Table.HeaderCell onClick={() => orderStore.setOrderBy('date')}>
-              Date opened
+              Date created
               {orderStore.sortOrdersBy == 'date_desc' && (
                 <Icon name="sort descending" />
               )}

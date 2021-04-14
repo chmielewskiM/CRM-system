@@ -248,14 +248,15 @@ export default class LeadStore {
   //----------------------------------------------
 
   // *CRUD task actions*
-  loadLeads = async (leadId?:string) => {
+  loadLeads = async (leadId?: string) => {
     this.loadingData(true);
     try {
-      const leads = await agent.Leads.list(this.listAxiosParams);
+      const leads = await agent.Leads.listLeads(this.listAxiosParams);
       runInAction(() => {
         this.leadRegistry.clear();
         leads.forEach((lead) => {
           this.leadRegistry.set(lead.contact.id, lead);
+          console.log(lead)
         });
       });
       this.loadingData(false);
@@ -269,7 +270,7 @@ export default class LeadStore {
     this.submittingData(true);
     let lead = values;
     try {
-      await agent.Leads.add(lead);
+      await agent.Leads.addLead(lead);
       runInAction(() => {
         this.leadRegistry.set(lead.contact.id, lead);
         this.showLeadForm = false;
@@ -290,6 +291,8 @@ export default class LeadStore {
       await agent.Leads.changeStatus(lead.contact.id, upgrade);
       await this.loadLeads();
       this.submittingData(false);
+      if (lead.contact.status == 'Invoice' && upgrade)
+        toast.success('Conversion succeeded.');
     } catch (error) {
       this.submittingData(false);
       console.log(error);
@@ -301,7 +304,7 @@ export default class LeadStore {
     this.submittingData(true);
     if (this.selectedLead !== lead) {
       try {
-        await agent.Contacts.update(lead.contact);
+        await agent.Contacts.updateContact(lead.contact);
         runInAction(() => {
           this.leadRegistry.set(lead.contact.id, lead);
           this.showLeadForm = false;
@@ -328,7 +331,9 @@ export default class LeadStore {
         this.selectedLead = undefined;
       });
       this.submittingData(false);
-      toast.success('Lead has been removed');
+      if (this.saveContact)
+        toast.success('Lead is removed and saved in contacts.');
+      else toast.success('Lead is removed completely.');
     } catch (error) {
       this.submittingData(false);
       console.log(error);
