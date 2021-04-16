@@ -9,6 +9,8 @@ using Application.Errors;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using Application.Interfaces;
+using FluentValidation;
+using Application.Validators;
 
 namespace Application.Orders
 {
@@ -30,6 +32,17 @@ namespace Application.Orders
             public string Notes { get; set; }
         }
 
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(x => x.Client).NotEmpty().OnFailure(x => ValidatorExtensions.brokenRule("Select client."));
+                RuleFor(x => x.Price).NotEmpty().OnFailure(x => ValidatorExtensions.brokenRule("Enter the price.")); ;
+                RuleFor(x => x.Amount).NotEmpty().OnFailure(x => ValidatorExtensions.brokenRule("Enter the amount.")); ;
+                RuleFor(x => x.Product).NotEmpty().OnFailure(x => ValidatorExtensions.brokenRule("Select product.")); ;
+            }
+        }
+
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
@@ -43,6 +56,11 @@ namespace Application.Orders
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
+
+                //Fluent validation
+                CommandValidator validator = new CommandValidator();
+                validator.ValidateAndThrow(request);
+
                 var client = await _context.Contacts.FindAsync(request.ClientId);
 
                 var user = await _context
@@ -50,10 +68,8 @@ namespace Application.Orders
                     .SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetLoggedUsername());
 
                 if (user == null)
-                    throw new RestException(HttpStatusCode.NotFound, new
-                    {
-                        error = "Could not access user. Make sure you are logged in properly."
-                    });
+                    throw new RestException(HttpStatusCode.NotFound,
+                    new { message = "Could not access user. Make sure you are logged in properly." });
 
                 int orderNumber = setOrderNumber();
 

@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
 using Application.Interfaces;
-using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -34,7 +33,7 @@ namespace Application.Orders
 
                 if (order == null)
                     throw new RestException(HttpStatusCode.NotFound,
-                    new { delegatedTask = "Not found" });
+                    new { message = "Order not found" });
 
                 order.Closed = true;
 
@@ -49,10 +48,8 @@ namespace Application.Orders
                     .SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetLoggedUsername());
 
                     if (user == null)
-                        throw new RestException(HttpStatusCode.NotFound, new
-                        {
-                            error = "Could not access user. Make sure you are logged in properly."
-                        });
+                        throw new RestException(HttpStatusCode.NotFound,
+                        new { message = "Could not access user. Make sure you are logged in properly." });
 
                     newOperation.Revenue = order.Price;
 

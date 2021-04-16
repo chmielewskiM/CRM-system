@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Persistence;
+using System.Net;
+using Application.Errors;
 
 namespace Application.Contacts
 {
@@ -33,22 +35,13 @@ namespace Application.Contacts
 
             public async Task<Contact> Handle(Query request, CancellationToken cancellationToken)
             {
+                if (request.Name == "" | request.Name == null)
+                    throw new RestException(HttpStatusCode.BadRequest, "Requested name is empty.");
+
                 var name = request.Name.Replace("%20", " ");
                 var contact = await _context.Contacts.FirstOrDefaultAsync(x => x.Name == name);
 
                 return contact;
-                // {   
-                //     Id = contact.Id,
-                //     Name = contact.Name,
-                //     Type = contact.Type,
-                //     Company = contact.Company,
-                //     PhoneNumber = contact.PhoneNumber,
-                //     DateAdded = contact.DateAdded,
-                //     Email = contact.Email,
-                //     Notes = contact.Notes,
-                //     Status = contact.Status,
-                //     Orders = contact.Orders
-                // };
             }
         }
     }

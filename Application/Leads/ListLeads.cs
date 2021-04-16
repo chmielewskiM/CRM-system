@@ -58,6 +58,7 @@ namespace Application.Leads
                 {
                     userContacts = _context.UserContacts.Where(x => x.User == user && x.Contact.Status != "Inactive");
                 }
+                else userContacts = _context.UserContacts.Where(x => x.Contact.Status != "Inactive");
 
                 //don't proceed and return empty list if there are no leads
                 if (userContacts == null)

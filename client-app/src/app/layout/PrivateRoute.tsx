@@ -19,7 +19,11 @@ const PrivateRoute: React.FC<IProps> = ({ component: Component, ...rest }) => {
     <Route
       {...rest}
       render={(props) =>
-        commonStore.token ? <Component {...props} /> : <Redirect to={'/'} />
+        commonStore.token != null ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to={'/'} />
+        )
       }
     />
   );

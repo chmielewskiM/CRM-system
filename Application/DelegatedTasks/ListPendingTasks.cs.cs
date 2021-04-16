@@ -54,8 +54,6 @@ namespace Application.DelegatedTasks
 
                 if (tasksCount > 0)
                 {
-                    // var paginatedTasks = PaginatedList<UserTask>.Create(userTasks, request.PendingActivePage, request.PendingPageSize);
-
                     foreach (UserTask userTask in userTasks)
                         tasks.Add(userTask.DelegatedTask);
                 }

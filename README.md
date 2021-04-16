@@ -29,13 +29,13 @@ and providing broader insight into workers' actions. In order to achieve these g
 * create-react-app
 * react-router-dom
 * mobx-react-lite
-* amCharts 4 
+* am4Charts
  ***... and more***
 <br>
 
 * Postman
 * SSMS
-
+* .Net CLI
 <br>
 
 ## Screenshots
@@ -46,16 +46,23 @@ and providing broader insight into workers' actions. In order to achieve these g
 
 <a href="https://s4.gifyu.com/images/leads.gif"><img src="https://s4.gifyu.com/images/leads.png" width="49.5%" height="300"></a><img width="1%"></img><a href="https://s4.gifyu.com/images/tasks.gif"><img src="https://s4.gifyu.com/images/tasks.png" alt="leads" border="0" width="49.5%" height="300"></a>
 
-<a href="https://s4.gifyu.com/images/orders.gif"><img src="https://s4.gifyu.com/images/orders.png" width="49.5%" height="300"></a><img width="1%"></img><a href="https://s4.gifyu.com/images/adminba7bf0e9815eafc9.gif"><img src="https://s4.gifyu.com/images/admin.png" width="49.5%" height="300"></a>
+<a href="https://s4.gifyu.com/images/orders.gif"><img src="https://s4.gifyu.com/images/orders.png" width="49.5%" height="300"></a><img width="1%"></img><a href="https://s4.gifyu.com/images/admin2.gif"><img src="https://s4.gifyu.com/images/admin.png" width="49.5%" height="300"></a>
 
 <br>
 
 ## Features
-  I've tried to process as much as possible on the server side. Pagination, sorting, filtering, validation all of those are processed on the server side.
-  There are 3 levels of access: *top*(admin), *mid*(manager), *low*(employee). Basically admin may see everything, even 'deleted' contacts by users which in fact
-  are 'unshared' with them. Manager can share tasks while employee can not.
-  
-  ### Dashboard
+
+```
+   * Custom error handling
+   * Server-side form validation (Fluent Validation with custom tweaks)
+   * Server-side filtering
+   * Server-side sorting
+   * Server-side pagination
+   * Three levels of access: top(admin), mid(manager), low(employee) 
+```
+   ### Brief description of sections
+
+  #### Dashboard
   
   Dashboard includes statistics that let user know what is workers' efficiency and how is the company doing at the moment. 
 User may choose between two periods of time: recent 30 days or 6 months.
@@ -68,12 +75,12 @@ There are 5 charts:
 
 Moreover there are stats of this month (from day 1 of the current month) and a calendar which displays tasks related to user.
 
-   ### Contacts
+   #### Contacts
    
 Contacts section is basically an address book. It includes all CRUD operations. User may add, edit or delete a contact, see contact's details, promote contact to premium member or start a sale process. When sale process is started that way, source of the lead is set to 'Former Client'.
 The list component is sortable, filterable and paginated. Sortable by header cells, filterable by buttons and search input which sends(on change) request after at least 2 letters are typed in.
    
-   ### Leads
+   #### Leads
    
  This section allows user to control the whole sale process. Every user has an access only to his leads. There are 4 stages: lead, opportunity, quote, invoice. All CRUD operations are available. Every operation in the chain, from lead to conversion,
  is tracked and registered. User may send straightforward an email to client, upgrade client's status or downgrade it in case of mistake with auto correction of previous operations which is crucial for proper displaying of stats on dashboard. User may choose anytime 
@@ -82,18 +89,18 @@ The list component is sortable, filterable and paginated. Sortable by header cel
  Before upgrading client's status to invoice, there has to be an order assigned to the client. Before converting client the order has to be closed.
  Before terminating a process there must be no order assigned to the client.
    
-   ### Tasks
+   #### Tasks
    
 The task's list may be filtered by 'my tasks', 'shared by me' or 'shared with me'. Shared tasks have subcategories which filter those tasks by their status. There are 4 states of tasks: 'pending', 'accepted', 'refused', 'done' and all of them are marked with proper icon.
 Besides all CRUD actions there is also a possibility to share a task. The user whom a task is shared with can see it in 'pending tasks'.
       
-   ### Orders
+   #### Orders
    
 All CRUD operations are included. There are list, history and detail components available in this section. The list component is sortable and filterable (by 'all', 'sale', 'purchase' buttons or search input).
 History is paginated and also filterable by the type of transactions. User may add an order only to contacts which he posess in his contacts list. A contact may have only 1 active order assigned.
 User chooses the type of order, client to assign, product, amount and price. He may optionally include some notes.
 
-   ### Admin panel
+   #### Admin panel
    
 Basically admin panel is a form. Admin is able to add, edit or delete users. ASP.NET Core Identity is used for this purpose, users are managed with AspNetUserManager. Editing includes setting new password.
 
@@ -112,4 +119,6 @@ Chosen platform to set up CI/CD is ***Azure***.
 
 <br>
 
-## API
+## API spec
+
+<img src="https://s4.gifyu.com/images/swagger.png" width="532" height="300" align="center">

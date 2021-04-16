@@ -1,0 +1,1821 @@
+swagger: '2.0'
+info:
+  title: CRM API
+  version: v2
+paths:
+  /Contacts:
+    get:
+      tags:
+        - Contacts
+      summary: Returns the list with contacts.
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: query
+          name: inProcess
+          type: boolean
+          description: >-
+            if true, returns contacts which are currently involved in some sale
+            process
+        - in: query
+          name: premium
+          type: boolean
+          description: 'if true, returns contacts with premium membership'
+        - in: query
+          name: orderBy
+          type: string
+          description: determines how returned data should be sorted
+        - in: query
+          name: activePage
+          type: integer
+          format: int32
+          description: active page of paginated list
+        - in: query
+          name: pageSize
+          type: integer
+          format: int32
+          description: count of contacts returned per page
+        - in: query
+          name: filterInput
+          type: string
+          description: text typed in search input
+        - in: query
+          name: uncontracted
+          type: boolean
+          description: 'if true, returns contacts which haven''t any open order assigned'
+      responses:
+        '200':
+          description: Returns the list.
+          schema:
+            $ref: '#/definitions/Application.Contacts.CompleteContactsData'
+        '500':
+          description: Server error.
+    post:
+      tags:
+        - Contacts
+      summary: Adds a contact to the collection.
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/Application.Contacts.AddContact%2BCommand'
+          description: name of the requested contact
+      responses:
+        '200':
+          description: Contact added successfully.
+          schema:
+            $ref: '#/definitions/MediatR.Unit'
+        '409':
+          description: This name is already taken.
+        '500':
+          description: Problem saving changes.
+  '/Contacts/name/{name}':
+    get:
+      tags:
+        - Contacts
+      summary: Returns the contact by requested name.
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: name
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Returns the contact.
+          schema:
+            $ref: '#/definitions/Domain.Contact'
+        '500':
+          description: Server error.
+  '/Contacts/{id}':
+    get:
+      tags:
+        - Contacts
+      summary: Returns details about the contact.
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Returns details about the contact.
+          schema:
+            $ref: '#/definitions/Application.Contacts.ContactDTO'
+        '404':
+          description: Contact not found.
+        '500':
+          description: Server error.
+    put:
+      tags:
+        - Contacts
+      summary: Edits a contact.
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          format: uuid
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/Application.Contacts.EditContact%2BCommand'
+      responses:
+        '200':
+          description: Contact edited successfully.
+          schema:
+            $ref: '#/definitions/MediatR.Unit'
+        '304':
+          description: There were no changes.
+        '404':
+          description: Contact not found.
+        '500':
+          description: Problem saving changes.
+    delete:
+      tags:
+        - Contacts
+      summary: Deletes the contact entirely.
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Contact deleted successfully.
+          schema:
+            $ref: '#/definitions/MediatR.Unit'
+        '404':
+          description: Contact not found.
+        '500':
+          description: Problem saving changes.
+  '/Contacts/upgrade/{id}':
+    post:
+      tags:
+        - Contacts
+      summary: Changes the status of contact's membership.
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Status changed successfully.
+          schema:
+            $ref: '#/definitions/MediatR.Unit'
+        '404':
+          description: Contact not found.
+        '500':
+          description: Problem saving changes.
+  '/Contacts/remove/{id}':
+    delete:
+      tags:
+        - Contacts
+      summary: "When user 'deletes' the contact, in fact he unshares it. The relation between user and\r\ncontact is erased, but the contact is kept in the DB."
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Contact removed successfully.
+          schema:
+            $ref: '#/definitions/MediatR.Unit'
+        '404':
+          description: Contact not found.
+        '424':
+          description: Some active order is assigned to the contact.
+        '500':
+          description: Problem saving changes.
+  /DelegatedTasks:
+    get:
+      tags:
+        - DelegatedTasks
+      summary: Returns list with tasks.
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: query
+          name: myTasks
+          type: boolean
+          description: returns tasks that were created by user sending the request
+        - in: query
+          name: sharedTasks
+          type: boolean
+          description: returns shared tasks
+        - in: query
+          name: accepted
+          type: boolean
+          description: returns accepted tasks
+        - in: query
+          name: refused
+          type: boolean
+          description: returns refused tasks
+        - in: query
+          name: done
+          type: boolean
+          description: returns done tasks
+        - in: query
+          name: activePage
+          type: integer
+          format: int32
+          description: active page of paginated list
+        - in: query
+          name: pageSize
+          type: integer
+          format: int32
+          description: count of tasks returned per page
+      responses:
+        '200':
+          description: Returns the list
+          schema:
+            $ref: '#/definitions/Application.DelegatedTasks.CompleteTaskData'
+        '500':
+          description: Server error.
+    post:
+      tags:
+        - DelegatedTasks
+      summary: Adds the task.
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/Application.DelegatedTasks.AddTask%2BCommand'
+      responses:
+        '200':
+          description: Adds the task.
+          schema:
+            $ref: '#/definitions/MediatR.Unit'
+        '500':
+          description: Problem saving changes.
+  '/DelegatedTasks/pending/page{pendingActivePage}=size{pendingPageSize}':
+    get:
+      tags:
+        - DelegatedTasks
+      summary: Returns list with pending tasks and their count.
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: pendingActivePage
+          required: true
+          type: integer
+          format: int32
+        - in: path
+          name: pendingPageSize
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Returns list with tasks count.
+          schema:
+            $ref: '#/definitions/Application.DelegatedTasks.CompleteTaskData'
+        '500':
+          description: Server error.
+  '/DelegatedTasks/{id}':
+    get:
+      tags:
+        - DelegatedTasks
+      summary: Returns details about the task.
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Returns details about the task.
+          schema:
+            $ref: '#/definitions/Domain.DelegatedTask'
+        '404':
+          description: Task not found.
+        '500':
+          description: Server error.
+    put:
+      tags:
+        - DelegatedTasks
+      summary: Edits the task.
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          format: uuid
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/Application.DelegatedTasks.EditTask%2BCommand'
+      responses:
+        '200':
+          description: Task edited successfully.
+          schema:
+            $ref: '#/definitions/MediatR.Unit'
+        '304':
+          description: There were no changes.
+        '404':
+          description: Task not found.
+        '500':
+          description: Problem saving changes.
+    delete:
+      tags:
+        - DelegatedTasks
+      summary: Deletes the task.
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Task deleted successfully.
+          schema:
+            $ref: '#/definitions/MediatR.Unit'
+        '404':
+          description: Task not found.
+        '500':
+          description: Problem saving changes.
+  '/DelegatedTasks/{id}/share/{username}':
+    post:
+      tags:
+        - DelegatedTasks
+      summary: Shares the task with other user.
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          format: uuid
+        - in: path
+          name: username
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Task deleted successfully.
+          schema:
+            $ref: '#/definitions/MediatR.Unit'
+        '403':
+          description: Task is shared already.
+        '404':
+          description: Task not found.
+        '500':
+          description: Problem saving changes.
+  '/DelegatedTasks/accept/{id}':
+    post:
+      tags:
+        - DelegatedTasks
+      summary: Accepts shared task.
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          format: uuid
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/Application.DelegatedTasks.AcceptTask%2BCommand'
+      responses:
+        '200':
+          description: Task accepted.
+          schema:
+            $ref: '#/definitions/MediatR.Unit'
+        '404':
+          description: Task not found.
+        '500':
+          description: Problem saving changes.
+  '/DelegatedTasks/refuse/{id}':
+    post:
+      tags:
+        - DelegatedTasks
+      summary: Refuses shared task.
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          format: uuid
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/Application.DelegatedTasks.RefuseTask%2BCommand'
+      responses:
+        '200':
+          description: Task refused.
+          schema:
+            $ref: '#/definitions/MediatR.Unit'
+        '404':
+          description: Task not found.
+        '500':
+          description: Problem saving changes.
+  '/DelegatedTasks/finish/{id}':
+    post:
+      tags:
+        - DelegatedTasks
+      summary: Closes shared task.
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          format: uuid
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/Application.DelegatedTasks.FinishTask%2BCommand'
+      responses:
+        '200':
+          description: Task closed successfully.
+          schema:
+            $ref: '#/definitions/MediatR.Unit'
+        '404':
+          description: Task not found.
+        '500':
+          description: Problem saving changes.
+  /Leads:
+    get:
+      tags:
+        - Leads
+      summary: Returns list with leads.
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: query
+          name: allLeads
+          type: boolean
+          description: return all leads
+        - in: query
+          name: status
+          type: string
+          description: return only leads with requested status
+        - in: query
+          name: sortBy
+          type: string
+          description: sort leads by 'name' or 'date'
+      responses:
+        '200':
+          description: Returns list with leads.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Application.Leads.LeadDTO'
+        '500':
+          description: Server error.
+    post:
+      tags:
+        - Leads
+      summary: Adds a lead.
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/Domain.Lead'
+      responses:
+        '200':
+          description: Lead added to collection successfully.
+          schema:
+            $ref: '#/definitions/MediatR.Unit'
+        '409':
+          description: This name is already taken.
+        '500':
+          description: Problem saving changes.
+  '/Leads/{id}':
+    get:
+      tags:
+        - Leads
+      summary: Returns details about lead.
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Returns details about leads.
+          schema:
+            $ref: '#/definitions/Application.Leads.LeadDTO'
+        '404':
+          description: Lead not found.
+        '500':
+          description: Server error.
+  '/Leads/{id}={upgrade}':
+    put:
+      tags:
+        - Leads
+      summary: Changes lead's status.
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          format: uuid
+        - in: path
+          name: upgrade
+          required: true
+          type: boolean
+      responses:
+        '200':
+          description: Status changed successfully.
+          schema:
+            $ref: '#/definitions/MediatR.Unit'
+        '400':
+          description: Can't downgrade lead with inactive status.
+        '403':
+          description: Lead has an open order assigned to him.
+        '404':
+          description: Lead not found.
+        '409':
+          description: This name is already taken.
+        '500':
+          description: Problem saving changes.
+  /Leads/abandon:
+    delete:
+      tags:
+        - Leads
+      summary: Terminates sale process.
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: query
+          name: id
+          type: string
+          format: uuid
+          description: lead's id
+        - in: query
+          name: saveContact
+          type: boolean
+          description: 'if true, keep contact in contacts'
+        - in: query
+          name: keepRecords
+          type: boolean
+          description: 'if true, keeps operations registered during this sale process'
+      responses:
+        '200':
+          description: Sale process erased successfully.
+          schema:
+            $ref: '#/definitions/MediatR.Unit'
+        '403':
+          description: "It is forbidden to cancel a process while there is an active order assigned to it.\r\nIt is forbidden to cancel the process after the assigned order is finalized(closed)."
+        '404':
+          description: Lead not found.
+        '500':
+          description: Problem saving changes.
+  /Operations:
+    get:
+      tags:
+        - Operations
+      summary: Returns all operations.
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: Returns all operations.
+          schema:
+            $ref: '#/definitions/Application.Operations.CompleteStats'
+        '500':
+          description: Server error.
+  /Operations/count:
+    get:
+      tags:
+        - Operations
+      summary: Returns count of all operations.
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: Returns count.
+          schema:
+            format: int32
+            type: integer
+        '404':
+          description: Task not found.
+        '500':
+          description: Problem saving changes.
+  /Orders:
+    get:
+      tags:
+        - Orders
+      summary: Returns list with orders.
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: query
+          name: allOrders
+          type: string
+          description: returns all orders
+        - in: query
+          name: saleOrders
+          type: string
+          description: 'if true, returns only sale orders, else only purchase orders'
+        - in: query
+          name: closedOrders
+          type: string
+          description: returns closed orders
+        - in: query
+          name: orderBy
+          type: string
+          description: determines how requested orders should be sorted
+        - in: query
+          name: filterInput
+          type: string
+          description: 'search input, returns records which contain input''s content'
+        - in: query
+          name: pageNumber
+          type: integer
+          format: int32
+          description: active page of paginated history
+        - in: query
+          name: pageSize
+          type: integer
+          format: int32
+          description: count of orders which are returned per history page
+      responses:
+        '200':
+          description: Returns list with orders.
+          schema:
+            $ref: '#/definitions/Application.Orders.CompleteOrderData'
+        '500':
+          description: Server error.
+    post:
+      tags:
+        - Orders
+      summary: Adds an order.
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/Application.Orders.AddOrder%2BCommand'
+      responses:
+        '200':
+          description: Order added successfully.
+          schema:
+            $ref: '#/definitions/MediatR.Unit'
+        '404':
+          description: Couldn't access the logged user.
+        '500':
+          description: Problem saving changes.
+  '/Orders/{id}':
+    put:
+      tags:
+        - Orders
+      summary: Edits an order.
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          format: uuid
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/Application.Orders.EditOrder%2BCommand'
+      responses:
+        '200':
+          description: Order updated successfully.
+          schema:
+            $ref: '#/definitions/MediatR.Unit'
+        '304':
+          description: There were no changes.
+        '404':
+          description: Couldn't find order or client.
+        '500':
+          description: Problem saving changes.
+    delete:
+      tags:
+        - Orders
+      summary: Deletes an order.
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Order deleted successfully.
+          schema:
+            $ref: '#/definitions/MediatR.Unit'
+        '403':
+          description: >-
+            It is forbidden to close an order which is assigned to lead with
+            'Invoice' status.
+        '404':
+          description: Couldn't find logged user.
+        '409':
+          description: Order has no client assigned.
+        '500':
+          description: Server error.
+  '/Orders/close/{id}':
+    put:
+      tags:
+        - Orders
+      summary: Closes an order.
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Order closed successfully.
+          schema:
+            $ref: '#/definitions/MediatR.Unit'
+        '404':
+          description: Couldn't find order or failed to get logged user.
+        '500':
+          description: Problem saving changes.
+  /Users:
+    get:
+      tags:
+        - Users
+      summary: Return list with users.
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: Returns list with users.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Domain.User'
+        '500':
+          description: Server error.
+  /Users/logged:
+    get:
+      tags:
+        - Users
+      summary: Returns logged user.
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: Returns logged user.
+          schema:
+            $ref: '#/definitions/Application.AppUser.AppUser'
+        '500':
+          description: Server error.
+  '/Users/user/{username}':
+    get:
+      tags:
+        - Users
+      summary: Returns an user.
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: username
+          required: true
+          type: string
+          description: user's username
+      responses:
+        '200':
+          description: Returns an user.
+          schema:
+            $ref: '#/definitions/Application.AppUser.AppUser'
+        '404':
+          description: User not found.
+        '500':
+          description: Server error.
+  /Users/login:
+    post:
+      tags:
+        - Users
+      summary: Logs user in.
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/Application.AppUser.Login%2BQuery'
+      responses:
+        '200':
+          description: User logged in.
+          schema:
+            $ref: '#/definitions/Application.AppUser.AppUser'
+        '401':
+          description: User unauthorized.
+        '500':
+          description: Server error.
+  /Users/register:
+    post:
+      tags:
+        - Users
+      summary: Registers an user.
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/Application.AppUser.RegisterUser%2BCommand'
+      responses:
+        '200':
+          description: Registers an user.
+          schema:
+            $ref: '#/definitions/Application.AppUser.AppUser'
+        '400':
+          description: Username/email already exists.
+        '500':
+          description: Problem creating user.
+  '/Users/update/{id}':
+    put:
+      tags:
+        - Users
+      summary: Updates an user.
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/Application.AppUser.EditUser%2BCommand'
+      responses:
+        '200':
+          description: User updated.
+          schema:
+            $ref: '#/definitions/MediatR.Unit'
+        '304':
+          description: There were no changes.
+        '404':
+          description: User not found.
+        '500':
+          description: Problem saving changes.
+  '/Users/{username}':
+    delete:
+      tags:
+        - Users
+      summary: Deletes an user.
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: username
+          required: true
+          type: string
+          description: user's username
+      responses:
+        '200':
+          description: User deleted successfully.
+          schema:
+            $ref: '#/definitions/MediatR.Unit'
+        '500':
+          description: Failed to delete user.
+definitions:
+  Application.AppUser.AppUser:
+    type: object
+    properties:
+      id:
+        type: string
+      displayName:
+        type: string
+      token:
+        type: string
+      username:
+        type: string
+      level:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+  Application.AppUser.EditUser+Command:
+    type: object
+    properties:
+      id:
+        type: string
+      displayName:
+        type: string
+      username:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      level:
+        type: string
+  Application.AppUser.Login+Query:
+    type: object
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+  Application.AppUser.RegisterUser+Command:
+    type: object
+    properties:
+      displayName:
+        type: string
+      username:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      level:
+        type: string
+  Application.Contacts.AddContact+Command:
+    type: object
+    properties:
+      id:
+        format: uuid
+        type: string
+      name:
+        type: string
+      type:
+        type: string
+      company:
+        type: string
+      phoneNumber:
+        type: string
+      email:
+        type: string
+      dateAdded:
+        format: date-time
+        type: string
+      notes:
+        type: string
+      status:
+        type: string
+      premium:
+        type: boolean
+      successfulDeals:
+        format: int32
+        type: integer
+  Application.Contacts.CompleteContactsData:
+    type: object
+    properties:
+      contacts:
+        type: array
+        items:
+          $ref: '#/definitions/Application.Contacts.ContactDTO'
+      contactsTotal:
+        format: int32
+        type: integer
+  Application.Contacts.ContactDTO:
+    type: object
+    properties:
+      id:
+        format: uuid
+        type: string
+      name:
+        type: string
+      type:
+        type: string
+      company:
+        type: string
+      phoneNumber:
+        type: string
+      email:
+        type: string
+      dateAdded:
+        format: date-time
+        type: string
+      notes:
+        type: string
+      status:
+        type: string
+      successfulDeals:
+        format: int32
+        type: integer
+      source:
+        type: string
+      premium:
+        type: string
+      userContacts:
+        type: array
+        items:
+          $ref: '#/definitions/Application.Contacts.UserAccessDTO'
+      orders:
+        type: array
+        items:
+          $ref: '#/definitions/Application.Orders.OrderDTO'
+  Application.Contacts.EditContact+Command:
+    type: object
+    properties:
+      id:
+        format: uuid
+        type: string
+      name:
+        type: string
+      type:
+        type: string
+      company:
+        type: string
+      phoneNumber:
+        type: string
+      email:
+        type: string
+      notes:
+        type: string
+      status:
+        type: string
+      source:
+        type: string
+  Application.Contacts.UserAccessDTO:
+    type: object
+    properties:
+      username:
+        type: string
+      displayName:
+        type: string
+      level:
+        type: string
+  Application.DelegatedTasks.AcceptTask+Command:
+    type: object
+    properties:
+      id:
+        format: uuid
+        type: string
+  Application.DelegatedTasks.AddTask+Command:
+    type: object
+    properties:
+      id:
+        format: uuid
+        type: string
+      type:
+        type: string
+      dateStarted:
+        format: date-time
+        type: string
+      deadline:
+        format: date-time
+        type: string
+      notes:
+        type: string
+      finishedBy:
+        type: string
+      accepted:
+        type: boolean
+      refused:
+        type: boolean
+  Application.DelegatedTasks.CompleteTaskData:
+    type: object
+    properties:
+      tasks:
+        type: array
+        items:
+          $ref: '#/definitions/Application.DelegatedTasks.DelegatedTaskDTO'
+      tasksCount:
+        format: int32
+        type: integer
+  Application.DelegatedTasks.DelegatedTaskDTO:
+    type: object
+    properties:
+      id:
+        format: uuid
+        type: string
+      type:
+        type: string
+      dateStarted:
+        format: date-time
+        type: string
+      deadline:
+        format: date-time
+        type: string
+      notes:
+        type: string
+      finishedBy:
+        type: string
+      accepted:
+        type: boolean
+      refused:
+        type: boolean
+      pending:
+        type: boolean
+      done:
+        type: boolean
+      userTask:
+        $ref: '#/definitions/Application.DelegatedTasks.UserAccessDTO'
+  Application.DelegatedTasks.EditTask+Command:
+    type: object
+    properties:
+      id:
+        format: uuid
+        type: string
+      type:
+        type: string
+      deadline:
+        format: date-time
+        type: string
+      notes:
+        type: string
+  Application.DelegatedTasks.FinishTask+Command:
+    type: object
+    properties:
+      id:
+        format: uuid
+        type: string
+  Application.DelegatedTasks.RefuseTask+Command:
+    type: object
+    properties:
+      id:
+        format: uuid
+        type: string
+  Application.DelegatedTasks.UserAccessDTO:
+    type: object
+    properties:
+      createdByUsername:
+        type: string
+      createdBy:
+        type: string
+      sharedWithUsername:
+        type: string
+      sharedWith:
+        type: string
+  Application.Leads.LeadDTO:
+    type: object
+    properties:
+      lastOperation:
+        format: date-time
+        type: string
+      contact:
+        $ref: '#/definitions/Application.Contacts.ContactDTO'
+      order:
+        $ref: '#/definitions/Application.Orders.OrderDTO'
+  Application.Operations.CollectedOperationData:
+    type: object
+    properties:
+      leads:
+        format: int32
+        type: integer
+      opportunities:
+        format: int32
+        type: integer
+      quotes:
+        format: int32
+        type: integer
+      invoices:
+        format: int32
+        type: integer
+      conversions:
+        format: int32
+        type: integer
+      orders:
+        format: int32
+        type: integer
+      revenue:
+        format: double
+        type: number
+      sources:
+        $ref: '#/definitions/Application.Operations.Sources'
+      dateStart:
+        format: date-time
+        type: string
+      dateEnd:
+        format: date-time
+        type: string
+  Application.Operations.CompleteStats:
+    type: object
+    properties:
+      thisMonthTotals:
+        $ref: '#/definitions/Application.Operations.Totals'
+      oneMonthTotals:
+        $ref: '#/definitions/Application.Operations.Totals'
+      sixMonthsTotals:
+        $ref: '#/definitions/Application.Operations.Totals'
+      thisMonthData:
+        type: array
+        items:
+          $ref: '#/definitions/Application.Operations.CollectedOperationData'
+      oneMonthData:
+        type: array
+        items:
+          $ref: '#/definitions/Application.Operations.CollectedOperationData'
+      sixMonthsData:
+        type: array
+        items:
+          $ref: '#/definitions/Application.Operations.CollectedOperationData'
+      oneMonthOpportunitiesByUser:
+        type: array
+        items:
+          $ref: '#/definitions/Application.Operations.OpportunitiesByUser'
+      sixMonthsOpportunitiesByUser:
+        type: array
+        items:
+          $ref: '#/definitions/Application.Operations.OpportunitiesByUser'
+  Application.Operations.OpportunitiesByUser:
+    type: object
+    properties:
+      userDisplayName:
+        type: string
+      leadsTotal:
+        format: int32
+        type: integer
+      opportunitiesTotal:
+        format: int32
+        type: integer
+  Application.Operations.Sources:
+    type: object
+    properties:
+      web:
+        format: int32
+        type: integer
+      socialMedia:
+        format: int32
+        type: integer
+      flyers:
+        format: int32
+        type: integer
+      commercial:
+        format: int32
+        type: integer
+      formerClient:
+        format: int32
+        type: integer
+  Application.Operations.Totals:
+    type: object
+    properties:
+      leadsTotal:
+        format: int32
+        type: integer
+      opportunitiesTotal:
+        format: int32
+        type: integer
+      quotesTotal:
+        format: int32
+        type: integer
+      invoicesTotal:
+        format: int32
+        type: integer
+      conversionsTotal:
+        format: int32
+        type: integer
+      ordersTotal:
+        format: int32
+        type: integer
+      revenueTotal:
+        format: double
+        type: number
+      sourcesTotal:
+        $ref: '#/definitions/Application.Operations.Sources'
+  Application.Orders.AddOrder+Command:
+    type: object
+    properties:
+      id:
+        format: uuid
+        type: string
+      orderNumber:
+        format: int32
+        type: integer
+      clientId:
+        format: uuid
+        type: string
+      client:
+        $ref: '#/definitions/Domain.Contact'
+      type:
+        type: boolean
+      closed:
+        type: boolean
+      product:
+        type: string
+      amount:
+        format: double
+        type: number
+      price:
+        format: double
+        type: number
+      dateOrderOpened:
+        format: date-time
+        type: string
+      dateOrderClosed:
+        format: date-time
+        type: string
+      notes:
+        type: string
+  Application.Orders.CompleteOrderData:
+    type: object
+    properties:
+      orders:
+        type: array
+        items:
+          $ref: '#/definitions/Application.Orders.OrderDTO'
+      ordersCount:
+        format: int32
+        type: integer
+  Application.Orders.EditOrder+Command:
+    type: object
+    properties:
+      id:
+        format: uuid
+        type: string
+      clientId:
+        format: uuid
+        type: string
+      product:
+        type: string
+      amount:
+        format: double
+        type: number
+      price:
+        format: double
+        type: number
+      notes:
+        type: string
+  Application.Orders.OrderDTO:
+    type: object
+    properties:
+      id:
+        format: uuid
+        type: string
+      orderNumber:
+        format: int32
+        type: integer
+      clientId:
+        type: string
+      clientName:
+        type: string
+      type:
+        type: boolean
+      closed:
+        type: boolean
+      product:
+        type: string
+      amount:
+        format: double
+        type: number
+      price:
+        format: double
+        type: number
+      dateOrderOpened:
+        format: date-time
+        type: string
+      dateOrderClosed:
+        format: date-time
+        type: string
+      notes:
+        type: string
+  Domain.Contact:
+    type: object
+    properties:
+      id:
+        format: uuid
+        type: string
+      name:
+        type: string
+      type:
+        type: string
+      company:
+        type: string
+      phoneNumber:
+        type: string
+      email:
+        type: string
+      dateAdded:
+        format: date-time
+        type: string
+      notes:
+        type: string
+      status:
+        type: string
+      successfulDeals:
+        format: int32
+        type: integer
+      source:
+        type: string
+      premium:
+        type: boolean
+      orders:
+        type: array
+        items:
+          $ref: '#/definitions/Domain.Order'
+      userContacts:
+        type: array
+        items:
+          $ref: '#/definitions/Domain.UserContact'
+      currentSale:
+        type: array
+        items:
+          $ref: '#/definitions/Domain.SaleProcess'
+  Domain.DelegatedTask:
+    type: object
+    properties:
+      id:
+        format: uuid
+        type: string
+      type:
+        type: string
+      dateStarted:
+        format: date-time
+        type: string
+      deadline:
+        format: date-time
+        type: string
+      notes:
+        type: string
+      finishedBy:
+        type: string
+      accepted:
+        type: boolean
+      refused:
+        type: boolean
+      pending:
+        type: boolean
+      done:
+        type: boolean
+      userTask:
+        $ref: '#/definitions/Domain.UserTask'
+  Domain.Lead:
+    type: object
+    properties:
+      lastOperation:
+        format: date-time
+        type: string
+      contact:
+        $ref: '#/definitions/Domain.Contact'
+      order:
+        $ref: '#/definitions/Domain.Order'
+  Domain.Operation:
+    type: object
+    properties:
+      id:
+        format: uuid
+        type: string
+      lead:
+        format: int64
+        type: integer
+      opportunity:
+        format: int64
+        type: integer
+      quote:
+        format: int64
+        type: integer
+      invoice:
+        format: int64
+        type: integer
+      conversion:
+        format: int64
+        type: integer
+      order:
+        format: int64
+        type: integer
+      revenue:
+        format: double
+        type: number
+      source:
+        type: string
+      date:
+        format: date-time
+        type: string
+      userOperation:
+        $ref: '#/definitions/Domain.UserOperation'
+      currentSale:
+        $ref: '#/definitions/Domain.SaleProcess'
+  Domain.Order:
+    type: object
+    properties:
+      id:
+        format: uuid
+        type: string
+      orderNumber:
+        format: int32
+        type: integer
+      userId:
+        type: string
+      clientId:
+        format: uuid
+        type: string
+      client:
+        $ref: '#/definitions/Domain.Contact'
+      type:
+        type: boolean
+      closed:
+        type: boolean
+      product:
+        type: string
+      amount:
+        format: double
+        type: number
+      price:
+        format: double
+        type: number
+      dateOrderOpened:
+        format: date-time
+        type: string
+      dateOrderClosed:
+        format: date-time
+        type: string
+      notes:
+        type: string
+  Domain.SaleProcess:
+    type: object
+    properties:
+      contact:
+        $ref: '#/definitions/Domain.Contact'
+      contactId:
+        format: uuid
+        type: string
+      operation:
+        $ref: '#/definitions/Domain.Operation'
+      operationId:
+        format: uuid
+        type: string
+      orderId:
+        type: string
+      index:
+        format: int32
+        type: integer
+  Domain.User:
+    type: object
+    properties:
+      id:
+        type: string
+      userName:
+        type: string
+      normalizedUserName:
+        type: string
+      email:
+        type: string
+      normalizedEmail:
+        type: string
+      emailConfirmed:
+        type: boolean
+      passwordHash:
+        type: string
+      securityStamp:
+        type: string
+      concurrencyStamp:
+        type: string
+      phoneNumber:
+        type: string
+      phoneNumberConfirmed:
+        type: boolean
+      twoFactorEnabled:
+        type: boolean
+      lockoutEnd:
+        format: date-time
+        type: string
+      lockoutEnabled:
+        type: boolean
+      accessFailedCount:
+        format: int32
+        type: integer
+      displayName:
+        type: string
+      level:
+        type: string
+      userContacts:
+        type: array
+        items:
+          $ref: '#/definitions/Domain.UserContact'
+      userTasks:
+        type: array
+        items:
+          $ref: '#/definitions/Domain.UserTask'
+      userOperations:
+        type: array
+        items:
+          $ref: '#/definitions/Domain.UserOperation'
+  Domain.UserContact:
+    type: object
+    properties:
+      id:
+        format: uuid
+        type: string
+      user:
+        $ref: '#/definitions/Domain.User'
+      userId:
+        format: uuid
+        type: string
+      contact:
+        $ref: '#/definitions/Domain.Contact'
+      contactId:
+        format: uuid
+        type: string
+      dateAdded:
+        format: date-time
+        type: string
+  Domain.UserOperation:
+    type: object
+    properties:
+      user:
+        $ref: '#/definitions/Domain.User'
+      userId:
+        format: uuid
+        type: string
+      operation:
+        $ref: '#/definitions/Domain.Operation'
+      operationId:
+        format: uuid
+        type: string
+      dateAdded:
+        format: date-time
+        type: string
+  Domain.UserTask:
+    type: object
+    properties:
+      createdBy:
+        $ref: '#/definitions/Domain.User'
+      createdById:
+        type: string
+      sharedWith:
+        $ref: '#/definitions/Domain.User'
+      sharedWithId:
+        type: string
+      delegatedTask:
+        $ref: '#/definitions/Domain.DelegatedTask'
+      delegatedTaskId:
+        format: uuid
+        type: string
+      dateAdded:
+        format: date-time
+        type: string
+  MediatR.Unit:
+    type: object

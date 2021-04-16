@@ -31,7 +31,7 @@ namespace Application.DelegatedTasks
 
                 if (delegatedTask == null)
                     throw new RestException(HttpStatusCode.NotFound,
-                    new { delegatedTask = "Not found" });
+                    new { message = "Not found" });
 
                 return delegatedTask;
             }

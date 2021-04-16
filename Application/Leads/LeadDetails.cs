@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Domain;
 using MediatR;
 using Persistence;
@@ -35,7 +34,7 @@ namespace Application.Leads
 
                 if (contact == null)
                     throw new RestException(HttpStatusCode.NotFound,
-                    new { contact = "Not found" });
+                    new { message = "Lead not found" });
 
                 var contactToReturn = _mapper.Map<Contact, LeadDTO>(contact);
 

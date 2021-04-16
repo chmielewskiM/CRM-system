@@ -1,8 +1,11 @@
 #root {
     & .row-content-2.charts {
-        & #opportunitiesChart, #opportunitiesByEmployeeChart{
-padding: 3rem 0 1rem 0;
+
+        & #opportunitiesChart,
+        #opportunitiesByEmployeeChart {
+            padding: 3rem 0 1rem 0;
         }
+
         & .buttons {
             padding-right: 1rem !important;
         }
@@ -10,9 +13,10 @@ padding: 3rem 0 1rem 0;
         & .chart {
             background-color: rgba(255, 255, 255, 0.116);
 
-            border:thin solid #fff;
+            border: thin solid #fff;
+
             @include breakpoint(tablet) {
-                height: 50%;
+                min-height: 40rem;
             }
         }
     }

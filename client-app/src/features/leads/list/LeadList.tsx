@@ -22,9 +22,7 @@ interface IProps {
 export const LeadList: React.FC<IProps> = (props) => {
   const { leadStore, modalStore } = useStores();
 
-  useEffect(() => {
-    // leadStore.loadLeads();
-  }, []);
+  useEffect(() => {}, []);
 
   const progress = (status: string) => {
     switch (status) {

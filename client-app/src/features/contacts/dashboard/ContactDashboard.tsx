@@ -13,6 +13,7 @@ export const ContactDashboard: React.FC = () => {
   const { contactStore, commonStore } = useStores();
 
   useEffect(() => {
+    contactStore.loadContacts();
     contactStore.selectContact('');
   }, []);
 
@@ -90,7 +91,9 @@ export const ContactDashboard: React.FC = () => {
               {contactStore.activePage >= 1 &&
                 contactStore.activePage.toString().concat('1')}
             </span>
-            <span className="contacts-to">-{contactStore.activePage + 1}0&nbsp;</span>
+            <span className="contacts-to">
+              -{contactStore.activePage + 1}0&nbsp;
+            </span>
             <span className="contacts-all">
               {' '}
               /&nbsp;{contactStore.contactsTotal}
@@ -99,8 +102,7 @@ export const ContactDashboard: React.FC = () => {
               icon="chevron right"
               onClick={() => contactStore.setPagination(1)}
               disabled={
-                contactStore.activePage + 1 >=
-                contactStore.contactsTotal / 10
+                contactStore.activePage + 1 >= contactStore.contactsTotal / 10
               }
             />
           </Button.Group>
@@ -117,9 +119,7 @@ export const ContactDashboard: React.FC = () => {
       </Grid.Row>
       <Grid.Row className="row-content-2">
         <Grid.Column mobile={16} computer={9} largeScreen={7}>
-          {contactStore.selectedContact !== undefined && (
-            <ContactDetails/>
-          )}
+          {contactStore.selectedContact !== undefined && <ContactDetails />}
         </Grid.Column>
       </Grid.Row>
     </Grid>

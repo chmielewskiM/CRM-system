@@ -45,7 +45,7 @@ namespace Application.AppUser
             {
                 var user = await _userManager.FindByNameAsync(request.Username);
                 if (user == null)
-                    throw new RestException(HttpStatusCode.Unauthorized);
+                    throw new RestException(HttpStatusCode.Unauthorized, new { message = "Authorization failure." });
 
                 var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
 
@@ -60,7 +60,7 @@ namespace Application.AppUser
                     };
                 }
 
-                throw new RestException(HttpStatusCode.Unauthorized);
+                throw new RestException(HttpStatusCode.Unauthorized, new { message = "Authorization failure." });
             }
         }
     }

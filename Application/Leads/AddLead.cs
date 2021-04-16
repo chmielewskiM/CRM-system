@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -7,6 +8,10 @@ using Domain;
 using FluentValidation;
 using Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Application.Errors;
+using System.Net;
+using Application.Validators;
+using FluentValidation.Results;
 
 namespace Application.Leads
 {
@@ -21,11 +26,12 @@ namespace Application.Leads
         {
             public CommandValidator()
             {
-                RuleFor(x => x.Lead.Contact.Name).NotEmpty();
-                RuleFor(x => x.Lead.Contact.Type).NotEmpty();
-                RuleFor(x => x.Lead.Contact.Company).NotEmpty();
-                RuleFor(x => x.Lead.Contact.PhoneNumber).NotEmpty();
-                // RuleFor(x => x.Lead.Contact.Email).NotEmpty();
+                RuleFor(x => x.Lead.Contact.Name).Name();
+                RuleFor(x => x.Lead.Contact.Type).NotEmpty().OnFailure(x => ValidatorExtensions.brokenRule("Select type of the lead."));
+                // RuleFor(x => x.Lead.Contact.Company).NotEmpty().WithMessage("Company can not be empty");
+                RuleFor(x => x.Lead.Contact.PhoneNumber).NotEmpty().OnFailure(x => ValidatorExtensions.brokenRule("Phone number can not be empty."));
+                RuleFor(x => x.Lead.Contact.Email).NotEmpty().OnFailure(x => ValidatorExtensions.brokenRule("Mail can not be empty."));;
+
             }
         }
         public class Handler : IRequestHandler<Command>
@@ -41,10 +47,18 @@ namespace Application.Leads
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
+                CommandValidator validator = new CommandValidator();
+                validator.ValidateAndThrow(request);
+
+                // Console.WriteLine(result);
                 var guid = Guid.NewGuid();
                 var contact = new Contact();
                 var user = await _context.Users.SingleOrDefaultAsync(x =>
                             x.UserName == _userAccessor.GetLoggedUsername());
+
+                bool alreadyExists = _context.Contacts.Where(x => x.Name == request.Lead.Contact.Name).Count() > 0;
+                if (alreadyExists)
+                    throw new RestException(HttpStatusCode.Conflict, "This name is already taken.");
 
                 if (request.Lead.Contact.Status.Equals(""))
                 {

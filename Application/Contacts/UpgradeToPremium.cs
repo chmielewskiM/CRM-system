@@ -32,7 +32,7 @@ namespace Application.Contacts
 
                 if (contact == null)
                     throw new RestException(HttpStatusCode.NotFound,
-                    new { delegatedTask = "Not found" });
+                    new { message = "Not found" });
 
                 contact.Premium = !contact.Premium;
 

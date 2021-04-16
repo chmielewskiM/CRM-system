@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
 using Application.Interfaces;
-using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -37,7 +36,7 @@ namespace Application.DelegatedTasks
 
                 if (delegatedTask == null)
                     throw new RestException(HttpStatusCode.NotFound,
-                    new { delegatedTask = "Not found" });
+                    new { message = "Task not found" });
 
                 delegatedTask.Accepted = false;
                 delegatedTask.Refused = false;

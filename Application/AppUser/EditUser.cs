@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
+using Application.Validators;
 using Domain;
 using FluentValidation;
 using MediatR;
@@ -27,11 +28,13 @@ namespace Application.AppUser
         {
             public CommandValidator()
             {
-                // RuleFor(x => x.Name).NotEmpty();
-                // RuleFor(x => x.Type).NotEmpty();
-                // RuleFor(x => x.Company).NotEmpty();
-                // RuleFor(x => x.PhoneNumber).NotEmpty();
-                // RuleFor(x => x.Email).NotEmpty();
+                RuleFor(x => x.DisplayName).NotEmpty().Name();
+                RuleFor(x => x.Username).NotEmpty().OnFailure(x => ValidatorExtensions.brokenRule("Username can not be empty."));
+                RuleFor(x => x.Email).NotEmpty().OnFailure(x => ValidatorExtensions.brokenRule("Email can not be empty."));
+            }
+            public void addEditPasswordRule()
+            {
+                this.RuleFor(x => x.Password).NotEmpty().OnFailure(x => ValidatorExtensions.brokenRule("Password can not be empty")).Password();
             }
         }
 
@@ -45,22 +48,26 @@ namespace Application.AppUser
                 _context = context;
                 _userManager = userManager;
             }
-            
+
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
+                //Fluent validation
+                CommandValidator validator = new CommandValidator();
+                //there is a possibility to omit editing password, if user types anything in the field then the rule is added to validator
+                if (request.Password != null) validator.addEditPasswordRule();
+                validator.ValidateAndThrow(request);
+
                 var user = await _context.Users.FindAsync(request.Id);
 
                 if (user == null)
                     throw new RestException(HttpStatusCode.NotFound,
-                    new { msg = "User not found" });
+                    new { message = "User not found" });
 
-                user.UserName = request.Username;
-                user.DisplayName = request.DisplayName;
-                user.Email = request.Email;
-                user.Level = request.Level;
-
-                var success = await _context.SaveChangesAsync() > 0;
-                var success2 = await _context.SaveChangesAsync();
+                bool noChanges = (
+                user.UserName == request.Username &&
+                user.DisplayName == request.DisplayName &&
+                user.Email == request.Email &&
+                user.Level == request.Level);
 
                 if (request.Password != null)
                 {
@@ -71,12 +78,21 @@ namespace Application.AppUser
 
                 }
 
+                if (noChanges && request.Password == null)
+                    throw new NoChangesException();
+
+                user.UserName = request.Username;
+                user.DisplayName = request.DisplayName;
+                user.Email = request.Email;
+                user.Level = request.Level;
+
+                var success = await _context.SaveChangesAsync() > 0;
                 //save changes to user manager
                 await _userManager.UpdateAsync(user);
 
-                if (success) return Unit.Value;
+                if (success || request.Password != null) return Unit.Value;
 
-                throw new RestException(HttpStatusCode.Conflict, "No changes detected.");
+                throw new Exception("Problem saving changes");
             }
         }
     }

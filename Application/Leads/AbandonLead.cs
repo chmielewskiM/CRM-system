@@ -48,7 +48,7 @@ namespace Application.Leads
 
                 if (contact == null)
                     throw new RestException(HttpStatusCode.NotFound,
-                    new { contact = "Not found" });
+                    new { message = "Lead not found." });
 
                 bool hasOrder = contact.CurrentSale.Any(x => x.OrderId != null);
                 bool hasCompletedOrder = false;
@@ -61,9 +61,11 @@ namespace Application.Leads
                 }
 
                 if (hasOrder && !hasCompletedOrder)
-                    throw new RestException(HttpStatusCode.Forbidden, "Delete the order before cancelling this process.");
+                    throw new RestException(HttpStatusCode.Forbidden,
+                    new { message = "Delete the order before cancelling this process." });
                 else if (hasOrder && hasCompletedOrder)
-                    throw new RestException(HttpStatusCode.Forbidden, "You can't abandon this process. An order with the lead has been finalized, you have to convert this lead.");
+                    throw new RestException(HttpStatusCode.Forbidden,
+                    new { message = "You can't abandon this process. An order with the lead has been finalized, you have to convert this lead." });
 
                 foreach (SaleProcess process in saleProcess)
                 {

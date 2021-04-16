@@ -33,7 +33,7 @@ export const Navbar: React.FC = () => {
           className="link"
           name="Dashboard"
           as={NavLink}
-          to="/dashboard"
+          to="/dashboard/home"
           onClick={commonStore.closeMobileNav}
         />
         <Menu.Item
@@ -41,7 +41,7 @@ export const Navbar: React.FC = () => {
           className="link"
           name="Contacts"
           as={NavLink}
-          to="/contacts"
+          to="/dashboard/contacts"
           onClick={() => commonStore.closeMobileNav()}
         />
         <Menu.Item
@@ -50,7 +50,7 @@ export const Navbar: React.FC = () => {
           name="Leads"
           onClick={commonStore.closeMobileNav}
           as={NavLink}
-          to="/leads"
+          to="/dashboard/leads"
         />
         <Menu.Item
           icon="tasks"
@@ -58,7 +58,7 @@ export const Navbar: React.FC = () => {
           name="Tasks"
           onClick={commonStore.closeMobileNav}
           as={NavLink}
-          to="/tasks"
+          to="/dashboard/tasks"
         />
         <Menu.Item
           icon="paste"
@@ -66,7 +66,7 @@ export const Navbar: React.FC = () => {
           name="Orders"
           onClick={commonStore.closeMobileNav}
           as={NavLink}
-          to="/orders"
+          to="/dashboard/orders"
         />
         {userStore.topAccess && (
           <Menu.Item
@@ -75,7 +75,7 @@ export const Navbar: React.FC = () => {
             name="Admin Panel"
             onClick={commonStore.closeMobileNav}
             as={NavLink}
-            to="/panel"
+            to="/dashboard/panel"
           />
         )}
         <Menu.Item>

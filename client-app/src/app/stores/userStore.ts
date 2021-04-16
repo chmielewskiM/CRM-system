@@ -50,7 +50,15 @@ export default class UserStore {
         });
       }
     );
-
+    autorun(() => {
+      if (this.rootStore.commonStore.token) {
+        this.getLoggedUser().then(() =>
+          this.rootStore.commonStore.setAppLoaded()
+        );
+      } else {
+        this.rootStore.commonStore.setAppLoaded();
+      }
+    });
     autorun(async () => {
       try {
         await this.getLoggedUser().then(async () => {
@@ -130,7 +138,7 @@ export default class UserStore {
         this.user = user;
       });
       this.rootStore.commonStore.setToken(user.token);
-      history.push('/dashboard');
+      history.push('/dashboard/home');
     } catch (error) {
       toast.error('Invalid username or password. Try again.');
     }
@@ -145,7 +153,7 @@ export default class UserStore {
       toast.success('User added successfully');
     } catch (error) {
       this.submittingData(false);
-      toast.error(error.data.errors.msg);
+      toast.error(error.data.errors.message);
       console.log(error);
     }
   };
@@ -162,11 +170,9 @@ export default class UserStore {
         this.submittingData(false);
         toast.success('Changes saved successfully.');
       } catch (error) {
-        runInAction(() => {
-          this.submitting = false;
-        });
-        // this.submittingData(false);
-        toast.error(error.data.errors);
+        this.submittingData(false);
+        if (error.status == 304) toast.info('There were no changes.');
+        else toast.error(error.data.errors.message);
         console.log(error);
       }
     } else {
@@ -184,7 +190,7 @@ export default class UserStore {
       toast.success('User deleted successfully.');
     } catch (error) {
       this.submittingData(false);
-      toast.error(error.data.errors.msg);
+      toast.error(error.data.errors.message);
       console.log(error);
     }
   };
