@@ -36,7 +36,7 @@ namespace Application.Contacts
 
                 if (contact == null)
                     throw new RestException(HttpStatusCode.NotFound,
-                    new { contact = "Not found" });
+                    new { message = "Contact not found." });
 
                 var contactToReturn = _mapper.Map<Contact, ContactDTO>(contact);
 

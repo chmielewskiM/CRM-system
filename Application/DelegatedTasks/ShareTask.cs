@@ -40,11 +40,9 @@ namespace Application.DelegatedTasks
                     .DelegatedTasks
                     .FindAsync(request.Id);
                 if (task == null)
-                    throw new RestException(HttpStatusCode.NotFound, new
-                    {
-                        Task = "Could not find task"
-                    });
-                
+                    throw new RestException(HttpStatusCode.NotFound,
+                    new { message = "Could not find task." });
+
                 var user = await _userManager.FindByNameAsync(_userAccessor.GetLoggedUsername());
                 var targetUser = await _userManager.FindByNameAsync(request.Username);
 
@@ -53,8 +51,8 @@ namespace Application.DelegatedTasks
                     .SingleOrDefaultAsync(x => x.DelegatedTaskId == task.Id && x.SharedWith.Id == user.Id);
 
                 if (share != null)
-                    throw new RestException(HttpStatusCode.BadRequest,
-                    new { Assign = "Already shared with this employee" });
+                    throw new RestException(HttpStatusCode.Forbidden,
+                    new { message = "Already shared with this employee" });
 
                 task.Accepted = false;
                 task.Refused = false;
@@ -64,8 +62,6 @@ namespace Application.DelegatedTasks
 
                 share.SharedWith = targetUser;
                 share.SharedWithId = targetUser.Id;
-
-                // _context.UserTasks.Add(share);
 
                 var success = await _context.SaveChangesAsync() > 0;
 

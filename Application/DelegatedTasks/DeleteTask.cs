@@ -28,7 +28,7 @@ namespace Application.DelegatedTasks
                 _context = context;
             }
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken )
+            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var delegatedTask = await _context
                     .DelegatedTasks
@@ -37,7 +37,7 @@ namespace Application.DelegatedTasks
                 if (delegatedTask == null)
                     throw new RestException(HttpStatusCode.NotFound, new
                     {
-                        Contact = "Could not find delegatedTask"
+                        message = "Could not find delegatedTask"
                     });
 
                 var user = await _context
@@ -52,7 +52,7 @@ namespace Application.DelegatedTasks
                     return Unit.Value;
 
                 if (share.CreatedBy.Id != user.Id)
-                    throw new RestException(HttpStatusCode.BadRequest, new { Share = "You cannot unshare this delegatedTask" });
+                    throw new RestException(HttpStatusCode.BadRequest, new { message = "You cannot unshare this delegatedTask" });
 
                 _context.UserTasks.Remove(share);
 

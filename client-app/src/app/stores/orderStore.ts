@@ -272,8 +272,8 @@ export default class OrderStore {
     this.loadingData(true);
     runInAction(() => {
       this.selectedOrder = undefined;
-      this.showOrderForm = true;
     });
+    this.setShowOrderForm(true);
     this.loadingData(false);
   };
 
@@ -281,7 +281,9 @@ export default class OrderStore {
     this.loadingData(true);
     const order = new OrderFormValues(this.selectedOrder);
     this.rootStore.contactStore.getContact(encodeURI(order.clientName!));
-    const contact = await agent.Contacts.getContact(encodeURI(order.clientName!));
+    const contact = await agent.Contacts.getContact(
+      encodeURI(order.clientName!)
+    );
     runInAction(() => {
       if (
         !this.rootStore.contactStore.contactRegistry.has(contact.id) &&
@@ -291,8 +293,8 @@ export default class OrderStore {
       } else this.selectedClient = contact;
       this.rootStore.contactStore.selectedContact = contact;
       this.selectedOrder = this.openOrderRegistry.get(id);
-      this.showOrderForm = true;
     });
+    this.setShowOrderForm(true);
     this.loadingData(false);
   };
 
@@ -397,8 +399,8 @@ export default class OrderStore {
       this.rootStore.contactStore.loadUncontracted();
     } catch (error) {
       this.submittingData(false);
-      toast.error('Problem occured');
-      console.log(error.response);
+      toast.error(error.data.errors.message);
+      console.log(error)
     }
   };
 
@@ -410,18 +412,21 @@ export default class OrderStore {
         await agent.Orders.updateOrder(order);
         runInAction(() => {
           this.openOrderRegistry.set(order.id, order);
-          this.showOrderForm = false;
         });
+        this.setShowOrderForm(false);
         if (this.temporaryContact) this.removeTemporaryContact();
         this.submittingData(false);
         this.loadOrders();
       } catch (error) {
+        this.setShowOrderForm(false);
         this.submittingData(false);
-        toast.error(error.data.errors);
+        if (error.status == 304) {
+          toast.info('There were no changes.');
+        } else toast.error(error.data.errors.message);
         console.log(error);
       }
     } else {
-      this.showOrderForm = false;
+      this.setShowOrderForm(false);
       this.submittingData(false);
     }
   };
@@ -438,10 +443,11 @@ export default class OrderStore {
       await this.setOrderList('allOrders', false);
       await this.setOrderList('allOrders', true);
       this.rootStore.contactStore.loadUncontracted();
+      toast.success('Order deleted successfully.');
     } catch (error) {
       this.submittingData(false);
       console.log(error);
-      toast.error(error.data.errors);
+      toast.error(error.data.errors.message);
     }
   };
 

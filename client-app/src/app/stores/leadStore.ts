@@ -54,6 +54,12 @@ export default class LeadStore {
     });
 
     this.rootStore = rootStore;
+    reaction(
+      () => this.listAxiosParams,
+      () => {
+        this.loadLeads();
+      }
+    );
     // reaction(
     //   () => this.modalDecision,
     //   () => {
@@ -221,8 +227,8 @@ export default class LeadStore {
     runInAction(() => {
       this.selectedLead = undefined;
       this.selectedValue = '';
-      this.showLeadForm = true;
     });
+    this.setShowLeadForm(true);
     this.loadingData(false);
   };
 
@@ -256,7 +262,6 @@ export default class LeadStore {
         this.leadRegistry.clear();
         leads.forEach((lead) => {
           this.leadRegistry.set(lead.contact.id, lead);
-          console.log(lead)
         });
       });
       this.loadingData(false);
@@ -273,15 +278,16 @@ export default class LeadStore {
       await agent.Leads.addLead(lead);
       runInAction(() => {
         this.leadRegistry.set(lead.contact.id, lead);
-        this.showLeadForm = false;
       });
+      this.setShowLeadForm(false);
       toast.success('Lead added');
       //reload list with status of added lead
       this.setLeadList(lead.contact.status, this.sortBy);
       this.submittingData(false);
     } catch (error) {
-      this.submittingData(false);
+      toast.error(error.data.errors.message);
       console.log(error);
+      this.submittingData(false);
     }
   };
 
@@ -307,16 +313,18 @@ export default class LeadStore {
         await agent.Contacts.updateContact(lead.contact);
         runInAction(() => {
           this.leadRegistry.set(lead.contact.id, lead);
-          this.showLeadForm = false;
         });
+        this.setShowLeadForm(false);
         this.submittingData(false);
       } catch (error) {
         this.submittingData(false);
-        toast.error('Problem occured');
+        if (error.status == 304) {
+          toast.info('There were no changes.');
+        } else toast.error(error.data.errors.message);
         console.log(error);
       }
     } else {
-      this.showLeadForm = false;
+      this.setShowLeadForm(false);
       this.submitting = false;
     }
   };

@@ -42,11 +42,16 @@ namespace API.Middleware
                     errors = re.Errors;
                     context.Response.StatusCode = (int)re.Code;
                     break;
+                case NoChangesException nce:
+                    logger.LogError(ex, "REST ERROR");
+                    context.Response.StatusCode = (int)System.Net.HttpStatusCode.NotModified;
+                    break;
                 case Exception e:
                     logger.LogError(ex, "SERVER ERROR");
-                    errors = string.IsNullOrWhiteSpace(e.Message) ? "Error" : e.Message;
+                    errors = new { message = string.IsNullOrWhiteSpace(e.Message) ? "Error" : e.Message };
                     context.Response.StatusCode = (int)System.Net.HttpStatusCode.InternalServerError;
                     break;
+
             }
 
             context.Response.ContentType = "application/json";

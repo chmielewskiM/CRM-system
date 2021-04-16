@@ -65,10 +65,6 @@ namespace Application.AppUser
 
                     throw new Exception("Failed to delete the user.");
                 }
-
-
-
-                // throw new Exception("Failed to delete the user.");
             }
         }
     }

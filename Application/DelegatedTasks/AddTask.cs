@@ -7,6 +7,7 @@ using Domain;
 using FluentValidation;
 using Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Application.Validators;
 
 namespace Application.DelegatedTasks
 {
@@ -28,8 +29,8 @@ namespace Application.DelegatedTasks
         {
             public CommandValidator()
             {
-                // RuleFor(x => x.Type).NotEmpty();
-                // RuleFor(x => x.Deadline).NotEmpty();
+                RuleFor(x => x.Type).NotEmpty().OnFailure(x => ValidatorExtensions.brokenRule("Select type of the task."));;
+                RuleFor(x => x.Deadline).NotEmpty().OnFailure(x => ValidatorExtensions.brokenRule("Select deadline."));;
                 // RuleFor(x => x.Notes).NotEmpty();
             }
         }
@@ -46,6 +47,10 @@ namespace Application.DelegatedTasks
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
+                //Fluent validation
+                CommandValidator validator = new CommandValidator();
+                validator.ValidateAndThrow(request);
+
                 var task = new DelegatedTask
                 {
                     Id = request.Id,

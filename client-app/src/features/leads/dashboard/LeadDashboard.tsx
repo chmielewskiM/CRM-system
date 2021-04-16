@@ -9,7 +9,9 @@ import { filterLeads } from '../../../app/common/options/buttons';
 export const LeadDashboard: React.FC = () => {
   const { leadStore, commonStore } = useStores();
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    leadStore.loadLeads();
+  }, []);
 
   const [sortBy, setSortBy] = useState('date');
 

@@ -111,7 +111,7 @@ namespace Application.DelegatedTasks
                     sortedTasks = sortedTasks.Where(x => x.DelegatedTask.Refused.Equals(true));
                 else if (done)
                     sortedTasks = sortedTasks.Where(x => x.DelegatedTask.Done.Equals(true));
-                    
+
                 if (user.Level == "low")
                     sortedTasks = sortedTasks.Where(x => x.CreatedBy == user || x.SharedWith == user);
                 else if (user.Level == "mid")

@@ -30,10 +30,10 @@ namespace Application.AppUser
         {
             public CommandValidator()
             {
-                RuleFor(x => x.DisplayName).NotEmpty();
-                // RuleFor(x => x.Username).NotEmpty();
-                // RuleFor(x => x.Email).NotEmpty().EmailAddress();
-                // RuleFor(x => x.Password).Password();
+                RuleFor(x => x.DisplayName).NotEmpty().Name();
+                RuleFor(x => x.Username).NotEmpty().OnFailure(x => ValidatorExtensions.brokenRule("Username can not be empty."));
+                RuleFor(x => x.Email).NotEmpty().OnFailure(x => ValidatorExtensions.brokenRule("Email can not be empty."));
+                RuleFor(x => x.Password).NotEmpty().OnFailure(x => ValidatorExtensions.brokenRule("Password can not be empty")).Password();
             }
         }
 
@@ -51,6 +51,9 @@ namespace Application.AppUser
 
             public async Task<AppUser> Handle(Command request, CancellationToken cancellationToken)
             {
+                CommandValidator validator = new CommandValidator();
+                validator.ValidateAndThrow(request);
+
                 if (await _context.Users.Where(x => x.Email == request.Email).AnyAsync())
                     throw new RestException(HttpStatusCode.BadRequest, new { msg = "This email already exists" });
 

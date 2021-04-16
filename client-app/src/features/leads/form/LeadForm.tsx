@@ -13,7 +13,7 @@ import SelectInput from '../../../app/common/form/SelectInput';
 import { ILead, LeadFormValues } from '../../../app/models/lead';
 
 const validation = combineValidators({
-  name: isRequired({ message: 'The name is required.' }),
+  // name: isRequired({ message: 'The name is required.' }),
   // type: isRequired({ message: 'Choose who should perform the task.' }),
   // company: isRequired({ message: 'Select type of the task.' }),
   // phoneNumber: isRequired({ message: 'The date is required.' }),

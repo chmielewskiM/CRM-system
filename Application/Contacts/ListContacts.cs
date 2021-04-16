@@ -59,7 +59,6 @@ namespace Application.Contacts
                 var user = await _context
                     .Users
                     .SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetLoggedUsername());
-
                 if (user.Level != "top")
                     userContacts = userContacts.Where(x => x.User == user);
                 if (request.InProcess)

@@ -358,8 +358,7 @@ export default class ContactStore {
       this.loadContacts();
     } catch (error) {
       this.submittingData(false);
-      toast.error(error.data.errors.msg);
-      toast.error(error.data.errors);
+      toast.error(error.data.errors.message);
       console.log(error);
     }
   };
@@ -374,13 +373,16 @@ export default class ContactStore {
         });
         this.setShowContactForm(false);
         this.submittingData(false);
+        toast.success('Contact updated successfully.');
       } catch (error) {
         this.submittingData(false);
-        toast.error('Problem occured');
+        if (error.status == 304) {
+          toast.info('There were no changes.');
+          this.setShowContactForm(false);
+        } else toast.error(error.data.errors.message);
         console.log(error);
       }
     } else {
-      toast.info('No changes');
       this.showContactForm = false;
       this.submittingData(false);
     }
@@ -397,7 +399,7 @@ export default class ContactStore {
       this.submittingData(false);
       toast.success('Contact deleted successfully.');
     } catch (error) {
-      toast.error(error.data.errors.error);
+      toast.error(error.data.errors.message);
       this.submittingData(false);
       console.log(error);
     }

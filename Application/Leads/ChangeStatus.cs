@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -52,7 +51,7 @@ namespace Application.Leads
 
                 if (contact == null)
                     throw new RestException(HttpStatusCode.NotFound,
-                    new { contact = "Not found" });
+                    new { message = "Lead not found" });
 
                 var user = await _context.Users.SingleOrDefaultAsync(x =>
                                 x.UserName == _userAccessor.GetLoggedUsername());
@@ -74,7 +73,7 @@ namespace Application.Leads
 
                     //make sure whether index is not out of boundary
                     if (index < 0)
-                        throw new RestException(HttpStatusCode.BadRequest, "Can't downgrade inactive client");
+                        throw new RestException(HttpStatusCode.BadRequest, new { message = "Can't downgrade inactive client" });
 
                     //declare previous operation (there is only one, desired process left in saleProcess)
 
@@ -110,8 +109,10 @@ namespace Application.Leads
                 Operation previousOperation = lastProcess.Operation;
                 var userOperation = await _context.UserOperations.FindAsync(new Guid(user.Id), previousOperation.Id);
                 _context.SaleProcess.Remove(lastProcess);
-                _context.UserOperations.Remove(userOperation);
-                _context.Remove(previousOperation);
+                if (userOperation != null)
+                    _context.UserOperations.Remove(userOperation);
+                if (previousOperation != null)
+                    _context.Remove(previousOperation);
             }
             private async Task UpgradeLead(SaleProcess lastProcess, string upgradeTo, Contact contact, DataContext context, User user)
             {
@@ -154,7 +155,7 @@ namespace Application.Leads
                 Order order = contact.Orders.OrderByDescending(x => x.DateOrderOpened).FirstOrDefault();
 
                 if (!order.Closed)
-                    throw new RestException(HttpStatusCode.Forbidden, "Please close the order before performing the conversion.");
+                    throw new RestException(HttpStatusCode.Forbidden, new { message = "Please close the order before performing the conversion." });
 
                 newOperation.Conversion = 1;
                 newOperation.Revenue = order.Price;

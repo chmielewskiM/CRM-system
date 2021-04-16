@@ -6,7 +6,7 @@ export const contactButtons = [
     icon:'users',
     size: 'small' as const,
     compact: true,
-    className: 'all',
+    className: 'all active',
     functionArg: 'all',
   },
   {

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Application.Errors;
 using Domain;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Persistence;
 
 namespace Application.Orders
@@ -31,18 +30,19 @@ namespace Application.Orders
                 var order = await _context.Orders.FindAsync(request.Id);
 
                 if (order == null)
-                    throw new RestException(HttpStatusCode.NotFound, "Couldn't find the order.");
+                    throw new RestException(HttpStatusCode.NotFound, new { message = "Couldn't find the order." });
 
                 Contact client = await _context.Contacts.FindAsync(order.ClientId);
 
                 if (client == null)
-                    throw new RestException(HttpStatusCode.Conflict, "Something went wrong. The order appears to have no client assigned.");
+                    throw new RestException(HttpStatusCode.Conflict, new { message = "Something went wrong. The order appears to have no client assigned." });
 
                 if (client.Status == "Invoice")
-                    throw new RestException(HttpStatusCode.Forbidden, "You can't delete an order which is waiting for finalization. Downgrade client's status first.");
+                    throw new RestException(HttpStatusCode.Forbidden, new { message = "You can't delete an order which is waiting for finalization. Downgrade client's status first." });
 
                 //check whether the order is assigned to any sale process
                 IQueryable<SaleProcess> saleProcess = _context.SaleProcess.Where(x => x.OrderId.Equals(order.Id.ToString()));
+                
                 //erase the order from the whole sale process
                 if (saleProcess.Count() > 0)
                     foreach (SaleProcess process in saleProcess)

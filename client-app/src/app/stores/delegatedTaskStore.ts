@@ -59,12 +59,7 @@ export default class DelegatedTaskStore {
     });
     this.rootStore = rootStore;
 
-    reaction(
-      () => this.axiosParams,
-      () => {
-        this.loadTasks();
-      }
-    );
+
     // reaction(
     //   () => this.pendingTasksByDate,
     //   () => {
@@ -379,14 +374,13 @@ export default class DelegatedTaskStore {
       runInAction(() => {
         this.activeTaskRegistry.set(delegatedTask.id, delegatedTask);
         toast.success('DelegatedTask added');
-        this.showTaskForm = false;
+        this.setShowTaskForm(false);
       });
       this.submittingData(false);
       await this.loadTasks();
     } catch (error) {
       this.submittingData(false);
-      toast.error('Problem occured');
-      console.log(error.response);
+      toast.error(error.data.errors.message);
     }
   };
 
@@ -397,18 +391,20 @@ export default class DelegatedTaskStore {
         await agent.DelegatedTasks.updateTask(delegatedTask);
         runInAction(() => {
           this.activeTaskRegistry.set(delegatedTask.id, delegatedTask);
-          this.showTaskForm = false;
-
+          this.setShowTaskForm(false);
           this.selectedTask = undefined;
         });
         this.submittingData(false);
       } catch (error) {
+        this.setShowTaskForm(false);
         this.submittingData(false);
-        toast.error('Problem occured');
+        if (error.status == 304) {
+          toast.info('There were no changes.');
+        } else toast.error(error.data.errors.message);
         console.log(error);
       }
     } else {
-      this.showTaskForm = false;
+      this.setShowTaskForm(false);
       this.submittingData(false);
     }
   };

@@ -44,17 +44,24 @@ namespace Application.DelegatedTasks
 
                 if (delegatedTask == null)
                     throw new RestException(HttpStatusCode.NotFound,
-                    new { delegatedTask = "Not found" });
+                    new { message = "Task not found" });
 
-                delegatedTask.Type = request.Type ?? delegatedTask.Type;
+                bool noChanges = (delegatedTask.Type == request.Type &&
+                                delegatedTask.Deadline == request.Deadline.AddHours(1) &&
+                                delegatedTask.Notes == request.Notes);
+
+                if (noChanges)
+                    throw new NoChangesException();
+
+                delegatedTask.Type = request.Type;
                 delegatedTask.Deadline = request.Deadline.AddHours(1);
-                delegatedTask.Notes = request.Notes ?? delegatedTask.Notes;
+                delegatedTask.Notes = request.Notes;
 
                 var success = await _context.SaveChangesAsync() > 0;
 
                 if (success) return Unit.Value;
 
-                throw new RestException(HttpStatusCode.NotModified, "No changes detected.");
+                throw new Exception("Problem saving changes");
             }
         }
     }

@@ -8,6 +8,9 @@ using FluentValidation;
 using Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Application.Errors;
+using System.Net;
+using Application.Validators;
 
 namespace Application.Contacts
 {
@@ -36,11 +39,11 @@ namespace Application.Contacts
         {
             public CommandValidator()
             {
-                RuleFor(x => x.Name).NotEmpty().WithMessage("The name field can not be empty.").WithName("msg");
-                // RuleFor(x => x.Type).NotEmpty();
-                // RuleFor(x => x.Company).NotEmpty();
+                RuleFor(x => x.Name).Name();
+                RuleFor(x => x.Type).NotEmpty().OnFailure(x => ValidatorExtensions.brokenRule("Type can not be empty"));
+                // RuleFor(x => x.Company).NotEmpty().OnFailure(x => ValidatorExtensions.brokenRule("Company can not be empty"));;
                 // RuleFor(x => x.PhoneNumber).NotEmpty();
-                // RuleFor(x => x.Email).NotEmpty();
+                RuleFor(x => x.Email).NotEmpty().OnFailure(x => ValidatorExtensions.brokenRule("Email address can not be empty"));
             }
         }
         public class Handler : IRequestHandler<Command>
@@ -56,9 +59,14 @@ namespace Application.Contacts
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
+                //Fluent validation
+                CommandValidator validator = new CommandValidator();
+                validator.ValidateAndThrow(request);
+
+                //check whether name exists already
                 bool alreadyExists = _context.Contacts.Where(x => x.Name == request.Name).Count() > 0;
                 if (alreadyExists)
-                    throw new Exception("This name is already taken.");
+                    throw new RestException(HttpStatusCode.Conflict, "This name is already taken.");
 
                 var contact = new Contact
                 {
@@ -73,7 +81,7 @@ namespace Application.Contacts
                     Status = "Inactive",
                     Premium = false
                 };
-                
+
                 _context.Contacts.Add(contact);
 
                 var user = await _context.Users.SingleOrDefaultAsync(x =>

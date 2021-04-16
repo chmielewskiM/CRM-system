@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Persistence;
+using Application.Errors;
+using System.Net;
 
 namespace Application.AppUser
 {
@@ -35,7 +37,10 @@ namespace Application.AppUser
             public async Task<AppUser> Handle(Query request, CancellationToken cancellationToken)
             {
                 var user = await _userManager.FindByNameAsync(request.Username);
-                var users = _userManager.Users;
+
+                if (user == null)
+                    throw new RestException(HttpStatusCode.NotFound,
+                    new { message = "User not found" });
 
                 return new AppUser
                 {

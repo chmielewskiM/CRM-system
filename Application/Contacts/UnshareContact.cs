@@ -50,7 +50,7 @@ namespace Application.Contacts
                 if (contact == null)
                     throw new RestException(HttpStatusCode.NotFound, new
                     {
-                        Contact = "Could not find contact"
+                        message = "Could not find contact"
                     });
 
                 var user = await _context
@@ -65,14 +65,14 @@ namespace Application.Contacts
                     return Unit.Value;
 
                 if (!share.UserId.Equals(new Guid(user.Id)))
-                    throw new RestException(HttpStatusCode.BadRequest, new { Share = "You cannot unshare this contact" });
+                    throw new RestException(HttpStatusCode.BadRequest, new { message = "You cannot unshare this contact" });
 
                 var hasOpenOrder = await orders.SingleOrDefaultAsync(x => x.UserId == user.Id && x.ClientId == contact.Id && x.Closed == false);
-                
+
                 if (hasOpenOrder != null)
                     throw new RestException(HttpStatusCode.FailedDependency, new
                     {
-                        error = "The contact has an open order. Close or delete the order before deleting the contact."
+                        message = "The contact has an open order. Close or delete the order before deleting the contact."
                     });
 
                 _context.UserContacts.Remove(share);

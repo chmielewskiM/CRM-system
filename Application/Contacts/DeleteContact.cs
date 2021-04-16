@@ -30,7 +30,7 @@ namespace Application.Contacts
 
                 if (contact == null)
                     throw new RestException(HttpStatusCode.NotFound,
-                    new { contact = "Not found" });
+                    new { message = "Not found" });
 
                 _context.Contacts.Remove(contact);
 

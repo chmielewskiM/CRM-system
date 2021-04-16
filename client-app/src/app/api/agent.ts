@@ -20,6 +20,7 @@ axios
             cfg.headers.Authorization = `Bearer ${token}`;
         return cfg;
     }, (error) => {
+        console.log(error);
         return Promise.reject(error);
     });
 
@@ -54,13 +55,13 @@ const requests = {
 };
 
 const Contacts = {
-    getContact: (name : String): Promise < IContact > => requests.get(`/contacts/${name}`),
+    getContact: (name : String): Promise < IContact > => requests.get(`/contacts/name/${name}`),
     listContacts: (params : URLSearchParams): Promise < ICompleteContactsData > => axios
         .get(`/contacts`, {params: params})
         .then(responseBody),
     addContact: (contact : IContact) => requests.post('/contacts', contact),
+    upgradeToPremium: (contact : IContact) => requests.post(`/contacts/upgrade/${contact.id}`, contact),
     updateContact: (contact : IContact) => requests.put(`/contacts/${contact.id}`, contact),
-    upgradeToPremium: (contact : IContact) => requests.put(`/contacts/upgrade/${contact.id}`, contact),
     deleteContact: (id : string) => requests.del(`/contacts/${id}`),
     unshareContact: (id : string) => requests.del(`/contacts/remove/${id}`)
 };
@@ -105,11 +106,11 @@ const Orders = {
 
 const Users = {
     listUsers: (): Promise < IUser[] > => requests.get('/users'),
-    getUser: (username : string): Promise < IUserFormValues > => requests.get(`/users/${username}`),
+    getUser: (username : string): Promise < IUserFormValues > => requests.get(`/users/user/${username}`),
     loggedUser: (): Promise < IUser > => requests.get('/users/logged'),
     login: (user : IUserFormValues): Promise < IUser > => requests.post('/users/login', user),
     registerUser: (user : IUserFormValues): Promise < IUser > => requests.post('/users/register', user),
-    updateUser: (user : IUser) => requests.put(`/users/${user.id}`, user),
+    updateUser: (user : IUser) => requests.put(`/users/update/${user.id}`, user),
     deleteUser: (username : string) => requests.del(`/users/${username}`)
 };
 

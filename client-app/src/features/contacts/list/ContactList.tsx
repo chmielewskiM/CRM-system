@@ -8,9 +8,7 @@ import ContactControls from './ContactControls';
 export const ContactList: React.FC = () => {
   const { contactStore } = useStores();
 
-  useEffect(() => {
-    contactStore.loadContacts();
-  }, []);
+  useEffect(() => {}, []);
 
   if (contactStore.loadingInitial)
     return <LoaderComponent content="Loading..." />;
@@ -108,7 +106,7 @@ export const ContactList: React.FC = () => {
               <Table.Cell>
                 {contact.name}
                 {contact.premium == 'True' && (
-                  <Icon name="star" style={{ color: 'gold'}} />
+                  <Icon name="star" style={{ color: 'gold' }} />
                 )}
               </Table.Cell>
               <Table.Cell>{contact.company}</Table.Cell>
