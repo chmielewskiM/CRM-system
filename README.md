@@ -121,4 +121,12 @@ Chosen platform to set up CI/CD is ***Azure***.
 
 ## API spec
 
-<img src="https://s4.gifyu.com/images/swagger.png" width="532" height="300" align="center">
+<p align="center"> <a href="https://petstore.swagger.io/?url=https://rawcdn.githack.com/chmielewskiM/CRM-system/28f82782bf23a08f32d903c4bdd4f76311979fa7/API-spec.yaml" align="ctr"> 
+ 
+***>Swagger petstore<*** 
+                          
+</a></p>
+ 
+ <br>
+ 
+<a href="https://petstore.swagger.io/?url=https://rawcdn.githack.com/chmielewskiM/CRM-system/28f82782bf23a08f32d903c4bdd4f76311979fa7/API-spec.yaml"><img src="https://s4.gifyu.com/images/swagger.png" width="532" height="300" align="center"></a>
