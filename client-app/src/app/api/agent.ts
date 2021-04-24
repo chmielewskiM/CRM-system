@@ -61,6 +61,7 @@ const Contacts = {
         .then(responseBody),
     addContact: (contact : IContact) => requests.post('/contacts', contact),
     upgradeToPremium: (contact : IContact) => requests.post(`/contacts/upgrade/${contact.id}`, contact),
+    startSaleProcess: (contact : IContact) => requests.post(`/contacts/${contact.id}`, contact),
     updateContact: (contact : IContact) => requests.put(`/contacts/${contact.id}`, contact),
     deleteContact: (id : string) => requests.del(`/contacts/${id}`),
     unshareContact: (id : string) => requests.del(`/contacts/remove/${id}`)

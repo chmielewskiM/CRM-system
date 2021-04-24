@@ -12,11 +12,11 @@ import { useStores } from '../../../app/stores/rootStore';
 import LoaderComponent from '../../../app/layout/LoaderComponent';
 
 const validation = combineValidators({
-  name: isRequired({ message: 'The name is required.' }),
-  type: isRequired({ message: 'Select the type.' }),
+  // name: isRequired({ message: 'The name is required.' }),
+  // type: isRequired({ message: 'Select the type.' }),
   // company: isRequired({ message: 'Select type of the task.' }),
   // phoneNumber: isRequired({ message: 'The date is required.' }),
-  email: isRequired({ message: 'Email cannot be empty.' }),
+  // email: isRequired({ message: 'Email cannot be empty.' }),
   // notes: isRequired({ message: 'The time is required.' }),
 });
 

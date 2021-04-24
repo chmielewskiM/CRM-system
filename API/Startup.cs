@@ -21,29 +21,20 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using System;
 using Microsoft.OpenApi.Models;
-using System.Collections.Generic;
 using System.Reflection;
 using System.IO;
-using Application.Contacts;
-using Application.Leads;
-using Application.DelegatedTasks;
-using Application.Orders;
-using Application.AppUser;
+using Application.Operations.Repository;
 
 namespace API
 {
     public class Startup
     {
         private readonly IWebHostEnvironment _env;
+        public IConfiguration Configuration { get; }
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             _env = env;
             Configuration = configuration;
-        }
-
-        public IConfiguration Configuration
-        {
-            get;
         }
 
         // This method gets called by the runtime. Use this method to add services to
@@ -69,9 +60,19 @@ namespace API
                     // .AllowCredentials();
                 });
             });
-            services.AddMediatR(typeof(Application.Contacts.ListContacts.Handler).Assembly, typeof(Application.DelegatedTasks.ListTasks.Handler).Assembly, typeof(Application.Orders.ListOrders.Handler).Assembly, typeof(Application.Leads.ListLeads.Handler).Assembly);
-            services.AddAutoMapper(typeof(Application.Contacts.ListContacts.Handler), typeof(Application.DelegatedTasks.ListTasks.Handler), typeof(Application.Orders.ListOrders.Handler), typeof(Application.Leads.ListLeads.Handler));
-            services.AddMvc(opt =>
+
+            services.AddMediatR(typeof(Application.Contacts.QueryHandlers.ListContactsQueryHandler).Assembly,
+                                typeof(Application.DelegatedTasks.QueryHandlers.ListTasksQueryHandler).Assembly,
+                                typeof(Application.Orders.QueryHandlers.ListOrdersQueryHandler).Assembly,
+                                typeof(Application.Leads.QueryHandlers.ListLeadsQueryHandler).Assembly);
+
+            services.AddAutoMapper(typeof(Application.Contacts.QueryHandlers.ListContactsQueryHandler),
+                                typeof(Application.DelegatedTasks.QueryHandlers.ListTasksQueryHandler),
+                                typeof(Application.Orders.QueryHandlers.ListOrdersQueryHandler),
+                                typeof(API.Controllers.LeadsController),
+                                typeof(Application.Leads.QueryHandlers.ListLeadsQueryHandler));
+
+            services.AddControllers(opt =>
             {
                 var policy = new AuthorizationPolicyBuilder()
                     .RequireAuthenticatedUser()
@@ -81,12 +82,7 @@ namespace API
                     .Add(new AuthorizeFilter(policy));
             }).AddFluentValidation(cfg =>
             {
-                cfg.RegisterValidatorsFromAssemblyContaining<AddContact>();
-                
-                cfg.RegisterValidatorsFromAssemblyContaining<AddTask>();
-                cfg.RegisterValidatorsFromAssemblyContaining<AddOrder>();
-                cfg.RegisterValidatorsFromAssemblyContaining<RegisterUser>();
-                cfg.RegisterValidatorsFromAssemblyContaining<AddLead>();
+                cfg.RegisterValidatorsFromAssembly(typeof(Startup).Assembly);
                 cfg.LocalizationEnabled = false;
             });
 
@@ -151,6 +147,7 @@ namespace API
                 });
 
             services.AddScoped<IJwtGenerator, JwtGenerator>();
+            services.AddScoped<IOperationsRepository, OperationsRepository>();
             services.AddScoped<IUserAccessor, UserAccessor>();
         }
 

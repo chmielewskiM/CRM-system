@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using Application.Operations;
+using Application.Operations.ViewModels;
+using Application.Interfaces;
+using Application.Operations.Queries;
 
 namespace API.Controllers
 {
@@ -11,15 +14,26 @@ namespace API.Controllers
     // [Produces("application/json")]
     public class OperationsController : BaseController
     {
+        private readonly IOperationsRepository _operationsRepository;
+        public OperationsController(IOperationsRepository operationsRepository)
+        {
+            _operationsRepository = operationsRepository;
+        }
         ///<summary>
         /// Returns all operations.
         ///</summary>
         ///<response code="200">Returns all operations.</response>
         ///<response code="500">Server error.</response>
         [HttpGet]
-        public async Task<ActionResult<CompleteStats>> ListOperations(CancellationToken ct)
+        public async Task<ActionResult<CompleteStatsViewModel>> ListOperations(CancellationToken ct)
         {
-            return await Mediator.Send(new ListOperations.Query(), ct);
+            var listOperationsQuery = new ListOperationsQuery();
+            var list = await Mediator.Send(listOperationsQuery);
+
+            // if (list == null)
+            //     return BadRequest("Contact not found");
+
+            return list;
         }
 
         ///<summary>
@@ -29,9 +43,11 @@ namespace API.Controllers
         ///<response code="404">Task not found.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpGet("count")]
-        public async Task<ActionResult<Int32>> CountOperations()
+        public async Task<ActionResult<int>> CountOperations()
         {
-            return await Mediator.Send(new CountOperations.Query());
+            var operationsCount = await _operationsRepository.Count();
+
+            return operationsCount;
         }
     }
 }

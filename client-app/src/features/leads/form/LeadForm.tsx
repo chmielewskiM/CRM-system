@@ -61,13 +61,15 @@ export const LeadForm: React.FC<IProps> = () => {
               initialValues={leadStore.fillForm()}
               render={({ handleSubmit }) => (
                 <Form onSubmit={handleSubmit} size="big">
-                  <Field
-                    options={sources}
-                    name="source"
-                    placeholder="Source"
-                    value={contact.source}
-                    component={SelectInput}
-                  />
+                  {!leadStore.selectedLead && (
+                    <Field
+                      options={sources}
+                      name="source"
+                      placeholder="Source"
+                      value={contact.source}
+                      component={SelectInput}
+                    />
+                  )}
                   <Field
                     name="name"
                     placeholder="Name"

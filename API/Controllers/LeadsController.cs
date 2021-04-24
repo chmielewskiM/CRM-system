@@ -4,9 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using System.Threading;
-using Application.Leads;
-// using static Application.Leads.AddLead;
 using Domain;
+using Application.Leads.ViewModels;
+using Application.Leads.Queries;
+using Application.Leads.Commands;
+using Application.Contacts.Queries;
 
 namespace API.Controllers
 {
@@ -21,9 +23,12 @@ namespace API.Controllers
         ///<response code="200">Returns list with leads.</response>
         ///<response code="500">Server error.</response>
         [HttpGet]
-        public async Task<ActionResult<List<LeadDTO>>> ListLeads(bool allLeads, string status, string sortBy, CancellationToken ct)
+        public async Task<ActionResult<List<LeadViewModel>>> ListLeads(bool allLeads, string status, string sortBy, CancellationToken ct)
         {
-            return await Mediator.Send(new ListLeads.Query(allLeads, status, sortBy), ct);
+            var listLeadsData = new ListLeadsQuery(allLeads, status, sortBy);
+            var list = await Mediator.Send(listLeadsData);
+
+            return Mapper.Map<List<Lead>, List<LeadViewModel>>(list);
         }
 
         ///<summary>
@@ -33,9 +38,15 @@ namespace API.Controllers
         ///<response code="404">Lead not found.</response>
         ///<response code="500">Server error.</response>
         [HttpGet("{id}")]
-        public async Task<ActionResult<LeadDTO>> LeadDetails(Guid id)
+        public async Task<ActionResult<LeadViewModel>> LeadDetails(Guid id)
         {
-            return await Mediator.Send(new LeadDetails.Query { Id = id });
+            var leadDetailsQuery = new LeadDetailsQuery(id);
+            var lead = await Mediator.Send(leadDetailsQuery);
+
+            if (lead == null)
+                return BadRequest("Lead not found");
+
+            return Mapper.Map<Lead, LeadViewModel>(lead);
         }
 
         ///<summary>
@@ -47,7 +58,10 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<Unit>> AddLead(Lead lead)
         {
-            return await Mediator.Send(new AddLead.Command { Lead = lead });
+            var addLeadCommand = new AddLeadCommand(lead.Contact.Name, lead.Contact.Company, lead.Contact.PhoneNumber, lead.Contact.Email, lead.Contact.Notes, lead.Contact.Source);
+            await Mediator.Send(addLeadCommand);
+
+            return NoContent();
         }
 
         ///<summary>
@@ -60,9 +74,17 @@ namespace API.Controllers
         ///<response code="409">This name is already taken.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpPut("{id}={upgrade}")]
-        public async Task<ActionResult<Unit>> ChangeStatus(Guid id, bool upgrade)
+        public async Task<ActionResult> ChangeStatus(Guid id, bool upgrade)
         {
-            return await Mediator.Send(new ChangeStatus.Command { Id = id, Upgrade = upgrade });
+            var contactDetailsQuery = new ContactDetailsQuery(id);
+            var contact = await Mediator.Send(contactDetailsQuery);
+            if (contact == null)
+                return BadRequest("Lead not found");
+
+            var changeStatusCommand = new ChangeStatusCommand(id, upgrade);
+            await Mediator.Send(changeStatusCommand);
+
+            return NoContent();
         }
 
         ///<summary>
@@ -76,9 +98,12 @@ namespace API.Controllers
         ///<response code="404">Lead not found.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpDelete("abandon")]
-        public async Task<ActionResult<Unit>> AbandonLead(Guid id, bool saveContact, bool keepRecords)
+        public async Task<ActionResult> AbandonLead(Guid id, bool saveContact, bool keepRecords)
         {
-            return await Mediator.Send(new AbandonLead.Command(id, saveContact, keepRecords));
+            var abandonLead = new AbandonLeadCommand(id, saveContact, keepRecords);
+            await Mediator.Send(abandonLead);
+
+            return NoContent();
         }
     }
 }

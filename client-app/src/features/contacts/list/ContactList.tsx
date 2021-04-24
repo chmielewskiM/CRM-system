@@ -105,7 +105,7 @@ export const ContactList: React.FC = () => {
             >
               <Table.Cell>
                 {contact.name}
-                {contact.premium == 'True' && (
+                {contact.premium == 'True' || contact.premium == true && (
                   <Icon name="star" style={{ color: 'gold' }} />
                 )}
               </Table.Cell>

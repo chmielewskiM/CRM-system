@@ -73,6 +73,7 @@ export const AdminPanelForm: React.FC<IProps> = (props) => {
                           : setLevel(false)
                       );
                   }}
+                  // onClick={()=>userStore.getUserList()}
                 />
               </Fragment>
             )}

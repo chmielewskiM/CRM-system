@@ -1,13 +1,12 @@
 using System;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence;
 using Microsoft.AspNetCore.Identity;
 using Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace API
 {

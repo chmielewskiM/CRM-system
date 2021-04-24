@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Domain;
 using MediatR;
 using Application.DelegatedTasks;
+using System.Collections.Generic;
 
 namespace API.Controllers
 {
@@ -18,9 +19,12 @@ namespace API.Controllers
         ///<response code="200">Returns the list</response>
         ///<response code="500">Server error.</response>
         [HttpGet]
-        public async Task<ActionResult<CompleteTaskData>> ListTasks(bool myTasks, bool sharedTasks, bool accepted, bool refused, bool done, int activePage, int pageSize)
+        public async Task<ActionResult<CompleteTasksDataViewModel>> ListTasks(bool myTasks, bool sharedTasks, bool accepted, bool refused, bool done, int activePage, int pageSize)
         {
-            return await Mediator.Send(new ListTasks.Query(myTasks, sharedTasks, accepted, refused, done, activePage, pageSize));
+            var tasksListQuery = new ListTasksQuery(myTasks, sharedTasks, accepted, refused, done, activePage, pageSize);
+            var data = await Mediator.Send(tasksListQuery);
+
+            return new CompleteTasksDataViewModel(Mapper.Map<List<DelegatedTask>, List<DelegatedTaskViewModel>>(data.Item1), data.Item2);
         }
 
         ///<summary>
@@ -29,9 +33,12 @@ namespace API.Controllers
         ///<response code="200">Returns list with tasks count.</response>
         ///<response code="500">Server error.</response>
         [HttpGet("pending/page{pendingActivePage}=size{pendingPageSize}")]
-        public async Task<ActionResult<CompleteTaskData>> ListPendingTasks(int pendingActivePage, int pendingPageSize)
+        public async Task<ActionResult<CompleteTasksDataViewModel>> ListPendingTasks(int pendingActivePage, int pendingPageSize)
         {
-            return await Mediator.Send(new ListPendingTasks.Query { PendingActivePage = pendingActivePage, PendingPageSize = pendingPageSize });
+            var pendingTasksListQuery = new ListPendingTasksQuery(pendingActivePage, pendingPageSize);
+            var data = await Mediator.Send(pendingTasksListQuery);
+
+            return new CompleteTasksDataViewModel(Mapper.Map<List<DelegatedTask>, List<DelegatedTaskViewModel>>(data.Item1), data.Item2);
         }
 
         ///<summary>
@@ -41,9 +48,15 @@ namespace API.Controllers
         ///<response code="404">Task not found.</response>
         ///<response code="500">Server error.</response>
         [HttpGet("{id}")]
-        public async Task<ActionResult<DelegatedTask>> TaskDetails(Guid id)
+        public async Task<ActionResult<DelegatedTaskViewModel>> TaskDetails(Guid id)
         {
-            return await Mediator.Send(new TaskDetails.Query { Id = id });
+            var taskDetailsQuery = new TaskDetailsQuery(id);
+            var task = await Mediator.Send(taskDetailsQuery);
+
+            if (task == null)
+                return BadRequest("Task not found");
+
+            return Mapper.Map<DelegatedTask, DelegatedTaskViewModel>(task);
         }
 
         ///<summary>
@@ -52,9 +65,12 @@ namespace API.Controllers
         ///<response code="200">Adds the task.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpPost]
-        public async Task<ActionResult<Unit>> AddTask(AddTask.Command command)
+        public async Task<ActionResult> AddTask(DelegatedTask task)
         {
-            return await Mediator.Send(command);
+            var addTaskCommand = new AddTaskCommand(task.Id, task.Type, task.Deadline, task.Notes);
+            await Mediator.Send(addTaskCommand);
+
+            return NoContent();
         }
 
         ///<summary>
@@ -65,10 +81,18 @@ namespace API.Controllers
         ///<response code="404">Task not found.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpPut("{id}")]
-        public async Task<ActionResult<Unit>> EditTask(Guid id, EditTask.Command command)
+        public async Task<ActionResult> EditTask(DelegatedTask task)
         {
-            command.Id = id;
-            return await Mediator.Send(command);
+            var taskDetailsQuery = new TaskDetailsQuery(task.Id);
+            var notFound = await Mediator.Send(taskDetailsQuery) == null;
+
+            if (notFound)
+                return BadRequest("Task not found");
+
+            var editTaskCommand = new EditTaskCommand(task.Id, task.Type, task.Deadline, task.Notes);
+            await Mediator.Send(editTaskCommand);
+
+            return NoContent();
         }
 
         ///<summary>
@@ -78,9 +102,18 @@ namespace API.Controllers
         ///<response code="404">Task not found.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Unit>> DeleteTask(Guid id)
+        public async Task<ActionResult> DeleteTask(Guid id)
         {
-            return await Mediator.Send(new DeleteTask.Command { Id = id });
+            var taskDetailsQuery = new TaskDetailsQuery(id);
+            var task = await Mediator.Send(taskDetailsQuery);
+
+            if (task == null)
+                return BadRequest("Task not found");
+
+            var deleteTaskCommand = new DeleteTaskCommand(task.Id);
+            await Mediator.Send(deleteTaskCommand);
+
+            return NoContent();
         }
 
         ///<summary>
@@ -91,9 +124,18 @@ namespace API.Controllers
         ///<response code="404">Task not found.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpPost("{id}/share/{username}")]
-        public async Task<ActionResult<Unit>> ShareTask(Guid id, string username)
+        public async Task<ActionResult> ShareTask(Guid id, string username)
         {
-            return await Mediator.Send(new ShareTask.Command { Id = id, Username = username });
+            var taskDetailsQuery = new TaskDetailsQuery(id);
+            var task = await Mediator.Send(taskDetailsQuery);
+
+            if (task == null)
+                return BadRequest("Task not found");
+
+            var shareTaskCommand = new ShareTaskCommand(id, username);
+            await Mediator.Send(shareTaskCommand);
+
+            return NoContent();
         }
 
         ///<summary>
@@ -103,10 +145,18 @@ namespace API.Controllers
         ///<response code="404">Task not found.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpPost("accept/{id}")]
-        public async Task<ActionResult<Unit>> AcceptTask(Guid id, AcceptTask.Command command)
+        public async Task<ActionResult> AcceptTask(Guid id)
         {
-            // command.Id = id;
-            return await Mediator.Send(new AcceptTask.Command { Id = id });
+            var taskDetailsQuery = new TaskDetailsQuery(id);
+            var task = await Mediator.Send(taskDetailsQuery);
+
+            if (task == null)
+                return BadRequest("Task not found");
+
+            var acceptTask = new AcceptTaskCommand(task.Id);
+            await Mediator.Send(acceptTask);
+
+            return NoContent();
         }
 
         ///<summary>
@@ -116,10 +166,18 @@ namespace API.Controllers
         ///<response code="404">Task not found.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpPost("refuse/{id}")]
-        public async Task<ActionResult<Unit>> RefuseTask(Guid id, RefuseTask.Command command)
+        public async Task<ActionResult> RefuseTask(Guid id)
         {
-            // command.Id = id;
-            return await Mediator.Send(new RefuseTask.Command { Id = id });
+            var taskDetailsQuery = new TaskDetailsQuery(id);
+            var task = await Mediator.Send(taskDetailsQuery);
+
+            if (task == null)
+                return BadRequest("Task not found");
+
+            var refuseTask = new AcceptTaskCommand(task.Id);
+            await Mediator.Send(refuseTask);
+
+            return NoContent();
         }
 
         ///<summary>
@@ -129,10 +187,18 @@ namespace API.Controllers
         ///<response code="404">Task not found.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpPost("finish/{id}")]
-        public async Task<ActionResult<Unit>> FinishTask(Guid id, FinishTask.Command command)
+        public async Task<ActionResult> FinishTask(Guid id)
         {
-            // command.Id = id;
-            return await Mediator.Send(new FinishTask.Command { Id = id });
+            var taskDetailsQuery = new TaskDetailsQuery(id);
+            var task = await Mediator.Send(taskDetailsQuery);
+
+            if (task == null)
+                return BadRequest("Task not found");
+
+            var finishTask = new FinishTaskCommand(task.Id);
+            await Mediator.Send(finishTask);
+
+            return NoContent();
         }
     }
 }

@@ -382,9 +382,6 @@ export default class OrderStore {
   addOrder = async (order: IOrder) => {
     this.submittingData(true);
     try {
-      order.client = this.rootStore.contactStore.selectedContact!;
-      var date = new Date(Date.now());
-      order.dateOrderOpened = date;
       order.type = this.sale;
       order.clientId = this.rootStore.contactStore.selectedContact?.id!;
       await agent.Orders.addOrder(order);

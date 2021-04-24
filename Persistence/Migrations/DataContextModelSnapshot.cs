@@ -107,26 +107,26 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<long>("Conversion")
-                        .HasColumnType("bigint");
+                    b.Property<bool>("Conversion")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("Invoice")
-                        .HasColumnType("bigint");
+                    b.Property<bool>("Invoice")
+                        .HasColumnType("bit");
 
-                    b.Property<long>("Lead")
-                        .HasColumnType("bigint");
+                    b.Property<bool>("Lead")
+                        .HasColumnType("bit");
 
-                    b.Property<long>("Opportunity")
-                        .HasColumnType("bigint");
+                    b.Property<bool>("Opportunity")
+                        .HasColumnType("bit");
 
-                    b.Property<long>("Order")
-                        .HasColumnType("bigint");
+                    b.Property<bool>("Order")
+                        .HasColumnType("bit");
 
-                    b.Property<long>("Quote")
-                        .HasColumnType("bigint");
+                    b.Property<bool>("Quote")
+                        .HasColumnType("bit");
 
                     b.Property<double>("Revenue")
                         .HasColumnType("float");
