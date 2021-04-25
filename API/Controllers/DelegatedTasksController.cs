@@ -5,6 +5,8 @@ using Domain;
 using MediatR;
 using Application.DelegatedTasks;
 using System.Collections.Generic;
+using Application.Users.Queries;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
@@ -31,11 +33,16 @@ namespace API.Controllers
         /// Returns list with pending tasks and their count.
         ///</summary>
         ///<response code="200">Returns list with tasks count.</response>
+        ///<response code="404">User not found.</response>
         ///<response code="500">Server error.</response>
         [HttpGet("pending/page{pendingActivePage}=size{pendingPageSize}")]
         public async Task<ActionResult<CompleteTasksDataViewModel>> ListPendingTasks(int pendingActivePage, int pendingPageSize)
         {
-            var pendingTasksListQuery = new ListPendingTasksQuery(pendingActivePage, pendingPageSize);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+                return BadRequest("User not found");
+
+            var pendingTasksListQuery = new ListPendingTasksQuery(userId, pendingActivePage, pendingPageSize);
             var data = await Mediator.Send(pendingTasksListQuery);
 
             return new CompleteTasksDataViewModel(Mapper.Map<List<DelegatedTask>, List<DelegatedTaskViewModel>>(data.Item1), data.Item2);
@@ -62,12 +69,12 @@ namespace API.Controllers
         ///<summary>
         /// Adds the task.
         ///</summary>
-        ///<response code="200">Adds the task.</response>
+        ///<response code="204">Adds the task.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpPost]
         public async Task<ActionResult> AddTask(DelegatedTask task)
         {
-            var addTaskCommand = new AddTaskCommand(task.Id, task.Type, task.Deadline, task.Notes);
+            var addTaskCommand = new AddTaskCommand(task.Type, task.Deadline, task.Notes);
             await Mediator.Send(addTaskCommand);
 
             return NoContent();
@@ -76,20 +83,19 @@ namespace API.Controllers
         ///<summary>
         /// Edits the task.
         ///</summary>
-        ///<response code="200">Task edited successfully.</response>
-        ///<response code="304">There were no changes.</response>
+        ///<response code="204">Task edited successfully.</response>
         ///<response code="404">Task not found.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpPut("{id}")]
         public async Task<ActionResult> EditTask(DelegatedTask task)
         {
             var taskDetailsQuery = new TaskDetailsQuery(task.Id);
-            var notFound = await Mediator.Send(taskDetailsQuery) == null;
+            var taskQuery = await Mediator.Send(taskDetailsQuery);
 
-            if (notFound)
+            if (taskQuery == null)
                 return BadRequest("Task not found");
 
-            var editTaskCommand = new EditTaskCommand(task.Id, task.Type, task.Deadline, task.Notes);
+            var editTaskCommand = new EditTaskCommand(taskQuery, task.Type, task.Deadline, task.Notes);
             await Mediator.Send(editTaskCommand);
 
             return NoContent();
@@ -98,7 +104,8 @@ namespace API.Controllers
         ///<summary>
         /// Deletes the task.
         ///</summary>
-        ///<response code="200">Task deleted successfully.</response>
+        ///<response code="204">Task deleted successfully.</response>
+        ///<response code="404">No logged user found.</response>
         ///<response code="404">Task not found.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpDelete("{id}")]
@@ -108,9 +115,13 @@ namespace API.Controllers
             var task = await Mediator.Send(taskDetailsQuery);
 
             if (task == null)
-                return BadRequest("Task not found");
+                return NotFound("Task not found");
 
-            var deleteTaskCommand = new DeleteTaskCommand(task.Id);
+            var username = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (username == null)
+                return NotFound("User not found");
+
+            var deleteTaskCommand = new DeleteTaskCommand(username, task);
             await Mediator.Send(deleteTaskCommand);
 
             return NoContent();
@@ -119,9 +130,11 @@ namespace API.Controllers
         ///<summary>
         /// Shares the task with other user.
         ///</summary>
-        ///<response code="200">Task deleted successfully.</response>
-        ///<response code="403">Task is shared already.</response>
+        ///<response code="204">Task deleted successfully.</response>
+        ///<response code="400">The task is shared already.</response>
         ///<response code="404">Task not found.</response>
+        ///<response code="404">User not found.</response>
+        ///<response code="404">User to share the task with not found.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpPost("{id}/share/{username}")]
         public async Task<ActionResult> ShareTask(Guid id, string username)
@@ -130,9 +143,22 @@ namespace API.Controllers
             var task = await Mediator.Send(taskDetailsQuery);
 
             if (task == null)
-                return BadRequest("Task not found");
+                return NotFound("Task not found");
 
-            var shareTaskCommand = new ShareTaskCommand(id, username);
+            var sharedById = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (sharedById == null)
+                return NotFound("User not found");
+
+            var getUserQuery = new GetUserQuery(username);
+            User sharedWithUser = await Mediator.Send(getUserQuery);
+
+            if (sharedWithUser == null)
+                return NotFound("User to share the task with not found.");
+
+            if (task.UserTask.SharedWithId != null)
+                return BadRequest("The task is shared already.");
+
+            var shareTaskCommand = new ShareTaskCommand(task, sharedById, sharedWithUser);
             await Mediator.Send(shareTaskCommand);
 
             return NoContent();
@@ -141,7 +167,7 @@ namespace API.Controllers
         ///<summary>
         /// Accepts shared task.
         ///</summary>
-        ///<response code="200">Task accepted.</response>
+        ///<response code="204">Task accepted.</response>
         ///<response code="404">Task not found.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpPost("accept/{id}")]
@@ -151,9 +177,9 @@ namespace API.Controllers
             var task = await Mediator.Send(taskDetailsQuery);
 
             if (task == null)
-                return BadRequest("Task not found");
+                return NotFound("Task not found");
 
-            var acceptTask = new AcceptTaskCommand(task.Id);
+            var acceptTask = new AcceptTaskCommand(task);
             await Mediator.Send(acceptTask);
 
             return NoContent();
@@ -162,7 +188,7 @@ namespace API.Controllers
         ///<summary>
         /// Refuses shared task.
         ///</summary>
-        ///<response code="200">Task refused.</response>
+        ///<response code="204">Task refused.</response>
         ///<response code="404">Task not found.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpPost("refuse/{id}")]
@@ -172,9 +198,9 @@ namespace API.Controllers
             var task = await Mediator.Send(taskDetailsQuery);
 
             if (task == null)
-                return BadRequest("Task not found");
+                return NotFound("Task not found");
 
-            var refuseTask = new AcceptTaskCommand(task.Id);
+            var refuseTask = new RefuseTaskCommand(task);
             await Mediator.Send(refuseTask);
 
             return NoContent();
@@ -183,7 +209,7 @@ namespace API.Controllers
         ///<summary>
         /// Closes shared task.
         ///</summary>
-        ///<response code="200">Task closed successfully.</response>
+        ///<response code="204">Task closed successfully.</response>
         ///<response code="404">Task not found.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpPost("finish/{id}")]
@@ -193,9 +219,9 @@ namespace API.Controllers
             var task = await Mediator.Send(taskDetailsQuery);
 
             if (task == null)
-                return BadRequest("Task not found");
+                return NotFound("Task not found");
 
-            var finishTask = new FinishTaskCommand(task.Id);
+            var finishTask = new FinishTaskCommand(task);
             await Mediator.Send(finishTask);
 
             return NoContent();

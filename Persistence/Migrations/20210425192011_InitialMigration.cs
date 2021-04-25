@@ -61,7 +61,7 @@ namespace Persistence.Migrations
                     DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SuccessfulDeals = table.Column<short>(type: "smallint", nullable: false),
+                    SuccessfulDeals = table.Column<int>(type: "int", nullable: false),
                     Source = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Premium = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -227,7 +227,7 @@ namespace Persistence.Migrations
                     Type = table.Column<bool>(type: "bit", nullable: false),
                     Closed = table.Column<bool>(type: "bit", nullable: false),
                     Product = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Amount = table.Column<double>(type: "float", nullable: true),
+                    Amount = table.Column<double>(type: "float", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
                     DateOrderOpened = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateOrderClosed = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -248,18 +248,17 @@ namespace Persistence.Migrations
                 name: "UserContacts",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ContactId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserContacts", x => new { x.UserId, x.ContactId });
                     table.ForeignKey(
-                        name: "FK_UserContacts_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_UserContacts_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -333,17 +332,16 @@ namespace Persistence.Migrations
                 name: "UserOperations",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     OperationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserOperations", x => new { x.UserId, x.OperationId });
                     table.ForeignKey(
-                        name: "FK_UserOperations_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_UserOperations_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -411,20 +409,10 @@ namespace Persistence.Migrations
                 column: "ContactId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserContacts_UserId1",
-                table: "UserContacts",
-                column: "UserId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_UserOperations_OperationId",
                 table: "UserOperations",
                 column: "OperationId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserOperations_UserId1",
-                table: "UserOperations",
-                column: "UserId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserTasks_DelegatedTaskId",

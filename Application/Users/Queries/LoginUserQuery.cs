@@ -1,11 +1,18 @@
 using Application.Users.ViewModels;
+using Domain;
 using MediatR;
 
 namespace Application.Users.Queries
 {
     public class LoginUserQuery : IRequest<UserViewModel>
     {
-        public string Username { get; set; }
-        public string Password { get; set; }
+        public User User { get; }
+        public string Password { get; }
+
+        public LoginUserQuery(User user, string password)
+        {
+            User = user;
+            Password = password;
+        }
     }
 }

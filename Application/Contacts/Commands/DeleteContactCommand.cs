@@ -1,15 +1,15 @@
-using System;
+using Domain;
 using MediatR;
 
 namespace Application.Contacts.Commands
 {
     public class DeleteContactCommand : IRequest
     {
-        public Guid Id { get; set; }
+        public Contact Contact { get; }
 
-        public DeleteContactCommand(Guid id)
+        public DeleteContactCommand(Contact contact)
         {
-            Id = id;
+            Contact = contact;
         }
     }
 }

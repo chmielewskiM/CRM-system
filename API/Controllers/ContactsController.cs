@@ -9,6 +9,7 @@ using Application.Contacts.Queries;
 using Application.Contacts.Commands;
 using Application.Validators;
 using System.Collections.Generic;
+using Application.Users.Queries;
 
 namespace API.Controllers
 {
@@ -35,16 +36,16 @@ namespace API.Controllers
         /// Returns the contact by requested name.
         ///</summary>
         ///<response code="200">Returns the contact.</response>
+        ///<response code="404">Contact not found.</response>
         ///<response code="500">Server error.</response>
         [HttpGet("name/{name}")]
         public async Task<ActionResult<ContactViewModel>> GetContact(String name)
         {
-
             var getContactByNameQuery = new GetContactByNameQuery(name);
             var contact = await Mediator.Send(getContactByNameQuery);
 
             if (contact == null)
-                return BadRequest("Contact not found");
+                return NotFound("Contact not found");
 
             return Mapper.Map<Contact, ContactViewModel>(contact);
         }
@@ -62,7 +63,7 @@ namespace API.Controllers
             var contact = await Mediator.Send(contactDetailsQuery);
 
             if (contact == null)
-                return BadRequest("Contact not found");
+                return NotFound("Contact not found");
 
             return Mapper.Map<Contact, ContactViewModel>(contact);
         }
@@ -70,17 +71,19 @@ namespace API.Controllers
         ///<summary>
         /// Adds a contact to the collection.
         ///</summary>
-        ///<response code="200">Contact added successfully.</response>
-        ///<response code="409">This name is already taken.</response>
+        ///<response code="204">Contact added successfully.</response>
+        ///<response code="400">This name is already taken.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpPost]
         public async Task<ActionResult> AddContact(ContactViewModel contact)
         {
-            var contactExists = GetContact(contact.Name).IsCompletedSuccessfully;
-            if (contactExists)
-                return BadRequest("Contact exists already.");
+            var getContactByNameQuery = new GetContactByNameQuery(contact.Name);
+            var getContact = await Mediator.Send(getContactByNameQuery);
 
-            var addContactCommand = new AddContactCommand(contact.Id, contact.Name, contact.Type, contact.Company, contact.PhoneNumber, contact.Email, contact.Notes);
+            if (getContact != null)
+                return BadRequest("This name is already taken.");
+
+            var addContactCommand = new AddContactCommand(contact.Name, contact.Type, contact.Company, contact.PhoneNumber, contact.Email, contact.Notes);
             await Mediator.Send(addContactCommand);
 
             return NoContent();
@@ -89,19 +92,19 @@ namespace API.Controllers
         ///<summary>
         /// Edits a contact.
         ///</summary>
-        ///<response code="200">Contact edited successfully.</response>
+        ///<response code="204">Contact edited successfully.</response>
         ///<response code="404">Contact not found.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpPost("{id}")]
         public async Task<ActionResult> StartSaleProcess(Guid id)
         {
             var contactDetailsQuery = new ContactDetailsQuery(id);
-            var notFound = await Mediator.Send(contactDetailsQuery) == null;
+            var contact = await Mediator.Send(contactDetailsQuery);
 
-            if (notFound)
-                return BadRequest("Contact not found");
+            if (contact == null)
+                return NotFound("Contact not found");
 
-            var startSaleProcessCommand = new StartSaleProcessCommand(id);
+            var startSaleProcessCommand = new StartSaleProcessCommand(contact);
             await Mediator.Send(startSaleProcessCommand);
 
             return NoContent();
@@ -110,7 +113,7 @@ namespace API.Controllers
         ///<summary>
         /// Changes the status of contact's membership.
         ///</summary>
-        ///<response code="200">Status changed successfully.</response>
+        ///<response code="204">Status changed successfully.</response>
         ///<response code="404">Contact not found.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpPost("upgrade/{id}")]
@@ -120,7 +123,7 @@ namespace API.Controllers
             var contact = await Mediator.Send(contactDetailsQuery);
 
             if (contact == null)
-                return BadRequest("Contact not found");
+                return NotFound("Contact not found");
 
             var upgradeToPremiumCommand = new UpgradeToPremiumCommand(contact.Id);
             await Mediator.Send(upgradeToPremiumCommand);
@@ -131,20 +134,19 @@ namespace API.Controllers
         ///<summary>
         /// Edits a contact.
         ///</summary>
-        ///<response code="200">Contact edited successfully.</response>
-        ///<response code="304">There were no changes.</response>
+        ///<response code="204">Contact edited successfully.</response>
         ///<response code="404">Contact not found.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpPut("{id}")]
         public async Task<ActionResult> EditContact(Contact contact)
         {
             var contactDetailsQuery = new ContactDetailsQuery(contact.Id);
-            var notFound = await Mediator.Send(contactDetailsQuery) == null;
+            var getContact = await Mediator.Send(contactDetailsQuery);
 
-            if (notFound)
-                return BadRequest("Contact not found");
+            if (getContact == null)
+                return NotFound("Contact not found");
 
-            var editContactCommand = new EditContactCommand(contact.Id, contact.Name, contact.Type, contact.Company, contact.PhoneNumber, contact.Email, contact.Notes, contact.Source);
+            var editContactCommand = new EditContactCommand(getContact, contact.Name, contact.Type, contact.Company, contact.PhoneNumber, contact.Email, contact.Notes, contact.Source);
             await Mediator.Send(editContactCommand);
 
             return NoContent();
@@ -153,7 +155,7 @@ namespace API.Controllers
         ///<summary>
         /// Deletes the contact entirely.
         ///</summary>
-        ///<response code="200">Contact deleted successfully.</response>
+        ///<response code="204">Contact deleted successfully.</response>
         ///<response code="404">Contact not found.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpDelete("{id}")]
@@ -163,9 +165,9 @@ namespace API.Controllers
             var contact = await Mediator.Send(contactDetailsQuery);
 
             if (contact == null)
-                return BadRequest("Contact not found");
+                return NotFound("Contact not found");
 
-            var deleteContactCommand = new DeleteContactCommand(contact.Id);
+            var deleteContactCommand = new DeleteContactCommand(contact);
             await Mediator.Send(deleteContactCommand);
 
             return NoContent();

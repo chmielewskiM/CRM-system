@@ -1,4 +1,5 @@
 using System;
+using Application.Leads.ViewModels;
 using Domain;
 using MediatR;
 
@@ -6,10 +7,11 @@ namespace Application.Leads.Queries
 {
     public class LeadDetailsQuery : IRequest<Lead>
     {
-        public Contact Contact { get; set; }
-        public LeadDetailsQuery(Guid id)
+        public Contact Contact { get; }
+
+        public LeadDetailsQuery(Contact contact)
         {
-            Contact.Id = id;
+            Contact = contact;
         }
     }
 }

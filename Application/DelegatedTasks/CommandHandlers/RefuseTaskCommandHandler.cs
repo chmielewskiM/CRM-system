@@ -17,11 +17,9 @@ namespace Application.DelegatedTasks
 
             public async Task<Unit> Handle(RefuseTaskCommand request, CancellationToken cancellationToken)
             {
-                var delegatedTask = await _context.DelegatedTasks.FindAsync(request.Id);
-
-                delegatedTask.Refused = true;
-                delegatedTask.Accepted = false;
-                delegatedTask.Pending = false;
+                request.Task.Refused = true;
+                request.Task.Accepted = false;
+                request.Task.Pending = false;
 
                 var success = await _context.SaveChangesAsync() > 0;
 

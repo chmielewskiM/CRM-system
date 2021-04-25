@@ -9,6 +9,6 @@ namespace Application.Interfaces
     {
         Task<bool> Add(Operation operation, User user);
         Task<int> Count();
-        Task<bool> Delete(DateTime date, Guid userId);
+        Task<bool> Delete(DateTime date, string userId);
     }
 }

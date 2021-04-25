@@ -1,16 +1,16 @@
 using System;
+using Domain;
 using MediatR;
 
 namespace Application.DelegatedTasks
 {
     public class FinishTaskCommand : IRequest
     {
-        public Guid Id { get; }
-        // public string UserDisplayName { get; }
-        public FinishTaskCommand(Guid id)
+        public DelegatedTask Task { get; }
+
+        public FinishTaskCommand(DelegatedTask task)
         {
-            Id = id;
-            // UserDisplayName = userDisplayName;
+            Task = task;
         }
     }
 }

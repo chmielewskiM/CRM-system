@@ -72,7 +72,7 @@ namespace Application.Leads.QueryHandlers
                     {
                         Contact = userContact.Contact,
                         Order = order,
-                        LastOperation = userContact.Contact.CurrentSale.Last().Operation.Date
+                        LastOperationDate = userContact.Contact.CurrentSale.Last().Operation.Date
                     });
                 }
                 else data.Add(new Lead
@@ -116,7 +116,7 @@ namespace Application.Leads.QueryHandlers
         private static List<Lead> sortLeads(List<Lead> list, string sortBy)
         {
             if (sortBy == "date")
-                list = list.OrderByDescending(x => x.LastOperation).ToList();
+                list = list.OrderByDescending(x => x.LastOperationDate).ToList();
             else if (sortBy == "name")
                 list = list.OrderBy(x => x.Contact.Name).ToList();
 

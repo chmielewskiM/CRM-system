@@ -1,15 +1,12 @@
 using System;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Errors;
 using Application.Interfaces;
 using Application.Leads.Commands;
 using Domain;
 using FluentValidation;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.Leads.CommandHandlers
@@ -23,18 +20,16 @@ namespace Application.Leads.CommandHandlers
         public ChangeStatusCommandHandler(DataContext context, IUserAccessor userAccessor, IOperationsRepository operationsRepository)
         {
             _operationsRepository = operationsRepository;
-            _userAccessor = userAccessor;
             _context = context;
+            _userAccessor = userAccessor;
         }
 
         public async Task<Unit> Handle(ChangeStatusCommand request, CancellationToken cancellationToken)
-        {   
-            var contact = await _context.Contacts.FindAsync(request.Id);
-            var user = await _context.Users.SingleOrDefaultAsync(x =>
-                            x.UserName == _userAccessor.GetLoggedUsername());
+        {
+            var user = await _userAccessor.GetLoggedUser();
 
             //get operations which belong to the currently managed sale process
-            IQueryable<SaleProcess> saleProcess = _context.SaleProcess.Where(x => x.ContactId == contact.Id);
+            IQueryable<SaleProcess> saleProcess = _context.SaleProcess.Where(x => x.ContactId == request.Contact.Id);
             saleProcess = saleProcess.OrderByDescending(x => x.Index);
 
             //select sale process element with highest index (containing the most recent operation in chain)
@@ -42,37 +37,32 @@ namespace Application.Leads.CommandHandlers
             string[] statuses = { "Inactive", "Lead", "Opportunity", "Quote", "Invoice" };
 
             //get index of the current lead's status
-            int index = Array.FindIndex(statuses, x => x == contact.Status);
-            //downgrade lead's status
+            int index = Array.FindIndex(statuses, x => x == request.Contact.Status);
+
             if (!request.Upgrade)
             {
                 index--;
 
-                //make sure whether index is not out of boundary
-                if (index < 0)
-                    throw new RestException(HttpStatusCode.BadRequest, new { message = "Can't downgrade inactive client" });
-
-                //declare previous operation (there is only one, desired process left in saleProcess)
-
                 await DowngradeLead(lastProcess, user);
 
-                contact.Status = statuses[index];
+                request.Contact.Status = statuses[index];
             }
             else if (request.Upgrade && index < statuses.Length - 1)
             {
                 index++;
-                contact.Status = statuses[index];
+                request.Contact.Status = statuses[index];
 
-                await UpgradeLead(lastProcess, statuses[index], contact, user);
+                await UpgradeLead(lastProcess, statuses[index], request.Contact, user);
 
             }
             else if (request.Upgrade && index == statuses.Length - 1)
             {
-                contact.Status = statuses[0];
-                await ConvertLead(saleProcess, contact, user);
+                request.Contact.Status = statuses[0];
+
+                await ConvertLead(saleProcess, request.Contact, user);
             }
 
-            _context.Contacts.Update(contact);
+            _context.Contacts.Update(request.Contact);
 
             var success = await _context.SaveChangesAsync() > 0;
 
@@ -85,7 +75,7 @@ namespace Application.Leads.CommandHandlers
         {
             Operation previousOperation = lastProcess.Operation;
 
-            await _operationsRepository.Delete(previousOperation.Date, new Guid(user.Id));
+            await _operationsRepository.Delete(previousOperation.Date, user.Id);
 
             _context.SaleProcess.Remove(lastProcess);
 
@@ -108,7 +98,7 @@ namespace Application.Leads.CommandHandlers
                     break;
             }
             newOperation.Date = DateTime.Now;
-            
+
             await _operationsRepository.Add(newOperation, user);
 
             var newProcess = new SaleProcess
@@ -126,18 +116,14 @@ namespace Application.Leads.CommandHandlers
         }
         private async Task ConvertLead(IQueryable<SaleProcess> saleProcess, Contact contact, User user)
         {
-
-            var newOperation = new Operation();
-
+            var operation = new Operation();
             Order order = contact.Orders.OrderByDescending(x => x.DateOrderOpened).FirstOrDefault();
 
-            if (!order.Closed)
-                throw new RestException(HttpStatusCode.Forbidden, new { message = "Please close the order before performing the conversion." });
+            operation.Conversion = true;
+            operation.Revenue = order.Price;
+            operation.Date = DateTime.Now;
 
-            newOperation.Conversion = true;
-            newOperation.Revenue = order.Price;
-            newOperation.Date = DateTime.Now;
-            await _operationsRepository.Add(newOperation, user);
+            await _operationsRepository.Add(operation, user);
 
             _context.SaleProcess.RemoveRange(saleProcess);
         }

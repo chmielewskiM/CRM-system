@@ -6,13 +6,14 @@ namespace Application.Orders.Queries
 {
     public class ListOrdersQuery : IRequest<(List<Order>, int)>
     {
-        public string AllOrders { get; set; }
-        public string SaleOrders { get; set; }
-        public string ClosedOrders { get; set; }
-        public string OrderBy { get; set; }
-        public string FilterInput { get; set; }
-        public int? PageNumber { get; set; }
-        public int? PageSize { get; set; }
+        public string AllOrders { get; }
+        public string SaleOrders { get; }
+        public string ClosedOrders { get; }
+        public string OrderBy { get; }
+        public string FilterInput { get; }
+        public int? PageNumber { get; }
+        public int? PageSize { get; }
+        
         public ListOrdersQuery(string allOrders, string saleOrders, string closedOrders, string orderBy, string filterInput, int? pageNumber, int? pageSize)
         {
             PageSize = pageSize;

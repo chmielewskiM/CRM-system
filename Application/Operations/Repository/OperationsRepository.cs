@@ -13,10 +13,12 @@ namespace Application.Operations.Repository
     public class OperationsRepository : IOperationsRepository
     {
         private readonly DataContext _context;
+        
         public OperationsRepository(DataContext context)
         {
             _context = context;
         }
+
         public async Task<bool> Add(Operation operation, User user)
         {
             operation.Id = Guid.NewGuid();
@@ -28,7 +30,7 @@ namespace Application.Operations.Repository
             var userOperation = new UserOperation
             {
                 User = user,
-                UserId = new Guid(user.Id),
+                UserId = user.Id,
                 Operation = operation,
                 OperationId = operation.Id,
                 DateAdded = DateTime.Now
@@ -46,7 +48,7 @@ namespace Application.Operations.Repository
             return operationsCount;
         }
 
-        public async Task<bool> Delete(DateTime date, Guid userId)
+        public async Task<bool> Delete(DateTime date, string userId)
         {
             var operation = _context.Operations.SingleOrDefault(x => x.Date.Millisecond == date.Millisecond);
             if (operation.UserOperation == null) return false;

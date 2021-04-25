@@ -358,7 +358,9 @@ export default class ContactStore {
       this.loadContacts();
     } catch (error) {
       this.submittingData(false);
-      // toast.error(error.data.errors.message);
+      if(error.status == 400)
+      toast.dark(error.data);
+      else toast.error(error.data.errors.message)
       console.log(error);
     }
   };

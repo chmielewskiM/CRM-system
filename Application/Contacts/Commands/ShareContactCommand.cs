@@ -1,21 +1,21 @@
-using System;
-using MediatR;
+// using System;
+// using MediatR;
 
-////////////////////////////////////////////
-//////
-//////     *** FEATURE NOT IMPLEMENTED ***
-//////
-////////////////////////////////////////////
+// ////////////////////////////////////////////
+// //////
+// //////     *** FEATURE NOT IMPLEMENTED ***
+// //////
+// ////////////////////////////////////////////
 
-namespace Application.Contacts.Commands
-{
-    public class ShareContactCommand : IRequest
-    {
-        public Guid Id { get; set; }
-        public ShareContactCommand(Guid id)
-        {
-            Id = id;
-        }
+// namespace Application.Contacts.Commands
+// {
+//     public class ShareContactCommand : IRequest
+//     {
+//         public Guid Id { get; set; }
+//         public ShareContactCommand(Guid id)
+//         {
+//             Id = id;
+//         }
 
-    }
-}
+//     }
+// }

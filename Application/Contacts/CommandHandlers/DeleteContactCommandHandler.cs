@@ -19,10 +19,7 @@ namespace Application.Contacts.CommandHandlers
 
         public async Task<Unit> Handle(DeleteContactCommand request, CancellationToken cancellationToken)
         {
-            //wybierać z bazy czy przekazać jakoś cały kontakt z kontrolera?
-            var contact = await _context.Contacts.FindAsync(request.Id);
-
-            _context.Contacts.Remove(contact);
+            _context.Contacts.Remove(request.Contact);
 
             var success = await _context.SaveChangesAsync() > 0;
 

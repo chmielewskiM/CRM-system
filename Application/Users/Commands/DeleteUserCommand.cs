@@ -1,13 +1,14 @@
+using Domain;
 using MediatR;
 
 namespace Application.Users.Commands
 {
     public class DeleteUserCommand : IRequest
     {
-        public string Username { get; set; }
-        public DeleteUserCommand(string username)
+        public User User { get; set; }
+        public DeleteUserCommand(User user)
         {
-            Username = username;
+            User = user;
         }
     }
 

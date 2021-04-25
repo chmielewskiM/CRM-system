@@ -1,20 +1,21 @@
 using System;
+using Domain;
 using MediatR;
 
 namespace Application.Orders
 {
     public class AddOrderCommand : IRequest
     {
-        public Guid? ClientId { get; set; }
-        public Boolean Type { get; set; }
-        public string Product { get; set; }
-        public Double Amount { get; set; }
-        public Double Price { get; set; }
-        public string Notes { get; set; }
+        public Contact Client { get; }
+        public Boolean Type { get; }
+        public string Product { get; }
+        public Double Amount { get; }
+        public Double Price { get; }
+        public string Notes { get; }
 
-        public AddOrderCommand(Guid? clientId, bool type, string product, double amount, double price, string notes)
+        public AddOrderCommand(Contact client, bool type, string product, double amount, double price, string notes)
         {
-            ClientId = clientId;
+            Client = client;
             Type = type;
             Product = product;
             Amount = amount;

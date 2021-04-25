@@ -14,7 +14,7 @@ interface IProps {
 export const ConfirmationModal: React.FC<IProps> = (props) => {
   const { modalStore, leadStore } = useStores();
 
-  useEffect(() => {}, [leadStore.keepRecords, leadStore.saveContact]);
+  useEffect(() => {}, [leadStore.keepRecords, leadStore.saveLead]);
 
   return (
     <Modal
@@ -35,7 +35,7 @@ export const ConfirmationModal: React.FC<IProps> = (props) => {
                 <div className="fields">
                   <Field
                     name="save"
-                    value={leadStore.saveContact}
+                    value={leadStore.saveLead}
                     label="Yes"
                     type="radio"
                     component={RadioInput}
@@ -44,7 +44,7 @@ export const ConfirmationModal: React.FC<IProps> = (props) => {
                   />
                   <Field
                     name="save"
-                    value={!leadStore.saveContact}
+                    value={!leadStore.saveLead}
                     label="No"
                     type="radio"
                     component={RadioInput}

@@ -1,14 +1,15 @@
 using System;
+using Domain;
 using MediatR;
 
 namespace Application.DelegatedTasks
 {
     public class AcceptTaskCommand : IRequest
     {
-        public Guid Id { get; }
-        public AcceptTaskCommand(Guid id)
+        public DelegatedTask Task { get; }
+        public AcceptTaskCommand(DelegatedTask task)
         {
-            Id = id;
+            Task = task;
         }
     }
 }

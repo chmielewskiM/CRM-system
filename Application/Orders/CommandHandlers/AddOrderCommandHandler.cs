@@ -28,11 +28,7 @@ namespace Application.Orders
 
         public async Task<Unit> Handle(AddOrderCommand request, CancellationToken cancellationToken)
         {
-            var client = await _context.Contacts.FindAsync(request.ClientId);
-
-            var user = await _context
-                .Users
-                .SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetLoggedUsername());
+            var user = await _userAccessor.GetLoggedUser();
 
             int orderNumber = setOrderNumber();
 
@@ -41,8 +37,8 @@ namespace Application.Orders
                 Id = Guid.NewGuid(),
                 OrderNumber = orderNumber,
                 UserId = user.Id,
-                ClientId = request.ClientId,
-                Client = client,
+                ClientId = request.Client.Id,
+                Client = request.Client,
                 Type = request.Type,
                 Closed = false,
                 Product = request.Product,
@@ -55,7 +51,7 @@ namespace Application.Orders
             _context.Orders.Add(order);
 
             //add the order to the client
-            client.Orders.Append(order);
+            request.Client.Orders.Append(order);
 
             //register this operation
             var operation = new Operation();
@@ -66,10 +62,10 @@ namespace Application.Orders
             // await operation.addOperation(operation, _context, user);
 
             //get operations which belong to the currently managed sale process
-            IQueryable<SaleProcess> saleProcess = _context.SaleProcess.Where(x => x.ContactId == client.Id);
+            IQueryable<SaleProcess> saleProcess = _context.SaleProcess.Where(x => x.ContactId == request.Client.Id);
             //handle the order in case there is a sale process open already
-            if (saleProcess.Count() > 0)
-                await handleSaleProcess(client, order.Id, saleProcess);
+            if (saleProcess.Count() > 0 && order.Type)
+                await handleSaleProcess(order.Id, saleProcess);
 
             var success = await _context.SaveChangesAsync() > 0;
 
@@ -77,7 +73,7 @@ namespace Application.Orders
 
             throw new Exception("Problem saving changes");
         }
-        private async Task handleSaleProcess(Contact client, Guid id, IQueryable<SaleProcess> saleProcess)
+        private async Task handleSaleProcess(Guid id, IQueryable<SaleProcess> saleProcess)
         {
             saleProcess = saleProcess.OrderByDescending(x => x.Index);
             //select sale process element with highest index (containing the most recent operation in chain)

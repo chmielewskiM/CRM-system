@@ -1,17 +1,19 @@
 using System;
+using Domain;
 using MediatR;
 
 namespace Application.DelegatedTasks
 {
     public class EditTaskCommand : IRequest
     {
-        public Guid Id { get; set; }
-        public string Type { get; set; }
-        public DateTime Deadline { get; set; }
-        public string Notes { get; set; }
-        public EditTaskCommand(Guid id, string type, DateTime deadline, string notes)
+        public DelegatedTask Task { get; }
+        public string Type { get; }
+        public DateTime Deadline { get; }
+        public string Notes { get; }
+
+        public EditTaskCommand(DelegatedTask task, string type, DateTime deadline, string notes)
         {
-            Id = id;
+            Task = task;
             Type = type;
             Deadline = deadline;
             Notes = notes;

@@ -30,17 +30,13 @@ namespace API.Controllers
             var listOperationsQuery = new ListOperationsQuery();
             var list = await Mediator.Send(listOperationsQuery);
 
-            // if (list == null)
-            //     return BadRequest("Contact not found");
-
             return list;
         }
 
         ///<summary>
         /// Returns count of all operations.
         ///</summary>
-        ///<response code="200">Returns count.</response>
-        ///<response code="404">Task not found.</response>
+        ///<response code="200">Returns operations count.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpGet("count")]
         public async Task<ActionResult<int>> CountOperations()

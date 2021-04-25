@@ -6,10 +6,11 @@ namespace Application.Orders.Commands
 {
     public class CloseOrderCommand : IRequest
     {
-        public Guid Id { get; set; }
-        public CloseOrderCommand(Guid id)
+        public Order Order { get; }
+
+        public CloseOrderCommand(Order order)
         {
-            Id = id;
+            Order = order;
         }
     }
 }

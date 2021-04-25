@@ -31,6 +31,7 @@ axios
         if (error.message === 'Network Error' && !error.response) {
             toast.error('Connection error');
         }
+
         // const { status, data, config } = error.response; if ((status === 400 &&
         // config.method === 'post') || (status === 400 && config.method === 'put')) {
         // toast.error('400'); } if (status === 500) {   toast.error('Server errror'); }

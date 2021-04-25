@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -11,32 +10,22 @@ namespace Application.DelegatedTasks
     public class DeleteTaskCommandHandler : IRequestHandler<DeleteTaskCommand>
     {
         private readonly DataContext _context;
-        private readonly IUserAccessor _userAccessor;
 
-        public DeleteTaskCommandHandler(DataContext context, IUserAccessor userAccessor)
+        public DeleteTaskCommandHandler(DataContext context)
         {
-            _userAccessor = userAccessor;
             _context = context;
         }
 
         public async Task<Unit> Handle(DeleteTaskCommand request, CancellationToken cancellationToken)
         {
-            var delegatedTask = await _context
-                .DelegatedTasks
-                .FindAsync(request.Id);
-                
-            var user = await _context
-                .Users
-                .SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetLoggedUsername());
-
-            var share = await _context
+            var userTask = await _context
                 .UserTasks
-                .SingleOrDefaultAsync(x => x.DelegatedTaskId == delegatedTask.Id && x.CreatedBy.Id == user.Id);
+                .SingleOrDefaultAsync(x => x.DelegatedTaskId == request.Task.Id && x.CreatedBy.UserName == request.Username);
 
-            if (share == null)
+            if (userTask.CreatedById == null)
                 return Unit.Value;
 
-            _context.UserTasks.Remove(share);
+            _context.UserTasks.Remove(userTask);
 
             var success = await _context.SaveChangesAsync() > 0;
 

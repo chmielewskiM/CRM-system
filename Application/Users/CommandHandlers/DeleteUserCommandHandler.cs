@@ -12,47 +12,46 @@ using Domain;
 namespace Application.Users.CommandHandlers
 {
     public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand>
+    {
+        private readonly DataContext _context;
+        private readonly UserManager<User> _userManager;
+
+        public DeleteUserCommandHandler(DataContext context, UserManager<User> userManager)
         {
-            private readonly DataContext _context;
-            private readonly UserManager<User> _userManager;
+            _userManager = userManager;
+            _context = context;
+        }
 
-            public DeleteUserCommandHandler(DataContext context, UserManager<User> userManager)
+        public async Task<Unit> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+        {
+            try
             {
-                _userManager = userManager;
-                _context = context;
+                IQueryable<UserTask> userTasks = _context.UserTasks.Where(x => x.SharedWith == request.User);
+
+                foreach (UserTask userTask in userTasks)
+                {
+                    userTask.SharedWith = null;
+                    userTask.SharedWithId = null;
+                    userTask.DelegatedTask.Pending = false;
+                }
+
+                IQueryable<DelegatedTask> tasks = _context.DelegatedTasks.Where(x => x.UserTask.CreatedBy == request.User);
+
+                _context.DelegatedTasks.RemoveRange(tasks);
+
+                _context.Users.Remove(request.User);
+
+                await _userManager.DeleteAsync(request.User);
+
+                await _context.SaveChangesAsync();
+
+                return Unit.Value;
             }
-
-            public async Task<Unit> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+            catch
             {
-                try
-                {
-                    var user = await _userManager.FindByNameAsync(request.Username);
-                    IQueryable<UserTask> userTasks = _context.UserTasks.Where(x => x.SharedWith == user);
 
-                    foreach (UserTask userTask in userTasks)
-                    {
-                        userTask.SharedWith = null;
-                        userTask.SharedWithId = null;
-                        userTask.DelegatedTask.Pending = false;
-                    }
-
-                    IQueryable<DelegatedTask> tasks = _context.DelegatedTasks.Where(x => x.UserTask.CreatedBy == user);
-
-                    _context.DelegatedTasks.RemoveRange(tasks);
-
-                    _context.Users.Remove(user);
-
-                    await _userManager.DeleteAsync(user);
-
-                    await _context.SaveChangesAsync();
-
-                    return Unit.Value;
-                }
-                catch
-                {
-
-                    throw new Exception("Failed to delete the user.");
-                }
+                throw new Exception("Failed to delete the user.");
             }
         }
+    }
 }

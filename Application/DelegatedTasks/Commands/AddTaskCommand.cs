@@ -1,23 +1,23 @@
 using System;
+using Domain;
 using MediatR;
 
 namespace Application.DelegatedTasks
 {
     public class AddTaskCommand : IRequest
     {
-        public Guid Id { get; }
         public string Type { get; }
-        public DateTime DateStarted { get; }
+        public DateTime DateStarted { get; set; }
         public DateTime Deadline { get; }
         public string Notes { get; }
-        public Boolean Accepted { get; }
-        public Boolean Refused { get; }
-        public Boolean Pending { get; }
-        public Boolean Done { get; }
-        public string FinishedBy { get; }
-        public AddTaskCommand(Guid id, string type, DateTime deadline, string notes)
+        public Boolean Accepted { get; set; }
+        public Boolean Refused { get; set; }
+        public Boolean Pending { get; set; }
+        public Boolean Done { get; set; }
+        public string FinishedBy { get; set; }
+
+        public AddTaskCommand(string type, DateTime deadline, string notes)
         {
-            Id = id;
             Type = type;
             Deadline = deadline;
             Notes = notes;

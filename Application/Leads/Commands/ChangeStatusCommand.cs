@@ -6,11 +6,12 @@ namespace Application.Leads.Commands
 {
     public class ChangeStatusCommand : IRequest
     {
-        public Guid Id { get; set; }
-        public bool Upgrade { get; set; }
-        public ChangeStatusCommand(Guid id, bool upgrade)
+        public Contact Contact { get; }
+        public bool Upgrade { get; }
+
+        public ChangeStatusCommand(Contact contact, bool upgrade)
         {
-            Id = id;
+            Contact = contact;
             Upgrade = upgrade;
         }
     }

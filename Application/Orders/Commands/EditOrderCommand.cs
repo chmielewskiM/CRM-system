@@ -6,14 +6,15 @@ namespace Application.Orders.Commands
 {
     public class EditOrderCommand : IRequest
     {
-        public Guid Id { get; set; }
-        public string Product { get; set; }
-        public Double Amount { get; set; }
-        public Double Price { get; set; }
-        public string Notes { get; set; }
-        public EditOrderCommand(Guid id, string product, double amount, double price, string notes)
+        public Order Order { get; }
+        public string Product { get; }
+        public Double Amount { get; }
+        public Double Price { get; }
+        public string Notes { get; }
+        
+        public EditOrderCommand(Order order, string product, double amount, double price, string notes)
         {
-            Id = id;
+            Order = order;
             Product = product;
             Amount = amount;
             Price = price;

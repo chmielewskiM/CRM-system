@@ -23,14 +23,10 @@ namespace Application.Orders
 
         public async Task<Unit> Handle(EditOrderCommand request, CancellationToken cancellationToken)
         {
-
-            var order = await _context.Orders.FindAsync(request.Id);
-            var client = await _context.Contacts.FindAsync(order.ClientId);
-
-            order.Amount = request.Amount;
-            order.Notes = request.Notes;
-            order.Price = request.Price;
-            order.Product = request.Product;
+            request.Order.Amount = request.Amount;
+            request.Order.Notes = request.Notes;
+            request.Order.Price = request.Price;
+            request.Order.Product = request.Product;
 
             var success = await _context.SaveChangesAsync() > 0;
 

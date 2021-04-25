@@ -18,7 +18,7 @@ namespace Application.Contacts
         public DateTime DateAdded { get; set; }
         public string Notes { get; set; }
         public string Status { get; set; }
-        public Int16 SuccessfulDeals { get; set; }
+        public int SuccessfulDeals { get; set; }
         public string Source { get; set; }
         public Boolean Premium { get; set; }
         

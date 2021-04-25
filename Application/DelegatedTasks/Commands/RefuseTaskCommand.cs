@@ -1,14 +1,16 @@
 using System;
+using Domain;
 using MediatR;
 
 namespace Application.DelegatedTasks
 {
     public class RefuseTaskCommand : IRequest
     {
-        public Guid Id { get; }
-        public RefuseTaskCommand(Guid id)
+        public DelegatedTask Task { get; }
+
+        public RefuseTaskCommand(DelegatedTask task)
         {
-            Id = id;
+            Task = task;
         }
     }
 }

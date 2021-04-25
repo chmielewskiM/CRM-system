@@ -26,7 +26,6 @@ namespace Application.Users.QueryHandlers
 
         public async Task<List<User>> Handle(ListUsersQuery request, CancellationToken cancellationToken)
         {
-
             var users = await _context.Users.ToListAsync();
 
             return users;

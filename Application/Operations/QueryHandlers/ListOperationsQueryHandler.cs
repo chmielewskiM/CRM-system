@@ -30,10 +30,6 @@ namespace Application.Operations.QueryHandlers
 
         public async Task<CompleteStatsViewModel> Handle(ListOperationsQuery request, CancellationToken cancellationToken)
         {
-            //get currently logged user
-            var user = await _context
-                .Users
-                .SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetLoggedUsername());
             //get all users from database
             var users = await _context.Users.ToListAsync();
 
@@ -52,7 +48,6 @@ namespace Application.Operations.QueryHandlers
                                                             oneMonth.Item1, oneMonth.Item2,
                                                             sixMonths.Item1, sixMonths.Item2,
                                                             oneMonth.Item3, sixMonths.Item3);
-
 
             return completeStats;
         }

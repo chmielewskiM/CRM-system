@@ -95,6 +95,7 @@ namespace Application.Orders.QueryHandlers
 
             if (request.ClosedOrders.Equals("true"))
             {
+                orders = orders.OrderByDescending(x => x.DateOrderClosed);
                 var paginatedList = PaginatedList<Order>.Create(orders, request.PageNumber ?? 1, request.PageSize ?? 3);
 
                 return (paginatedList, ordersCount);

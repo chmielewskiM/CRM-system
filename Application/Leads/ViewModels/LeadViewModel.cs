@@ -7,7 +7,7 @@ namespace Application.Leads.ViewModels
 {
     public class LeadViewModel
     {
-        public DateTime LastOperation { get; set; }
+        public DateTime LastOperationDate { get; set; }
         public ContactViewModel Contact { get; set; }
         public OrderViewModel Order { get; set; }
 

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Application.Interfaces;
 using Domain;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.DelegatedTasks
@@ -16,19 +15,17 @@ namespace Application.DelegatedTasks
 
         public AddTaskCommandHandler(DataContext context, IUserAccessor userAccessor)
         {
-            _userAccessor = userAccessor;
             _context = context;
+            _userAccessor = userAccessor;
         }
 
         public async Task<Unit> Handle(AddTaskCommand request, CancellationToken cancellationToken)
         {
-            //Fluent validation
-            // CommandValidator validator = new CommandValidator();
-            // validator.ValidateAndThrow(request);
+            var user = await _userAccessor.GetLoggedUser();
 
             var task = new DelegatedTask
             {
-                Id = request.Id,
+                Id = Guid.NewGuid(),
                 Type = request.Type,
                 Deadline = request.Deadline,
                 Notes = request.Notes,
@@ -41,9 +38,6 @@ namespace Application.DelegatedTasks
             };
 
             _context.DelegatedTasks.Add(task);
-
-            var user = await _context.Users.SingleOrDefaultAsync(x =>
-            x.UserName == _userAccessor.GetLoggedUsername());
 
             var userAccess = new UserTask
             {

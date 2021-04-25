@@ -104,7 +104,7 @@ namespace Application.Contacts.QueryHandlers
 
             if (request.Uncontracted)
             {
-                userContacts = userContacts.Where(x => !x.Contact.Orders.Any(x => x.Closed == false));
+                userContacts = userContacts.Where(x => !x.Contact.Orders.Any(x => (x.Closed == false && x.Type == true)));
 
                 foreach (var userContact in userContacts)
                 {

@@ -1,14 +1,18 @@
 using System;
+using Domain;
 using MediatR;
 
 namespace Application.DelegatedTasks
 {
     public class DeleteTaskCommand : IRequest
     {
-        public Guid Id { get; }
-        public DeleteTaskCommand(Guid id)
+        public string Username { get; }
+        public DelegatedTask Task { get; }
+
+        public DeleteTaskCommand(string username, DelegatedTask task)
         {
-            Id = id;
+            Username = username;
+            Task = task;
         }
     }
 }

@@ -1,4 +1,3 @@
-
 using System.Threading.Tasks;
 using MediatR;
 using Persistence;
@@ -6,7 +5,6 @@ using Application.Contacts.Commands;
 using System.Threading;
 using System;
 using Application.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using Domain;
 
 namespace Application.Contacts.CommandHandlers
@@ -14,25 +12,21 @@ namespace Application.Contacts.CommandHandlers
     public class StartSaleProcessCommandHandler : IRequestHandler<StartSaleProcessCommand>
     {
         private readonly DataContext _context;
-        private readonly IUserAccessor _userAccessor;
         private readonly IOperationsRepository _operationsRepository;
+        private readonly IUserAccessor _userAccessor;
 
         public StartSaleProcessCommandHandler(DataContext context, IUserAccessor userAccessor, IOperationsRepository operationsRepository)
         {
-            _operationsRepository = operationsRepository;
             _userAccessor = userAccessor;
+            _operationsRepository = operationsRepository;
             _context = context;
         }
 
         public async Task<Unit> Handle(StartSaleProcessCommand request, CancellationToken cancellationToken)
         {
-            var contact = await _context.Contacts.FindAsync(request.Id);
+            var user = await _userAccessor.GetLoggedUser();
 
-            contact.Status = request.Status;
-
-            var user = await _context
-                    .Users
-                    .SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetLoggedUsername());
+            request.Contact.Status = "Lead";
 
             var operation = new Operation();
             operation.Lead = true;
@@ -43,8 +37,8 @@ namespace Application.Contacts.CommandHandlers
 
             var saleProcess = new SaleProcess
             {
-                Contact = contact,
-                ContactId = contact.Id,
+                Contact = request.Contact,
+                ContactId = request.Contact.Id,
                 Operation = operation,
                 OperationId = operation.Id,
                 OrderId = null,
@@ -53,7 +47,7 @@ namespace Application.Contacts.CommandHandlers
 
             _context.SaleProcess.Add(saleProcess);
 
-            contact.CurrentSale.Add(saleProcess);
+            request.Contact.CurrentSale.Add(saleProcess);
 
             var success = await _context.SaveChangesAsync() > 0;
 

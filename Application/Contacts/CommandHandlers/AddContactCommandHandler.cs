@@ -1,16 +1,12 @@
 
 using System.Threading.Tasks;
-using Application.Interfaces;
 using MediatR;
 using Persistence;
 using Application.Contacts.Commands;
 using System.Threading;
-using System.Linq;
-using Application.Errors;
-using System.Net;
 using Domain;
-using Microsoft.EntityFrameworkCore;
 using System;
+using Application.Interfaces;
 
 namespace Application.Contacts.CommandHandlers
 {
@@ -21,15 +17,17 @@ namespace Application.Contacts.CommandHandlers
 
         public AddContactCommandHandler(DataContext context, IUserAccessor userAccessor)
         {
-            _userAccessor = userAccessor;
             _context = context;
+            _userAccessor = userAccessor;
         }
 
         public async Task<Unit> Handle(AddContactCommand request, CancellationToken cancellationToken)
         {
+            var user = await _userAccessor.GetLoggedUser();
+
             var contact = new Contact
             {
-                Id = request.Id,
+                Id = Guid.NewGuid(),
                 Name = request.Name,
                 Type = request.Type,
                 Company = request.Company,
@@ -44,14 +42,11 @@ namespace Application.Contacts.CommandHandlers
 
             _context.Contacts.Add(contact);
 
-            var user = await _context.Users.SingleOrDefaultAsync(x =>
-            x.UserName == _userAccessor.GetLoggedUsername());
-
             var userAccess = new UserContact
             {
                 Id = Guid.NewGuid(),
                 User = user,
-                UserId = new Guid(user.Id),
+                UserId = user.Id,
                 Contact = contact,
                 ContactId = contact.Id,
                 DateAdded = request.DateAdded

@@ -9,6 +9,7 @@ namespace Application.Leads.Commands
     public class AddLeadCommand : IRequest
     {
         public Contact Contact = new Contact();
+
         public AddLeadCommand(string name, string company, string phoneNumber, string email, string notes, string source)
         {
             Contact.Name = name;

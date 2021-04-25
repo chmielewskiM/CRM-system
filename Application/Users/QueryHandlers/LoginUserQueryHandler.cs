@@ -1,7 +1,5 @@
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Errors;
 using Application.Interfaces;
 using Application.Users.Queries;
 using Application.Users.ViewModels;
@@ -27,24 +25,20 @@ namespace Application.Users.QueryHandlers
 
         public async Task<UserViewModel> Handle(LoginUserQuery request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByNameAsync(request.Username);
-            // if (user == null)
-            //     throw new RestException(HttpStatusCode.Unauthorized, new { message = "Authorization failure." });
-
-            var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
+            var result = await _signInManager.CheckPasswordSignInAsync(request.User, request.Password, false);
 
             if (result.Succeeded)
             {
                 return new UserViewModel
                 {
-                    DisplayName = user.DisplayName,
-                    Username = user.UserName,
-                    Token = _jwtGenerator.CreateToken(user),
-                    Level = user.Level,
+                    DisplayName = request.User.DisplayName,
+                    Username = request.User.UserName,
+                    Token = _jwtGenerator.CreateToken(request.User),
+                    Level = request.User.Level,
                 };
             }
 
-            throw new RestException(HttpStatusCode.Unauthorized, new { message = "Authorization failure." });
+            return null;
         }
     }
 }

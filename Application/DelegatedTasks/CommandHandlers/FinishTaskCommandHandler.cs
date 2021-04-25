@@ -21,15 +21,13 @@ namespace Application.DelegatedTasks
 
         public async Task<Unit> Handle(FinishTaskCommand request, CancellationToken cancellationToken)
         {
-            var delegatedTask = await _context.DelegatedTasks.FindAsync(request.Id);
-            var user = await _context.Users.SingleOrDefaultAsync(x =>
-                           x.UserName == _userAccessor.GetLoggedUsername());
+            var finishedBy = _userAccessor.GetLoggedUsername();
 
-            delegatedTask.Accepted = false;
-            delegatedTask.Refused = false;
-            delegatedTask.FinishedBy = user.DisplayName;
-            delegatedTask.Pending = false;
-            delegatedTask.Done = true;
+            request.Task.Accepted = false;
+            request.Task.Refused = false;
+            request.Task.FinishedBy = finishedBy;
+            request.Task.Pending = false;
+            request.Task.Done = true;
 
             var success = await _context.SaveChangesAsync() > 0;
 

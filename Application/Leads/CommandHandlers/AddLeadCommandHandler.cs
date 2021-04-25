@@ -20,22 +20,16 @@ namespace Application.Leads.CommandHandlers
         private readonly IUserAccessor _userAccessor;
         private readonly IOperationsRepository _operationsRepository;
 
-        public AddLeadCommandHandler(DataContext context, IUserAccessor userAccessor, IOperationsRepository operationsRepository)
+        public AddLeadCommandHandler(DataContext context, IOperationsRepository operationsRepository, IUserAccessor userAccessor)
         {
             _operationsRepository = operationsRepository;
-            _userAccessor = userAccessor;
             _context = context;
+            _userAccessor = userAccessor;
         }
 
         public async Task<Unit> Handle(AddLeadCommand request, CancellationToken cancellationToken)
         {
-            var guid = Guid.NewGuid();
-            var user = await _context.Users.SingleOrDefaultAsync(x =>
-                        x.UserName == _userAccessor.GetLoggedUsername());
-
-            bool alreadyExists = _context.Contacts.Where(x => x.Name == request.Contact.Name).Count() > 0;
-            if (alreadyExists)
-                throw new RestException(HttpStatusCode.Conflict, "This name is already taken.");
+            var user = await _userAccessor.GetLoggedUser();
 
             var contact = new Contact
             {
@@ -59,7 +53,7 @@ namespace Application.Leads.CommandHandlers
             {
                 Id = Guid.NewGuid(),
                 User = user,
-                UserId = new Guid(user.Id),
+                UserId = user.Id,
                 Contact = contact,
                 ContactId = contact.Id,
                 DateAdded = request.Contact.DateAdded

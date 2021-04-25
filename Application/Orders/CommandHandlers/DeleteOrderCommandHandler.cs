@@ -10,7 +10,7 @@ using Domain;
 using MediatR;
 using Persistence;
 
-namespace Application.Orders
+namespace Application.Orders.CommandHandlers
 {
     public class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand>
     {
@@ -25,30 +25,17 @@ namespace Application.Orders
 
         public async Task<Unit> Handle(DeleteOrderCommand request, CancellationToken cancellationToken)
         {
-            var order = await _context.Orders.FindAsync(request.Id);
-
-            if (order == null)
-                throw new RestException(HttpStatusCode.NotFound, new { message = "Couldn't find the order." });
-
-            Contact client = await _context.Contacts.FindAsync(order.ClientId);
-
-            if (client == null)
-                throw new RestException(HttpStatusCode.Conflict, new { message = "Something went wrong. The order appears to have no client assigned." });
-
-            if (client.Status == "Invoice")
-                throw new RestException(HttpStatusCode.Forbidden, new { message = "You can't delete an order which is waiting for finalization. Downgrade client's status first." });
-
             //check whether the order is assigned to any sale process
-            IQueryable<SaleProcess> saleProcess = _context.SaleProcess.Where(x => x.OrderId.Equals(order.Id.ToString()));
+            IQueryable<SaleProcess> saleProcess = _context.SaleProcess.Where(x => x.OrderId.Equals(request.Order.Id.ToString()));
 
             //erase the order from the whole sale process
             if (saleProcess.Count() > 0)
                 foreach (SaleProcess process in saleProcess)
                     process.OrderId = null;
 
-            await _operationsRepository.Delete(order.DateOrderOpened, new Guid(order.UserId));
+            await _operationsRepository.Delete(request.Order.DateOrderOpened, request.Order.UserId);
 
-            _context.Remove(order);
+            _context.Remove(request.Order);
 
             var success = await _context.SaveChangesAsync() > 0;
 

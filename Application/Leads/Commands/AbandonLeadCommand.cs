@@ -6,14 +6,17 @@ namespace Application.Leads.Commands
 {
     public class AbandonLeadCommand : IRequest
     {
-        public Guid Id { get; set; }
-        public bool SaveContact { get; set; }
-        public bool KeepRecords { get; set; }
-        public AbandonLeadCommand(Guid id, bool saveContact, bool keepRecords)
+        public string UserId { get; }
+        public Contact Lead { get; }
+        public bool SaveLead { get; }
+        public bool KeepRecords { get; }
+
+        public AbandonLeadCommand(string userId, Contact lead, bool saveLead, bool keepRecords)
         {
+            UserId = userId;
+            Lead = lead;
+            SaveLead = saveLead;
             KeepRecords = keepRecords;
-            SaveContact = saveContact;
-            Id = id;
         }
     }
 }

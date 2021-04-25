@@ -6,12 +6,15 @@ namespace Application.DelegatedTasks
 {
     public class ShareTaskCommand : IRequest
     {
-        public Guid Id { get; set; }
-        public string Username { get; set; }
-        public ShareTaskCommand(Guid id, string username)
+        public DelegatedTask Task { get; }
+        public string SharedById { get; }
+        public User SharedWithUser { get; }
+
+        public ShareTaskCommand(DelegatedTask task, string sharedById, User sharedWithUser)
         {
-            Id = id;
-            Username = username;
+            Task = task;
+            SharedById = sharedById;
+            SharedWithUser = sharedWithUser;
         }
     }
 }

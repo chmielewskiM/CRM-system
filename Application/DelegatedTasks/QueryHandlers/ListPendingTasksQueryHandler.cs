@@ -16,25 +16,19 @@ namespace Application.DelegatedTasks.Queries
 {
     public class ListPendingTasksQueryHandler : IRequestHandler<ListPendingTasksQuery, (List<DelegatedTask>, int)>
     {
-        private readonly IUserAccessor _userAccessor;
         private readonly DataContext _context;
         private readonly ILogger<ListPendingTasksQueryHandler> _logger;
 
-        public ListPendingTasksQueryHandler(DataContext context, ILogger<ListPendingTasksQueryHandler> logger, IMapper mapper, IUserAccessor userAccessor)
+        public ListPendingTasksQueryHandler(DataContext context, ILogger<ListPendingTasksQueryHandler> logger, IMapper mapper)
         {
-            _userAccessor = userAccessor;
             _logger = logger;
             _context = context;
         }
 
         public async Task<(List<DelegatedTask>, int)> Handle(ListPendingTasksQuery request, CancellationToken cancellationToken)
         {
-            var user = await _context
-                                .Users
-                                .SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetLoggedUsername());
-
             var userTasks = await _context.UserTasks.Where(x =>
-                                                        x.SharedWith == user &&
+                                                        x.SharedWithId == request.UserId &&
                                                         x.DelegatedTask.Pending.Equals(true))
                                                         .OrderBy(x => x.DelegatedTask.Deadline)
                                                         .ToListAsync();

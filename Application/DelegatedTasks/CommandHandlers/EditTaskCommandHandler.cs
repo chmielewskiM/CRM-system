@@ -17,15 +17,9 @@ namespace Application.DelegatedTasks
 
         public async Task<Unit> Handle(EditTaskCommand request, CancellationToken cancellationToken)
         {
-            var delegatedTask = await _context.DelegatedTasks.FindAsync(request.Id);
-
-            bool noChanges = (delegatedTask.Type == request.Type &&
-                            delegatedTask.Deadline == request.Deadline.AddHours(1) &&
-                            delegatedTask.Notes == request.Notes);
-
-            delegatedTask.Type = request.Type;
-            delegatedTask.Deadline = request.Deadline.AddHours(1);
-            delegatedTask.Notes = request.Notes;
+            request.Task.Type = request.Type;
+            request.Task.Deadline = request.Deadline.AddHours(1);
+            request.Task.Notes = request.Notes;
 
             var success = await _context.SaveChangesAsync() > 0;
 

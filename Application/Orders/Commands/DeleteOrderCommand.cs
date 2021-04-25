@@ -6,10 +6,13 @@ namespace Application.Orders.Commands
 {
     public class DeleteOrderCommand : IRequest
     {
-        public Guid Id { get; set; }
-        public DeleteOrderCommand(Guid id)
+        public Contact Client { get; }
+        public Order Order { get; }
+
+        public DeleteOrderCommand(Contact client, Order order)
         {
-            Id = id;
+            Client = client;
+            Order = order;
         }
     }
 }

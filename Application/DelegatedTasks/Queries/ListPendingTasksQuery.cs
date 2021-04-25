@@ -6,10 +6,13 @@ namespace Application.DelegatedTasks
 {
     public class ListPendingTasksQuery : IRequest<(List<DelegatedTask>, int)>
     {
-        public int PendingActivePage { get; set; }
-        public int PendingPageSize { get; set; }
-        public ListPendingTasksQuery(int pendingActivePage, int pendingPageSize)
+        public string UserId { get; }
+        public int PendingActivePage { get; }
+        public int PendingPageSize { get; }
+
+        public ListPendingTasksQuery(string userId, int pendingActivePage, int pendingPageSize)
         {
+            UserId = userId;
             PendingActivePage = pendingActivePage;
             PendingPageSize = pendingPageSize;
         }

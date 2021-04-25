@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using MediatR;
 using System.Threading;
 using Domain;
 using Application.Leads.ViewModels;
 using Application.Leads.Queries;
 using Application.Leads.Commands;
 using Application.Contacts.Queries;
+using Application.Users.Queries;
 
 namespace API.Controllers
 {
@@ -34,17 +34,20 @@ namespace API.Controllers
         ///<summary>
         /// Returns details about lead.
         ///</summary>
-        ///<response code="200">Returns details about leads.</response>
+        ///<response code="200">Returns details about lead.</response>
         ///<response code="404">Lead not found.</response>
         ///<response code="500">Server error.</response>
         [HttpGet("{id}")]
         public async Task<ActionResult<LeadViewModel>> LeadDetails(Guid id)
         {
-            var leadDetailsQuery = new LeadDetailsQuery(id);
-            var lead = await Mediator.Send(leadDetailsQuery);
+            var getContactQuery = new ContactDetailsQuery(id);
+            var contact = await Mediator.Send(getContactQuery);
 
-            if (lead == null)
-                return BadRequest("Lead not found");
+            if (contact == null)
+                return NotFound("Lead not found.");
+
+            var leadDetailsQuery = new LeadDetailsQuery(contact);
+            var lead = await Mediator.Send(leadDetailsQuery);
 
             return Mapper.Map<Lead, LeadViewModel>(lead);
         }
@@ -52,12 +55,17 @@ namespace API.Controllers
         ///<summary>
         /// Adds a lead.
         ///</summary>
-        ///<response code="200">Lead added to collection successfully.</response>
-        ///<response code="409">This name is already taken.</response>
+        ///<response code="204">Lead added to collection successfully.</response>
+        ///<response code="400">This name is already taken.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpPost]
-        public async Task<ActionResult<Unit>> AddLead(Lead lead)
+        public async Task<ActionResult> AddLead(Lead lead)
         {
+            var getLeadQuery = new GetContactByNameQuery(lead.Contact.Name);
+
+            if (await Mediator.Send(getLeadQuery) != null)
+                return BadRequest("This name is already taken.");
+
             var addLeadCommand = new AddLeadCommand(lead.Contact.Name, lead.Contact.Company, lead.Contact.PhoneNumber, lead.Contact.Email, lead.Contact.Notes, lead.Contact.Source);
             await Mediator.Send(addLeadCommand);
 
@@ -67,21 +75,31 @@ namespace API.Controllers
         ///<summary>
         /// Changes lead's status.
         ///</summary>
-        ///<response code="200">Status changed successfully.</response>
-        ///<response code="400">Can't downgrade lead with inactive status.</response>
-        ///<response code="403">Lead has an open order assigned to him.</response>
+        ///<response code="204">Status changed successfully.</response>
+        ///<response code="400">Close order before conversion.</response>
+        ///<response code="400">Add an order before upgrading the lead.</response>
+        ///<response code="400">Can not downgrade lead whose order was finalized.</response>
         ///<response code="404">Lead not found.</response>
-        ///<response code="409">This name is already taken.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpPut("{id}={upgrade}")]
         public async Task<ActionResult> ChangeStatus(Guid id, bool upgrade)
         {
-            var contactDetailsQuery = new ContactDetailsQuery(id);
-            var contact = await Mediator.Send(contactDetailsQuery);
+            var getContactQuery = new ContactDetailsQuery(id);
+            var contact = await Mediator.Send(getContactQuery);
             if (contact == null)
-                return BadRequest("Lead not found");
+                return NotFound("Lead not found");
 
-            var changeStatusCommand = new ChangeStatusCommand(id, upgrade);
+            var getLeadQuery = new LeadDetailsQuery(contact);
+            var lead = await Mediator.Send(getLeadQuery);
+
+            if (lead.Contact.Status == "Invoice" && !lead.Order.Closed && upgrade)
+                return BadRequest("Close the order before conversion.");
+            else if (lead.Contact.Status == "Quote" && lead.Order == null && upgrade)
+                return BadRequest("Add an order before upgrading lead to 'Invoice'.");
+            else if (lead.Contact.Status == "Invoice" && lead.Order != null && lead.Order.Closed && !upgrade)
+                return BadRequest("Order has been finalized. You can't downgrade the lead, please convert.");
+
+            var changeStatusCommand = new ChangeStatusCommand(contact, upgrade);
             await Mediator.Send(changeStatusCommand);
 
             return NoContent();
@@ -90,17 +108,33 @@ namespace API.Controllers
         ///<summary>
         /// Terminates sale process.
         ///</summary>
-        ///<response code="200">Sale process erased successfully.</response>
-        ///<response code="403">
-        /// It is forbidden to cancel a process while there is an active order assigned to it.
-        /// It is forbidden to cancel the process after the assigned order is finalized(closed).
-        /// </response>
+        ///<response code="204">Sale process erased successfully.</response>
+        ///<response code="400">Delete or close the order before cancelling this process.</response>
+        ///<response code="404">No logged user found.</response>
         ///<response code="404">Lead not found.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpDelete("abandon")]
-        public async Task<ActionResult> AbandonLead(Guid id, bool saveContact, bool keepRecords)
+        public async Task<ActionResult> AbandonLead(Guid id, bool saveLead, bool keepRecords)
         {
-            var abandonLead = new AbandonLeadCommand(id, saveContact, keepRecords);
+            var loggedUserQuery = new LoggedUserQuery();
+            User user = await Mediator.Send(loggedUserQuery);
+
+            if (user == null)
+                return NotFound("No logged user found.");
+
+            var getLeadQuery = new ContactDetailsQuery(id);
+            var lead = await Mediator.Send(getLeadQuery);
+
+            if (lead == null)
+                return NotFound("Lead not found.");
+            Console.WriteLine(saveLead);
+            foreach (var process in lead.CurrentSale)
+            {
+                if (process.OrderId != null)
+                    return BadRequest("Delete or close the order before cancelling this process.");
+            }
+
+            var abandonLead = new AbandonLeadCommand(user.Id, lead, saveLead, keepRecords);
             await Mediator.Send(abandonLead);
 
             return NoContent();

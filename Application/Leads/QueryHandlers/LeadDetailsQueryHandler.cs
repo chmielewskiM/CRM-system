@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Domain;
@@ -7,8 +6,9 @@ using Persistence;
 using Application.Errors;
 using System.Net;
 using AutoMapper;
-using Application.Leads.ViewModels;
 using Application.Leads.Queries;
+using System.Linq;
+using System;
 
 namespace Application.Leads.QueryHandlers
 {
@@ -25,14 +25,20 @@ namespace Application.Leads.QueryHandlers
 
         public async Task<Lead> Handle(LeadDetailsQuery request, CancellationToken cancellationToken)
         {
-            var contact = await _context.Contacts
-            .FindAsync(request.Contact.Id);
+            Lead lead = new Lead();
+            IQueryable<SaleProcess> saleProcess = _context.SaleProcess.Where(x => x.ContactId == request.Contact.Id);
 
-            if (contact == null)
-                throw new RestException(HttpStatusCode.NotFound,
-                new { message = "Lead not found" });
+            if (saleProcess.Count() == 0)
+                throw new RestException(HttpStatusCode.NotFound, new { message = "This lead is not involved in any sale process." });
 
-            var lead = _mapper.Map<Contact, Lead>(contact);
+            saleProcess = saleProcess.OrderByDescending(x => x.Index);
+            var lastProcess = saleProcess.First();
+
+            lead.Contact = request.Contact;
+            lead.LastOperationDate = lastProcess.Operation.Date;
+            if (lastProcess.OrderId != null)
+                lead.Order = await _context.Orders.FindAsync(new Guid(lastProcess.OrderId));
+            else lead.Order = null;
 
             return lead;
         }
