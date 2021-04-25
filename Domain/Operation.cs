@@ -6,12 +6,12 @@ namespace Domain
     public class Operation
     {
         public Guid Id { get; set; }
-        public Int64 Lead { get; set; }
-        public Int64 Opportunity { get; set; }
-        public Int64 Quote { get; set; }
-        public Int64 Invoice { get; set; }
-        public Int64 Conversion { get; set; }
-        public Int64 Order { get; set; }
+        public bool Lead { get; set; }
+        public bool Opportunity { get; set; }
+        public bool Quote { get; set; }
+        public bool Invoice { get; set; }
+        public bool Conversion { get; set; }
+        public bool Order { get; set; }
         public Double Revenue { get; set; }
         public string Source { get; set; }
         public DateTime Date { get; set; }

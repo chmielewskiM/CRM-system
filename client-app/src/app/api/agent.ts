@@ -31,6 +31,7 @@ axios
         if (error.message === 'Network Error' && !error.response) {
             toast.error('Connection error');
         }
+
         // const { status, data, config } = error.response; if ((status === 400 &&
         // config.method === 'post') || (status === 400 && config.method === 'put')) {
         // toast.error('400'); } if (status === 500) {   toast.error('Server errror'); }
@@ -61,6 +62,7 @@ const Contacts = {
         .then(responseBody),
     addContact: (contact : IContact) => requests.post('/contacts', contact),
     upgradeToPremium: (contact : IContact) => requests.post(`/contacts/upgrade/${contact.id}`, contact),
+    startSaleProcess: (contact : IContact) => requests.post(`/contacts/${contact.id}`, contact),
     updateContact: (contact : IContact) => requests.put(`/contacts/${contact.id}`, contact),
     deleteContact: (id : string) => requests.del(`/contacts/${id}`),
     unshareContact: (id : string) => requests.del(`/contacts/remove/${id}`)

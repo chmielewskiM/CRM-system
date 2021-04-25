@@ -60,12 +60,12 @@ export default class DelegatedTaskStore {
     this.rootStore = rootStore;
 
 
-    // reaction(
-    //   () => this.pendingTasksByDate,
-    //   () => {
-    //     this.loadTasks();
-    //   }
-    // );
+    reaction(
+      () => this.axiosParams,
+      () => {
+        this.loadTasks();
+      }
+    );
     // autorun(
 
     // );

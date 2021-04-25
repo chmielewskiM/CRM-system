@@ -31,7 +31,7 @@ export default class LeadStore {
       status: observable,
       sortBy: observable,
       keepRecords: observable,
-      saveContact: observable,
+      saveLead: observable,
       targetLead: observable,
       contactId: observable,
       listAxiosParams: computed,
@@ -90,7 +90,7 @@ export default class LeadStore {
     lead: new ContactFormValues(),
   };
   keepRecords: boolean = true;
-  saveContact: boolean = true;
+  saveLead: boolean = true;
   confirmation = false;
   //controls
   loadingInitial = false;
@@ -122,7 +122,7 @@ export default class LeadStore {
     const params = new URLSearchParams();
     params.append('id', `${this.contactId}`);
     params.append('keepRecords', `${this.keepRecords}`);
-    params.append('saveContact', `${this.saveContact}`);
+    params.append('saveLead', `${this.saveLead}`);
     return params;
   }
 
@@ -180,7 +180,7 @@ export default class LeadStore {
 
   save = () => {
     runInAction(() => {
-      this.saveContact ? (this.saveContact = false) : (this.saveContact = true);
+      this.saveLead ? (this.saveLead = false) : (this.saveLead = true);
     });
   };
 
@@ -332,6 +332,7 @@ export default class LeadStore {
   abandonLead = async () => {
     this.submittingData(true);
     try {
+      console.log(this.saveLead)
       await agent.Leads.abandonLead(this.abandonAxiosParams);
       this.loadLeads();
       runInAction(() => {
@@ -339,7 +340,7 @@ export default class LeadStore {
         this.selectedLead = undefined;
       });
       this.submittingData(false);
-      if (this.saveContact)
+      if (this.saveLead)
         toast.success('Lead is removed and saved in contacts.');
       else toast.success('Lead is removed completely.');
     } catch (error) {

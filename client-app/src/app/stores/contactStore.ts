@@ -358,7 +358,9 @@ export default class ContactStore {
       this.loadContacts();
     } catch (error) {
       this.submittingData(false);
-      toast.error(error.data.errors.message);
+      if(error.status == 400)
+      toast.dark(error.data);
+      else toast.error(error.data.errors.message)
       console.log(error);
     }
   };
@@ -453,7 +455,7 @@ export default class ContactStore {
     lead.contact.source = 'Former Client';
     lead.order!.clientId = lead.contact.id;
     lead.order!.id = uuid();
-    await this.rootStore.leadStore.addLead(lead);
+    await agent.Contacts.startSaleProcess(lead.contact);
     this.submittingData(false);
     this.loadContacts();
   };

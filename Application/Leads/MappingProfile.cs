@@ -1,4 +1,5 @@
 using Application.Contacts;
+using Application.Leads.ViewModels;
 using Application.Orders;
 using AutoMapper;
 using Domain;
@@ -9,7 +10,10 @@ namespace Application.Leads
     {
         public MappingProfile()
         {
-            CreateMap<Lead, LeadDTO>();
+            CreateMap<Lead, LeadViewModel>();
+            CreateMap<Contact, LeadViewModel>();
+            CreateMap<Order, LeadViewModel>();
+            CreateMap<ContactViewModel, Contact>();
             // CreateMap<Contact, ContactDTO>()
             // .ForMember(c =>c.Status, d => d.MapFrom(s=>s.Status));
             // CreateMap<Order, OrderDTO>()

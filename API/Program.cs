@@ -1,13 +1,12 @@
 using System;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence;
 using Microsoft.AspNetCore.Identity;
 using Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace API
 {
@@ -25,7 +24,7 @@ namespace API
                     var context = services.GetRequiredService<DataContext>();
                     var userManager = services.GetRequiredService<UserManager<User>>();
                     var signInManager = services.GetRequiredService<SignInManager<User>>();
-                    // context.Database.Migrate();
+                    context.Database.Migrate();
                     Seed.SeedData(context, userManager).Wait();
                 }
                 catch (Exception ex)
