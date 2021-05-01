@@ -7,6 +7,7 @@ namespace Application.Contacts.Queries
 {
     public class ListContactsQuery : IRequest<(List<Contact>, int)>
     {
+        public User User { get; }
         public bool InProcess { get; }
         public bool Premium { get; }
         public string OrderBy { get; }
@@ -15,8 +16,9 @@ namespace Application.Contacts.Queries
         public string FilterInput { get; }
         public bool Uncontracted { get; }
 
-        public ListContactsQuery(bool inProcess, bool premium, string orderBy, int? activePage, int? pageSize, string filterInput, bool uncontracted)
+        public ListContactsQuery(User user, bool inProcess, bool premium, string orderBy, int? activePage, int? pageSize, string filterInput, bool uncontracted)
         {
+            User = user;
             Uncontracted = uncontracted;
             InProcess = inProcess;
             Premium = premium;

@@ -77,11 +77,9 @@ namespace API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserViewModel>> Login(UserViewModel user)
         {
-            Console.WriteLine(user.Username);
-
             var getUserQuery = new GetUserQuery(user.Username);
             var getUser = await Mediator.Send(getUserQuery);
-            Console.WriteLine(user.Username);
+
             if (getUser == null)
                 return NotFound("User not found");
 
@@ -103,8 +101,11 @@ namespace API.Controllers
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult> RegisterUser(UserViewModel user)
-        {
-            var userExists = await GetUser(user.Username) != null;
+        {   
+            Console.WriteLine(ModelState.Values);
+            var getUserQuery = new GetUserQuery(user.Username);
+            var userExists = await Mediator.Send(getUserQuery) != null;
+
             if (userExists)
                 return NotFound("This username is taken already.");
 

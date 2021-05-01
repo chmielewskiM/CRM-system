@@ -24,6 +24,7 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.IO;
 using Application.Operations.Repository;
+using Application.Validators;
 
 namespace API
 {
@@ -82,11 +83,12 @@ namespace API
                     .Add(new AuthorizeFilter(policy));
             }).AddFluentValidation(cfg =>
             {
-                // cfg.RegisterValidatorsFromAssemblyContaining<Application.Validators.AddOrderValidator>();
-                // cfg.RegisterValidatorsFromAssembly(typeof(Startup).Assembly);
+                cfg.RegisterValidatorsFromAssemblyContaining<RegisterUserValidator>();
                 cfg.LocalizationEnabled = false;
             });
 
+            services.AddTransient<IValidatorInterceptor, ValidatorInterceptor>();
+  
             services
                 .AddControllers()
                 .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);

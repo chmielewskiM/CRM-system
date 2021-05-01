@@ -10,6 +10,7 @@ using Application.Orders.Queries;
 using Application.Orders.Commands;
 using Application.Contacts.Queries;
 using Application.Users.Queries;
+using FluentValidation.AspNetCore;
 
 namespace API.Controllers
 {
@@ -37,20 +38,15 @@ namespace API.Controllers
         /// Adds an order.
         ///</summary>
         ///<response code="204">Order added successfully.</response>
-        ///<response code="404">No logged user found.</response>
         ///<response code="404">Client not found.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpPost]
-        public async Task<ActionResult> AddOrder(Order order)
+        public async Task<ActionResult> AddOrder([CustomizeValidator(Interceptor=typeof(API.Middleware.ValidatorInterceptor))]OrderViewModel order)
         {
             var loggedUserQuery = new LoggedUserQuery();
             User user = await Mediator.Send(loggedUserQuery);
 
-            if (user == null)
-                return NotFound("No logged user found.");
-
-            Guid clientId = order.ClientId ?? new Guid();
-            var getClientQuery = new ContactDetailsQuery(clientId);
+            var getClientQuery = new GetContactByNameQuery(order.ClientName);
             var client = await Mediator.Send(getClientQuery);
 
             if (client == null)
@@ -69,7 +65,7 @@ namespace API.Controllers
         ///<response code="404">Order not found.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpPut("{id}")]
-        public async Task<ActionResult> EditOrder(Order order)
+        public async Task<ActionResult> EditOrder([CustomizeValidator(Interceptor=typeof(API.Middleware.ValidatorInterceptor))]OrderViewModel order)
         {
             var getOrderQuery = new GetOrderQuery(order.Id);
             var orderQuery = await Mediator.Send(getOrderQuery);
@@ -87,7 +83,6 @@ namespace API.Controllers
         /// Closes an order.
         ///</summary>
         ///<response code="204">Order closed successfully.</response>
-        ///<response code="404">No logged user found.</response>
         ///<response code="404">Order not found.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpPut("close/{id}")]
@@ -95,9 +90,6 @@ namespace API.Controllers
         {
             var loggedUserQuery = new LoggedUserQuery();
             User user = await Mediator.Send(loggedUserQuery);
-
-            if (user == null)
-                return NotFound("No logged user found.");
 
             var getOrderQuery = new GetOrderQuery(id);
             var order = await Mediator.Send(getOrderQuery);

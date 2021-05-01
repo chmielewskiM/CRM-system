@@ -396,7 +396,7 @@ export default class OrderStore {
       this.rootStore.contactStore.loadUncontracted();
     } catch (error) {
       this.submittingData(false);
-      toast.error(error.data.errors.message);
+      toast.error(this.rootStore.commonStore.handleErrorMessage(error));
       console.log(error)
     }
   };
@@ -417,9 +417,7 @@ export default class OrderStore {
       } catch (error) {
         this.setShowOrderForm(false);
         this.submittingData(false);
-        if (error.status == 304) {
-          toast.info('There were no changes.');
-        } else toast.error(error.data.errors.message);
+        toast.error(this.rootStore.commonStore.handleErrorMessage(error));
         console.log(error);
       }
     } else {

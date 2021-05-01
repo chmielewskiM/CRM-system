@@ -16,6 +16,7 @@ import { InputOnChangeData } from 'semantic-ui-react';
 import { IUserFormValues } from '../models/user';
 import { LeadFormValues } from '../models/lead';
 import { getuid } from 'process';
+import { Console } from 'node:console';
 
 //number of returned contacts
 const PAGE_SIZE = 10;
@@ -358,9 +359,7 @@ export default class ContactStore {
       this.loadContacts();
     } catch (error) {
       this.submittingData(false);
-      if(error.status == 400)
-      toast.dark(error.data);
-      else toast.error(error.data.errors.message)
+      toast.error(this.rootStore.commonStore.handleErrorMessage(error));
       console.log(error);
     }
   };
@@ -378,10 +377,7 @@ export default class ContactStore {
         toast.success('Contact updated successfully.');
       } catch (error) {
         this.submittingData(false);
-        if (error.status == 304) {
-          toast.info('There were no changes.');
-          this.setShowContactForm(false);
-        } else toast.error(error.data.errors.message);
+        toast.error(this.rootStore.commonStore.handleErrorMessage(error));
         console.log(error);
       }
     } else {

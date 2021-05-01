@@ -10,6 +10,7 @@ using Application.Contacts.Commands;
 using Application.Validators;
 using System.Collections.Generic;
 using Application.Users.Queries;
+using FluentValidation.AspNetCore;
 
 namespace API.Controllers
 {
@@ -26,7 +27,10 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<CompleteContactsDataViewModel>> ListContacts(bool inProcess, bool premium, string orderBy, int? activePage, int? pageSize, string filterInput, bool uncontracted, CancellationToken ct)
         {
-            var completeContactsData = new ListContactsQuery(inProcess, premium, orderBy, activePage, pageSize, filterInput, uncontracted);
+            var loggedUserQuery = new LoggedUserQuery();
+            User user = await Mediator.Send(loggedUserQuery);
+
+            var completeContactsData = new ListContactsQuery(user, inProcess, premium, orderBy, activePage, pageSize, filterInput, uncontracted);
             var data = await Mediator.Send(completeContactsData);
 
             return new CompleteContactsDataViewModel(Mapper.Map<List<Contact>, List<ContactViewModel>>(data.Item1), data.Item2);
@@ -75,7 +79,7 @@ namespace API.Controllers
         ///<response code="400">This name is already taken.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpPost]
-        public async Task<ActionResult> AddContact(ContactViewModel contact)
+        public async Task<ActionResult> AddContact([CustomizeValidator(Interceptor = typeof(API.Middleware.ValidatorInterceptor))] ContactViewModel contact)
         {
             var getContactByNameQuery = new GetContactByNameQuery(contact.Name);
             var getContact = await Mediator.Send(getContactByNameQuery);
@@ -138,7 +142,7 @@ namespace API.Controllers
         ///<response code="404">Contact not found.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpPut("{id}")]
-        public async Task<ActionResult> EditContact(Contact contact)
+        public async Task<ActionResult> EditContact([CustomizeValidator(Interceptor = typeof(API.Middleware.ValidatorInterceptor))] ContactViewModel contact)
         {
             var contactDetailsQuery = new ContactDetailsQuery(contact.Id);
             var getContact = await Mediator.Send(contactDetailsQuery);
@@ -177,7 +181,7 @@ namespace API.Controllers
         /// When user 'deletes' the contact, in fact he unshares it. The relation between user and
         /// contact is erased, but the contact is kept in the DB.
         ///</summary>
-        ///<response code="200">Contact removed successfully.</response>
+        ///<response code="204">Contact removed successfully.</response>
         ///<response code="404">Contact not found.</response>
         ///<response code="424">Some active order is assigned to the contact.</response>
         ///<response code="500">Problem saving changes.</response>

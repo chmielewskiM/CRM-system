@@ -29,9 +29,6 @@ namespace Application.Users.CommandHandlers
 
         public async Task<Unit> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
-            // CommandValidator validator = new CommandValidator();
-            // validator.ValidateAndThrow(request);
-
             if (await _context.Users.Where(x => x.Email == request.Email).AnyAsync())
                 throw new RestException(HttpStatusCode.BadRequest, new { msg = "This email already exists" });
 

@@ -38,15 +38,57 @@ and providing broader insight into workers' actions. In order to achieve these g
 * .Net CLI
 <br>
 
+## Installation
+
+#### Server (.NET Core)
+
+##### *Requirements:*
+
+###### *.NET Core SDK*
+
+##### Execute `dotnet restore` in root directory.
+##### Then build the project with `dotnet build`.
+
+
+
+#### Client (React)
+
+##### *Requirements:*
+
+###### *Node*
+###### *npm*
+
+##### Go to client-app folder and execute `npm install`  
+
+<br>
+
+#### -Development env-
+
+##### Change "ASPNETCORE_ENVIRONMENT" to "Development" in `launchSettings.json`.
+
+##### In client-app folder execute `npm run-script start-watch` .
+
+##### In API folder exectute `dotnet watch run`.
+
+#### -Production env-
+
+##### In client-app folder execute `npm run build` (it will create build and move it to the API folder).
+
+##### Go to the API folder and execute `dotnet watch run`.
+
+ ## API spec
+
+<img src="https://s4.gifyu.com/images/swagger.png" width="532" height="300" align="center">
+
 ## Screenshots
 
 ***<p align="center">Click on the screenshot to see Gif.</p>***
 
-<a href="https://s4.gifyu.com/images/dashboardb0c711e13dafd802.gif"><img src="https://s4.gifyu.com/images/dash.png" alt="dashboard" width="49.5%" height="300"></a><img width="1%"></img><a href="https://s4.gifyu.com/images/contactsec081b0316b6ed48.gif"><img src="https://s4.gifyu.com/images/contacts.png" alt="contacts" border="0" width="49.5%" height="300"></a>
+<a href="https://s4.gifyu.com/images/dashboardb0c711e13dafd802.gif"><img src="https://s4.gifyu.com/images/dash.png" alt="dashboard" width="49.5%" height="280"></a><img width="1%"></img><a href="https://s4.gifyu.com/images/contactsec081b0316b6ed48.gif"><img src="https://s4.gifyu.com/images/contacts.png" alt="contacts" border="0" width="49.5%" height="280"></a>
 
-<a href="https://s4.gifyu.com/images/leads.gif"><img src="https://s4.gifyu.com/images/leads.png" width="49.5%" height="300"></a><img width="1%"></img><a href="https://s4.gifyu.com/images/tasks.gif"><img src="https://s4.gifyu.com/images/tasks.png" alt="leads" border="0" width="49.5%" height="300"></a>
+<a href="https://s4.gifyu.com/images/leads.gif"><img src="https://s4.gifyu.com/images/leads.png" width="49.5%" height="280"></a><img width="1%"></img><a href="https://s4.gifyu.com/images/tasks.gif"><img src="https://s4.gifyu.com/images/tasks.png" alt="leads" border="0" width="49.5%" height="280"></a>
 
-<a href="https://s4.gifyu.com/images/orders.gif"><img src="https://s4.gifyu.com/images/orders.png" width="49.5%" height="300"></a><img width="1%"></img><a href="https://s4.gifyu.com/images/admin2.gif"><img src="https://s4.gifyu.com/images/admin.png" width="49.5%" height="300"></a>
+<a href="https://s4.gifyu.com/images/orders.gif"><img src="https://s4.gifyu.com/images/orders.png" width="49.5%" height="280"></a><img width="1%"></img><a href="https://s4.gifyu.com/images/admin2.gif"><img src="https://s4.gifyu.com/images/admin.png" width="49.5%" height="280"></a>
 
 <br>
 
@@ -118,7 +160,3 @@ Chosen platform to set up CI/CD is ***Azure***.
 ***SQL script is included in artifact and passed that way to the release. There is no way to create the output in release. Thank to this every time the app runs, migration is skipped, it migrates only during release.***
 
 <br>
-
-## API spec
-
-<img src="https://s4.gifyu.com/images/swagger.png" width="532" height="300" align="center">
