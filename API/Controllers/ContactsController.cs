@@ -194,7 +194,10 @@ namespace API.Controllers
             if (contact == null)
                 return BadRequest("Contact not found");
 
-            var unshareContactCommand = new UnshareContactCommand(id);
+            var loggedUserQuery = new LoggedUserQuery();
+            User user = await Mediator.Send(loggedUserQuery);
+
+            var unshareContactCommand = new UnshareContactCommand(contact.Id, user.Id);
             await Mediator.Send(unshareContactCommand);
 
             return NoContent();

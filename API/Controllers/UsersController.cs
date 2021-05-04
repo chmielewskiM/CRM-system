@@ -75,7 +75,7 @@ namespace API.Controllers
         ///<response code="500">Server error.</response>
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<ActionResult<UserViewModel>> Login(UserViewModel user)
+        public async Task<ActionResult<UserViewModel>> Login(LoggingUserViewModel user)
         {
             var getUserQuery = new GetUserQuery(user.Username);
             var getUser = await Mediator.Send(getUserQuery);
@@ -85,7 +85,7 @@ namespace API.Controllers
 
             var loginUserQuery = new LoginUserQuery(getUser, user.Password);
             var loggedUser = await Mediator.Send(loginUserQuery);
-            Console.WriteLine(loggedUser.Username);
+
             if (loggedUser == null)
                 return BadRequest("Invalid username or password.");
 

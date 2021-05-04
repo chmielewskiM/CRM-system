@@ -27,8 +27,4 @@
 		<ProjectReference Include="..\..\API\API.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Folder Include="Leads\CommandHandlers\" />
-	</ItemGroup>
-
 </Project>

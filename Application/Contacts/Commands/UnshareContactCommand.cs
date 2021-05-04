@@ -5,10 +5,13 @@ namespace Application.Contacts.Commands
 {
     public class UnshareContactCommand : IRequest
     {
-        public Guid Id { get; set; }
-        public UnshareContactCommand(Guid id)
+        public Guid ContactId { get; }
+        public string UserId { get; }
+
+        public UnshareContactCommand(Guid contactId, string userId)
         {
-            Id = id;
+            ContactId = contactId;
+            UserId = userId;
         }
     }
 }

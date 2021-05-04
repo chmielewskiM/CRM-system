@@ -70,7 +70,10 @@ namespace API.Controllers
             if (await Mediator.Send(getLeadQuery) != null)
                 return BadRequest("This name is already taken.");
 
-            var addLeadCommand = new AddLeadCommand(lead.Contact.Name, lead.Contact.Company, lead.Contact.PhoneNumber, lead.Contact.Email, lead.Contact.Notes, lead.Contact.Source);
+            var loggedUserQuery = new LoggedUserQuery();
+            User user = await Mediator.Send(loggedUserQuery);
+
+            var addLeadCommand = new AddLeadCommand(user, lead.Contact.Name, lead.Contact.Company, lead.Contact.PhoneNumber, lead.Contact.Email, lead.Contact.Notes, lead.Contact.Source);
             await Mediator.Send(addLeadCommand);
 
             return NoContent();

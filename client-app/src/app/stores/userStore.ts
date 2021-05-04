@@ -140,6 +140,7 @@ export default class UserStore {
       this.rootStore.commonStore.setToken(user.token);
       history.push('/dashboard/home');
     } catch (error) {
+      console.log(error);
       toast.error('Invalid username or password. Try again.');
     }
   };

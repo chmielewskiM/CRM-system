@@ -441,7 +441,7 @@ export default class OrderStore {
       toast.success('Order deleted successfully.');
     } catch (error) {
       this.submittingData(false);
-      console.log(error);
+      toast.error(this.rootStore.commonStore.handleErrorMessage(error));
       toast.error(error.data.errors.message);
     }
   };

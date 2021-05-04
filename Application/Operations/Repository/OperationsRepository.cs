@@ -25,7 +25,7 @@ namespace Application.Operations.Repository
             if (operation.Source == null)
                 operation.Source = "";
 
-            var addedOperation = await _context.Operations.AddAsync(operation);
+            await _context.Operations.AddAsync(operation);
 
             var userOperation = new UserOperation
             {
@@ -36,7 +36,7 @@ namespace Application.Operations.Repository
                 DateAdded = DateTime.Now
             };
 
-            var addedUserOperation = await _context.UserOperations.AddAsync(userOperation);
+            await _context.UserOperations.AddAsync(userOperation);
 
             return true;
         }
