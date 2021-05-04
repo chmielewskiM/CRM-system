@@ -16,11 +16,9 @@ namespace Application.Orders.QueryHandlers
     public class ListOrdersQueryHandler : IRequestHandler<ListOrdersQuery, (List<Order>, int)>
     {
         private readonly DataContext _context;
-        private readonly ILogger<ListOrdersQueryHandler> _logger;
 
-        public ListOrdersQueryHandler(DataContext context, ILogger<ListOrdersQueryHandler> logger)
+        public ListOrdersQueryHandler(DataContext context)
         {
-            _logger = logger;
             _context = context;
         }
 

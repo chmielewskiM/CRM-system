@@ -19,6 +19,7 @@ namespace API.Controllers
         {
             _operationsRepository = operationsRepository;
         }
+
         ///<summary>
         /// Returns all operations.
         ///</summary>
@@ -37,7 +38,7 @@ namespace API.Controllers
         /// Returns count of all operations.
         ///</summary>
         ///<response code="200">Returns operations count.</response>
-        ///<response code="500">Problem saving changes.</response>
+        ///<response code="500">Server error.</response>
         [HttpGet("count")]
         public async Task<ActionResult<int>> CountOperations()
         {

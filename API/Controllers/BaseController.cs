@@ -30,15 +30,5 @@ namespace API.Controllers
         protected IMapper Mapper => _mapper ?? (_mapper = HttpContext.RequestServices.GetService<IMapper>());
         protected IUserAccessor UserAccessor => _userAccessor ?? (_userAccessor = HttpContext.RequestServices.GetService<IUserAccessor>());
         protected DataContext Context => _context ?? (_context = HttpContext.RequestServices.GetService<DataContext>());
-
-
-        public async Task<User> GetLoggedUserAsync()
-        {
-            var user = await _context
-                .Users
-                .SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetLoggedUsername());
-
-            return user;
-        }
     }
 }

@@ -9,6 +9,7 @@ using Application.Leads.Queries;
 using Application.Leads.Commands;
 using Application.Contacts.Queries;
 using Application.Users.Queries;
+using FluentValidation.AspNetCore;
 
 namespace API.Controllers
 {
@@ -25,7 +26,10 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<LeadViewModel>>> ListLeads(bool allLeads, string status, string sortBy, CancellationToken ct)
         {
-            var listLeadsData = new ListLeadsQuery(allLeads, status, sortBy);
+            var loggedUserQuery = new LoggedUserQuery();
+            User user = await Mediator.Send(loggedUserQuery);
+
+            var listLeadsData = new ListLeadsQuery(user.Id, user.Level, allLeads, status, sortBy);
             var list = await Mediator.Send(listLeadsData);
 
             return Mapper.Map<List<Lead>, List<LeadViewModel>>(list);
@@ -59,14 +63,17 @@ namespace API.Controllers
         ///<response code="400">This name is already taken.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpPost]
-        public async Task<ActionResult> AddLead(Lead lead)
+        public async Task<ActionResult> AddLead([CustomizeValidator(Interceptor = typeof(API.Middleware.ValidatorInterceptor))] LeadViewModel lead)
         {
             var getLeadQuery = new GetContactByNameQuery(lead.Contact.Name);
 
             if (await Mediator.Send(getLeadQuery) != null)
                 return BadRequest("This name is already taken.");
 
-            var addLeadCommand = new AddLeadCommand(lead.Contact.Name, lead.Contact.Company, lead.Contact.PhoneNumber, lead.Contact.Email, lead.Contact.Notes, lead.Contact.Source);
+            var loggedUserQuery = new LoggedUserQuery();
+            User user = await Mediator.Send(loggedUserQuery);
+
+            var addLeadCommand = new AddLeadCommand(user, lead.Contact.Name, lead.Contact.Company, lead.Contact.PhoneNumber, lead.Contact.Email, lead.Contact.Notes, lead.Contact.Source);
             await Mediator.Send(addLeadCommand);
 
             return NoContent();
@@ -110,7 +117,6 @@ namespace API.Controllers
         ///</summary>
         ///<response code="204">Sale process erased successfully.</response>
         ///<response code="400">Delete or close the order before cancelling this process.</response>
-        ///<response code="404">No logged user found.</response>
         ///<response code="404">Lead not found.</response>
         ///<response code="500">Problem saving changes.</response>
         [HttpDelete("abandon")]
@@ -118,9 +124,6 @@ namespace API.Controllers
         {
             var loggedUserQuery = new LoggedUserQuery();
             User user = await Mediator.Send(loggedUserQuery);
-
-            if (user == null)
-                return NotFound("No logged user found.");
 
             var getLeadQuery = new ContactDetailsQuery(id);
             var lead = await Mediator.Send(getLeadQuery);

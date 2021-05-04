@@ -20,11 +20,9 @@ namespace Application.Contacts.QueryHandlers
     {
         private readonly DataContext _context;
         private readonly ILogger<ListContactsQueryHandler> _logger;
-        private readonly IUserAccessor _userAccessor;
 
-        public ListContactsQueryHandler(DataContext context, ILogger<ListContactsQueryHandler> logger, IUserAccessor userAccessor)
+        public ListContactsQueryHandler(DataContext context, ILogger<ListContactsQueryHandler> logger)
         {
-            _userAccessor = userAccessor;
             _logger = logger;
             _context = context;
         }
@@ -34,11 +32,8 @@ namespace Application.Contacts.QueryHandlers
             List<Contact> contacts = new List<Contact>();
             IQueryable<UserContact> userContacts = _context.UserContacts;
 
-            var user = await _context
-                .Users
-                .SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetLoggedUsername());
-            if (user.Level != "top")
-                userContacts = userContacts.Where(x => x.User == user);
+            if (request.User.Level != "top")
+                userContacts = userContacts.Where(x => x.User == request.User);
             if (request.InProcess)
                 userContacts = userContacts.Where(x => x.Contact.Status != "Inactive");
             else if (request.Premium)

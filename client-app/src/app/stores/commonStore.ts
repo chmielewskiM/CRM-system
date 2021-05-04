@@ -8,6 +8,7 @@ import {
 } from 'mobx';
 import { SyntheticEvent } from 'react';
 import { OperationValues } from '../models/operation';
+import { toast } from 'react-toastify';
 
 export default class CommonStore {
   rootStore: RootStore;
@@ -86,4 +87,14 @@ export default class CommonStore {
       this.expandedMenu = !this.expandedMenu;
     });
   };
+
+  handleErrorMessage(error: any) {
+    console.log(error);
+
+    if (error.status == 400 && !error.data.errors && error.data)
+      return error.data;
+    else if (error.status == 400 && error.data.errors.message[0])
+      return error.data.errors.message[0];
+    else if (error.data.errors.message) return error.data.errors.message;
+  }
 }

@@ -19,11 +19,9 @@ namespace Application.Leads.QueryHandlers
     {
         private readonly DataContext _context;
         private readonly ILogger<ListLeadsQueryHandler> _logger;
-        private readonly IUserAccessor _userAccessor;
 
-        public ListLeadsQueryHandler(DataContext context, ILogger<ListLeadsQueryHandler> logger, IUserAccessor userAccessor)
+        public ListLeadsQueryHandler(DataContext context, ILogger<ListLeadsQueryHandler> logger)
         {
-            _userAccessor = userAccessor;
             _logger = logger;
             _context = context;
         }
@@ -34,26 +32,22 @@ namespace Application.Leads.QueryHandlers
             IQueryable<Order> orders = null;
             List<Lead> data = new List<Lead>();
 
-            var user = await _context
-                .Users
-                .SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetLoggedUsername());
-
             //query for leads (contacts with other than inactive status) which belong to logged user if user is not an admin, otherwise query all contacts
-            if (user.Level != "top")
+            if (request.UserLevel != "top")
             {
-                userContacts = _context.UserContacts.Where(x => x.User == user && x.Contact.Status != "Inactive");
+                userContacts = _context.UserContacts.Where(x => x.User.Id == request.UserId && x.Contact.Status != "Inactive");
             }
             else userContacts = _context.UserContacts.Where(x => x.Contact.Status != "Inactive");
 
             //don't proceed and return empty list if there are no leads
             if (userContacts == null)
-                return null;
+                return new List<Lead>();
 
             orders = _context.Orders.Where(x => x.Closed == false);
 
             if (request.AllLeads == false)
             {
-                userContacts = filterLeads(userContacts, user, request.Status);
+                userContacts = filterLeads(userContacts, request.Status);
             }
 
             foreach (UserContact userContact in userContacts)
@@ -87,7 +81,7 @@ namespace Application.Leads.QueryHandlers
             return data;
         }
 
-        private static IQueryable<UserContact> filterLeads(IQueryable<UserContact> userContacts, User user, string status)
+        private static IQueryable<UserContact> filterLeads(IQueryable<UserContact> userContacts, string status)
         {
             //queries for leads with particular status, in case status is 'Invoice' a lead has an active order
             switch (status)

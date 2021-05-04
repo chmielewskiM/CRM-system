@@ -380,7 +380,7 @@ export default class DelegatedTaskStore {
       await this.loadTasks();
     } catch (error) {
       this.submittingData(false);
-      toast.error(error.data.errors.message);
+      toast.error(this.rootStore.commonStore.handleErrorMessage(error));
     }
   };
 
@@ -398,10 +398,7 @@ export default class DelegatedTaskStore {
       } catch (error) {
         this.setShowTaskForm(false);
         this.submittingData(false);
-        if (error.status == 304) {
-          toast.info('There were no changes.');
-        } else toast.error(error.data.errors.message);
-        console.log(error);
+        toast.error(this.rootStore.commonStore.handleErrorMessage(error));
       }
     } else {
       this.setShowTaskForm(false);

@@ -17,20 +17,16 @@ namespace Application.Leads.CommandHandlers
     public class AddLeadCommandHandler : IRequestHandler<AddLeadCommand>
     {
         private readonly DataContext _context;
-        private readonly IUserAccessor _userAccessor;
         private readonly IOperationsRepository _operationsRepository;
 
-        public AddLeadCommandHandler(DataContext context, IOperationsRepository operationsRepository, IUserAccessor userAccessor)
+        public AddLeadCommandHandler(DataContext context, IOperationsRepository operationsRepository)
         {
             _operationsRepository = operationsRepository;
             _context = context;
-            _userAccessor = userAccessor;
         }
 
         public async Task<Unit> Handle(AddLeadCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userAccessor.GetLoggedUser();
-
             var contact = new Contact
             {
                 Id = Guid.NewGuid(),
@@ -52,8 +48,8 @@ namespace Application.Leads.CommandHandlers
             var userAccess = new UserContact
             {
                 Id = Guid.NewGuid(),
-                User = user,
-                UserId = user.Id,
+                User = request.User,
+                UserId = request.User.Id,
                 Contact = contact,
                 ContactId = contact.Id,
                 DateAdded = request.Contact.DateAdded
@@ -67,9 +63,9 @@ namespace Application.Leads.CommandHandlers
             operation.Source = request.Contact.Source;
             operation.Date = contact.DateAdded;
 
-            var saveOperation = await _operationsRepository.Add(operation, user);
+            var saveOperation = await _operationsRepository.Add(operation, request.User);
             if (!saveOperation)
-                throw new Exception("Problem saving changes");
+                throw new Exception("Problem saving operation");
 
             var saleProcess = new SaleProcess
             {

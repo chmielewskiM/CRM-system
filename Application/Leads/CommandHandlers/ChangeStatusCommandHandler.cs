@@ -58,6 +58,7 @@ namespace Application.Leads.CommandHandlers
             else if (request.Upgrade && index == statuses.Length - 1)
             {
                 request.Contact.Status = statuses[0];
+                request.Contact.SuccessfulDeals++;
 
                 await ConvertLead(saleProcess, request.Contact, user);
             }

@@ -140,6 +140,7 @@ export default class UserStore {
       this.rootStore.commonStore.setToken(user.token);
       history.push('/dashboard/home');
     } catch (error) {
+      console.log(error);
       toast.error('Invalid username or password. Try again.');
     }
   };
@@ -153,8 +154,7 @@ export default class UserStore {
       toast.success('User added successfully');
     } catch (error) {
       this.submittingData(false);
-      toast.error(error.data.errors?.message);
-      console.log(error);
+      toast.error(this.rootStore.commonStore.handleErrorMessage(error));
     }
   };
 
@@ -171,10 +171,7 @@ export default class UserStore {
         toast.success('Changes saved successfully.');
       } catch (error) {
         this.submittingData(false);
-        // if (error.status == 304) toast.info('There were no changes.');
-        // else if (error.data.errors.message)
-        //   toast.error(error.data.errors.message);
-        console.log(error);
+        toast.error(this.rootStore.commonStore.handleErrorMessage(error));
       }
     } else {
       toast.info('No changes');

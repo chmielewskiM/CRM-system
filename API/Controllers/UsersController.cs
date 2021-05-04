@@ -75,19 +75,17 @@ namespace API.Controllers
         ///<response code="500">Server error.</response>
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<ActionResult<UserViewModel>> Login(UserViewModel user)
+        public async Task<ActionResult<UserViewModel>> Login(LoggingUserViewModel user)
         {
-            Console.WriteLine(user.Username);
-
             var getUserQuery = new GetUserQuery(user.Username);
             var getUser = await Mediator.Send(getUserQuery);
-            Console.WriteLine(user.Username);
+
             if (getUser == null)
                 return NotFound("User not found");
 
             var loginUserQuery = new LoginUserQuery(getUser, user.Password);
             var loggedUser = await Mediator.Send(loginUserQuery);
-            Console.WriteLine(loggedUser.Username);
+
             if (loggedUser == null)
                 return BadRequest("Invalid username or password.");
 
@@ -103,8 +101,11 @@ namespace API.Controllers
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult> RegisterUser(UserViewModel user)
-        {
-            var userExists = await GetUser(user.Username) != null;
+        {   
+            Console.WriteLine(ModelState.Values);
+            var getUserQuery = new GetUserQuery(user.Username);
+            var userExists = await Mediator.Send(getUserQuery) != null;
+
             if (userExists)
                 return NotFound("This username is taken already.");
 
