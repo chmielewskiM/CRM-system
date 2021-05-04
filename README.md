@@ -76,9 +76,16 @@ and providing broader insight into workers' actions. In order to achieve these g
 
 ##### Go to the API folder and execute `dotnet watch run`.
 
- ## API spec
+## API spec
 
-<img src="https://s4.gifyu.com/images/swagger.png" width="532" height="300" align="center">
+<p align="center"> <a href="https://petstore.swagger.io/?url=https://rawcdn.githack.com/chmielewskiM/CRM-system/28f82782bf23a08f32d903c4bdd4f76311979fa7/API-spec.yaml" align="ctr"> 
+ 
+***>Swagger petstore<*** 
+                          
+</a></p>
+ 
+ <br>
+
 
 ## Screenshots
 
