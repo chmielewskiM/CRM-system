@@ -10,10 +10,6 @@ and providing broader insight into workers' actions. In order to achieve these g
 <p align="center"> <a href="https://petstore.swagger.io/?url=https://rawcdn.githack.com/chmielewskiM/CRM-system/28f82782bf23a08f32d903c4bdd4f76311979fa7/API-spec.yaml" align="ctr"> 
  <img width="80%" valign="bottom" src="https://s3.gifyu.com/images/swagger2fcf591146bc942c5.png"></a></p>
  
-
-                          
-</a></p>
- 
  
 ## Tech/framework used
 |<div align="center"><img height="50" width="50" valign="middle" src="https://svgshare.com/i/W5Y.svg"></div>|<div align="center"><img height="50" width="50" valign="middle" src="https://svgshare.com/i/W5j.svg"></div> |
