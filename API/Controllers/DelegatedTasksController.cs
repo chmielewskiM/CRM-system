@@ -2,12 +2,11 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Domain;
-using MediatR;
 using Application.DelegatedTasks;
 using System.Collections.Generic;
 using Application.Users.Queries;
-using System.Security.Claims;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Http;
 
 namespace API.Controllers
 {
@@ -21,6 +20,8 @@ namespace API.Controllers
         ///</summary>
         ///<response code="200">Returns the list</response>
         ///<response code="500">Server error.</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CompleteTasksDataViewModel))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet]
         public async Task<ActionResult<CompleteTasksDataViewModel>> ListTasks(bool myTasks, bool sharedTasks, bool accepted, bool refused, bool done, int activePage, int pageSize)
         {
@@ -35,6 +36,8 @@ namespace API.Controllers
         ///</summary>
         ///<response code="200">Returns list with tasks count.</response>
         ///<response code="500">Server error.</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CompleteTasksDataViewModel))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet("pending/page{pendingActivePage}=size{pendingPageSize}")]
         public async Task<ActionResult<CompleteTasksDataViewModel>> ListPendingTasks(int pendingActivePage, int pendingPageSize)
         {
@@ -53,6 +56,8 @@ namespace API.Controllers
         ///<response code="200">Returns details about the task.</response>
         ///<response code="404">Task not found.</response>
         ///<response code="500">Server error.</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DelegatedTaskViewModel))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet("{id}")]
         public async Task<ActionResult<DelegatedTaskViewModel>> TaskDetails(Guid id)
         {
@@ -69,9 +74,13 @@ namespace API.Controllers
         /// Adds the task.
         ///</summary>
         ///<response code="204">Adds the task.</response>
+        ///<response code="400">Failed validation (fluent validation).</response>
         ///<response code="500">Problem saving changes.</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost]
-        public async Task<ActionResult> AddTask([CustomizeValidator(Interceptor=typeof(API.Middleware.ValidatorInterceptor))]DelegatedTaskViewModel task)
+        public async Task<ActionResult> AddTask([CustomizeValidator(Interceptor = typeof(API.Middleware.ValidatorInterceptor))] DelegatedTaskViewModel task)
         {
             var addTaskCommand = new AddTaskCommand(task.Type, task.Deadline, task.Notes);
             await Mediator.Send(addTaskCommand);
@@ -83,10 +92,15 @@ namespace API.Controllers
         /// Edits the task.
         ///</summary>
         ///<response code="204">Task edited successfully.</response>
+        ///<response code="400">Failed validation (fluent validation).</response>
         ///<response code="404">Task not found.</response>
         ///<response code="500">Problem saving changes.</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPut("{id}")]
-        public async Task<ActionResult> EditTask([CustomizeValidator(Interceptor=typeof(API.Middleware.ValidatorInterceptor))]DelegatedTaskViewModel task)
+        public async Task<ActionResult> EditTask([CustomizeValidator(Interceptor = typeof(API.Middleware.ValidatorInterceptor))] DelegatedTaskViewModel task)
         {
             var taskDetailsQuery = new TaskDetailsQuery(task.Id);
             var taskQuery = await Mediator.Send(taskDetailsQuery);
@@ -106,6 +120,9 @@ namespace API.Controllers
         ///<response code="204">Task deleted successfully.</response>
         ///<response code="404">Task not found.</response>
         ///<response code="500">Problem saving changes.</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteTask(Guid id)
         {
@@ -132,6 +149,10 @@ namespace API.Controllers
         ///<response code="404">Task not found.</response>
         ///<response code="404">User to share with not found.</response>
         ///<response code="500">Problem saving changes.</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost("{id}/share/{username}")]
         public async Task<ActionResult> ShareTask(Guid id, string username)
         {

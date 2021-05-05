@@ -16,40 +16,38 @@ paths:
         - in: query
           name: inProcess
           type: boolean
-          description: >-
-            if true, returns contacts which are currently involved in some sale
-            process
+          description: "if true, returns contacts which are currently involved in some sale process"
         - in: query
           name: premium
           type: boolean
-          description: 'if true, returns contacts with premium membership'
+          description: "if true, returns contacts with premium membership"
         - in: query
           name: orderBy
           type: string
-          description: determines how returned data should be sorted
+          description: "determines how returned data should be sorted"
         - in: query
           name: activePage
           type: integer
           format: int32
-          description: active page of paginated list
+          description: "active page of paginated list"
         - in: query
           name: pageSize
           type: integer
           format: int32
-          description: count of contacts returned per page
+          description: "count of contacts returned per page"
         - in: query
           name: filterInput
           type: string
-          description: text typed in search input
+          description: "text typed in search input"
         - in: query
           name: uncontracted
           type: boolean
-          description: 'if true, returns contacts which haven''t any open order assigned'
+          description: "if true, returns contacts which haven''t any open order assigned"
       responses:
         '200':
           description: Returns the list.
           schema:
-            $ref: '#/definitions/Application.Contacts.CompleteContactsData'
+            $ref: '#/definitions/Application.Contacts.CompleteContactsDataViewModel'
         '500':
           description: Server error.
     post:
@@ -69,22 +67,21 @@ paths:
         - in: body
           name: body
           schema:
-            $ref: '#/definitions/Application.Contacts.AddContact%2BCommand'
-          description: name of the requested contact
+            $ref: '#/definitions/Application.Contacts.ContactViewModel'
       responses:
-        '200':
+        '204':
           description: Contact added successfully.
-          schema:
-            $ref: '#/definitions/MediatR.Unit'
-        '409':
+        '400':
           description: This name is already taken.
+          schema:
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '500':
           description: Problem saving changes.
   '/Contacts/name/{name}':
     get:
       tags:
         - Contacts
-      summary: Returns the contact by requested name.
+      summary: Returns a contact by requested name.
       produces:
         - text/plain
         - application/json
@@ -94,18 +91,23 @@ paths:
           name: name
           required: true
           type: string
+          description: "requested contact's name"
       responses:
         '200':
-          description: Returns the contact.
+          description: Returns a contact.
           schema:
-            $ref: '#/definitions/Domain.Contact'
+            $ref: '#/definitions/Application.Contacts.ContactViewModel'
+        '404':
+          description: Contact not found.
+          schema:
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '500':
           description: Server error.
   '/Contacts/{id}':
     get:
       tags:
         - Contacts
-      summary: Returns details about the contact.
+      summary: Returns details about contact.
       produces:
         - text/plain
         - application/json
@@ -116,19 +118,46 @@ paths:
           required: true
           type: string
           format: uuid
+          description: "requested contact's id"
       responses:
         '200':
           description: Returns details about the contact.
           schema:
-            $ref: '#/definitions/Application.Contacts.ContactDTO'
+            $ref: '#/definitions/Application.Contacts.ContactViewModel'
         '404':
           description: Contact not found.
+          schema:
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '500':
           description: Server error.
+    post:
+      tags:
+        - Contacts
+      summary: Starts sale process.
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          format: uuid
+          description: "requested contact's id"
+      responses:
+        '204':
+          description: Starts sale process.
+        '404':
+          description: Contact not found.
+          schema:
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '500':
+          description: Problem saving changes.
     put:
       tags:
         - Contacts
-      summary: Edits a contact.
+      summary: Updates a contact.
       consumes:
         - application/json-patch+json
         - application/json
@@ -143,26 +172,24 @@ paths:
           name: id
           required: true
           type: string
-          format: uuid
+          description: "requested contact's id"
         - in: body
           name: body
           schema:
-            $ref: '#/definitions/Application.Contacts.EditContact%2BCommand'
+            $ref: '#/definitions/Application.Contacts.ContactViewModel'
       responses:
-        '200':
+        '204':
           description: Contact edited successfully.
-          schema:
-            $ref: '#/definitions/MediatR.Unit'
-        '304':
-          description: There were no changes.
         '404':
           description: Contact not found.
+          schema:
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '500':
           description: Problem saving changes.
     delete:
       tags:
         - Contacts
-      summary: Deletes the contact entirely.
+      summary: Deletes a contact entirely.
       produces:
         - text/plain
         - application/json
@@ -173,13 +200,14 @@ paths:
           required: true
           type: string
           format: uuid
+          description: "contact's id"
       responses:
-        '200':
+        '204':
           description: Contact deleted successfully.
-          schema:
-            $ref: '#/definitions/MediatR.Unit'
         '404':
           description: Contact not found.
+          schema:
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '500':
           description: Problem saving changes.
   '/Contacts/upgrade/{id}':
@@ -197,20 +225,21 @@ paths:
           required: true
           type: string
           format: uuid
+          description: "contact's id"
       responses:
-        '200':
+        '204':
           description: Status changed successfully.
-          schema:
-            $ref: '#/definitions/MediatR.Unit'
         '404':
           description: Contact not found.
+          schema:
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '500':
           description: Problem saving changes.
   '/Contacts/remove/{id}':
     delete:
       tags:
         - Contacts
-      summary: "When user 'deletes' the contact, in fact he unshares it. The relation between user and\r\ncontact is erased, but the contact is kept in the DB."
+      summary: "When user 'deletes' the contact, in fact he unshares it. The relation between user and\r\ncontact is erased, but the contact is kept in the DB and is still visible for users\r\nwho have top level access (admins)."
       produces:
         - text/plain
         - application/json
@@ -221,15 +250,18 @@ paths:
           required: true
           type: string
           format: uuid
+          description: "contact's id"
       responses:
-        '200':
+        '204':
           description: Contact removed successfully.
+        '400':
+          description: Some active order is assigned to contact.
           schema:
-            $ref: '#/definitions/MediatR.Unit'
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '404':
           description: Contact not found.
-        '424':
-          description: Some active order is assigned to the contact.
+          schema:
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '500':
           description: Problem saving changes.
   /DelegatedTasks:
@@ -245,38 +277,38 @@ paths:
         - in: query
           name: myTasks
           type: boolean
-          description: returns tasks that were created by user sending the request
+          description: "if true, returns tasks that were created by user sending the request"
         - in: query
           name: sharedTasks
           type: boolean
-          description: returns shared tasks
+          description: "if true, returns shared tasks"
         - in: query
           name: accepted
           type: boolean
-          description: returns accepted tasks
+          description: "if true, returns accepted tasks"
         - in: query
           name: refused
           type: boolean
-          description: returns refused tasks
+          description: "if true, returns refused tasks"
         - in: query
           name: done
           type: boolean
-          description: returns done tasks
+          description: "if true, returns done tasks"
         - in: query
           name: activePage
           type: integer
           format: int32
-          description: active page of paginated list
+          description: "active page of paginated list"
         - in: query
           name: pageSize
           type: integer
           format: int32
-          description: count of tasks returned per page
+          description: "count of tasks returned per page"
       responses:
         '200':
           description: Returns the list
           schema:
-            $ref: '#/definitions/Application.DelegatedTasks.CompleteTaskData'
+            $ref: '#/definitions/Application.DelegatedTasks.CompleteTasksDataViewModel'
         '500':
           description: Server error.
     post:
@@ -296,12 +328,14 @@ paths:
         - in: body
           name: body
           schema:
-            $ref: '#/definitions/Application.DelegatedTasks.AddTask%2BCommand'
+            $ref: '#/definitions/Application.DelegatedTasks.DelegatedTaskViewModel'
       responses:
-        '200':
+        '204':
           description: Adds the task.
+        '400':
+          description: Failed validation (fluent validation).
           schema:
-            $ref: '#/definitions/MediatR.Unit'
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '500':
           description: Problem saving changes.
   '/DelegatedTasks/pending/page{pendingActivePage}=size{pendingPageSize}':
@@ -319,16 +353,18 @@ paths:
           required: true
           type: integer
           format: int32
+          description: "active page of paginated list with received tasks"
         - in: path
           name: pendingPageSize
           required: true
           type: integer
           format: int32
+          description: "size of the paginated list's page"
       responses:
         '200':
           description: Returns list with tasks count.
           schema:
-            $ref: '#/definitions/Application.DelegatedTasks.CompleteTaskData'
+            $ref: '#/definitions/Application.DelegatedTasks.CompleteTasksDataViewModel'
         '500':
           description: Server error.
   '/DelegatedTasks/{id}':
@@ -346,11 +382,12 @@ paths:
           required: true
           type: string
           format: uuid
+          description: "task id"
       responses:
         '200':
           description: Returns details about the task.
           schema:
-            $ref: '#/definitions/Domain.DelegatedTask'
+            $ref: '#/definitions/Application.DelegatedTasks.DelegatedTaskViewModel'
         '404':
           description: Task not found.
         '500':
@@ -373,20 +410,22 @@ paths:
           name: id
           required: true
           type: string
-          format: uuid
+          description: "task id"
         - in: body
           name: body
           schema:
-            $ref: '#/definitions/Application.DelegatedTasks.EditTask%2BCommand'
+            $ref: '#/definitions/Application.DelegatedTasks.DelegatedTaskViewModel'
       responses:
-        '200':
+        '204':
           description: Task edited successfully.
+        '400':
+          description: Failed validation (fluent validation).
           schema:
-            $ref: '#/definitions/MediatR.Unit'
-        '304':
-          description: There were no changes.
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '404':
           description: Task not found.
+          schema:
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '500':
           description: Problem saving changes.
     delete:
@@ -403,13 +442,14 @@ paths:
           required: true
           type: string
           format: uuid
+          description: "task id"
       responses:
-        '200':
+        '204':
           description: Task deleted successfully.
-          schema:
-            $ref: '#/definitions/MediatR.Unit'
         '404':
           description: Task not found.
+          schema:
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '500':
           description: Problem saving changes.
   '/DelegatedTasks/{id}/share/{username}':
@@ -427,19 +467,23 @@ paths:
           required: true
           type: string
           format: uuid
+          description: "task id"
         - in: path
           name: username
           required: true
           type: string
+          description: "username of the user to share task with"
       responses:
-        '200':
+        '204':
           description: Task deleted successfully.
+        '400':
+          description: The task is shared already.
           schema:
-            $ref: '#/definitions/MediatR.Unit'
-        '403':
-          description: Task is shared already.
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '404':
-          description: Task not found.
+          description: User to share with not found.
+          schema:
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '500':
           description: Problem saving changes.
   '/DelegatedTasks/accept/{id}':
@@ -447,30 +491,18 @@ paths:
       tags:
         - DelegatedTasks
       summary: Accepts shared task.
-      consumes:
-        - application/json-patch+json
-        - application/json
-        - text/json
-        - application/*+json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
       parameters:
         - in: path
           name: id
           required: true
           type: string
           format: uuid
-        - in: body
-          name: body
-          schema:
-            $ref: '#/definitions/Application.DelegatedTasks.AcceptTask%2BCommand'
+          description: "task id"
       responses:
         '200':
+          description: Success
+        '204':
           description: Task accepted.
-          schema:
-            $ref: '#/definitions/MediatR.Unit'
         '404':
           description: Task not found.
         '500':
@@ -480,30 +512,18 @@ paths:
       tags:
         - DelegatedTasks
       summary: Refuses shared task.
-      consumes:
-        - application/json-patch+json
-        - application/json
-        - text/json
-        - application/*+json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
       parameters:
         - in: path
           name: id
           required: true
           type: string
           format: uuid
-        - in: body
-          name: body
-          schema:
-            $ref: '#/definitions/Application.DelegatedTasks.RefuseTask%2BCommand'
+          description: "task id"
       responses:
         '200':
+          description: Success
+        '204':
           description: Task refused.
-          schema:
-            $ref: '#/definitions/MediatR.Unit'
         '404':
           description: Task not found.
         '500':
@@ -513,30 +533,18 @@ paths:
       tags:
         - DelegatedTasks
       summary: Closes shared task.
-      consumes:
-        - application/json-patch+json
-        - application/json
-        - text/json
-        - application/*+json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
       parameters:
         - in: path
           name: id
           required: true
           type: string
           format: uuid
-        - in: body
-          name: body
-          schema:
-            $ref: '#/definitions/Application.DelegatedTasks.FinishTask%2BCommand'
+          description: "task id"
       responses:
         '200':
+          description: Success
+        '204':
           description: Task closed successfully.
-          schema:
-            $ref: '#/definitions/MediatR.Unit'
         '404':
           description: Task not found.
         '500':
@@ -554,22 +562,22 @@ paths:
         - in: query
           name: allLeads
           type: boolean
-          description: return all leads
+          description: "return all leads"
         - in: query
           name: status
           type: string
-          description: return only leads with requested status
+          description: "return only leads with requested status"
         - in: query
           name: sortBy
           type: string
-          description: sort leads by 'name' or 'date'
+          description: "sort leads by name or last operation date"
       responses:
         '200':
           description: Returns list with leads.
           schema:
             type: array
             items:
-              $ref: '#/definitions/Application.Leads.LeadDTO'
+              $ref: '#/definitions/Application.Leads.ViewModels.LeadViewModel'
         '500':
           description: Server error.
     post:
@@ -589,14 +597,18 @@ paths:
         - in: body
           name: body
           schema:
-            $ref: '#/definitions/Domain.Lead'
+            $ref: '#/definitions/Application.Leads.ViewModels.LeadViewModel'
       responses:
-        '200':
+        '204':
           description: Lead added to collection successfully.
-          schema:
-            $ref: '#/definitions/MediatR.Unit'
-        '409':
+        '400':
           description: This name is already taken.
+          schema:
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '500':
           description: Problem saving changes.
   '/Leads/{id}':
@@ -614,13 +626,16 @@ paths:
           required: true
           type: string
           format: uuid
+          description: "lead's id"
       responses:
         '200':
-          description: Returns details about leads.
-          schema:
-            $ref: '#/definitions/Application.Leads.LeadDTO'
+          description: Returns details about lead.
+        '204':
+          description: Success
         '404':
           description: Lead not found.
+          schema:
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '500':
           description: Server error.
   '/Leads/{id}={upgrade}':
@@ -638,23 +653,23 @@ paths:
           required: true
           type: string
           format: uuid
+          description: "lead's id"
         - in: path
           name: upgrade
           required: true
           type: boolean
+          description: "upgrade/downgrade lead's status"
       responses:
-        '200':
+        '204':
           description: Status changed successfully.
-          schema:
-            $ref: '#/definitions/MediatR.Unit'
         '400':
-          description: Can't downgrade lead with inactive status.
-        '403':
-          description: Lead has an open order assigned to him.
+          description: Can not downgrade lead whose order was finalized.
+          schema:
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '404':
           description: Lead not found.
-        '409':
-          description: This name is already taken.
+          schema:
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '500':
           description: Problem saving changes.
   /Leads/abandon:
@@ -671,24 +686,26 @@ paths:
           name: id
           type: string
           format: uuid
-          description: lead's id
+          description: "lead's id"
         - in: query
           name: saveContact
           type: boolean
-          description: 'if true, keep contact in contacts'
+          description: "if true, keeps contact in contacts"
         - in: query
           name: keepRecords
           type: boolean
-          description: 'if true, keeps operations registered during this sale process'
+          description: "if true, keeps operations registered during this sale process"
       responses:
-        '200':
+        '204':
           description: Sale process erased successfully.
+        '400':
+          description: Delete or close the order before cancelling this process.
           schema:
-            $ref: '#/definitions/MediatR.Unit'
-        '403':
-          description: "It is forbidden to cancel a process while there is an active order assigned to it.\r\nIt is forbidden to cancel the process after the assigned order is finalized(closed)."
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '404':
           description: Lead not found.
+          schema:
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '500':
           description: Problem saving changes.
   /Operations:
@@ -704,7 +721,7 @@ paths:
         '200':
           description: Returns all operations.
           schema:
-            $ref: '#/definitions/Application.Operations.CompleteStats'
+            $ref: '#/definitions/Application.Operations.ViewModels.CompleteStatsViewModel'
         '500':
           description: Server error.
   /Operations/count:
@@ -718,14 +735,12 @@ paths:
         - text/json
       responses:
         '200':
-          description: Returns count.
+          description: Returns operations count.
           schema:
             format: int32
             type: integer
-        '404':
-          description: Task not found.
         '500':
-          description: Problem saving changes.
+          description: Server error.
   /Orders:
     get:
       tags:
@@ -739,38 +754,38 @@ paths:
         - in: query
           name: allOrders
           type: string
-          description: returns all orders
+          description: "returns all orders"
         - in: query
           name: saleOrders
           type: string
-          description: 'if true, returns only sale orders, else only purchase orders'
+          description: "if true, returns only sale orders, else only purchase orders"
         - in: query
           name: closedOrders
           type: string
-          description: returns closed orders
+          description: "returns closed orders"
         - in: query
           name: orderBy
           type: string
-          description: determines how requested orders should be sorted
+          description: "determines how requested orders should be sorted"
         - in: query
           name: filterInput
           type: string
-          description: 'search input, returns records which contain input''s content'
+          description: "search input, returns records which contain input''s content"
         - in: query
           name: pageNumber
           type: integer
           format: int32
-          description: active page of paginated history
+          description: "active page of paginated history"
         - in: query
           name: pageSize
           type: integer
           format: int32
-          description: count of orders which are returned per history page
+          description: "count of orders which are returned per history page"
       responses:
         '200':
           description: Returns list with orders.
           schema:
-            $ref: '#/definitions/Application.Orders.CompleteOrderData'
+            $ref: '#/definitions/Application.Orders.ViewModels.CompleteOrderDataViewModel'
         '500':
           description: Server error.
     post:
@@ -790,14 +805,18 @@ paths:
         - in: body
           name: body
           schema:
-            $ref: '#/definitions/Application.Orders.AddOrder%2BCommand'
+            $ref: '#/definitions/Application.Orders.ViewModels.OrderViewModel'
       responses:
-        '200':
+        '201':
+          description: Success
+        '204':
           description: Order added successfully.
+        '400':
+          description: Failed validation (fluent validation).
           schema:
-            $ref: '#/definitions/MediatR.Unit'
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '404':
-          description: Couldn't access the logged user.
+          description: Client not found.
         '500':
           description: Problem saving changes.
   '/Orders/{id}':
@@ -819,20 +838,22 @@ paths:
           name: id
           required: true
           type: string
-          format: uuid
+          description: "order id"
         - in: body
           name: body
           schema:
-            $ref: '#/definitions/Application.Orders.EditOrder%2BCommand'
+            $ref: '#/definitions/Application.Orders.ViewModels.OrderViewModel'
       responses:
-        '200':
+        '204':
           description: Order updated successfully.
+        '400':
+          description: Failed validation (fluent validation).
           schema:
-            $ref: '#/definitions/MediatR.Unit'
-        '304':
-          description: There were no changes.
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '404':
-          description: Couldn't find order or client.
+          description: Order not found.
+          schema:
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '500':
           description: Problem saving changes.
     delete:
@@ -849,19 +870,18 @@ paths:
           required: true
           type: string
           format: uuid
+          description: "order id"
       responses:
-        '200':
+        '204':
           description: Order deleted successfully.
+        '400':
+          description: Can not delete an order which is assigned to lead with 'Invoice' status.
           schema:
-            $ref: '#/definitions/MediatR.Unit'
-        '403':
-          description: >-
-            It is forbidden to close an order which is assigned to lead with
-            'Invoice' status.
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '404':
-          description: Couldn't find logged user.
-        '409':
-          description: Order has no client assigned.
+          description: Client assigned to order not found.
+          schema:
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '500':
           description: Server error.
   '/Orders/close/{id}':
@@ -879,13 +899,14 @@ paths:
           required: true
           type: string
           format: uuid
+          description: "order id"
       responses:
-        '200':
+        '204':
           description: Order closed successfully.
-          schema:
-            $ref: '#/definitions/MediatR.Unit'
         '404':
-          description: Couldn't find order or failed to get logged user.
+          description: Order not found.
+          schema:
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '500':
           description: Problem saving changes.
   /Users:
@@ -903,7 +924,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Domain.User'
+              $ref: '#/definitions/Application.Users.ViewModels.UserViewModel'
         '500':
           description: Server error.
   /Users/logged:
@@ -919,7 +940,7 @@ paths:
         '200':
           description: Returns logged user.
           schema:
-            $ref: '#/definitions/Application.AppUser.AppUser'
+            $ref: '#/definitions/Application.Users.ViewModels.UserViewModel'
         '500':
           description: Server error.
   '/Users/user/{username}':
@@ -936,14 +957,16 @@ paths:
           name: username
           required: true
           type: string
-          description: user's username
+          description: "user's username"
       responses:
         '200':
           description: Returns an user.
           schema:
-            $ref: '#/definitions/Application.AppUser.AppUser'
+            $ref: '#/definitions/Application.Users.ViewModels.UserViewModel'
         '404':
           description: User not found.
+          schema:
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '500':
           description: Server error.
   /Users/login:
@@ -964,14 +987,16 @@ paths:
         - in: body
           name: body
           schema:
-            $ref: '#/definitions/Application.AppUser.Login%2BQuery'
+            $ref: '#/definitions/Application.Users.ViewModels.LoggingUserViewModel'
       responses:
         '200':
           description: User logged in.
           schema:
-            $ref: '#/definitions/Application.AppUser.AppUser'
-        '401':
-          description: User unauthorized.
+            $ref: '#/definitions/Application.Users.ViewModels.UserViewModel'
+        '404':
+          description: User not found.
+          schema:
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '500':
           description: Server error.
   /Users/register:
@@ -992,14 +1017,14 @@ paths:
         - in: body
           name: body
           schema:
-            $ref: '#/definitions/Application.AppUser.RegisterUser%2BCommand'
+            $ref: '#/definitions/Application.Users.ViewModels.UserViewModel'
       responses:
-        '200':
+        '204':
           description: Registers an user.
-          schema:
-            $ref: '#/definitions/Application.AppUser.AppUser'
-        '400':
+        '404':
           description: Username/email already exists.
+          schema:
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '500':
           description: Problem creating user.
   '/Users/update/{id}':
@@ -1021,19 +1046,18 @@ paths:
           name: id
           required: true
           type: string
+          description: "user's id"
         - in: body
           name: body
           schema:
-            $ref: '#/definitions/Application.AppUser.EditUser%2BCommand'
+            $ref: '#/definitions/Application.Users.ViewModels.UserViewModel'
       responses:
-        '200':
+        '204':
           description: User updated.
-          schema:
-            $ref: '#/definitions/MediatR.Unit'
-        '304':
-          description: There were no changes.
         '404':
           description: User not found.
+          schema:
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '500':
           description: Problem saving changes.
   '/Users/{username}':
@@ -1050,106 +1074,28 @@ paths:
           name: username
           required: true
           type: string
-          description: user's username
+          description: "user's username"
       responses:
-        '200':
+        '204':
           description: User deleted successfully.
+        '404':
+          description: User not found.
           schema:
-            $ref: '#/definitions/MediatR.Unit'
+            $ref: '#/definitions/Microsoft.AspNetCore.Mvc.ProblemDetails'
         '500':
           description: Failed to delete user.
 definitions:
-  Application.AppUser.AppUser:
-    type: object
-    properties:
-      id:
-        type: string
-      displayName:
-        type: string
-      token:
-        type: string
-      username:
-        type: string
-      level:
-        type: string
-      email:
-        type: string
-      password:
-        type: string
-  Application.AppUser.EditUser+Command:
-    type: object
-    properties:
-      id:
-        type: string
-      displayName:
-        type: string
-      username:
-        type: string
-      email:
-        type: string
-      password:
-        type: string
-      level:
-        type: string
-  Application.AppUser.Login+Query:
-    type: object
-    properties:
-      username:
-        type: string
-      password:
-        type: string
-  Application.AppUser.RegisterUser+Command:
-    type: object
-    properties:
-      displayName:
-        type: string
-      username:
-        type: string
-      email:
-        type: string
-      password:
-        type: string
-      level:
-        type: string
-  Application.Contacts.AddContact+Command:
-    type: object
-    properties:
-      id:
-        format: uuid
-        type: string
-      name:
-        type: string
-      type:
-        type: string
-      company:
-        type: string
-      phoneNumber:
-        type: string
-      email:
-        type: string
-      dateAdded:
-        format: date-time
-        type: string
-      notes:
-        type: string
-      status:
-        type: string
-      premium:
-        type: boolean
-      successfulDeals:
-        format: int32
-        type: integer
-  Application.Contacts.CompleteContactsData:
+  Application.Contacts.CompleteContactsDataViewModel:
     type: object
     properties:
       contacts:
         type: array
         items:
-          $ref: '#/definitions/Application.Contacts.ContactDTO'
+          $ref: '#/definitions/Application.Contacts.ContactViewModel'
       contactsTotal:
         format: int32
         type: integer
-  Application.Contacts.ContactDTO:
+  Application.Contacts.ContactViewModel:
     type: object
     properties:
       id:
@@ -1178,38 +1124,16 @@ definitions:
       source:
         type: string
       premium:
-        type: string
+        type: boolean
       userContacts:
         type: array
         items:
-          $ref: '#/definitions/Application.Contacts.UserAccessDTO'
+          $ref: '#/definitions/Application.Contacts.ViewModels.UserAccessViewModel'
       orders:
         type: array
         items:
-          $ref: '#/definitions/Application.Orders.OrderDTO'
-  Application.Contacts.EditContact+Command:
-    type: object
-    properties:
-      id:
-        format: uuid
-        type: string
-      name:
-        type: string
-      type:
-        type: string
-      company:
-        type: string
-      phoneNumber:
-        type: string
-      email:
-        type: string
-      notes:
-        type: string
-      status:
-        type: string
-      source:
-        type: string
-  Application.Contacts.UserAccessDTO:
+          $ref: '#/definitions/Application.Orders.ViewModels.OrderViewModel'
+  Application.Contacts.ViewModels.UserAccessViewModel:
     type: object
     properties:
       username:
@@ -1218,45 +1142,17 @@ definitions:
         type: string
       level:
         type: string
-  Application.DelegatedTasks.AcceptTask+Command:
-    type: object
-    properties:
-      id:
-        format: uuid
-        type: string
-  Application.DelegatedTasks.AddTask+Command:
-    type: object
-    properties:
-      id:
-        format: uuid
-        type: string
-      type:
-        type: string
-      dateStarted:
-        format: date-time
-        type: string
-      deadline:
-        format: date-time
-        type: string
-      notes:
-        type: string
-      finishedBy:
-        type: string
-      accepted:
-        type: boolean
-      refused:
-        type: boolean
-  Application.DelegatedTasks.CompleteTaskData:
+  Application.DelegatedTasks.CompleteTasksDataViewModel:
     type: object
     properties:
       tasks:
         type: array
         items:
-          $ref: '#/definitions/Application.DelegatedTasks.DelegatedTaskDTO'
+          $ref: '#/definitions/Application.DelegatedTasks.DelegatedTaskViewModel'
       tasksCount:
         format: int32
         type: integer
-  Application.DelegatedTasks.DelegatedTaskDTO:
+  Application.DelegatedTasks.DelegatedTaskViewModel:
     type: object
     properties:
       id:
@@ -1283,33 +1179,8 @@ definitions:
       done:
         type: boolean
       userTask:
-        $ref: '#/definitions/Application.DelegatedTasks.UserAccessDTO'
-  Application.DelegatedTasks.EditTask+Command:
-    type: object
-    properties:
-      id:
-        format: uuid
-        type: string
-      type:
-        type: string
-      deadline:
-        format: date-time
-        type: string
-      notes:
-        type: string
-  Application.DelegatedTasks.FinishTask+Command:
-    type: object
-    properties:
-      id:
-        format: uuid
-        type: string
-  Application.DelegatedTasks.RefuseTask+Command:
-    type: object
-    properties:
-      id:
-        format: uuid
-        type: string
-  Application.DelegatedTasks.UserAccessDTO:
+        $ref: '#/definitions/Application.DelegatedTasks.UserAccessViewModel'
+  Application.DelegatedTasks.UserAccessViewModel:
     type: object
     properties:
       createdByUsername:
@@ -1320,107 +1191,17 @@ definitions:
         type: string
       sharedWith:
         type: string
-  Application.Leads.LeadDTO:
+  Application.Leads.ViewModels.LeadViewModel:
     type: object
     properties:
-      lastOperation:
+      lastOperationDate:
         format: date-time
         type: string
       contact:
-        $ref: '#/definitions/Application.Contacts.ContactDTO'
+        $ref: '#/definitions/Application.Contacts.ContactViewModel'
       order:
-        $ref: '#/definitions/Application.Orders.OrderDTO'
-  Application.Operations.CollectedOperationData:
-    type: object
-    properties:
-      leads:
-        format: int32
-        type: integer
-      opportunities:
-        format: int32
-        type: integer
-      quotes:
-        format: int32
-        type: integer
-      invoices:
-        format: int32
-        type: integer
-      conversions:
-        format: int32
-        type: integer
-      orders:
-        format: int32
-        type: integer
-      revenue:
-        format: double
-        type: number
-      sources:
-        $ref: '#/definitions/Application.Operations.Sources'
-      dateStart:
-        format: date-time
-        type: string
-      dateEnd:
-        format: date-time
-        type: string
-  Application.Operations.CompleteStats:
-    type: object
-    properties:
-      thisMonthTotals:
-        $ref: '#/definitions/Application.Operations.Totals'
-      oneMonthTotals:
-        $ref: '#/definitions/Application.Operations.Totals'
-      sixMonthsTotals:
-        $ref: '#/definitions/Application.Operations.Totals'
-      thisMonthData:
-        type: array
-        items:
-          $ref: '#/definitions/Application.Operations.CollectedOperationData'
-      oneMonthData:
-        type: array
-        items:
-          $ref: '#/definitions/Application.Operations.CollectedOperationData'
-      sixMonthsData:
-        type: array
-        items:
-          $ref: '#/definitions/Application.Operations.CollectedOperationData'
-      oneMonthOpportunitiesByUser:
-        type: array
-        items:
-          $ref: '#/definitions/Application.Operations.OpportunitiesByUser'
-      sixMonthsOpportunitiesByUser:
-        type: array
-        items:
-          $ref: '#/definitions/Application.Operations.OpportunitiesByUser'
-  Application.Operations.OpportunitiesByUser:
-    type: object
-    properties:
-      userDisplayName:
-        type: string
-      leadsTotal:
-        format: int32
-        type: integer
-      opportunitiesTotal:
-        format: int32
-        type: integer
-  Application.Operations.Sources:
-    type: object
-    properties:
-      web:
-        format: int32
-        type: integer
-      socialMedia:
-        format: int32
-        type: integer
-      flyers:
-        format: int32
-        type: integer
-      commercial:
-        format: int32
-        type: integer
-      formerClient:
-        format: int32
-        type: integer
-  Application.Operations.Totals:
+        $ref: '#/definitions/Application.Orders.ViewModels.OrderViewModel'
+  Application.Operations.TotalsViewModel:
     type: object
     properties:
       leadsTotal:
@@ -1445,71 +1226,108 @@ definitions:
         format: double
         type: number
       sourcesTotal:
-        $ref: '#/definitions/Application.Operations.Sources'
-  Application.Orders.AddOrder+Command:
+        $ref: '#/definitions/Application.Operations.ViewModels.SourcesViewModel'
+  Application.Operations.ViewModels.CollectedOperationDataViewModel:
     type: object
     properties:
-      id:
-        format: uuid
-        type: string
-      orderNumber:
+      leads:
         format: int32
         type: integer
-      clientId:
-        format: uuid
-        type: string
-      client:
-        $ref: '#/definitions/Domain.Contact'
-      type:
-        type: boolean
-      closed:
-        type: boolean
-      product:
-        type: string
-      amount:
+      opportunities:
+        format: int32
+        type: integer
+      quotes:
+        format: int32
+        type: integer
+      invoices:
+        format: int32
+        type: integer
+      conversions:
+        format: int32
+        type: integer
+      orders:
+        format: int32
+        type: integer
+      revenue:
         format: double
         type: number
-      price:
-        format: double
-        type: number
-      dateOrderOpened:
+      sources:
+        $ref: '#/definitions/Application.Operations.ViewModels.SourcesViewModel'
+      dateStart:
         format: date-time
         type: string
-      dateOrderClosed:
+      dateEnd:
         format: date-time
         type: string
-      notes:
+  Application.Operations.ViewModels.CompleteStatsViewModel:
+    type: object
+    properties:
+      thisMonthTotals:
+        $ref: '#/definitions/Application.Operations.TotalsViewModel'
+      oneMonthTotals:
+        $ref: '#/definitions/Application.Operations.TotalsViewModel'
+      sixMonthsTotals:
+        $ref: '#/definitions/Application.Operations.TotalsViewModel'
+      thisMonthData:
+        type: array
+        items:
+          $ref: '#/definitions/Application.Operations.ViewModels.CollectedOperationDataViewModel'
+      oneMonthData:
+        type: array
+        items:
+          $ref: '#/definitions/Application.Operations.ViewModels.CollectedOperationDataViewModel'
+      sixMonthsData:
+        type: array
+        items:
+          $ref: '#/definitions/Application.Operations.ViewModels.CollectedOperationDataViewModel'
+      oneMonthOpportunitiesByUser:
+        type: array
+        items:
+          $ref: '#/definitions/Application.Operations.ViewModels.OpportunitiesByUserViewModel'
+      sixMonthsOpportunitiesByUser:
+        type: array
+        items:
+          $ref: '#/definitions/Application.Operations.ViewModels.OpportunitiesByUserViewModel'
+  Application.Operations.ViewModels.OpportunitiesByUserViewModel:
+    type: object
+    properties:
+      userDisplayName:
         type: string
-  Application.Orders.CompleteOrderData:
+      leadsTotal:
+        format: int32
+        type: integer
+      opportunitiesTotal:
+        format: int32
+        type: integer
+  Application.Operations.ViewModels.SourcesViewModel:
+    type: object
+    properties:
+      web:
+        format: int32
+        type: integer
+      socialMedia:
+        format: int32
+        type: integer
+      flyers:
+        format: int32
+        type: integer
+      commercial:
+        format: int32
+        type: integer
+      formerClient:
+        format: int32
+        type: integer
+  Application.Orders.ViewModels.CompleteOrderDataViewModel:
     type: object
     properties:
       orders:
         type: array
         items:
-          $ref: '#/definitions/Application.Orders.OrderDTO'
+          $ref: '#/definitions/Application.Orders.ViewModels.OrderViewModel'
       ordersCount:
         format: int32
         type: integer
-  Application.Orders.EditOrder+Command:
-    type: object
-    properties:
-      id:
-        format: uuid
-        type: string
-      clientId:
-        format: uuid
-        type: string
-      product:
-        type: string
-      amount:
-        format: double
-        type: number
-      price:
-        format: double
-        type: number
-      notes:
-        type: string
-  Application.Orders.OrderDTO:
+  Application.Orders.ViewModels.OrderViewModel:
     type: object
     properties:
       id:
@@ -1518,8 +1336,6 @@ definitions:
       orderNumber:
         format: int32
         type: integer
-      clientId:
-        type: string
       clientName:
         type: string
       type:
@@ -1542,280 +1358,42 @@ definitions:
         type: string
       notes:
         type: string
-  Domain.Contact:
+  Application.Users.ViewModels.LoggingUserViewModel:
     type: object
     properties:
-      id:
-        format: uuid
+      username:
         type: string
-      name:
+      password:
         type: string
-      type:
-        type: string
-      company:
-        type: string
-      phoneNumber:
-        type: string
-      email:
-        type: string
-      dateAdded:
-        format: date-time
-        type: string
-      notes:
-        type: string
-      status:
-        type: string
-      successfulDeals:
-        format: int32
-        type: integer
-      source:
-        type: string
-      premium:
-        type: boolean
-      orders:
-        type: array
-        items:
-          $ref: '#/definitions/Domain.Order'
-      userContacts:
-        type: array
-        items:
-          $ref: '#/definitions/Domain.UserContact'
-      currentSale:
-        type: array
-        items:
-          $ref: '#/definitions/Domain.SaleProcess'
-  Domain.DelegatedTask:
-    type: object
-    properties:
-      id:
-        format: uuid
-        type: string
-      type:
-        type: string
-      dateStarted:
-        format: date-time
-        type: string
-      deadline:
-        format: date-time
-        type: string
-      notes:
-        type: string
-      finishedBy:
-        type: string
-      accepted:
-        type: boolean
-      refused:
-        type: boolean
-      pending:
-        type: boolean
-      done:
-        type: boolean
-      userTask:
-        $ref: '#/definitions/Domain.UserTask'
-  Domain.Lead:
-    type: object
-    properties:
-      lastOperation:
-        format: date-time
-        type: string
-      contact:
-        $ref: '#/definitions/Domain.Contact'
-      order:
-        $ref: '#/definitions/Domain.Order'
-  Domain.Operation:
-    type: object
-    properties:
-      id:
-        format: uuid
-        type: string
-      lead:
-        format: int64
-        type: integer
-      opportunity:
-        format: int64
-        type: integer
-      quote:
-        format: int64
-        type: integer
-      invoice:
-        format: int64
-        type: integer
-      conversion:
-        format: int64
-        type: integer
-      order:
-        format: int64
-        type: integer
-      revenue:
-        format: double
-        type: number
-      source:
-        type: string
-      date:
-        format: date-time
-        type: string
-      userOperation:
-        $ref: '#/definitions/Domain.UserOperation'
-      currentSale:
-        $ref: '#/definitions/Domain.SaleProcess'
-  Domain.Order:
-    type: object
-    properties:
-      id:
-        format: uuid
-        type: string
-      orderNumber:
-        format: int32
-        type: integer
-      userId:
-        type: string
-      clientId:
-        format: uuid
-        type: string
-      client:
-        $ref: '#/definitions/Domain.Contact'
-      type:
-        type: boolean
-      closed:
-        type: boolean
-      product:
-        type: string
-      amount:
-        format: double
-        type: number
-      price:
-        format: double
-        type: number
-      dateOrderOpened:
-        format: date-time
-        type: string
-      dateOrderClosed:
-        format: date-time
-        type: string
-      notes:
-        type: string
-  Domain.SaleProcess:
-    type: object
-    properties:
-      contact:
-        $ref: '#/definitions/Domain.Contact'
-      contactId:
-        format: uuid
-        type: string
-      operation:
-        $ref: '#/definitions/Domain.Operation'
-      operationId:
-        format: uuid
-        type: string
-      orderId:
-        type: string
-      index:
-        format: int32
-        type: integer
-  Domain.User:
+  Application.Users.ViewModels.UserViewModel:
     type: object
     properties:
       id:
         type: string
-      userName:
-        type: string
-      normalizedUserName:
-        type: string
-      email:
-        type: string
-      normalizedEmail:
-        type: string
-      emailConfirmed:
-        type: boolean
-      passwordHash:
-        type: string
-      securityStamp:
-        type: string
-      concurrencyStamp:
-        type: string
-      phoneNumber:
-        type: string
-      phoneNumberConfirmed:
-        type: boolean
-      twoFactorEnabled:
-        type: boolean
-      lockoutEnd:
-        format: date-time
-        type: string
-      lockoutEnabled:
-        type: boolean
-      accessFailedCount:
-        format: int32
-        type: integer
       displayName:
+        type: string
+      token:
+        type: string
+      username:
         type: string
       level:
         type: string
-      userContacts:
-        type: array
-        items:
-          $ref: '#/definitions/Domain.UserContact'
-      userTasks:
-        type: array
-        items:
-          $ref: '#/definitions/Domain.UserTask'
-      userOperations:
-        type: array
-        items:
-          $ref: '#/definitions/Domain.UserOperation'
-  Domain.UserContact:
+      email:
+        type: string
+      password:
+        type: string
+  Microsoft.AspNetCore.Mvc.ProblemDetails:
     type: object
     properties:
-      id:
-        format: uuid
+      type:
         type: string
-      user:
-        $ref: '#/definitions/Domain.User'
-      userId:
-        format: uuid
+      title:
         type: string
-      contact:
-        $ref: '#/definitions/Domain.Contact'
-      contactId:
-        format: uuid
+      status:
+        format: int32
+        type: integer
+      detail:
         type: string
-      dateAdded:
-        format: date-time
+      instance:
         type: string
-  Domain.UserOperation:
-    type: object
-    properties:
-      user:
-        $ref: '#/definitions/Domain.User'
-      userId:
-        format: uuid
-        type: string
-      operation:
-        $ref: '#/definitions/Domain.Operation'
-      operationId:
-        format: uuid
-        type: string
-      dateAdded:
-        format: date-time
-        type: string
-  Domain.UserTask:
-    type: object
-    properties:
-      createdBy:
-        $ref: '#/definitions/Domain.User'
-      createdById:
-        type: string
-      sharedWith:
-        $ref: '#/definitions/Domain.User'
-      sharedWithId:
-        type: string
-      delegatedTask:
-        $ref: '#/definitions/Domain.DelegatedTask'
-      delegatedTaskId:
-        format: uuid
-        type: string
-      dateAdded:
-        format: date-time
-        type: string
-  MediatR.Unit:
-    type: object
+    additionalProperties: {}

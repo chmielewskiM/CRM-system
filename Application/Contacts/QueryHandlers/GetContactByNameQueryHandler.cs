@@ -18,11 +18,11 @@ namespace Application.QueryHandlers
             _context = context;
         }
 
-        public Task<Contact> Handle(GetContactByNameQuery request, CancellationToken cancellationToken)
+        public async Task<Contact> Handle(GetContactByNameQuery request, CancellationToken cancellationToken)
         {
             var name = request.Name.Replace("%20", " ");
 
-            return _context.Contacts.SingleOrDefaultAsync(u => u.Name == name, cancellationToken);
+            return await _context.Contacts.SingleOrDefaultAsync(u => u.Name == name, cancellationToken);
         }
     }
 }

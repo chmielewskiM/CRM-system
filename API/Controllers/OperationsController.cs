@@ -6,6 +6,7 @@ using Application.Operations;
 using Application.Operations.ViewModels;
 using Application.Interfaces;
 using Application.Operations.Queries;
+using Microsoft.AspNetCore.Http;
 
 namespace API.Controllers
 {
@@ -25,6 +26,8 @@ namespace API.Controllers
         ///</summary>
         ///<response code="200">Returns all operations.</response>
         ///<response code="500">Server error.</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CompleteStatsViewModel))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet]
         public async Task<ActionResult<CompleteStatsViewModel>> ListOperations(CancellationToken ct)
         {
@@ -39,6 +42,8 @@ namespace API.Controllers
         ///</summary>
         ///<response code="200">Returns operations count.</response>
         ///<response code="500">Server error.</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet("count")]
         public async Task<ActionResult<int>> CountOperations()
         {
