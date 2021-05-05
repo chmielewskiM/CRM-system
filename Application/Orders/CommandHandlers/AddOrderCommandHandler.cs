@@ -47,7 +47,7 @@ namespace Application.Orders
                 DateOrderOpened = DateTime.Now,
                 Notes = request.Notes,
             };
-
+            
             _context.Orders.Add(order);
 
             //add the order to the client

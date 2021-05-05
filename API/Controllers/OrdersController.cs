@@ -11,6 +11,7 @@ using Application.Orders.Commands;
 using Application.Contacts.Queries;
 using Application.Users.Queries;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Http;
 
 namespace API.Controllers
 {
@@ -24,13 +25,16 @@ namespace API.Controllers
         ///</summary>
         ///<response code="200">Returns list with orders.</response>
         ///<response code="500">Server error.</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CompleteOrderDataViewModel))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet]
         public async Task<ActionResult<CompleteOrderDataViewModel>> ListOrders(string allOrders, string saleOrders, string closedOrders,
-                                                                        string orderBy, string filterInput, int? pageNumber, int? pageSize)
+                                                                string orderBy, string filterInput, int? pageNumber, int? pageSize)
         {
             var listOrdersQuery = new ListOrdersQuery(allOrders, saleOrders, closedOrders, orderBy, filterInput, pageNumber, pageSize);
             var data = await Mediator.Send(listOrdersQuery);
-
+            // foreach(var s in data.Item1)
+            // Console.WriteLine(s.Client.Name);
             return new CompleteOrderDataViewModel(Mapper.Map<List<Order>, List<OrderViewModel>>(data.Item1), data.Item2);
         }
 
@@ -38,10 +42,14 @@ namespace API.Controllers
         /// Adds an order.
         ///</summary>
         ///<response code="204">Order added successfully.</response>
+        ///<response code="400">Failed validation (fluent validation).</response>
         ///<response code="404">Client not found.</response>
         ///<response code="500">Problem saving changes.</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost]
-        public async Task<ActionResult> AddOrder([CustomizeValidator(Interceptor=typeof(API.Middleware.ValidatorInterceptor))]OrderViewModel order)
+        public async Task<ActionResult> AddOrder([CustomizeValidator(Interceptor = typeof(API.Middleware.ValidatorInterceptor))] OrderViewModel order)
         {
             var loggedUserQuery = new LoggedUserQuery();
             User user = await Mediator.Send(loggedUserQuery);
@@ -62,10 +70,15 @@ namespace API.Controllers
         /// Edits an order.
         ///</summary>
         ///<response code="204">Order updated successfully.</response>
+        ///<response code="400">Failed validation (fluent validation).</response>
         ///<response code="404">Order not found.</response>
         ///<response code="500">Problem saving changes.</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPut("{id}")]
-        public async Task<ActionResult> EditOrder([CustomizeValidator(Interceptor=typeof(API.Middleware.ValidatorInterceptor))]OrderViewModel order)
+        public async Task<ActionResult> EditOrder([CustomizeValidator(Interceptor = typeof(API.Middleware.ValidatorInterceptor))] OrderViewModel order)
         {
             var getOrderQuery = new GetOrderQuery(order.Id);
             var orderQuery = await Mediator.Send(getOrderQuery);
@@ -85,8 +98,11 @@ namespace API.Controllers
         ///<response code="204">Order closed successfully.</response>
         ///<response code="404">Order not found.</response>
         ///<response code="500">Problem saving changes.</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPut("close/{id}")]
-        public async Task<ActionResult<Unit>> CloseOrder(Guid id)
+        public async Task<ActionResult> CloseOrder(Guid id)
         {
             var loggedUserQuery = new LoggedUserQuery();
             User user = await Mediator.Send(loggedUserQuery);
@@ -111,6 +127,10 @@ namespace API.Controllers
         ///<response code="404">Order not found.</response>
         ///<response code="404">Client assigned to order not found.</response>
         ///<response code="500">Server error.</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteOrder(Guid id)
         {

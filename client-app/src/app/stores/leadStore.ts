@@ -285,7 +285,7 @@ export default class LeadStore {
       this.setLeadList(lead.contact.status, this.sortBy);
       this.submittingData(false);
     } catch (error) {
-      toast.error(error.data.errors.message);
+      toast.error(this.rootStore.commonStore.handleErrorMessage(error));
       console.log(error);
       this.submittingData(false);
     }
@@ -302,7 +302,7 @@ export default class LeadStore {
     } catch (error) {
       this.submittingData(false);
       console.log(error);
-      toast.error(error.data.errors);
+      toast.error(this.rootStore.commonStore.handleErrorMessage(error));
     }
   };
 
@@ -318,9 +318,7 @@ export default class LeadStore {
         this.submittingData(false);
       } catch (error) {
         this.submittingData(false);
-        if (error.status == 304) {
-          toast.info('There were no changes.');
-        } else toast.error(error.data.errors.message);
+        toast.error(this.rootStore.commonStore.handleErrorMessage(error));
         console.log(error);
       }
     } else {
@@ -346,7 +344,7 @@ export default class LeadStore {
     } catch (error) {
       this.submittingData(false);
       console.log(error);
-      toast.error(error.data.errors);
+      toast.error(this.rootStore.commonStore.handleErrorMessage(error));
     }
   };
   //----------------------------------------

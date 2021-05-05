@@ -5,7 +5,16 @@
 The main purpose of this project was to build a tool which will boost the workflow inside a company by enhancing sale management
 and providing broader insight into workers' actions. In order to achieve these goals, the app serves various features which are described in the following sections.
 
+## API specification        
+### <p align="center"><a href="https://petstore.swagger.io/?url=https://rawcdn.githack.com/chmielewskiM/CRM-system/28f82782bf23a08f32d903c4bdd4f76311979fa7/API-spec.yaml" align="ctr">***Link to swagger petstore*** </a></p>
+<p align="center"> <a href="https://petstore.swagger.io/?url=https://rawcdn.githack.com/chmielewskiM/CRM-system/28f82782bf23a08f32d903c4bdd4f76311979fa7/API-spec.yaml" align="ctr"> 
+ <img width="80%" valign="bottom" src="https://s3.gifyu.com/images/swagger2fcf591146bc942c5.png"></a></p>
+ 
 
+                          
+</a></p>
+ 
+ 
 ## Tech/framework used
 |<div align="center"><img height="50" width="50" valign="middle" src="https://svgshare.com/i/W5Y.svg"></div>|<div align="center"><img height="50" width="50" valign="middle" src="https://svgshare.com/i/W5j.svg"></div> |
 |-------------|-------------|
@@ -26,6 +35,9 @@ and providing broader insight into workers' actions. In order to achieve these g
 * MediatR
 * JWT
 * Swagger
+* xUnit
+* Moq
+* Fluent Assertions
 * create-react-app
 * react-router-dom
 * mobx-react-lite
@@ -40,29 +52,28 @@ and providing broader insight into workers' actions. In order to achieve these g
 
 ## Installation
 
-#### Server (.NET Core)
+### Server (.NET Core)
 
-##### *Requirements:*
+*Requirements:*
 
-###### *.NET Core SDK*
+* *.NET Core SDK*
 
 ##### Execute `dotnet restore` in root directory.
 ##### Then build the project with `dotnet build`.
 
 
 
-#### Client (React)
+### Client (React)
 
-##### *Requirements:*
+*Requirements:*
 
-###### *Node*
-###### *npm*
+* *Node*
+* *npm*
 
 ##### Go to client-app folder and execute `npm install`  
 
-<br>
 
-#### -Development env-
+### -Development env-
 
 ##### Change "ASPNETCORE_ENVIRONMENT" to "Development" in `launchSettings.json`.
 
@@ -70,15 +81,11 @@ and providing broader insight into workers' actions. In order to achieve these g
 
 ##### In API folder exectute `dotnet watch run`.
 
-#### -Production env-
+### -Production env-
 
 ##### In client-app folder execute `npm run build` (it will create build and move it to the API folder).
 
 ##### Go to the API folder and execute `dotnet watch run`.
-
- ## API spec
-
-<img src="https://s4.gifyu.com/images/swagger.png" width="532" height="300" align="center">
 
 ## Screenshots
 

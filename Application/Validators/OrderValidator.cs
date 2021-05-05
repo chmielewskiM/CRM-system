@@ -12,7 +12,7 @@ namespace Application.Validators
                                     .GreaterThanOrEqualTo(5).WithMessage("Amount must be greather than 5 pieces.");
             RuleFor(p => p.Price).NotEmpty().WithMessage("Price to display must not be empty.")
                                     .GreaterThanOrEqualTo(20).WithMessage("Minimum price is 20$.");
-            // RuleFor(p => p.Client).NotEmpty().WithMessage("Select client.");
+            RuleFor(p => p.Product).NotEmpty().WithMessage("Select Product.");
         }
     }
 }
