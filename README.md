@@ -6,8 +6,8 @@ The main purpose of this project was to build a tool which will boost the workfl
 and providing broader insight into workers' actions. In order to achieve these goals, the app serves various features which are described in the following sections.
 
 ## API specification        
-### <p align="center"><a href="https://petstore.swagger.io/?url=https://rawcdn.githack.com/chmielewskiM/CRM-system/28f82782bf23a08f32d903c4bdd4f76311979fa7/API-spec.yaml" align="ctr">***Link to swagger petstore*** </a></p>
-<p align="center"> <a href="https://petstore.swagger.io/?url=https://rawcdn.githack.com/chmielewskiM/CRM-system/28f82782bf23a08f32d903c4bdd4f76311979fa7/API-spec.yaml" align="ctr"> 
+### <p align="center"><a href="https://petstore.swagger.io/?url=https://raw.githack.com/chmielewskiM/CRM-system/master/API-spec.yaml" align="ctr">***Link to swagger petstore*** </a></p>
+<p align="center"> <a href="https://petstore.swagger.io/?url=https://raw.githack.com/chmielewskiM/CRM-system/master/API-spec.yaml" align="ctr"> 
  <img width="80%" valign="bottom" src="https://s3.gifyu.com/images/swagger2fcf591146bc942c5.png"></a></p>
  
  
