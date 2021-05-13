@@ -138,8 +138,6 @@ export default class OrderStore {
   ////
   //*Actions*
   //
-  // Loading and submitting actions. According to MobX documentation it's
-  // observables should be modified only by actions
   loadingData = (value: boolean) => {
     runInAction(() => {
       this.loadingInitial = value;
@@ -343,10 +341,12 @@ export default class OrderStore {
       const data = await agent.Orders.listOrders(this.axiosParams);
       const [...orders] = data.orders;
       const count = data.ordersCount;
+
       runInAction(() => {
         this.openOrderRegistry.clear();
         orders.forEach((order) => {
           this.openOrderRegistry.set(order.id, order);
+          console.log(order.clientName)
         });
       });
       this.loadingData(false);
@@ -384,6 +384,8 @@ export default class OrderStore {
     try {
       order.type = this.sale;
       order.clientId = this.rootStore.contactStore.selectedContact?.id!;
+      order.clientName = this.rootStore.contactStore.selectedContact?.name;
+
       await agent.Orders.addOrder(order);
       runInAction(() => {
         this.openOrderRegistry.set(order.id, order);

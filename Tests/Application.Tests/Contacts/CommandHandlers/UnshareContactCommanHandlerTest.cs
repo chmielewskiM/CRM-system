@@ -2,12 +2,12 @@
 using System.Linq;
 using Xunit;
 using Moq;
-using Application.Tests;
 using FluentAssertions;
 using Application.Contacts.Commands;
 using MediatR;
+using Application.Contacts.CommandHandlers;
 
-namespace Application.Contacts.CommandHandlers
+namespace Application.Tests.Contacts.CommandHandlers
 {
     public class UnshareContactCommandHandlerTest : BaseTest
     {
@@ -24,9 +24,7 @@ namespace Application.Contacts.CommandHandlers
 
             //Act
             var unshareContactCommand = new UnshareContactCommand(contact.Id, user.Id);
-
             var handler = new UnshareContactCommandHandler(Context);
-
             var result = await handler.Handle(unshareContactCommand, new CancellationToken());
             
             //Assert

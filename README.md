@@ -5,6 +5,10 @@
 The main purpose of this project was to build a tool which will boost the workflow inside a company by enhancing sale management
 and providing broader insight into workers' actions. In order to achieve these goals, the app serves various features which are described in the following sections.
 
+## API specification        
+### <p align="center"><a href="https://petstore.swagger.io/?url=https://raw.githack.com/chmielewskiM/CRM-system/master/API-spec.yaml" align="ctr">***Link to swagger petstore*** </a></p>
+<p align="center"> <a href="https://petstore.swagger.io/?url=https://raw.githack.com/chmielewskiM/CRM-system/master/API-spec.yaml" align="ctr"> 
+ <img width="80%" valign="bottom" src="https://s3.gifyu.com/images/swagger2fcf591146bc942c5.png"></a></p>
 
 ## Tech/framework used
 |<div align="center"><img height="50" width="50" valign="middle" src="https://svgshare.com/i/W5Y.svg"></div>|<div align="center"><img height="50" width="50" valign="middle" src="https://svgshare.com/i/W5j.svg"></div> |
@@ -40,27 +44,25 @@ and providing broader insight into workers' actions. In order to achieve these g
 
 ## Installation
 
-#### Server (.NET Core)
+### Server (.NET Core)
 
-##### *Requirements:*
+###### *Requirements:*
 
 ###### *.NET Core SDK*
 
-##### Execute `dotnet restore` in root directory.
-##### Then build the project with `dotnet build`.
+#### Execute `dotnet restore` in root directory.
+#### Then build the project with `dotnet build`.
 
 
 
-#### Client (React)
+### Client (React)
 
-##### *Requirements:*
+###### *Requirements:*
 
 ###### *Node*
 ###### *npm*
 
-##### Go to client-app folder and execute `npm install`  
-
-<br>
+#### Go to client-app folder and execute `npm install`  
 
 #### -Development env-
 
@@ -76,9 +78,14 @@ and providing broader insight into workers' actions. In order to achieve these g
 
 ##### Go to the API folder and execute `dotnet watch run`.
 
- ## API spec
+<br>
 
-<img src="https://s4.gifyu.com/images/swagger.png" width="532" height="300" align="center">
+``` 
+Seeded users
+
+Login: Admin | Manager | Manager-2 | Employee | Employee-2
+Password: Qw123!
+```
 
 ## Screenshots
 
@@ -102,7 +109,7 @@ and providing broader insight into workers' actions. In order to achieve these g
    * Server-side pagination
    * Three levels of access: top(admin), mid(manager), low(employee) 
 ```
-   ### Brief description of sections
+   ### Brief description
 
   #### Dashboard
   
@@ -153,10 +160,8 @@ Basically admin panel is a form. Admin is able to add, edit or delete users. ASP
 Chosen platform to set up CI/CD is ***Azure***.
 
 ### Pipeline
-<div align="center"><img valign="middle" src="https://s4.gifyu.com/images/pipe.png"></div>
+<div align="center"><img valign="middle" src="https://s3.gifyu.com/images/azure.png"></div>
 <br>
 <div align="center"><img valign="middle" src="https://s4.gifyu.com/images/stage.png"></div>
-
-***SQL script is included in artifact and passed that way to the release. There is no way to create the output in release. Thank to this every time the app runs, migration is skipped, it migrates only during release.***
 
 <br>

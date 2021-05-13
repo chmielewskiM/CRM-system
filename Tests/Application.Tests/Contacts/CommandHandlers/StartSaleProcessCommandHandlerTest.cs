@@ -39,17 +39,13 @@ namespace Application.Tests.Contacts.CommandHandlers
             };
 
             UserAccessor.Setup(x => x.GetLoggedUser()).ReturnsAsync(user).Verifiable();
-
             OperationsRepository.Setup(x => x.Add(It.IsAny<Operation>(), user)).ReturnsAsync(true).Verifiable();
-
             Mediator.Setup(x => x.Send(It.IsAny<StartSaleProcessCommand>(), new CancellationToken()))
                 .ReturnsAsync(Unit.Value);
 
             //Act
             var addContactCommand = new StartSaleProcessCommand(contact);
-
             var handler = new StartSaleProcessCommandHandler(Context, UserAccessor.Object, OperationsRepository.Object);
-
             var result = await handler.Handle(addContactCommand, new CancellationToken());
 
             //Assert

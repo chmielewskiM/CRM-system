@@ -83,7 +83,7 @@ namespace API
                     .Add(new AuthorizeFilter(policy));
             }).AddFluentValidation(cfg =>
             {
-                cfg.RegisterValidatorsFromAssemblyContaining<RegisterUserValidator>();
+                cfg.RegisterValidatorsFromAssemblyContaining<UserValidator>();
                 cfg.LocalizationEnabled = false;
             });
 
