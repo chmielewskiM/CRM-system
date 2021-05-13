@@ -2,12 +2,12 @@
 using System.Linq;
 using Xunit;
 using Moq;
-using Application.Tests;
 using FluentAssertions;
 using Application.Contacts.Commands;
 using MediatR;
+using Application.Contacts.CommandHandlers;
 
-namespace Application.Contacts.CommandHandlers
+namespace Application.Tests.Contacts.CommandHandlers
 {
     public class DeleteContactCommandHandlerTest : BaseTest
     {
@@ -16,15 +16,12 @@ namespace Application.Contacts.CommandHandlers
         {
             //Arrange
             var contact = Context.Contacts.First();
-
             Mediator.Setup(x => x.Send(It.IsAny<DeleteContactCommand>(), new CancellationToken()))
                 .ReturnsAsync(Unit.Value);
 
             //Act
             var deleteContactCommand = new DeleteContactCommand(contact);
-
             var handler = new DeleteContactCommandHandler(Context);
-
             var result = await handler.Handle(deleteContactCommand, new CancellationToken());
 
             //Assert

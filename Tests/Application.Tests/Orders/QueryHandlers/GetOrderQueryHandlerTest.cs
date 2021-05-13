@@ -4,12 +4,11 @@ using System.Linq;
 using System;
 using Xunit;
 using Moq;
-using Application.Tests;
 using FluentAssertions;
 using Application.Orders.Queries;
 using Application.Orders;
 
-namespace Application.Contacts.QueryHandlers
+namespace Application.Tests.Orders.QueryHandlers
 {
     public class GetOrderQueryHandlerTest : BaseTest
     {
@@ -18,7 +17,6 @@ namespace Application.Contacts.QueryHandlers
         {
             //Arrange
             Guid orderId = Context.Orders.First().Id;
-
             var queryGetOrder = new GetOrderQuery(orderId);
 
             Mediator.Setup(x => x.Send(It.IsAny<GetOrderQuery>(), new CancellationToken()))
@@ -26,7 +24,6 @@ namespace Application.Contacts.QueryHandlers
 
             //Act
             var handler = new GetOrderQueryHandler(Context);
-
             var result = await handler.Handle(queryGetOrder, new CancellationToken());
 
             //Assert

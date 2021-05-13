@@ -2,12 +2,12 @@
 using System.Linq;
 using Xunit;
 using Moq;
-using Application.Tests;
 using FluentAssertions;
 using Application.Orders.Commands;
 using MediatR;
+using Application.Orders;
 
-namespace Application.Orders.CommandHandlers
+namespace Application.Tests.Orders.CommandHandlers
 {
     public class EditOrderCommandHandlerTest : BaseTest
     {
@@ -22,9 +22,7 @@ namespace Application.Orders.CommandHandlers
 
             //Act
             var editOrderCommand = new EditOrderCommand(order, "test product", 20, 50.5, "");
-
             var handler = new EditOrderCommandHandler(Context);
-
             var result = await handler.Handle(editOrderCommand, new CancellationToken());
 
             //Assert

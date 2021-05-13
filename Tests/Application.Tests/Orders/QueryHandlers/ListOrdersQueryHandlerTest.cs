@@ -2,13 +2,12 @@
 using Domain;
 using Xunit;
 using Moq;
-using Application.Tests;
 using FluentAssertions;
 using Application.Orders.Queries;
 using Application.Orders.QueryHandlers;
 using System.Collections.Generic;
 
-namespace Application.Contacts.QueryHandlers
+namespace Application.Tests.Orders.QueryHandlers
 {
     public class ListOrdersQueryHandlerTest : BaseTest
     {
@@ -23,7 +22,6 @@ namespace Application.Contacts.QueryHandlers
 
             //Act
             var handler = new ListOrdersQueryHandler(Context);
-
             var result = await handler.Handle(queryOrdersList, new CancellationToken());
 
             //Assert

@@ -21,7 +21,6 @@ namespace Application.Contacts
         public int SuccessfulDeals { get; set; }
         public string Source { get; set; }
         public Boolean Premium { get; set; }
-        
         [JsonProperty("users")]
         public ICollection<UserAccessViewModel> UserContacts { get; set; }
         [JsonProperty("orders")]

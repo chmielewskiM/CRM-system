@@ -138,8 +138,6 @@ export default class OrderStore {
   ////
   //*Actions*
   //
-  // Loading and submitting actions. According to MobX documentation it's
-  // observables should be modified only by actions
   loadingData = (value: boolean) => {
     runInAction(() => {
       this.loadingInitial = value;

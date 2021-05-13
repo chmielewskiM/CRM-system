@@ -17,7 +17,6 @@ namespace Application.Tests.Contacts.QueryHandlers
         {
             //Arrange
             User user = Context.Users.First();
-
             var queryContactsList = new ListContactsQuery(user, false, false, "name_desc", 1, 5, "", false);
 
             Mediator.Setup(x => x.Send(It.IsAny<ListContactsQuery>(), new CancellationToken()))
@@ -25,7 +24,6 @@ namespace Application.Tests.Contacts.QueryHandlers
 
             //Act
             var handler = new ListContactsQueryHandler(Context, null);
-
             var result = await handler.Handle(queryContactsList, new CancellationToken());
 
             //Assert

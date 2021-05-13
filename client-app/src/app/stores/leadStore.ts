@@ -164,8 +164,6 @@ export default class LeadStore {
   ////
   // *Actions*
   //
-  // Loading and submitting actions. According to MobX documentation it's recommended to
-  // modify observables only by actions
   loadingData = (value: boolean) => {
     runInAction(() => {
       this.loadingInitial = value;

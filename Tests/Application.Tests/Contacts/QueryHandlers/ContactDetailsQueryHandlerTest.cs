@@ -4,11 +4,11 @@ using System.Linq;
 using System;
 using Xunit;
 using Moq;
-using Application.Tests;
 using FluentAssertions;
 using Application.Contacts.Queries;
+using Application.Contacts.QueryHandlers;
 
-namespace Application.Contacts.QueryHandlers
+namespace Application.Tests.Contacts.QueryHandlers
 {
     public class ContactDetailsQueryHandlerTest : BaseTest
     {
@@ -17,7 +17,6 @@ namespace Application.Contacts.QueryHandlers
         {
             //Arrange
             Guid contactId = Context.Contacts.First().Id;
-
             var queryContactDetails = new ContactDetailsQuery(contactId);
 
             Mediator.Setup(x => x.Send(It.IsAny<ContactDetailsQuery>(), new CancellationToken()))
@@ -25,7 +24,6 @@ namespace Application.Contacts.QueryHandlers
 
             //Act
             var handler = new ContactDetailsQueryHandler(Context);
-
             var result = await handler.Handle(queryContactDetails, new CancellationToken());
 
             //Assert
