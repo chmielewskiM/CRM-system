@@ -87,6 +87,7 @@ Login: Admin | Manager | Manager-2 | Employee | Employee-2
 Password: Qw123!
 ```
 
+
 ## Screenshots
 
 ***<p align="center">Click on the screenshot to see Gif.</p>***
