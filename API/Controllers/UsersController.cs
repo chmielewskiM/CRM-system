@@ -10,6 +10,7 @@ using Application.Users.ViewModels;
 using Application.Users;
 using Application.Users.Queries;
 using Application.Users.Commands;
+using Microsoft.AspNetCore.Http;
 
 namespace API.Controllers
 {
@@ -23,6 +24,8 @@ namespace API.Controllers
         ///</summary>
         ///<response code="200">Returns list with users.</response>
         ///<response code="500">Server error.</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<UserViewModel>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet]
         public async Task<ActionResult<List<UserViewModel>>> ListUsers(CancellationToken ct)
         {
@@ -37,6 +40,8 @@ namespace API.Controllers
         ///</summary>
         ///<response code="200">Returns logged user.</response>
         ///<response code="500">Server error.</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserViewModel))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet("logged")]
         public async Task<ActionResult<UserViewModel>> LoggedUser()
         {
@@ -55,6 +60,9 @@ namespace API.Controllers
         ///<response code="200">Returns an user.</response>
         ///<response code="404">User not found.</response>
         ///<response code="500">Server error.</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserViewModel))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet("user/{username}")]
         public async Task<ActionResult<UserViewModel>> GetUser(String username)
         {
@@ -73,6 +81,9 @@ namespace API.Controllers
         ///<response code="200">User logged in.</response>
         ///<response code="404">User not found.</response>
         ///<response code="500">Server error.</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserViewModel))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<UserViewModel>> Login(LoggingUserViewModel user)
@@ -98,10 +109,13 @@ namespace API.Controllers
         ///<response code="204">Registers an user.</response>
         ///<response code="404">Username/email already exists.</response>
         ///<response code="500">Problem creating user.</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult> RegisterUser(UserViewModel user)
-        {   
+        {
             Console.WriteLine(ModelState.Values);
             var getUserQuery = new GetUserQuery(user.Username);
             var userExists = await Mediator.Send(getUserQuery) != null;
@@ -121,6 +135,9 @@ namespace API.Controllers
         ///<response code="204">User updated.</response>
         ///<response code="404">User not found.</response>
         ///<response code="500">Problem saving changes.</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPut("update/{id}")]
         public async Task<ActionResult> EditUser(UserViewModel user)
         {
@@ -136,6 +153,9 @@ namespace API.Controllers
         ///<response code="204">User deleted successfully.</response>
         ///<response code="404">User not found.</response>
         ///<response code="500">Failed to delete user.</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpDelete("{username}")]
         public async Task<ActionResult> DeleteUser(string username)
         {

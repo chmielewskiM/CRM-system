@@ -10,6 +10,7 @@ using Application.Leads.Commands;
 using Application.Contacts.Queries;
 using Application.Users.Queries;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Http;
 
 namespace API.Controllers
 {
@@ -23,6 +24,8 @@ namespace API.Controllers
         ///</summary>
         ///<response code="200">Returns list with leads.</response>
         ///<response code="500">Server error.</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<LeadViewModel>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet]
         public async Task<ActionResult<List<LeadViewModel>>> ListLeads(bool allLeads, string status, string sortBy, CancellationToken ct)
         {
@@ -41,6 +44,9 @@ namespace API.Controllers
         ///<response code="200">Returns details about lead.</response>
         ///<response code="404">Lead not found.</response>
         ///<response code="500">Server error.</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet("{id}")]
         public async Task<ActionResult<LeadViewModel>> LeadDetails(Guid id)
         {
@@ -60,8 +66,13 @@ namespace API.Controllers
         /// Adds a lead.
         ///</summary>
         ///<response code="204">Lead added to collection successfully.</response>
+        ///<response code="400">Failed validation (fluent validation).</response>
         ///<response code="400">This name is already taken.</response>
         ///<response code="500">Problem saving changes.</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost]
         public async Task<ActionResult> AddLead([CustomizeValidator(Interceptor = typeof(API.Middleware.ValidatorInterceptor))] LeadViewModel lead)
         {
@@ -88,6 +99,10 @@ namespace API.Controllers
         ///<response code="400">Can not downgrade lead whose order was finalized.</response>
         ///<response code="404">Lead not found.</response>
         ///<response code="500">Problem saving changes.</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPut("{id}={upgrade}")]
         public async Task<ActionResult> ChangeStatus(Guid id, bool upgrade)
         {
@@ -119,6 +134,10 @@ namespace API.Controllers
         ///<response code="400">Delete or close the order before cancelling this process.</response>
         ///<response code="404">Lead not found.</response>
         ///<response code="500">Problem saving changes.</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpDelete("abandon")]
         public async Task<ActionResult> AbandonLead(Guid id, bool saveLead, bool keepRecords)
         {

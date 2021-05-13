@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using MediatR;
 using System.Threading;
 using Application.Contacts;
 using Domain;
 using Application.Contacts.Queries;
 using Application.Contacts.Commands;
-using Application.Validators;
 using System.Collections.Generic;
 using Application.Users.Queries;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
@@ -24,6 +24,8 @@ namespace API.Controllers
         ///</summary>
         ///<response code="200">Returns the list.</response>
         ///<response code="500">Server error.</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CompleteContactsDataViewModel))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet]
         public async Task<ActionResult<CompleteContactsDataViewModel>> ListContacts(bool inProcess, bool premium, string orderBy, int? activePage, int? pageSize, string filterInput, bool uncontracted, CancellationToken ct)
         {
@@ -42,6 +44,9 @@ namespace API.Controllers
         ///<response code="200">Returns the contact.</response>
         ///<response code="404">Contact not found.</response>
         ///<response code="500">Server error.</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ContactViewModel))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet("name/{name}")]
         public async Task<ActionResult<ContactViewModel>> GetContact(String name)
         {
@@ -60,6 +65,10 @@ namespace API.Controllers
         ///<response code="200">Returns details about the contact.</response>
         ///<response code="404">Contact not found.</response>
         ///<response code="500">Server error.</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ContactViewModel))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<ContactViewModel>> ContactDetails(Guid id)
         {
@@ -78,6 +87,9 @@ namespace API.Controllers
         ///<response code="204">Contact added successfully.</response>
         ///<response code="400">This name is already taken.</response>
         ///<response code="500">Problem saving changes.</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost]
         public async Task<ActionResult> AddContact([CustomizeValidator(Interceptor = typeof(API.Middleware.ValidatorInterceptor))] ContactViewModel contact)
         {
@@ -94,11 +106,14 @@ namespace API.Controllers
         }
 
         ///<summary>
-        /// Edits a contact.
+        /// Starts sale process.
         ///</summary>
-        ///<response code="204">Contact edited successfully.</response>
+        ///<response code="204">Starts sale process.</response>
         ///<response code="404">Contact not found.</response>
         ///<response code="500">Problem saving changes.</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost("{id}")]
         public async Task<ActionResult> StartSaleProcess(Guid id)
         {
@@ -120,6 +135,9 @@ namespace API.Controllers
         ///<response code="204">Status changed successfully.</response>
         ///<response code="404">Contact not found.</response>
         ///<response code="500">Problem saving changes.</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost("upgrade/{id}")]
         public async Task<ActionResult> UpgradeToPremium(Guid id)
         {
@@ -141,6 +159,9 @@ namespace API.Controllers
         ///<response code="204">Contact edited successfully.</response>
         ///<response code="404">Contact not found.</response>
         ///<response code="500">Problem saving changes.</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPut("{id}")]
         public async Task<ActionResult> EditContact([CustomizeValidator(Interceptor = typeof(API.Middleware.ValidatorInterceptor))] ContactViewModel contact)
         {
@@ -162,6 +183,9 @@ namespace API.Controllers
         ///<response code="204">Contact deleted successfully.</response>
         ///<response code="404">Contact not found.</response>
         ///<response code="500">Problem saving changes.</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteContact(Guid id)
         {
@@ -179,12 +203,17 @@ namespace API.Controllers
 
         ///<summary>
         /// When user 'deletes' the contact, in fact he unshares it. The relation between user and
-        /// contact is erased, but the contact is kept in the DB.
+        /// contact is erased, but the contact is kept in the DB and is still visible for users
+        /// who have top level access (admins).
         ///</summary>
         ///<response code="204">Contact removed successfully.</response>
+        ///<response code="400">Some active order is assigned to the contact.</response>
         ///<response code="404">Contact not found.</response>
-        ///<response code="424">Some active order is assigned to the contact.</response>
         ///<response code="500">Problem saving changes.</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpDelete("remove/{id}")]
         public async Task<ActionResult> UnshareContact(Guid id)
         {

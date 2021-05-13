@@ -88,7 +88,7 @@ namespace API
             });
 
             services.AddTransient<IValidatorInterceptor, ValidatorInterceptor>();
-  
+
             services
                 .AddControllers()
                 .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
@@ -100,19 +100,14 @@ namespace API
                     cfg.CustomSchemaIds(x => x.FullName);
                     // cfg.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                     // {
-                    //     Description = "JWT Authorization header using the bearer scheme",
                     //     Name = "Authorization",
+                    //     Type = SecuritySchemeType.ApiKey,
+                    //     Scheme = "Bearer",
+                    //     BearerFormat = "JWT",
                     //     In = ParameterLocation.Header,
-                    //     Type = SecuritySchemeType.ApiKey
+                    //     Description = "JWT Authorization header using the Bearer scheme."
                     // });
-                    // cfg.AddSecurityRequirement(new OpenApiSecurityRequirement
-                    // {
-                    //     {new OpenApiSecurityScheme{Reference = new OpenApiReference
-                    //     {
-                    //         Id = "Bearer",
-                    //         Type = ReferenceType.SecurityScheme
-                    //     }}, new List<string>()}
-                    // });
+                    // cfg.OperationFilter<AuthOperationAttribute>();
 
                     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
@@ -174,7 +169,7 @@ namespace API
             });
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v2/swagger.json", "CRM API");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "CRM API");
             });
             app.UseAuthentication();
             app.UseCors("CorsPolicy");

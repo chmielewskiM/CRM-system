@@ -10,6 +10,8 @@ and providing broader insight into workers' actions. In order to achieve these g
 <p align="center"> <a href="https://petstore.swagger.io/?url=https://raw.githack.com/chmielewskiM/CRM-system/master/API-spec.yaml" align="ctr"> 
  <img width="80%" valign="bottom" src="https://s3.gifyu.com/images/swagger2fcf591146bc942c5.png"></a></p>
 
+<br>
+
 ## Tech/framework used
 |<div align="center"><img height="50" width="50" valign="middle" src="https://svgshare.com/i/W5Y.svg"></div>|<div align="center"><img height="50" width="50" valign="middle" src="https://svgshare.com/i/W5j.svg"></div> |
 |-------------|-------------|
@@ -30,6 +32,9 @@ and providing broader insight into workers' actions. In order to achieve these g
 * MediatR
 * JWT
 * Swagger
+* xUnit
+* Moq
+* Fluent Assertions
 * create-react-app
 * react-router-dom
 * mobx-react-lite
@@ -53,8 +58,6 @@ and providing broader insight into workers' actions. In order to achieve these g
 #### Execute `dotnet restore` in root directory.
 #### Then build the project with `dotnet build`.
 
-
-
 ### Client (React)
 
 ###### *Requirements:*
@@ -64,7 +67,7 @@ and providing broader insight into workers' actions. In order to achieve these g
 
 #### Go to client-app folder and execute `npm install`  
 
-#### -Development env-
+### -Development env-
 
 ##### Change "ASPNETCORE_ENVIRONMENT" to "Development" in `launchSettings.json`.
 
@@ -72,13 +75,11 @@ and providing broader insight into workers' actions. In order to achieve these g
 
 ##### In API folder exectute `dotnet watch run`.
 
-#### -Production env-
+### -Production env-
 
 ##### In client-app folder execute `npm run build` (it will create build and move it to the API folder).
 
 ##### Go to the API folder and execute `dotnet watch run`.
-
-<br>
 
 ``` 
 Seeded users
@@ -86,7 +87,6 @@ Seeded users
 Login: Admin | Manager | Manager-2 | Employee | Employee-2
 Password: Qw123!
 ```
-
 
 ## Screenshots
 

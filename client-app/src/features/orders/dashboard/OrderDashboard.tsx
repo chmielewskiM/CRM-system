@@ -121,7 +121,7 @@ export const OrderDashboard: React.FC = () => {
           <GridColumn mobile={10} computer={7} className="details-col">
             {orderStore.selectedOrder && <OrderDetails />}
           </GridColumn>
-          <Grid.Column computer={6} mobile={10}>
+          <Grid.Column computer={6} mobile={10} className="history-col">
             <OrderHistory />
             <HistoryPagination
               itemsCount={orderStore.ordersCount}

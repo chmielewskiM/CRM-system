@@ -20,7 +20,7 @@ namespace Application.Validators
             var options = ruleBuilder
             .NotEmpty().WithMessage("Name can not be empty.")
             .MinimumLength(4).WithMessage("Name must be at least 4 characters.")
-            .Matches("[^0-9]").WithMessage("Name can not contain numbers.");
+            .Matches("[^0-9]").WithMessage("Name must contain letters.");
 
             return options;
         }

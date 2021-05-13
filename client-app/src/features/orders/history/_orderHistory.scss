@@ -1,131 +1,134 @@
 #root {
     & .ui.container.wrapper .ui.centered.main-grid.grid {
-        & .order-history {
-            @include reset-div;
-            @include component-border;
-            min-height: 25rem !important;
-            max-height: min-content;
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
-            padding: 1rem;
-            border: thin solid #fff;
-            border-top: none;
-            overflow: scroll;
-
-            &::before {
-                background-color: #fff;
-            }
-
-            & * {
-                box-shadow: none;
-                border: 0;
-
-            }
-
-            &__btn-group {
-                position: relative;
-                border: 0;
-                display: block;
-                z-index: 2;
-
-                & .button.small.compact {
-                    font-size: 1.5rem;
-                    font-weight: $bold;
-                    color: $color-primary-dark !important;
-                    border: 0;
-                    cursor: pointer;
-
-                    &:hover {
-                        border-radius: 0;
-                        background-color: transparent !important;
-                    }
-
-                    &.active,
-                    &:focus {
-                        color: $color-secondary !important;
-                        background-color: transparent !important;
-                    }
-                }
-            }
-
-            & .item {
-                display: flex;
-                border-radius: .2rem;
-                background-color: $color-primary-dark;
-                position: relative;
-                padding: .3rem 2rem;
-                margin: .2rem 0;
-                width: 100%;
-
+        & .history-col {
+            margin:0 auto;
+            & .order-history {
+                @include reset-div;
+                @include component-border;
+                min-height: 25rem !important;
+                max-height: min-content;
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
+                padding: 1rem;
+                border: thin solid #fff;
+                border-top: none;
+                overflow: scroll;
+                margin: 0 auto;
                 &::before {
-                    left: 0;
-                    right: 99%;
-                    content: '';
-                    top: 0;
-                    bottom: 0;
+                    background-color: #fff;
+                }
+
+                & * {
+                    box-shadow: none;
+                    border: 0;
+
+                }
+
+                &__btn-group {
+                    position: relative;
+                    border: 0;
                     display: block;
-                    position: absolute;
-                    z-index: 5;
-                }
+                    z-index: 2;
 
-                &.true {
-                    &::before {
-                        background-color: green;
-                    }
-                }
+                    & .button.small.compact {
+                        font-size: 1.5rem;
+                        font-weight: $bold;
+                        color: $color-primary-dark !important;
+                        border: 0;
+                        cursor: pointer;
 
-                &.false {
-                    &::before {
-                        background-color: red;
-                    }
-                }
+                        &:hover {
+                            border-radius: 0;
+                            background-color: transparent !important;
+                        }
 
-                &:first {
-                    margin-top: 4rem;
-                }
-
-                & i {
-                    align-self: center;
-                    height: min-content;
-                    margin: 0 2.5rem 0 1rem;
-
-                    &.checkmark:before {
-                        font-size: 2rem;
-                    }
-                }
-
-                & .content {
-                    font-size: 1.2rem;
-                    width: 100%;
-
-                    & .header {
-                        color: $color3;
-                    }
-
-                    & .meta {
-                        display: flex;
-                        justify-content: space-evenly;
-
-                        & span {
-                            flex: 1 0;
-                            color: #fff;
+                        &.active,
+                        &:focus {
+                            color: $color-secondary !important;
+                            background-color: transparent !important;
                         }
                     }
                 }
 
-                & .button {
-                    position: absolute;
-                    right: 0;
-                    top: 25%;
-                    background-color: $color-primary;
-                    color: #fff;
+                & .item {
+                    display: flex;
+                    border-radius: .2rem;
+                    background-color: $color-primary-dark;
+                    position: relative;
+                    padding: .3rem 2rem;
+                    margin: .2rem 0;
+                    width: 100%;
 
-                    &:hover,
-                    &.active {
-                        background-color: $color-primary-dark;
+                    &::before {
+                        left: 0;
+                        right: 99%;
+                        content: '';
+                        top: 0;
+                        bottom: 0;
+                        display: block;
+                        position: absolute;
+                        z-index: 5;
+                    }
 
-                        & i {
-                            color: $color-detail;
+                    &.true {
+                        &::before {
+                            background-color: green;
+                        }
+                    }
+
+                    &.false {
+                        &::before {
+                            background-color: red;
+                        }
+                    }
+
+                    &:first {
+                        margin-top: 4rem;
+                    }
+
+                    & i {
+                        align-self: center;
+                        height: min-content;
+                        margin: 0 2.5rem 0 1rem;
+
+                        &.checkmark:before {
+                            font-size: 2rem;
+                        }
+                    }
+
+                    & .content {
+                        font-size: 1.2rem;
+                        width: 100%;
+
+                        & .header {
+                            color: $color3;
+                        }
+
+                        & .meta {
+                            display: flex;
+                            justify-content: space-evenly;
+
+                            & span {
+                                flex: 1 0;
+                                color: #fff;
+                            }
+                        }
+                    }
+
+                    & .button {
+                        position: absolute;
+                        right: 0;
+                        top: 25%;
+                        background-color: $color-primary;
+                        color: #fff;
+
+                        &:hover,
+                        &.active {
+                            background-color: $color-primary-dark;
+
+                            & i {
+                                color: $color-detail;
+                            }
                         }
                     }
                 }

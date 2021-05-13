@@ -48,7 +48,7 @@ namespace Application.Operations.Repository
 
         public async Task<bool> Delete(DateTime date, string userId)
         {
-            var operation = _context.Operations.SingleOrDefault(x => x.Date.Millisecond == date.Millisecond);
+            var operation = _context.Operations.SingleOrDefault(x => x.Date == date);
             if (operation.UserOperation == null) return false;
 
             _context.Operations.Remove(operation);
